@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+  x:Class="FantasyFootball.AppShell"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:views="clr-namespace:FantasyFootball.Views"
+  xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+
+  <TabBar>
+    <ShellContent
+      Title="{xct:Translate Competitions}"
+      ContentTemplate="{DataTemplate views:CompetitionsPage}"
+      Icon="cup"
+      Route="CompetitionsPage" />
+    <Tab Title="{xct:Translate Stats}" Icon="{x:StaticResource StatsIcon}" Route="stats">
+      <ShellContent Title="{xct:Translate Teams}" ContentTemplate="{DataTemplate views:TeamsPage}" Route="TeamsPage" />
+      <ShellContent Title="{xct:Translate Stats}" ContentTemplate="{DataTemplate views:CompetitionStatisticsPage}" Route="CompetitionStatisticsPage" />
+    </Tab>
+    <ShellContent Title="{xct:Translate Settings}" ContentTemplate="{DataTemplate views:SettingsPage}" Icon="{x:StaticResource SettingsIcon}" />
+    <!--<ShellContent Title="{xct:Translate Database}" ContentTemplate="{DataTemplate views:DatabasePage}" Icon="{x:StaticResource DatabaseIcon}" />-->
+  </TabBar>
+
+  <!--
+    TODO Check if still needed: Invisible, sIf you would like to navigate to this content you can do so by calling
+    await Shell.Current.GoToAsync("//LoginPage");
+  -->
+  <ShellContent ContentTemplate="{DataTemplate views:NewCompetitionPage}" Route="NewCompetitionPage" />
+  <ShellContent ContentTemplate="{DataTemplate views:CompetitionDetailPage}" Route="CompetitionDetailPage" />
+</Shell>

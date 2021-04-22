@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="FantasyFootball.Views.CompetitionsPage"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:model="clr-namespace:FantasyFootball.Data"
+  xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
+  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  x:Name="BrowseItemsPage"
+  Title="{Binding Title}"
+  x:DataType="vm:CompetitionsViewModel">
+  <StackLayout Padding="10,10,10,10">
+    <!--  History of past competitions  -->
+    <CollectionView ItemsSource="{Binding CompetitionVms}" SelectionMode="Single">
+      <CollectionView.ItemTemplate>
+        <DataTemplate x:DataType="vm:CompetitionDetailViewModel">
+          <StackLayout>
+            <StackLayout.GestureRecognizers>
+              <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CompetitionsViewModel}}, Path=OpenCompetitionCommand}" CommandParameter="{Binding CompetitionId}" />
+            </StackLayout.GestureRecognizers>
+            <StackLayout Padding="10" Orientation="Horizontal">
+              <StackLayout>
+                <Label
+                  FontSize="16"
+                  LineBreakMode="NoWrap"
+                  Text="{Binding DisplayName}"
+                  VerticalOptions="Center" />
+                <Label
+                  FontSize="12"
+                  LineBreakMode="NoWrap"
+                  Text="{Binding Competition.Start, StringFormat='{0:t}'}"
+                  VerticalOptions="Center" />
+              </StackLayout>
+              <Image WidthRequest="30" HeightRequest="30">
+                <Image.Source>
+                  <UriImageSource CacheValidity="10:00:00.0" Uri="{Binding Winner.Logo}" />
+                </Image.Source>
+                <Image.Clip>
+                  <EllipseGeometry Center="15,15" RadiusX="15" RadiusY="15" />
+                </Image.Clip>
+              </Image>
+              <Label
+                FontSize="16"
+                LineBreakMode="NoWrap"
+                Text="{Binding Winner}"
+                VerticalOptions="Center" />
+            </StackLayout>
+            <!--  Separator  -->
+            <BoxView HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+          </StackLayout>
+        </DataTemplate>
+      </CollectionView.ItemTemplate>
+    </CollectionView>
+    <!--  Controls for simulating a new competition instance  -->
+    <StackLayout Orientation="Horizontal">
+      <Button
+        WidthRequest="150"
+        BorderColor="Gray"
+        BorderWidth="2"
+        Command="{Binding SimulateCompetitionCommand}"
+        CommandParameter="true"
+        HorizontalOptions="CenterAndExpand"
+        ImageSource="{StaticResource NewIcon}"
+        Text="{xct:Translate Single}" />
+      <Button
+        WidthRequest="150"
+        BorderColor="Gray"
+        BorderWidth="2"
+        Command="{Binding SimulateCompetitionCommand}"
+        CommandParameter="true"
+        HorizontalOptions="CenterAndExpand"
+        ImageSource="{StaticResource ShuffleIcon}"
+        Text="{xct:Translate WithDrawing}" />
+    </StackLayout>
+  </StackLayout>
+</ContentPage>

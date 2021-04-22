@@ -1,0 +1,67 @@
+ @@ -1,63 +1,58 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+# ending with a slash denotes a directory and ignores all dirs with that name
+######################
+[Dd]ebug/
+[Rr]elease/
+[Rr]elDeb/
+[Oo]ld/
+[Oo]bj/
+bin/
+
+
+# temporary and other unwanted files #
+######################
+*.tmp
+*.bak
+enc_temp_folder/
+
+TestResults/
+
+
+# IDEs and editors
+######################
+.vs/
+*.ipch
+*.suo
+*.user
+*.cache
+*.opendb
+*.db
+*.aps
+*.dat
+*.ncb
+*.sublime-workspace
+
+# NuGet Packages
+######################
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+# NuGet v3's project.json files produces more ignoreable files
+*.nuget.props
+*.nuget.targets
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.sonarqube
+.Trashes
+Thumbs.db
+UpgradeLog.htm
+
+testresults.xml
+Resource.designer.cs
+
+*.dgml
+
+mono_crash*
