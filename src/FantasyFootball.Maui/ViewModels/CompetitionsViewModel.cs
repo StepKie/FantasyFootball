@@ -6,7 +6,7 @@ namespace FantasyFootball.ViewModels;
 public partial class CompetitionsViewModel : GeneralViewModel
 {
 	[ObservableProperty]
-	ObservableCollection<CompetitionDetailViewModel> _competitionVms;
+	ObservableCollection<Competition> _competitions;
 
 	[ObservableProperty]
 	CompetitionType _type;
@@ -16,20 +16,24 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	public CompetitionsViewModel()
 	{
 		Title = Type.Name().Short;
-		ReloadCompetitions();
+		LoadCompetitions();
 	}
 
-	void ReloadCompetitions()
+	void LoadCompetitions()
 	{
 		Title = Type.Name().Short;
 		IsBusy = true;
-		CompetitionVms = new(DataStore.GetAll<Competition>().Where(c => c.Type == Type).Select(competition => new CompetitionDetailViewModel(competition.Id)));
-		Log.Debug($"Reloaded {CompetitionVms.Count} competitions from db ...");
+		Competitions = new(DataStore.GetAll<Competition>().Where(c => c.Type == Type));
+		Log.Debug($"Loaded {Competitions.Count} competitions from db ...");
 		IsBusy = false;
 	}
 
 	[ICommand]
-	async Task OpenCompetition(int competitionId) => await Shell.Current.GoToAsync($"{nameof(CompetitionDetailPage)}?{nameof(CompetitionDetailViewModel.CompetitionId)}={competitionId}");
+	async Task OpenCompetition(int competitionId)
+	{
+		var route = $"{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competitionId}";
+		await Shell.Current.GoToAsync($"{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competitionId}");
+	}
 
 	[ICommand]
 	async Task SimulateCompetition()

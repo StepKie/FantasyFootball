@@ -22,8 +22,8 @@ public static class MauiProgram
 		// Register pages and viewmodels
 
 		builder.Services
-			.AddTransient<CompetitionsPage>()
-			.AddTransient<CompetitionsViewModel>()
+			.AddSingleton<CompetitionsPage>()
+			.AddSingleton<CompetitionsViewModel>()
 
 			.AddSingleton<CompetitionStatisticsPage>()
 			.AddSingleton<StandingsViewModel>()
@@ -38,7 +38,12 @@ public static class MauiProgram
 			.AddTransient<CompetitionDetailViewModel>()
 
 			.AddTransient<NewCompetitionPage>()
-			.AddTransient<NewCompetitionViewModel>();
+			.AddTransient<NewCompetitionViewModel>()
+
+			.AddSingleton<GamesPage>()
+			.AddSingleton<GamesViewModel>()
+
+			.AddSingleton<StandingsPage>();
 
 		return builder.Build();
 	}

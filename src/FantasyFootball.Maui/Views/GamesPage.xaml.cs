@@ -1,15 +1,12 @@
-﻿namespace FantasyFootball.Controls;
+﻿namespace FantasyFootball.Views;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class GamesView : ContentView
+public partial class GamesPage : ContentPage
 {
-
-	public GamesView() { }
-
-	public GamesView(GamesViewModel viewmodel)
+	public GamesPage(GamesViewModel gamesViewModel)
 	{
 		InitializeComponent();
-		BindingContext = viewmodel;
+		BindingContext = gamesViewModel;
 		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, game => ScrollToGame(game));
 	}
 

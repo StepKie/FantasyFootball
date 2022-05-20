@@ -9,9 +9,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 	[AlsoNotifyChangeFor(nameof(Competition))]
 	int _competitionId;
 
-	public Competition Competition => DataStore.Get<Competition>(CompetitionId);
-
-	public GamesViewModel Games => new(Competition);
+	public Competition Competition { get; private set; } = new();
 
 	public Team? Winner => Competition.LastGame?.Winner;
 
@@ -19,18 +17,18 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 
 	public string DisplayName => $"{Competition.ShortName} {Competition?.Id}";
 
-	public CompetitionDetailViewModel() { }
-	public CompetitionDetailViewModel(int competitionId)
+	public CompetitionDetailViewModel()
 	{
 		MessagingCenter.Subscribe<Competition>(this, MessageKeys.CompetitionUpdated, _ => OnPropertyChanged(nameof(Competition)));
-		LoadCompetitionId(competitionId);
 	}
 
-	void LoadCompetitionId(int competitionId)
+	partial void OnCompetitionIdChanged(int value) => LoadCompetition();
+
+	virtual public void LoadCompetition()
 	{
 		try
 		{
-			CompetitionId = competitionId;
+			Competition = DataStore.Get<Competition>(CompetitionId);
 			Simulator = new CompetitionSimulator(Competition, DataStore);
 			Title = $"{Competition.ShortName}-{Competition.Id}";
 		}

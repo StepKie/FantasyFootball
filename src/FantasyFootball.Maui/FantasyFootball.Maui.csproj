@@ -113,4 +113,10 @@
     <ProjectReference Include="..\FantasyFootball\FantasyFootball.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Controls\GameViewRow.xaml.cs">
+      <DependentUpon>GameViewRow.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

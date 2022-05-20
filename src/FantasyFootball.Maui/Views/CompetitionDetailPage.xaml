@@ -23,7 +23,7 @@
         <!--  No idea why we need to wrap in another content view, otherwise binding does not work  -->
         <ContentView>
           <StackLayout Margin="0,0,0,10">
-            <ctrls:GamesView BindingContext="{Binding Games}" />
+            <ctrls:GameViewRow />
             <StackLayout Orientation="Horizontal">
               <ImageButton
                 WidthRequest="40"

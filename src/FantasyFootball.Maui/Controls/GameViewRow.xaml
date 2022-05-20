@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+  x:Class="FantasyFootball.Controls.GameViewRow"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:models="clr-namespace:FantasyFootball.Models"
+  xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
+  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  x:DataType="vm:GameViewModel">
+  <Grid
+    Grid.Row="0"
+    RowDefinitions="60"
+    ColumnDefinitions="100,40,20,40,100"
+    BackgroundColor="{Binding BgColor}">
+    <Label
+      Grid.Column="0"
+      HorizontalOptions="End"
+      Text="{Binding HomeName}"
+      VerticalOptions="Center" />
+    <Image Grid.Column="1" WidthRequest="30" HeightRequest="30">
+      <Image.Source>
+        <UriImageSource CacheValidity="10:00:00.0" Uri="{Binding Game.HomeTeam.Logo}" />
+      </Image.Source>
+      <Image.Clip>
+        <EllipseGeometry Center="15,15" RadiusX="15" RadiusY="15" />
+      </Image.Clip>
+    </Image>
+    <Label Grid.Column="2" Text="{Binding Game.Result}" VerticalOptions="Center" />
+    <Image Grid.Column="3" WidthRequest="30" HeightRequest="30">
+      <Image.Source>
+        <UriImageSource CacheValidity="10:00:00.0" Uri="{Binding Game.AwayTeam.Logo}" />
+      </Image.Source>
+      <Image.Clip>
+        <EllipseGeometry Center="15,15" RadiusX="15" RadiusY="15" />
+      </Image.Clip>
+    </Image>
+    <Label Grid.Column="4" Text="{Binding AwayName}" VerticalOptions="Center" />
+  </Grid>
+</ContentView>
