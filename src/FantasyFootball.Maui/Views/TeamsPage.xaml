@@ -9,6 +9,9 @@
   x:Name="BrowseItemsPage"
   Title="{Binding Title}"
   x:DataType="vm:TeamsViewModel">
+  <ContentPage.Behaviors>
+    <!--  xct:EventToCommandBehavior Command="{Binding LoadTeamsCommand}" EventName="Appearing" /  -->
+  </ContentPage.Behaviors>
   <StackLayout Padding="20,20,0,0">
     <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding Confederations}" SelectedItem="{Binding SelectedConfederation}" />
     <CollectionView ItemsSource="{Binding Teams}" SelectionMode="None">
@@ -58,5 +61,10 @@
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>
+    <ActivityIndicator
+      IsEnabled="{Binding IsBusy}"
+      IsRunning="{Binding IsBusy}"
+      IsVisible="{Binding IsBusy}"
+      VerticalOptions="CenterAndExpand" />
   </StackLayout>
 </ContentPage>

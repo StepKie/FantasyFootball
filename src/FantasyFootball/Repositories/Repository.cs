@@ -33,6 +33,8 @@ public class Repository : IRepository
 
 	public IList<T> GetAll<T>() where T : NamedUniqueId, new() => _dbConnection.GetAllWithChildren<T>(recursive: true);
 
+	public Task<List<T>> GetAllAsync<T>() where T : NamedUniqueId, new() => Task.Run(() => _dbConnection.GetAllWithChildren<T>(recursive: true));
+
 	public int Count<T>() where T : NamedUniqueId, new() => _dbConnection.Table<T>().Count();
 
 	public T Get<T>(int id) where T : NamedUniqueId, new() => _dbConnection.GetWithChildren<T>(id, recursive: true);

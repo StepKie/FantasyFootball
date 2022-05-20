@@ -11,10 +11,13 @@ public partial class TeamsViewModel : GeneralViewModel
 	[ObservableProperty]
 	TeamType _selectedType;
 
+	[ObservableProperty]
+	[AlsoNotifyChangeFor(nameof(Teams))]
+	ObservableCollection<TeamViewModel> _allTeams = new();
+
 	public ObservableCollection<TeamViewModel> Teams => new(AllTeams.Where(tvm => _selectedConfederation == Res.All || tvm.Team.Country.Confederation.Name == SelectedConfederation));
 
 	public IList<string> Confederations { get; } = Confederation.All.Select(c => c.Name).Prepend(Res.All).ToList();
-	public ObservableCollection<TeamViewModel> AllTeams { get; set; }
 
 	public TeamsViewModel()
 	{
@@ -23,10 +26,13 @@ public partial class TeamsViewModel : GeneralViewModel
 		SelectedConfederation = Res.All;
 	}
 
-	void LoadTeams()
+	[ICommand]
+	async void LoadTeams()
 	{
-		var teamsDb = DataStore.GetAll<Team>();
+		IsBusy = true;
+		var teamsDb = await DataStore.GetAllAsync<Team>();
 		AllTeams = new(teamsDb.OrderByDescending(t => t.Elo).Select((t, rank) => new TeamViewModel(rank + 1, t)));
+		IsBusy = false;
 	}
 
 	public List<TeamType> Type { get; init; }
