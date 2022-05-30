@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-android</TargetFrameworks>
-    <!-- TargetFrameworks>$(TargetFrameworks);net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks -->
-    <!-- TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks -->
+    <TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
     <!-- <TargetFrameworks>$(TargetFrameworks);net6.0-tizen</TargetFrameworks> -->
     <OutputType>Exe</OutputType>
@@ -35,13 +34,13 @@
   <ItemGroup>
     <!-- TODO Figure out sizing (splash) and app icon -->
     <!-- App Icon -->
-    <MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\Images\splash_screen.png" Color="#512BD4" />
+    <MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\splash_screen.png" Color="#512BD4" />
     <!--<MauiIcon Include="Resources\Images\ic_launcher_round.png" />-->
     <!--<MauiIcon Include="Resources\Images\world_cup_icon.svg" />-->
 
     <!-- Splash Screen -->
     <!-- TODO Figure out sizing -->
-    <MauiSplashScreen Include="Resources\Images\splash_screen.png" />
+    <MauiSplashScreen Include="Resources\splash_screen.png" />
 
     <!-- Images -->
     <MauiImage Include="Resources\Images\*" />
@@ -51,46 +50,6 @@
 
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AndroidResource Remove="Platforms\iOS\**" />
-    <AndroidResource Remove="Platforms\MacCatalyst\**" />
-    <AndroidResource Remove="Platforms\Tizen\**" />
-    <AndroidResource Remove="Platforms\Windows\**" />
-    <Compile Remove="Platforms\iOS\**" />
-    <Compile Remove="Platforms\MacCatalyst\**" />
-    <Compile Remove="Platforms\Tizen\**" />
-    <Compile Remove="Platforms\Windows\**" />
-    <EmbeddedResource Remove="Platforms\iOS\**" />
-    <EmbeddedResource Remove="Platforms\MacCatalyst\**" />
-    <EmbeddedResource Remove="Platforms\Tizen\**" />
-    <EmbeddedResource Remove="Platforms\Windows\**" />
-    <MauiCss Remove="Platforms\iOS\**" />
-    <MauiCss Remove="Platforms\MacCatalyst\**" />
-    <MauiCss Remove="Platforms\Tizen\**" />
-    <MauiCss Remove="Platforms\Windows\**" />
-    <MauiXaml Remove="Platforms\iOS\**" />
-    <MauiXaml Remove="Platforms\MacCatalyst\**" />
-    <MauiXaml Remove="Platforms\Tizen\**" />
-    <MauiXaml Remove="Platforms\Windows\**" />
-    <None Remove="Platforms\iOS\**" />
-    <None Remove="Platforms\MacCatalyst\**" />
-    <None Remove="Platforms\Tizen\**" />
-    <None Remove="Platforms\Windows\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <MauiFont Remove="Resources\Fonts\IconFont.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <MauiImage Remove="Resources\Images\splash_screen.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\Fonts\MaterialIconsOutlined-Regular.otf" />
-    <None Remove="Resources\Images\splash_screen.png" />
   </ItemGroup>
   
   <ItemGroup>
@@ -102,10 +61,10 @@
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
     <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
     <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.7" />
-    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.7" />
-    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.7" />
-    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.0.7" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.0" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="2.1.0" />
+    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.0" />
+    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.0" />
     <PackageReference Include="Xamarin.CommunityToolkit.MauiCompat" Version="2.0.2-preview1013" />
   </ItemGroup>
 
