@@ -29,19 +29,6 @@
     <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.0" />
   </ItemGroup>
   
-<ItemGroup>
-    <Compile Update="Resources\AppResource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AppResources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\AppResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AppResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Update="Resources\AppResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

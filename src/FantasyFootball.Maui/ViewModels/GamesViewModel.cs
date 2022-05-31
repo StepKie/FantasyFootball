@@ -31,8 +31,6 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 		UpdateStageAndRoundFromCompetition();
 	}
 
-
-
 	void UpdateStageAndRoundFromCompetition()
 	{
 		SelectedStage = Competition.CurrentStage ?? Competition.Stages.Last();

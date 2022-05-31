@@ -24,7 +24,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 
 	partial void OnCompetitionIdChanged(int value) => LoadCompetition();
 
-	virtual public void LoadCompetition()
+	public virtual void LoadCompetition()
 	{
 		try
 		{
