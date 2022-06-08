@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore workload
-      run: dotnet workload restore .\src\FantasyFootball.Maui\FantasyFootball.Maui.csproj
+      run: dotnet workload restore src/FantasyFootball.Maui/FantasyFootball.Maui.csproj
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
