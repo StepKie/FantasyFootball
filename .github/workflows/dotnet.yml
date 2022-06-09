@@ -1,4 +1,4 @@
-name: .NET MAUI (Android)
+name: .NET MAUI (Android only)
 
 on:
   push:
