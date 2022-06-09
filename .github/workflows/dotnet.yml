@@ -20,4 +20,4 @@ jobs:
     - name: Install MAUI workload
       run: dotnet workload install maui
     - name: Build
-      run: dotnet build -c Release -f:net6.0-android
+      run: dotnet build src/FantasyFootball.Maui/FantasyFootball.Maui.csproj -f:net6.0-android
