@@ -16,41 +16,41 @@
         ItemDisplayBinding="{Binding Name}"
         ItemsSource="{Binding Rounds}"
         SelectedItem="{Binding SelectedRound, Mode=TwoWay}" />
-      <CollectionView
-        x:Name="gamesCollection"
-        IsGrouped="True"
-        ItemSizingStrategy="MeasureAllItems"
-        ItemsSource="{Binding GamesByRound}"
-        VerticalOptions="Center">
-        <CollectionView.ItemsLayout>
-          <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
-        </CollectionView.ItemsLayout>
-        <CollectionView.ItemTemplate>
-          <DataTemplate x:DataType="vm:GameViewModel">
-            <ctrls:GameViewRow BindingContext="{Binding .}" />
-          </DataTemplate>
-        </CollectionView.ItemTemplate>
-        <CollectionView.GroupHeaderTemplate>
-          <DataTemplate>
-            <Label
-              x:DataType="vm:RoundGroup"
-              BackgroundColor="LightGray"
-              FontAttributes="Bold"
-              Text="{Binding Name}" />
-          </DataTemplate>
-        </CollectionView.GroupHeaderTemplate>
-      </CollectionView>
+      <ScrollView VerticalOptions="FillAndExpand">
+        <CollectionView
+          x:Name="gamesCollection"
+          IsGrouped="True"
+          ItemSizingStrategy="MeasureAllItems"
+          ItemsSource="{Binding GamesByRound}"
+          VerticalOptions="Center">
+          <CollectionView.ItemsLayout>
+            <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+          </CollectionView.ItemsLayout>
+          <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="vm:GameViewModel">
+              <ctrls:GameViewRow BindingContext="{Binding .}" />
+            </DataTemplate>
+          </CollectionView.ItemTemplate>
+          <CollectionView.GroupHeaderTemplate>
+            <DataTemplate>
+              <Label
+                x:DataType="vm:RoundGroup"
+                BackgroundColor="LightGray"
+                FontAttributes="Bold"
+                Text="{Binding Name}" />
+            </DataTemplate>
+          </CollectionView.GroupHeaderTemplate>
+        </CollectionView>
+      </ScrollView>
       <StackLayout Orientation="Horizontal">
         <ImageButton
           WidthRequest="40"
           HeightRequest="40"
-          BackgroundColor="Transparent"
           Command="{Binding SimulateGameCommand}"
           HorizontalOptions="CenterAndExpand"
           IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
           IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-          Source="{StaticResource PlayIcon}"
-          VerticalOptions="Center" />
+          Source="{x:StaticResource PlayIcon}" />
         <ImageButton
           WidthRequest="40"
           HeightRequest="40"
@@ -59,7 +59,7 @@
           HorizontalOptions="CenterAndExpand"
           IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
           IsVisible="{Binding Competition.IsFinished}"
-          Source="{StaticResource ReplayIcon}"
+          Source="{x:StaticResource ReplayIcon}"
           VerticalOptions="Center" />
         <ImageButton
           WidthRequest="40"
@@ -69,7 +69,7 @@
           HorizontalOptions="CenterAndExpand"
           IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
           IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-          Source="{StaticResource SkipNextIcon}"
+          Source="{x:StaticResource SkipNextIcon}"
           VerticalOptions="Center" />
       </StackLayout>
     </StackLayout>

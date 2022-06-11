@@ -1,23 +1,7 @@
-﻿using System.Collections.ObjectModel;
-
-namespace FantasyFootball.ViewModels;
+﻿namespace FantasyFootball.ViewModels;
 
 public partial class GamesViewModel : CompetitionDetailViewModel
 {
-	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(Rounds))]
-	Stage _selectedStage = new();
-
-	[ObservableProperty]
-	Round _selectedRound = new();
-
-	public IList<Stage> Stages { get; private set; }
-	public IList<Round> Rounds => SelectedStage.Rounds;
-
-	public ObservableCollection<RoundGroup> GamesByRound => new(Competition.Rounds.Select(r => new RoundGroup(r.Name, r.Games.OrderBy(g => g.PlayedOn).Select(g => new GameViewModel(g)))));
-
-	//public ObservableCollection<GameViewModel> Games { get; set; }
-
 	public GamesViewModel()
 	{
 		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, _ => UpdateStageAndRoundFromCompetition());
@@ -26,8 +10,6 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 	public override void LoadCompetition()
 	{
 		base.LoadCompetition();
-		//Games = new(Competition.GamesByDate.Select(g => new GameViewModel(g)));
-		Stages = Competition.Stages;
 		UpdateStageAndRoundFromCompetition();
 	}
 

@@ -29,16 +29,4 @@ public partial class App : Application
 		LocalizationResourceManager.Current.Init(Res.ResourceManager);
 		LocalizationResourceManager.Current.CurrentCulture = CultureInfo.GetCultureInfo(Preferences.Get("Language", "de"));
 	}
-
-	protected override void OnStart()
-	{
-	}
-
-	protected override void OnSleep()
-	{
-	}
-
-	protected override void OnResume()
-	{
-	}
 }

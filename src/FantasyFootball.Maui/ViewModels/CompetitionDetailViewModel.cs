@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace FantasyFootball.ViewModels;
 
@@ -9,9 +10,26 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 	[AlsoNotifyChangeFor(nameof(Competition))]
 	int _competitionId;
 
-	public Competition Competition { get; private set; } = new();
+	[ObservableProperty]
+	[AlsoNotifyChangeFor(nameof(Stages))]
+	[AlsoNotifyChangeFor(nameof(Winner))]
+	Competition _competition = new();
 
-	public Team? Winner => Competition.LastGame?.Winner;
+	[ObservableProperty]
+	[AlsoNotifyChangeFor(nameof(Rounds))]
+	Stage? _selectedStage = new();
+
+	[ObservableProperty]
+	[AlsoNotifyChangeFor(nameof(GamesByRound))]
+	Round? _selectedRound = new();
+
+	public IList<Stage> Stages => Competition.Stages;
+	public IList<Round> Rounds => SelectedStage?.Rounds ?? new List<Round>();
+
+	public ObservableCollection<RoundGroup> GamesByRound => new(Competition.Rounds.Select(r => new RoundGroup(r.Name, r.Games.OrderBy(g => g.PlayedOn).Select(g => new GameViewModel(g)))));
+
+
+	public Team? Winner => Competition.IsFinished ? Competition.LastGame?.Winner : null;
 
 	public CompetitionSimulator Simulator { get; private set; }
 
@@ -28,7 +46,8 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 	{
 		try
 		{
-			Competition = DataStore.Get<Competition>(CompetitionId);
+			var loadedCompetitionFromDbById = DataStore.Get<Competition>(CompetitionId);
+			Competition = loadedCompetitionFromDbById;
 			Simulator = new CompetitionSimulator(Competition, DataStore);
 			Title = $"{Competition.ShortName}-{Competition.Id}";
 		}
@@ -39,42 +58,4 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 	}
 
 	public IEnumerable<StandingsViewModel> StandingsByGroup => Competition.Groups.Select(group => new StandingsViewModel(group.Name, group.Games));
-
-	[ICommand]
-	async Task SimulateGame()
-	{
-		var game = Competition.CurrentGame;
-		if (game == null)
-		{
-			Log.Debug("Can't simulate: No more games");
-			return;
-		}
-
-		await Simulator.SimulateGame(game);
-	}
-
-	[ICommand]
-	async Task SimulateAgain()
-	{
-		await Shell.Current.GoToAsync("..");
-		//await new CompetitionsViewModel(Competition.Type).SimulateCompetitionCommand.ExecuteAsync(false);
-	}
-
-	[ICommand]
-	async Task SimulateCurrentStage()
-	{
-		_ = Competition.CurrentStage ?? throw new InvalidOperationException($"Can't call {nameof(SimulateCurrentStage)}, {nameof(Competition.CurrentStage)} is null");
-		IsBusy = true;
-		await Simulator.SimulateStage(Competition.CurrentStage);
-		IsBusy = false;
-	}
-
-	[ICommand]
-	async Task SimulateCurrentRound()
-	{
-		_ = Competition.CurrentStage?.CurrentRound ?? throw new InvalidOperationException($"Can't call {nameof(SimulateCurrentRound)}, {nameof(Competition.CurrentStage.CurrentRound)} is null");
-		IsBusy = true;
-		await Simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
-		IsBusy = false;
-	}
 }

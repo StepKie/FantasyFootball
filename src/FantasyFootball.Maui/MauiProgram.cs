@@ -17,7 +17,7 @@ public static class MauiProgram
 			.AddSingleton<ISettingsService, SettingsService>()
 			.AddSingleton<IDataService, CsvDataService>()
 			.AddSingleton<IRepository>(new Repository(inMemory: false))
-			.AddLogging(lb => lb.AddSerilog(dispose: true));
+			.AddLogging(lb => lb.AddSerilog());
 
 		// Register pages and viewmodels
 

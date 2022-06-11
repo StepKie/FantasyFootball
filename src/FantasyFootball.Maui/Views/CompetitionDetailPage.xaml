@@ -24,38 +24,6 @@
         <ContentView>
           <StackLayout Margin="0,0,0,10">
             <ctrls:GameViewRow />
-            <StackLayout Orientation="Horizontal">
-              <ImageButton
-                WidthRequest="40"
-                HeightRequest="40"
-                BackgroundColor="Transparent"
-                Command="{Binding SimulateGameCommand}"
-                HorizontalOptions="CenterAndExpand"
-                IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-                IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-                Source="{StaticResource PlayIcon}"
-                VerticalOptions="Center" />
-              <ImageButton
-                WidthRequest="40"
-                HeightRequest="40"
-                BackgroundColor="Transparent"
-                Command="{Binding SimulateAgainCommand}"
-                HorizontalOptions="CenterAndExpand"
-                IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-                IsVisible="{Binding Competition.IsFinished}"
-                Source="{StaticResource ReplayIcon}"
-                VerticalOptions="Center" />
-              <ImageButton
-                WidthRequest="40"
-                HeightRequest="40"
-                BackgroundColor="Transparent"
-                Command="{Binding SimulateCurrentStageCommand}"
-                HorizontalOptions="CenterAndExpand"
-                IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-                IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-                Source="{StaticResource SkipNextIcon}"
-                VerticalOptions="Center" />
-            </StackLayout>
           </StackLayout>
         </ContentView>
       </xct:TabViewItem>
@@ -75,38 +43,6 @@
               </DataTemplate>
             </CollectionView.ItemTemplate>
           </CollectionView>
-          <StackLayout Orientation="Horizontal">
-            <ImageButton
-              WidthRequest="40"
-              HeightRequest="40"
-              BackgroundColor="Transparent"
-              Command="{Binding SimulateGameCommand}"
-              HorizontalOptions="CenterAndExpand"
-              IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-              IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-              Source="{StaticResource PlayIcon}"
-              VerticalOptions="Center" />
-            <ImageButton
-              WidthRequest="40"
-              HeightRequest="40"
-              BackgroundColor="Transparent"
-              Command="{Binding SimulateAgainCommand}"
-              HorizontalOptions="CenterAndExpand"
-              IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-              IsVisible="{Binding Competition.IsFinished}"
-              Source="{StaticResource ReplayIcon}"
-              VerticalOptions="Center" />
-            <ImageButton
-              WidthRequest="40"
-              HeightRequest="40"
-              BackgroundColor="Transparent"
-              Command="{Binding SimulateCurrentStageCommand}"
-              HorizontalOptions="CenterAndExpand"
-              IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-              IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-              Source="{StaticResource SkipNextIcon}"
-              VerticalOptions="Center" />
-          </StackLayout>
         </StackLayout>
       </xct:TabViewItem>
     </xct:TabView>

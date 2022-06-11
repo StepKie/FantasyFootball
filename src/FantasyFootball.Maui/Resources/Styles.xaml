@@ -35,14 +35,46 @@
 
   <FontImageSource x:Key="SettingsIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Settings}" />
   <FontImageSource x:Key="StatsIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Stacked_bar_chart}" />
-  <FontImageSource x:Key="NewIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Add_circle_outline}" />
-  <FontImageSource x:Key="PlayIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Play_circle_filled}" />
-  <FontImageSource x:Key="ReplayIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Replay_circle_filled}" />
-  <FontImageSource x:Key="PauseIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Pause_circle_filled}" />
-  <FontImageSource x:Key="ShuffleIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Shuffle}" />
-  <FontImageSource x:Key="FastForwardIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Fast_forward}" />
-  <FontImageSource x:Key="SkipNextIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Skip_next}" />
-  <FontImageSource x:Key="SoccerIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Sports_soccer}" />
+  <FontImageSource
+    x:Key="NewIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Add_circle_outline}"
+    Color="Black" />
+  <FontImageSource
+    x:Key="PlayIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Play_circle_filled}"
+    Color="Black" />
+  <FontImageSource
+    x:Key="ReplayIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Replay_circle_filled}"
+    Color="Black" />
+  <FontImageSource
+    x:Key="PauseIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Pause_circle_filled}"
+    Color="Black" />
+  <FontImageSource
+    x:Key="ShuffleIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Shuffle}"
+    Color="Black" />
+  <FontImageSource
+    x:Key="FastForwardIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Fast_forward}"
+    Color="Black" />
+  <FontImageSource
+    x:Key="SkipNextIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Skip_next}"
+    Color="Black" />
+  <FontImageSource
+    x:Key="SoccerIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Sports_soccer}"
+    Color="Black" />
 
   <Style TargetType="ActivityIndicator">
     <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />

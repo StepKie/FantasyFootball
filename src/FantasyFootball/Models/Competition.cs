@@ -14,7 +14,7 @@ public class Competition : NamedUniqueId
 	public DateTime SimulationFinished { get; set; }
 
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public virtual List<Stage> Stages { get; set; }
+	public virtual List<Stage> Stages { get; set; } = new();
 
 	[Ignore] public Stage? CurrentStage => Stages.FirstOrDefault(s => !s.IsFinished);
 	[Ignore] public bool IsFinished => CurrentStage == null;
