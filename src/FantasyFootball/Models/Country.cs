@@ -12,15 +12,15 @@ public class Country : NamedUniqueId
 	[ForeignKey(typeof(Confederation))]
 	public int ConfederationId { get; set; }
 
-	[ManyToOne(CascadeOperations = CascadeOperation.CascadeRead)]
+	[ManyToOne]
 	public Confederation Confederation { get; set; }
 
-	[OneToMany(CascadeOperations = CascadeOperation.All)]
+	[OneToMany]
 	public List<Team> Clubs { get; set; }
 
 	[ForeignKey(typeof(Team))]
 	public int NationalTeamId { get; set; }
 
-	[OneToOne(CascadeOperations = CascadeOperation.All)]
-	public Team NationalTeam => new() { Country = this, Type = TeamType.NATIONAL_MEN, Name = Name, ShortName = Code3, Elo = Elo };
+	[OneToOne]
+	public Team NationalTeam => new() { Type = TeamType.NATIONAL_MEN, Name = Name, ShortName = Code3, Elo = Elo };
 }

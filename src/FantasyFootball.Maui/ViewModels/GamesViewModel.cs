@@ -36,7 +36,7 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 	async Task SimulateAgain()
 	{
 		await Shell.Current.GoToAsync("..");
-		//await new CompetitionsViewModel(Competition.Type).SimulateCompetitionCommand.ExecuteAsync(false);
+		// await new CompetitionsViewModel(Competition.Type).SimulateCompetitionCommand.ExecuteAsync(false);
 	}
 
 	[ICommand]

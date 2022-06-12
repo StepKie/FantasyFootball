@@ -23,6 +23,7 @@ public abstract class CompetitionFactory
 	protected abstract void CreateGroups();
 	protected abstract IList<Stage> CreateStages();
 
+	[Time]
 	/// <summary>
 	/// Creates an (unsaved) competition
 	/// </summary>

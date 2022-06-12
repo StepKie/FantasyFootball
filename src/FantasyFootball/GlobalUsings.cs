@@ -2,6 +2,8 @@
 
 global using System.Globalization;
 
+global using MethodTimer;
+
 global using Serilog;
 
 global using SQLite;

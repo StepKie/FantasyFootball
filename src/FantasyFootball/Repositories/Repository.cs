@@ -31,6 +31,7 @@ public class Repository : IRepository
 		);
 	}
 
+	[Time]
 	public IList<T> GetAll<T>() where T : NamedUniqueId, new() => _dbConnection.GetAllWithChildren<T>(recursive: true);
 
 	public Task<List<T>> GetAllAsync<T>() where T : NamedUniqueId, new() => Task.Run(() => _dbConnection.GetAllWithChildren<T>(recursive: true));
@@ -39,6 +40,7 @@ public class Repository : IRepository
 
 	public T Get<T>(int id) where T : NamedUniqueId, new() => _dbConnection.GetWithChildren<T>(id, recursive: true);
 
+	[Time]
 	public void Save<T>(T item) where T : NamedUniqueId, new()
 	{
 		if (item.Id != 0)

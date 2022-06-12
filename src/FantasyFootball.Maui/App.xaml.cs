@@ -10,7 +10,13 @@ public partial class App : Application
 		LoadLanguage();
 		InitializeComponent();
 		Log.Logger = ISettingsService.StandardLoggerConfig.CreateLogger();
-		ServiceHelper.GetService<IDataService>()!.Reset();
+		
+		var repoService = ServiceHelper.GetService<IRepository>()!;
+		if (!repoService.GetAll<Team>().Any())
+		{
+			ServiceHelper.GetService<IDataService>()!.Reset();
+		}
+
 		MainPage = new AppShell();
 
 		Routing.RegisterRoute(nameof(CompetitionsPage), typeof(CompetitionsPage));

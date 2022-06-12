@@ -55,22 +55,20 @@
           WidthRequest="40"
           HeightRequest="40"
           BackgroundColor="Transparent"
-          Command="{Binding SimulateAgainCommand}"
-          HorizontalOptions="CenterAndExpand"
-          IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-          IsVisible="{Binding Competition.IsFinished}"
-          Source="{x:StaticResource ReplayIcon}"
-          VerticalOptions="Center" />
-        <ImageButton
-          WidthRequest="40"
-          HeightRequest="40"
-          BackgroundColor="Transparent"
           Command="{Binding SimulateCurrentStageCommand}"
           HorizontalOptions="CenterAndExpand"
           IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
           IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-          Source="{x:StaticResource SkipNextIcon}"
-          VerticalOptions="Center" />
+          Source="{x:StaticResource SkipNextIcon}" />
+        <ImageButton
+          WidthRequest="40"
+          HeightRequest="40"
+          BackgroundColor="Transparent"
+          Command="{Binding SimulateAgainCommand}"
+          HorizontalOptions="CenterAndExpand"
+          IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
+          IsVisible="{Binding Competition.IsFinished}"
+          Source="{x:StaticResource ReplayIcon}" />
       </StackLayout>
     </StackLayout>
   </ContentPage.Content>

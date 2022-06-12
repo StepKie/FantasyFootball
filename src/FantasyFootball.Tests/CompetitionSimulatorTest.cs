@@ -7,6 +7,7 @@ public class CompetitionSimulatorTest : BaseTest
 {
 	public CompetitionSimulatorTest(ITestOutputHelper output) : base(output, level: LogEventLevel.Debug) { }
 
+	[Time]
 	[Fact]
 	public async Task TestRunEm2020()
 	{

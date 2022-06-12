@@ -35,6 +35,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 		await Shell.Current.GoToAsync($"{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competitionId}");
 	}
 
+	[Time]
 	[ICommand]
 	async Task SimulateCompetition()
 	{

@@ -2,6 +2,8 @@
 global using System.Linq;
 global using System.Threading.Tasks;
 
+global using MethodTimer;
+
 global using Serilog;
 global using Serilog.Events;
 

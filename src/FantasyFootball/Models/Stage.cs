@@ -8,7 +8,7 @@ public class Stage : NamedUniqueId
 	public List<Group> Groups { get; set; } = new();
 
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public virtual List<Round> Rounds { get; set; }
+	public virtual List<Round> Rounds { get; set; } = new();
 
 	[ForeignKey(typeof(Competition))]
 	public int CompetitionId { get; set; }
