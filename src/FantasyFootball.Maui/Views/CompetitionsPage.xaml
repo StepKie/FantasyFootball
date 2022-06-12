@@ -31,14 +31,7 @@
                   Text="{Binding Start, StringFormat='{0:t}'}"
                   VerticalOptions="Center" />
               </StackLayout>
-              <Image WidthRequest="30" HeightRequest="30">
-                <Image.Source>
-                  <UriImageSource CacheValidity="10:00:00.0" Uri="{Binding LastGame.Winner.Logo}" />
-                </Image.Source>
-                <Image.Clip>
-                  <EllipseGeometry Center="15,15" RadiusX="15" RadiusY="15" />
-                </Image.Clip>
-              </Image>
+              <Image WidthRequest="30" HeightRequest="30" Source="{Binding LastGame.Winner.Logo}" />
               <Label
                 FontSize="16"
                 LineBreakMode="NoWrap"

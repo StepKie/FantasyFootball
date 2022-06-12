@@ -34,14 +34,7 @@
               ColumnDefinitions="30,60,180,60"
               BackgroundColor="White">
               <Label Grid.Column="0" Text="{Binding Rank}" VerticalOptions="Center" />
-              <Image WidthRequest="30" HeightRequest="30">
-                <Image.Source>
-                  <UriImageSource CacheValidity="10:00:00.0" Uri="{Binding Team.Logo}" />
-                </Image.Source>
-                <Image.Clip>
-                  <EllipseGeometry Center="15,15" RadiusX="15" RadiusY="15" />
-                </Image.Clip>
-              </Image>
+              <Image WidthRequest="30" HeightRequest="30" Source="{Binding Team.Logo}" />
               <Label Grid.Column="2" Text="{Binding Team.Name}" VerticalOptions="Center" />
               <Entry
                 Grid.Column="3"

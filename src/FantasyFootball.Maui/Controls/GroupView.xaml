@@ -42,14 +42,12 @@
               BackgroundColor="{Binding BgColor}">
 
               <Label Grid.Column="0" FontAttributes="Bold" Text="{Binding Record.Position}" />
-              <Image Grid.Column="1" WidthRequest="80" HeightRequest="80">
-                <Image.Source>
-                  <UriImageSource CacheValidity="10:00:00.0" Uri="{Binding Winner.Logo}" />
-                </Image.Source>
-                <Image.Clip>
-                  <EllipseGeometry Center="40,40" RadiusX="40" RadiusY="40" />
-                </Image.Clip>
-              </Image>
+              <Image
+                Grid.Column="1"
+                WidthRequest="80"
+                HeightRequest="80"
+                Source="{Binding Winner.Logo}" />
+
               <Label Grid.Column="2" xct:ShadowEffect.Color="Gray" Text="{Binding Record.Team.Name}" />
               <Label Grid.Column="3" Text="{Binding Record.MatchesPlayed}" />
               <Label Grid.Column="4">

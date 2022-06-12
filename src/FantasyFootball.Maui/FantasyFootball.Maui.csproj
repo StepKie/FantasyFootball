@@ -43,7 +43,7 @@
     <MauiSplashScreen Include="Resources\splash_screen.png" />
 
     <!-- Images -->
-    <MauiImage Include="Resources\Images\*" />
+    <MauiImage Include="Resources\Images\**" />
 
     <!-- Custom Fonts -->
     <MauiFont Include="Resources\Fonts\*" />

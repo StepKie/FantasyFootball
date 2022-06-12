@@ -2,8 +2,10 @@
 
 public class IconStrings
 {
-	//TODO Return (from folder?) based on country code
-	public static string GetNationalFlagWeb(Country country) => $"https://flagcdn.com/h80/{country.Code2.ToLower()}.png";
+	//TODO Return (from folder?) based on country code. Older versions (from web)
+	// $"https://flagcdn.com/h80/{country.Code2.ToLower()}.png"
+	// $"https://hatscripts.github.io/circle-flags/flags/{country.Code2.ToLower()}.svg"
+	public static string GetNationalFlagWeb(Country country) => $"{country.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "_")}.png";
 	public static string GetConfederationLogo(Confederation confederation) => "";
 
 	public static string? GetCompetitionLogo(CompetitionType competitionType) =>
