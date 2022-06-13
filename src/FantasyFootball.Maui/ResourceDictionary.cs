@@ -1,6 +1,6 @@
 ﻿namespace FantasyFootball;
 
-static class ResourceDictionary
+static class ResourceConstants
 {
 	public static readonly Color DefaultHighlightColor = Colors.AntiqueWhite;
 }

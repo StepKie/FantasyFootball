@@ -10,6 +10,10 @@ public partial class SettingsViewModel : GeneralViewModel
 	[ObservableProperty] CultureInfo _selectedLanguage;
 	[ObservableProperty] double _simulationSpeedMs;
 
+	[ObservableProperty] bool _isBusyA;
+
+	public bool IsBusyB { get; set; }
+
 	readonly ISettingsService _settings;
 	readonly IDataService _dataService;
 
@@ -37,5 +41,18 @@ public partial class SettingsViewModel : GeneralViewModel
 	partial void OnSimulationSpeedMsChanged(double value) => _settings.SimulationSpeed = TimeSpan.FromMilliseconds(value);
 
 	[ICommand]
-	void ResetDatabase() => _dataService.Reset();
+	async void ResetDatabase()
+	{
+		IsBusy = true;
+		IsBusyA = true;
+		IsBusyB = true;
+		OnPropertyChanged(nameof(IsBusy));
+		OnPropertyChanged(nameof(IsBusyA));
+		OnPropertyChanged(nameof(IsBusyB));
+		await Task.Run(() => _dataService.Reset());
+		IsBusyA = false;
+		IsBusyB = false;
+		IsBusy = false;
+		OnPropertyChanged(nameof(IsBusyB));
+	}
 }

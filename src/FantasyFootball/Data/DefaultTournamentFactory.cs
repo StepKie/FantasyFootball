@@ -13,7 +13,7 @@ public abstract class DefaultTournamentFactory : CompetitionFactory
 
 	protected override void CreateGroups()
 	{
-		CreateParticipants();
+		SelectParticipants();
 		Groups = "ABCDEFGHIJK".Take(NoOfGroups).Select(letter => new Group { Name = $"{Res.Group} {letter}", }).ToList();
 		var teams = new Queue<Team>(Participants);
 		while (teams.Any())

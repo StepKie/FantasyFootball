@@ -10,6 +10,7 @@
   Title="{xct:Translate Competitions}"
   x:DataType="vm:CompetitionsViewModel">
   <StackLayout Padding="10,10,10,10">
+    <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
     <Grid RowDefinitions="40,40,40" ColumnDefinitions="50,*">
       <Image Grid.Row="0" Grid.Column="0" Source="{Binding CompetitionLogo}" />
       <Picker

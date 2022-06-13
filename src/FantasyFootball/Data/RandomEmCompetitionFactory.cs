@@ -5,7 +5,7 @@ public class RandomEmCompetitionFactory : DefaultTournamentFactory
 
 	public RandomEmCompetitionFactory(IRepository repo) : base(CompetitionType.EM, startDate: HistoricalData.EM_2020_START, noOfGroups: 6, groupSize: 4, repo) { }
 
-	protected override void CreateParticipants() => Participants = new TeamSelector(_participantPool).DrawTeamsWeightedByElo(24, Confederation.UEFA);
+	protected override void SelectParticipants() => Participants = new TeamSelector(_participantPool).DrawTeamsWeightedByElo(24, Confederation.UEFA);
 
 	protected override IList<Stage> CreateStages()
 	{

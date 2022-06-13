@@ -13,13 +13,15 @@
     </ResourceDictionary>
   </ContentPage.Resources>
   <StackLayout>
+    <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+    <Button Margin="10" Command="{Binding ResetDatabaseCommand}" Text="{xct:Translate ResetDatabase}" />
     <TableView Intent="Settings">
       <TableRoot>
         <TableSection Title="{xct:Translate Settings}">
           <ViewCell>
             <ViewCell.View>
               <StackLayout Padding="13,0" Orientation="Horizontal">
-                <Label Text="{xct:Translate Language}" VerticalOptions="Center" />
+                <Label VerticalOptions="Center" Text="{xct:Translate Language}" />
                 <Picker
                   HorizontalOptions="EndAndExpand"
                   ItemDisplayBinding="{Binding DisplayName}"
@@ -31,7 +33,7 @@
           <ViewCell>
             <ViewCell.View>
               <StackLayout Orientation="Horizontal">
-                <Label Text="{xct:Translate SimSpeed}" VerticalOptions="Center" />
+                <Label VerticalOptions="Center" Text="{xct:Translate SimSpeed}" />
                 <Slider
                   WidthRequest="200"
                   HorizontalOptions="EndAndExpand"
@@ -46,6 +48,6 @@
         </TableSection>
       </TableRoot>
     </TableView>
-    <Button Command="{Binding ResetDatabaseCommand}" Text="{xct:Translate ResetDatabase}" />
+
   </StackLayout>
 </ContentPage>

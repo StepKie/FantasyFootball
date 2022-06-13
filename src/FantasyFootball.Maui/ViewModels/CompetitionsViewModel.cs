@@ -36,14 +36,14 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	[ICommand]
 	async Task SimulateCompetition()
 	{
-		Log.Debug("Creating competition");
+		IsBusy = true;
 		_competitionFactory = new EmCompetitionFactory(DataStore);
-		var competition = _competitionFactory.Create();
+		var competition = await _competitionFactory.Create();
 		DataStore.Save(competition);
 		Log.Debug("Competition created");
-		var svm = ServiceHelper.GetService<StandingsViewModel>();
-		svm.LoadCompetition(competition);
+		ServiceHelper.GetService<StandingsViewModel>()!.LoadCompetition(competition);
 		await OpenCompetition(competition.Id);
+		IsBusy = false;
 	}
 
 	/// <summary> Enable reloading from OnNavigatedTo (when db is reset from another page) </summary>

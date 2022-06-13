@@ -17,7 +17,7 @@ public class CompetitionSimulatorTest : BaseTest
 		var groups = Repo.GetAll<Group>();
 		var teams = Repo.GetAll<Team>();
 		var games = Repo.GetAll<Game>();
-		var em2020 = new EmCompetitionFactory(Repo).Create();
+		var em2020 = await new EmCompetitionFactory(Repo).Create();
 		Repo.Save(em2020);
 
 		// To check whether  the save operation inserts correctly with cascades and child relationships
@@ -53,13 +53,13 @@ public class CompetitionSimulatorTest : BaseTest
 	}
 
 	[Fact]
-	public void TestInitializeRandomEm()
+	public async Task TestInitializeRandomEm()
 	{
 		var groups = Repo.GetAll<Group>();
 		var teams = Repo.GetAll<Team>();
 		var games = Repo.GetAll<Game>();
 		var countries = Repo.GetAll<Country>();
-		var em2020 = new RandomEmCompetitionFactory(Repo).Create();
+		var em2020 = await new RandomEmCompetitionFactory(Repo).Create();
 		Repo.Save(em2020);
 		var teamsAfterEm2020 = Repo.GetAll<Team>();
 

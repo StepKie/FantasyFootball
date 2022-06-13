@@ -44,7 +44,7 @@ public partial class StandingsViewModel : GeneralViewModel
 		// records.Where(r => r != null)
 		OnPropertyChanged(nameof(RecordsByGroup));
 
-		Color GetColor(TeamRecord r) => r.Team.Equals(justFinished?.HomeTeam) || r.Team.Equals(justFinished?.AwayTeam) ? ResourceDictionary.DefaultHighlightColor : Colors.White;
+		Color GetColor(TeamRecord r) => r.Team.Equals(justFinished?.HomeTeam) || r.Team.Equals(justFinished?.AwayTeam) ? ResourceConstants.DefaultHighlightColor : Colors.White;
 	}
 
 	void UpdateGames(IEnumerable<Game> games)

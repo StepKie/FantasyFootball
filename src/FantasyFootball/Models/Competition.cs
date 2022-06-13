@@ -6,7 +6,7 @@ public class Competition : NamedUniqueId
 	public CompetitionType Type { get; init; }
 	public string ShortName { get; init; }
 
-	[Ignore] public DateTime Start => GamesByDate.First()?.PlayedOn ?? throw new InvalidOperationException("Can't get Start date without any Games present ...");
+	[Ignore] public DateTime? Start => GamesByDate.FirstOrDefault()?.PlayedOn;
 
 	public DateTime SimulationStart { get; set; }
 

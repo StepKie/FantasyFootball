@@ -18,7 +18,7 @@ public partial class GameViewModel : GeneralViewModel
 
 	void UpdateUI(Game justFinished)
 	{
-		BgColor = Game.Equals(justFinished) ? ResourceDictionary.DefaultHighlightColor : Colors.White;
+		BgColor = Game.Equals(justFinished) ? ResourceConstants.DefaultHighlightColor : Colors.White;
 		OnPropertyChanged(nameof(HomeName));
 		OnPropertyChanged(nameof(AwayName));
 		OnPropertyChanged(nameof(Game));

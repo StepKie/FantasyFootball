@@ -77,7 +77,7 @@ public class EmCompetitionFactory : CompetitionFactory
 		};
 	}
 
-	protected override void CreateParticipants() => throw new NotImplementedException("Unused");
+	protected override void SelectParticipants() => throw new NotImplementedException("Unused");
 
 	protected override IList<Stage> CreateStages()
 	{

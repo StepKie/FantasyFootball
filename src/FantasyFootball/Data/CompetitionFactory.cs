@@ -2,7 +2,8 @@
 
 public abstract class CompetitionFactory
 {
-	protected readonly IList<Team> _participantPool;
+	protected IList<Team> _participantPool;
+	protected readonly IRepository _repo;
 	Competition _competition;
 
 	protected CompetitionType CompetitionType { get; init; }
@@ -14,12 +15,12 @@ public abstract class CompetitionFactory
 
 	public CompetitionFactory(CompetitionType type, DateTime startDate, IRepository repo)
 	{
-		_participantPool = repo.GetAll<Team>();
+		_repo = repo;
 		CompetitionType = type;
 		StartDate = startDate;
 	}
 
-	protected abstract void CreateParticipants();
+	protected abstract void SelectParticipants();
 	protected abstract void CreateGroups();
 	protected abstract IList<Stage> CreateStages();
 
@@ -28,8 +29,9 @@ public abstract class CompetitionFactory
 	/// Creates an (unsaved) competition
 	/// </summary>
 	/// <returns></returns>
-	public virtual Competition Create()
+	public virtual async Task<Competition> Create()
 	{
+		_participantPool = await _repo.GetAllAsync<Team>();
 		CreateGroups();
 		_competition = new()
 		{
