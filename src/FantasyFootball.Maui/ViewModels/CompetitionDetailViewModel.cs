@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace FantasyFootball.ViewModels;
 
@@ -26,7 +25,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 	public IList<Stage> Stages => Competition.Stages;
 	public IList<Round> Rounds => SelectedStage?.Rounds ?? new List<Round>();
 
-	public ObservableCollection<RoundGroup> GamesByRound => new(Competition.Rounds.Select(r => new RoundGroup(r.Name, r.Games.OrderBy(g => g.PlayedOn).Select(g => new GameViewModel(g)))));
+	public ObservableCollection<RoundGroup> GamesByRound { get; private set; }
 
 
 	public Team? Winner => Competition.IsFinished ? Competition.LastGame?.Winner : null;
@@ -47,7 +46,13 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 		try
 		{
 			var loadedCompetitionFromDbById = DataStore.Get<Competition>(CompetitionId);
+			if (loadedCompetitionFromDbById is null)
+			{
+				Log.Error($"Unable to find {CompetitionId} in db");
+				return;
+			}
 			Competition = loadedCompetitionFromDbById;
+			GamesByRound = new(Competition.Rounds.Select(r => new RoundGroup(r.Name, r.Games.OrderBy(g => g.PlayedOn).Select(g => new GameViewModel(g)))));
 			Simulator = new CompetitionSimulator(Competition, DataStore);
 			Title = $"{Competition.ShortName}-{Competition.Id}";
 		}

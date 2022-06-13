@@ -10,7 +10,7 @@ public partial class App : Application
 		LoadLanguage();
 		InitializeComponent();
 		Log.Logger = ISettingsService.StandardLoggerConfig.CreateLogger();
-		
+
 		var repoService = ServiceHelper.GetService<IRepository>()!;
 		if (!repoService.GetAll<Team>().Any())
 		{
@@ -26,7 +26,6 @@ public partial class App : Application
 		Routing.RegisterRoute(nameof(CompetitionStatisticsPage), typeof(CompetitionStatisticsPage));
 		Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
 		Routing.RegisterRoute(nameof(TeamsPage), typeof(TeamsPage));
-		Routing.RegisterRoute(nameof(NewCompetitionPage), typeof(NewCompetitionPage));
 	}
 
 	static void LoadLanguage()

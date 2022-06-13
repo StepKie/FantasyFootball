@@ -22,11 +22,6 @@
     </Tab>
 
     <ShellContent Title="{xct:Translate Settings}" ContentTemplate="{DataTemplate views:SettingsPage}" Icon="{x:StaticResource SettingsIcon}" />
-    <ShellContent
-      Title="CompetitionDetail"
-      ContentTemplate="{DataTemplate views:CompetitionDetailPage}"
-      Icon="{x:StaticResource SoccerIcon}"
-      Route="CompetitionDetailPage" />
     <!--<ShellContent Title="{xct:Translate Database}" ContentTemplate="{DataTemplate views:DatabasePage}" Icon="{x:StaticResource DatabaseIcon}" />-->
   </TabBar>
 </Shell>

@@ -1,5 +1,5 @@
 ﻿// Contains global usings imported into all files in the project
-
+global using System.Collections.ObjectModel;
 global using System.Globalization;
 
 global using CommunityToolkit.Mvvm.ComponentModel;

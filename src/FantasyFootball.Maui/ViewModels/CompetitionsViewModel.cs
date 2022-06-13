@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace FantasyFootball.ViewModels;
+﻿namespace FantasyFootball.ViewModels;
 
 [QueryProperty(nameof(SelectedCompetitionType), nameof(SelectedCompetitionType))]
 public partial class CompetitionsViewModel : GeneralViewModel

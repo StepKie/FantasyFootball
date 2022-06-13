@@ -71,6 +71,7 @@ public class CompetitionSimulator
 		{
 			Repo.Save(Competition);
 		}
+		MessagingCenter.Send(game, MessageKeys.GameFinished);
 	}
 
 	public static void Print(Group group)
@@ -78,7 +79,7 @@ public class CompetitionSimulator
 		Log.Debug($"{Res.Group} {group.Name}");
 		Log.Debug("------------------------------------");
 		Log.Debug($"{"Name",-30} {Res.Games,5}  | {Res.Goals,5}  | {Res.GoalDifference,5}  | {Res.Points,2}");
-		foreach (var record in Standings.CreateFrom(group.Teams, group.Stage.Games))
+		foreach (var record in Standings.CreateFrom(group.Stage.Games))
 		{
 			Log.Debug($"{record.Team.Name,-20} {record.MatchesPlayed,5}  | {record.GoalsFor,2}:{record.GoalsAgainst,2}  | {record.GoalDifference,5}  | {record.Points,5}");
 		}

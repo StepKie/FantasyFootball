@@ -38,7 +38,18 @@ public class Repository : IRepository
 
 	public int Count<T>() where T : NamedUniqueId, new() => _dbConnection.Table<T>().Count();
 
-	public T Get<T>(int id) where T : NamedUniqueId, new() => _dbConnection.GetWithChildren<T>(id, recursive: true);
+	public T? Get<T>(int id) where T : NamedUniqueId, new()
+	{
+		try
+		{
+			return _dbConnection.GetWithChildren<T>(id, recursive: true);
+		}
+		catch (InvalidOperationException e)
+		{
+			Log.Error(e, $"Unable to find key {id} for type {typeof(T).Name}");
+			return null;
+		}
+	}
 
 	[Time]
 	public void Save<T>(T item) where T : NamedUniqueId, new()

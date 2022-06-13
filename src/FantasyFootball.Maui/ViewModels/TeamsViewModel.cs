@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace FantasyFootball.ViewModels;
+﻿namespace FantasyFootball.ViewModels;
 
 public partial class TeamsViewModel : GeneralViewModel
 {
