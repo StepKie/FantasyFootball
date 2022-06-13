@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace FantasyFootball.ViewModels;
+﻿namespace FantasyFootball.ViewModels;
 
 [QueryProperty(nameof(CompetitionId), nameof(CompetitionId))]
 public partial class CompetitionDetailViewModel : GeneralViewModel
@@ -58,7 +56,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 		}
 		catch (Exception e)
 		{
-			Debug.WriteLine($"Failed to load competition: {e}");
+			Log.Error($"Failed to load competition: {e}");
 		}
 	}
 

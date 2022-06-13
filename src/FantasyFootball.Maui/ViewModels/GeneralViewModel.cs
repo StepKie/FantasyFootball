@@ -1,6 +1,4 @@
-﻿using FantasyFootball.Helpers;
-
-namespace FantasyFootball.ViewModels;
+﻿namespace FantasyFootball.ViewModels;
 
 /// <summary>
 /// Nicht domänenspezifische Funktionalität

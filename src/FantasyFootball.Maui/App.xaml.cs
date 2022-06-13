@@ -1,5 +1,4 @@
-﻿using FantasyFootball.Helpers;
-using Xamarin.CommunityToolkit.Helpers;
+﻿using Xamarin.CommunityToolkit.Helpers;
 
 namespace FantasyFootball;
 

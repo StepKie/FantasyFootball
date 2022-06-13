@@ -3,36 +3,49 @@
   x:Class="FantasyFootball.Views.StandingsPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:ctrls="clr-namespace:FantasyFootball.Controls"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
   Title="{Binding Title}"
   x:DataType="vm:StandingsViewModel">
   <ContentPage.Content>
-    <StackLayout Margin="10,10,10,10">
-      <!-- CollectionView ItemSizingStrategy="MeasureAllItems" ItemsSource="{Binding Records}" VerticalOptions="Center">
-        <CollectionView.Header>
-          <Grid
-            Grid.Row="0"
-            RowDefinitions="30"
-            ColumnDefinitions="20,20,170,30,40,30,30,30"
-            BackgroundColor="White">
-            <Label
-              Grid.Column="0"
-              Grid.ColumnSpan="3"
-              FontAttributes="Bold"
-              Text="{Binding Title}"
-              TextTransform="Uppercase" />
-            <Label Grid.Column="3" Text="{xct:Translate Games}" />
-            <Label Grid.Column="4" Text="{xct:Translate Goals}" />
-            <Label Grid.Column="5" Text="{xct:Translate GoalDifference}" />
-            <Label Grid.Column="6" Text="{xct:Translate Points}" />
-          </Grid>
-        </CollectionView.Header>
+    <StackLayout Margin="0,0,0,10">
+      <Grid
+        Grid.Row="0"
+        RowDefinitions="30"
+        ColumnDefinitions="20,20,170,30,40,30,30,30"
+        BackgroundColor="White">
+        <Label
+          Grid.Column="0"
+          Grid.ColumnSpan="3"
+          FontAttributes="Bold"
+          Text="{Binding Title}"
+          TextTransform="Uppercase" />
+        <Label Grid.Column="3" Text="{xct:Translate Games}" />
+        <Label Grid.Column="4" Text="{xct:Translate Goals}" />
+        <Label Grid.Column="5" Text="{xct:Translate GoalDifference}" />
+        <Label Grid.Column="6" Text="{xct:Translate Points}" />
+      </Grid>
+      <CollectionView
+        HorizontalScrollBarVisibility="Always"
+        IsGrouped="True"
+        ItemSizingStrategy="MeasureAllItems"
+        ItemsSource="{Binding RecordsByGroup}"
+        VerticalOptions="FillAndExpand">
         <CollectionView.ItemsLayout>
-          <LinearItemsLayout ItemSpacing="1" Orientation="Vertical" />
+          <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
         </CollectionView.ItemsLayout>
-        <CollectionView.ItemTemplate>
+        <CollectionView.GroupHeaderTemplate>
           <DataTemplate>
+            <Label
+              x:DataType="vm:RecordsGroup"
+              FontAttributes="Bold"
+              Text="{Binding Name}"
+              TextTransform="Uppercase" />
+          </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
+        <CollectionView.ItemTemplate>
+          <DataTemplate x:DataType="vm:TeamRecordViewModel">
             <Grid
               Grid.Row="0"
               RowDefinitions="25"
@@ -40,15 +53,13 @@
               BackgroundColor="{Binding BgColor}">
 
               <Label Grid.Column="0" FontAttributes="Bold" Text="{Binding Record.Position}" />
-              <Image Grid.Column="1" WidthRequest="80" HeightRequest="80">
-                <Image.Source>
-                  <UriImageSource CacheValidity="10:00:00.0" Uri="{Binding Winner.Logo}" />
-                </Image.Source>
-                <Image.Clip>
-                  <EllipseGeometry Center="40,40" RadiusX="40" RadiusY="40" />
-                </Image.Clip>
-              </Image>
-              <Label Grid.Column="2" xct:ShadowEffect.Color="Gray" Text="{Binding Record.Team.Name}" />
+              <Image
+                Grid.Column="1"
+                WidthRequest="20"
+                HeightRequest="20"
+                Source="{Binding Record.Team.Logo}" />
+
+              <Label Grid.Column="2" Text="{Binding Record.Team.Name}" />
               <Label Grid.Column="3" Text="{Binding Record.MatchesPlayed}" />
               <Label Grid.Column="4">
                 <Label.Text>
@@ -60,11 +71,11 @@
               </Label>
               <Label Grid.Column="5" Text="{Binding Record.GoalDifference}" />
               <Label Grid.Column="6" FontAttributes="Bold" Text="{Binding Record.Points}" />
-              <Label Grid.Column="7" FontAttributes="Bold" Text="{Binding Record.AveragePointsPerGame}" />
+              <!--  Label Grid.Column="7" FontAttributes="Bold" Text="{Binding Record.AveragePointsPerGame}" /  -->
             </Grid>
           </DataTemplate>
         </CollectionView.ItemTemplate>
-      </CollectionView-->
+      </CollectionView>
     </StackLayout>
   </ContentPage.Content>
 </ContentPage>

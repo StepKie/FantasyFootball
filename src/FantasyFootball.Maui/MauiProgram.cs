@@ -26,6 +26,7 @@ public static class MauiProgram
 			.AddSingleton<CompetitionsViewModel>()
 
 			.AddSingleton<CompetitionStatisticsPage>()
+			.AddSingleton<StandingsPage>()
 			.AddSingleton<StandingsViewModel>()
 
 			.AddSingleton<SettingsPage>()
@@ -38,9 +39,7 @@ public static class MauiProgram
 			.AddTransient<CompetitionDetailViewModel>()
 
 			.AddSingleton<GamesPage>()
-			.AddSingleton<GamesViewModel>()
-
-			.AddSingleton<StandingsPage>();
+			.AddSingleton<GamesViewModel>();
 
 		return builder.Build();
 	}

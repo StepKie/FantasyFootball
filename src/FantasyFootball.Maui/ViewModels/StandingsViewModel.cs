@@ -6,6 +6,7 @@ public partial class StandingsViewModel : GeneralViewModel
 {
 	[ObservableProperty] CompetitionType _selectedCompetitionType;
 
+	public ObservableCollection<RecordsGroup> RecordsByGroup { get; private set; }
 	public IList<TeamRecordViewModel> Records { get; set; }
 	public IList<Team> Teams { get; init; }
 
@@ -27,20 +28,21 @@ public partial class StandingsViewModel : GeneralViewModel
 
 	public StandingsViewModel()
 	{
-		// MessagingCenter.Subscribe<IRepository>(this, MessageKeys.CompetitionUpdated, _ => UpdateGamesFromCompetitionType());
-		SelectedCompetitionType = CompetitionType.EM;
+		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, UpdateStandings);
 	}
 	public StandingsViewModel(string title, IEnumerable<Game> games)
 	{
-		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, justFinished => UpdateStandings(justFinished));
+		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, UpdateStandings);
 		Title = title;
 		UpdateGames(games);
 	}
 
 	public void UpdateStandings(Game? justFinished)
 	{
-		Records = Standings.CreateFrom(Games).Select(r => new TeamRecordViewModel(r, GetColor(r))).ToList();
-		OnPropertyChanged(nameof(Records));
+		RecordsByGroup = new(justFinished?.Round.Stage.Groups.Select(group => new RecordsGroup(group.Name, Standings.CreateFrom(group.Games).Select(r => new TeamRecordViewModel(r, GetColor(r))))));
+		//var records = RecordsByGroup.SelectMany(r => r).Select(r => r.Record);
+		// records.Where(r => r != null)
+		OnPropertyChanged(nameof(RecordsByGroup));
 
 		Color GetColor(TeamRecord r) => r.Team.Equals(justFinished?.HomeTeam) || r.Team.Equals(justFinished?.AwayTeam) ? ResourceDictionary.DefaultHighlightColor : Colors.White;
 	}
@@ -50,5 +52,18 @@ public partial class StandingsViewModel : GeneralViewModel
 		Games = games;
 		Records = Standings.CreateFrom(Games).Select(r => new TeamRecordViewModel(r, Colors.White)).ToList();
 		OnPropertyChanged(nameof(Records));
+	}
+
+	public virtual void LoadCompetition(Competition competition)
+	{
+		try
+		{
+			RecordsByGroup = new(competition.Groups.Select(group => new RecordsGroup(group.Name, Standings.CreateFrom(group.Games).Select(r => new TeamRecordViewModel(r, Colors.White)))));
+			OnPropertyChanged(nameof(RecordsByGroup));
+		}
+		catch (Exception e)
+		{
+			Log.Error($"Failed to load competition: {e}");
+		}
 	}
 }

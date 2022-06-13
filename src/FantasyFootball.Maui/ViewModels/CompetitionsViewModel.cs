@@ -41,6 +41,8 @@ public partial class CompetitionsViewModel : GeneralViewModel
 		var competition = _competitionFactory.Create();
 		DataStore.Save(competition);
 		Log.Debug("Competition created");
+		var svm = ServiceHelper.GetService<StandingsViewModel>();
+		svm.LoadCompetition(competition);
 		await OpenCompetition(competition.Id);
 	}
 
