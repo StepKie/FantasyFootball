@@ -3,7 +3,7 @@
   x:Class="FantasyFootball.Controls.GameViewRow"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  xmlns:models="clr-namespace:FantasyFootball.Models"
+  xmlns:models="clr-namespace:FantasyFootball.Models;assembly=FantasyFootball"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
   x:DataType="vm:GameViewModel">

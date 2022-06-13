@@ -24,4 +24,5 @@ public class Competition : NamedUniqueId
 	[Ignore] public Game? LastGame => GamesByDate.LastOrDefault(g => g.IsFinished);
 	[Ignore] public Game? CurrentGame => GamesByDate.FirstOrDefault(g => !g.IsFinished);
 	[Ignore] public List<Team> Participants => Groups.SelectMany(group => group.Teams).ToList();
+	[Ignore] public Team? Winner => IsFinished ? LastGame?.Winner : null;
 }

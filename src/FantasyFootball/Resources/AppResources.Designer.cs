@@ -205,6 +205,15 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go!.
+        /// </summary>
+        public static string Go {
+            get {
+                return ResourceManager.GetString("Go", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to +/-.
         /// </summary>
         public static string GoalDifference {
@@ -241,6 +250,15 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Historic.
+        /// </summary>
+        public static string Historic {
+            get {
+                return ResourceManager.GetString("Historic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In Progress ....
         /// </summary>
         public static string InProgress {
@@ -264,6 +282,15 @@ namespace FantasyFootball.Resources {
         public static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual Selection.
+        /// </summary>
+        public static string ManualSelection {
+            get {
+                return ResourceManager.GetString("ManualSelection", resourceCulture);
             }
         }
         
@@ -471,6 +498,15 @@ namespace FantasyFootball.Resources {
         public static string WorldCup {
             get {
                 return ResourceManager.GetString("WorldCup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year.
+        /// </summary>
+        public static string Year {
+            get {
+                return ResourceManager.GetString("Year", resourceCulture);
             }
         }
     }

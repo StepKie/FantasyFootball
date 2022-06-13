@@ -12,7 +12,7 @@
       ContentTemplate="{DataTemplate views:CompetitionsPage}"
       Icon="cup"
       Route="CompetitionsPage" />
-    <Tab Title="Play" Icon="{x:StaticResource SoccerIcon}">
+    <Tab Title="Play" Icon="{x:StaticResource SoccerIcon}" Route="PlayTab">
       <ShellContent Title="{xct:Translate Games}" ContentTemplate="{DataTemplate views:GamesPage}" Route="GamesPage" />
       <ShellContent Title="{xct:Translate Standings}" ContentTemplate="{DataTemplate views:StandingsPage}" Route="StandingsPage" />
     </Tab>

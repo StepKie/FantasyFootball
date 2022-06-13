@@ -22,5 +22,5 @@ public class Country : NamedUniqueId
 	public int NationalTeamId { get; set; }
 
 	[OneToOne]
-	public Team NationalTeam => new() { Type = TeamType.NATIONAL_MEN, Name = Name, ShortName = Code3, Elo = Elo };
+	public Team NationalTeam => new() { Country = this, Type = TeamType.NATIONAL_MEN, Name = Name, ShortName = Code3, Elo = Elo };
 }

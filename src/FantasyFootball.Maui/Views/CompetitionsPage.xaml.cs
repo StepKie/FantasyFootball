@@ -7,4 +7,6 @@ public partial class CompetitionsPage : ContentPage
 		InitializeComponent();
 		BindingContext = viewmodel;
 	}
+
+	protected override void OnNavigatedTo(NavigatedToEventArgs args) => (BindingContext as CompetitionsViewModel)?.ReloadCompetitions();
 }

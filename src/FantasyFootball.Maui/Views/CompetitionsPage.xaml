@@ -7,11 +7,50 @@
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
   x:Name="BrowseItemsPage"
-  Title="{Binding Title}"
+  Title="{xct:Translate Competitions}"
   x:DataType="vm:CompetitionsViewModel">
   <StackLayout Padding="10,10,10,10">
+    <Grid RowDefinitions="40,40,40" ColumnDefinitions="50,*">
+      <Image Grid.Row="0" Grid.Column="0" Source="{Binding CompetitionLogo}" />
+      <Picker
+        Grid.Row="0"
+        Grid.Column="1"
+        HorizontalOptions="FillAndExpand"
+        ItemsSource="{Binding CompetitionTypes}"
+        SelectedItem="{Binding SelectedCompetitionType}" />
+      <Label
+        Grid.Row="1"
+        HorizontalOptions="End"
+        Text="{xct:Translate Year}"
+        VerticalOptions="Center" />
+      <Picker
+        Grid.Row="1"
+        Grid.Column="1"
+        HorizontalOptions="FillAndExpand"
+        ItemsSource="{Binding Years}"
+        SelectedItem="{Binding SelectedYear}" />
+      <Label
+        Grid.Row="2"
+        HorizontalOptions="End"
+        Text="{xct:Translate Teams}"
+        VerticalOptions="Center" />
+      <Picker
+        Grid.Row="2"
+        Grid.Column="1"
+        HorizontalOptions="FillAndExpand"
+        ItemsSource="{Binding ParticipantSelectionTypes}"
+        SelectedItem="{Binding SelectedParticipantMode}" />
+    </Grid>
+    <Button
+      WidthRequest="150"
+      Margin="20"
+      Command="{Binding SimulateCompetitionCommand}"
+      CommandParameter="true"
+      HorizontalOptions="CenterAndExpand"
+      ImageSource="{x:StaticResource PlayIcon}"
+      Text="{xct:Translate Go}" />
     <!--  History of past competitions  -->
-    <CollectionView ItemsSource="{Binding Competitions}" SelectionMode="Single">
+    <CollectionView ItemsSource="{Binding StoredCompetitionsForSelectedType}" SelectionMode="Single">
       <CollectionView.ItemTemplate>
         <DataTemplate x:DataType="model:Competition">
           <StackLayout>
@@ -31,11 +70,11 @@
                   Text="{Binding Start, StringFormat='{0:t}'}"
                   VerticalOptions="Center" />
               </StackLayout>
-              <Image WidthRequest="30" HeightRequest="30" Source="{Binding LastGame.Winner.Logo}" />
+              <Image WidthRequest="30" HeightRequest="30" Source="{Binding Winner.Logo}" />
               <Label
                 FontSize="16"
                 LineBreakMode="NoWrap"
-                Text="{Binding LastGame.Winner}"
+                Text="{Binding Winner, TargetNullValue='Not Finished'}"
                 VerticalOptions="Center" />
             </StackLayout>
             <!--  Separator  -->
@@ -44,26 +83,5 @@
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>
-    <!--  Controls for simulating a new competition instance  -->
-    <StackLayout Orientation="Horizontal">
-      <Button
-        WidthRequest="150"
-        BorderColor="Gray"
-        BorderWidth="2"
-        Command="{Binding SimulateCompetitionCommand}"
-        CommandParameter="true"
-        HorizontalOptions="CenterAndExpand"
-        ImageSource="{StaticResource NewIcon}"
-        Text="{xct:Translate Single}" />
-      <Button
-        WidthRequest="150"
-        BorderColor="Gray"
-        BorderWidth="2"
-        Command="{Binding SimulateCompetitionCommand}"
-        CommandParameter="true"
-        HorizontalOptions="CenterAndExpand"
-        ImageSource="{StaticResource ShuffleIcon}"
-        Text="{xct:Translate WithDrawing}" />
-    </StackLayout>
   </StackLayout>
 </ContentPage>

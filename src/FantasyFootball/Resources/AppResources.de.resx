@@ -165,6 +165,9 @@
   <data name="Games" xml:space="preserve">
     <value>Sp.</value>
   </data>
+  <data name="Go" xml:space="preserve">
+    <value>Los!</value>
+  </data>
   <data name="GoalDifference" xml:space="preserve">
     <value>+/-</value>
   </data>
@@ -177,6 +180,9 @@
   <data name="GroupStage" xml:space="preserve">
     <value>Gruppenphase</value>
   </data>
+  <data name="Historic" xml:space="preserve">
+    <value>Historisch</value>
+  </data>
   <data name="InProgress" xml:space="preserve">
     <value>In Simulation ...</value>
   </data>
@@ -185,6 +191,9 @@
   </data>
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
+  </data>
+  <data name="ManualSelection" xml:space="preserve">
+    <value>Auswahl</value>
   </data>
   <data name="Multiple" xml:space="preserve">
     <value>Mehrfach</value>
@@ -254,5 +263,8 @@
   </data>
   <data name="WorldCup" xml:space="preserve">
     <value>Weltmeisterschaft</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Jahr</value>
   </data>
 </root>
