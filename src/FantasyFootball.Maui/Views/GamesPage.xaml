@@ -12,17 +12,18 @@
     <StackLayout Margin="20,20,20,20">
       <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding Stages}" SelectedItem="{Binding SelectedStage, Mode=TwoWay}" />
       <Picker
+        Title="Moo"
         HorizontalOptions="FillAndExpand"
         ItemDisplayBinding="{Binding Name}"
         ItemsSource="{Binding Rounds}"
         SelectedItem="{Binding SelectedRound, Mode=TwoWay}" />
       <CollectionView
         x:Name="gamesCollection"
+        VerticalOptions="FillAndExpand"
         HorizontalScrollBarVisibility="Always"
         IsGrouped="True"
         ItemSizingStrategy="MeasureAllItems"
-        ItemsSource="{Binding GamesByRound}"
-        VerticalOptions="FillAndExpand">
+        ItemsSource="{Binding GamesByRound}">
         <CollectionView.ItemsLayout>
           <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
         </CollectionView.ItemsLayout>
@@ -45,26 +46,26 @@
         <ImageButton
           WidthRequest="40"
           HeightRequest="40"
-          Command="{Binding SimulateGameCommand}"
           HorizontalOptions="CenterAndExpand"
+          Command="{Binding SimulateGameCommand}"
           IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
           IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
           Source="{x:StaticResource PlayIcon}" />
         <ImageButton
           WidthRequest="40"
           HeightRequest="40"
+          HorizontalOptions="CenterAndExpand"
           BackgroundColor="Transparent"
           Command="{Binding SimulateCurrentStageCommand}"
-          HorizontalOptions="CenterAndExpand"
           IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
           IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
           Source="{x:StaticResource SkipNextIcon}" />
         <ImageButton
           WidthRequest="40"
           HeightRequest="40"
+          HorizontalOptions="CenterAndExpand"
           BackgroundColor="Transparent"
           Command="{Binding SimulateAgainCommand}"
-          HorizontalOptions="CenterAndExpand"
           IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
           IsVisible="{Binding Competition.IsFinished}"
           Source="{x:StaticResource ReplayIcon}" />
