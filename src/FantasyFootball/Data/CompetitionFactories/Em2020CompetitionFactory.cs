@@ -1,12 +1,12 @@
 ﻿namespace FantasyFootball.Data;
 
-public class EmCompetitionFactory : CompetitionFactory
+public class Em2020CompetitionFactory : CompetitionFactory
 {
-	public EmCompetitionFactory(IRepository repo) : base(CompetitionType.EM, startDate: HistoricalData.EM_2020_START, repo) { }
+	public Em2020CompetitionFactory(IRepository repo) : base(CompetitionType.EM, startDate: HistoricalData.EM_2020_START, repo) { }
 
-	protected override void CreateGroups()
+	protected override List<Group> CreateGroups()
 	{
-		Groups = new()
+		return new()
 		{
 			new()
 			{
@@ -77,11 +77,11 @@ public class EmCompetitionFactory : CompetitionFactory
 		};
 	}
 
-	protected override void SelectParticipants() => throw new NotImplementedException("Unused");
+	protected override List<Team> SelectParticipants() => _participantPool.ToList();
 
-	protected override IList<Stage> CreateStages()
+	protected override List<Stage> CreateStages()
 	{
-		return new Stage[]
+		return new()
 		{
 			new Stage
 			{

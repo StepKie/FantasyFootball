@@ -11,7 +11,7 @@
         <Image WidthRequest="30" HeightRequest="30" Source="{Binding CompetitionLogo}" />
         <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding CompetitionTypes}" SelectedItem="{Binding SelectedCompetitionType}" />
       </StackLayout>
-      <CollectionView VerticalOptions="FillAndExpand" ItemsSource="{Binding Records}">
+      <CollectionView  VerticalOptions="FillAndExpand" ItemsSource="{Binding Records}">
         <CollectionView.Header>
           <Grid
             Grid.Row="0"

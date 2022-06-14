@@ -76,7 +76,7 @@
                     VerticalOptions="Center"
                     FontSize="12"
                     LineBreakMode="NoWrap"
-                    Text="{Binding Start, StringFormat='{0:t}'}" />
+                    Text="{Binding SimulationStart, StringFormat='{0:g}'}" />
                 </StackLayout>
                 <Image WidthRequest="30" HeightRequest="30" Source="{Binding Winner.Logo}" />
                 <Label

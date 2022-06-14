@@ -11,16 +11,22 @@ public abstract class DefaultTournamentFactory : CompetitionFactory
 		GroupSize = groupSize;
 	}
 
-	protected override void CreateGroups()
+	protected override List<Group> CreateGroups()
 	{
-		SelectParticipants();
-		Groups = "ABCDEFGHIJK".Take(NoOfGroups).Select(letter => new Group { Name = $"{Res.Group} {letter}", }).ToList();
+		var groups = "ABCDEFGHIJK".Take(NoOfGroups).Select(letter => new Group { Name = $"{Res.Group} {letter}", }).ToList();
 		var teams = new Queue<Team>(Participants);
 		while (teams.Any())
 		{
 			// Distribute teams into groups by selecting a random group from all groups with the least amount of teams in them
-			var eligibleGroup = Groups.OrderBy(g => g.Teams.Count).ThenBy(g => new Guid()).First();
+			var eligibleGroup = groups.Where(g => g.Teams.Count < GroupSize).OrderBy(g => g.Teams.Count).ThenBy(g => new Guid()).FirstOrDefault();
+			if (eligibleGroup is null)
+			{
+				break;
+			}
+
 			eligibleGroup.Teams.Add(teams.Dequeue());
 		}
+
+		return groups;
 	}
 }

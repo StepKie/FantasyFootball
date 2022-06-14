@@ -17,7 +17,7 @@ public class CompetitionSimulatorTest : BaseTest
 		var groups = Repo.GetAll<Group>();
 		var teams = Repo.GetAll<Team>();
 		var games = Repo.GetAll<Game>();
-		var em2020 = await new EmCompetitionFactory(Repo).Create();
+		var em2020 = await new Em2020CompetitionFactory(Repo).Create();
 		Repo.Save(em2020);
 
 		// To check whether  the save operation inserts correctly with cascades and child relationships

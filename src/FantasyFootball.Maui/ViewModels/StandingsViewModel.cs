@@ -32,17 +32,18 @@ public partial class StandingsViewModel : GeneralViewModel
 
 	public void UpdateStandings(Game? justFinished)
 	{
+		Title = "";
 		RecordsByGroup = new(justFinished?.Round.Stage.Groups.Select(group => new RecordsGroup(group.Name, Standings.CreateFrom(group.Games).Select(r => new TeamRecordViewModel(r, GetColor(r))))));
 		OnPropertyChanged(nameof(RecordsByGroup));
 
-		Color GetColor(TeamRecord r) => r.Team.Equals(justFinished?.HomeTeam) || r.Team.Equals(justFinished?.AwayTeam) ? ResourceConstants.DefaultHighlightColor : Colors.White;
+		Color GetColor(TeamRecord r) => r.Team.Equals(justFinished?.HomeTeam) || r.Team.Equals(justFinished?.AwayTeam) ? ResourceConstants.DefaultHighlightColor : ResourceConstants.DefaultPageColor;
 	}
 
 	public virtual void LoadCompetition(Competition competition)
 	{
 		try
 		{
-			RecordsByGroup = new(competition.Groups.Select(group => new RecordsGroup(group.Name, Standings.CreateFrom(group.Games).Select(r => new TeamRecordViewModel(r, Colors.White)))));
+			RecordsByGroup = new(competition.Groups.Select(group => new RecordsGroup(group.Name, Standings.CreateFrom(group.Games).Select(r => new TeamRecordViewModel(r, ResourceConstants.DefaultPageColor)))));
 			OnPropertyChanged(nameof(Records));
 			OnPropertyChanged(nameof(RecordsByGroup));
 		}

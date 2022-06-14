@@ -37,8 +37,9 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	async Task SimulateCompetition()
 	{
 		IsBusy = true;
-		_competitionFactory = new EmCompetitionFactory(DataStore);
-		var competition = await _competitionFactory.Create();
+		//_competitionFactory = await CompetitionFactories.CreateEm(DataStore, SelectedParticipantMode);
+		//_competitionFactory = new Em2020CompetitionFactory(DataStore);
+		var competition = await CompetitionFactories.CreateEm(DataStore, SelectedParticipantMode);
 		DataStore.Save(competition);
 		Log.Debug("Competition created");
 		ServiceHelper.GetService<StandingsViewModel>()!.LoadCompetition(competition);

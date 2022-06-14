@@ -31,4 +31,6 @@ public class Confederation : NamedUniqueId
 
 	public static Confederation FromName(string name) => All.FirstOrDefault(c => c.Name == name) ?? UNKNOWN;
 
+
+
 }

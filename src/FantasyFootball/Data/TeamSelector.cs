@@ -12,9 +12,10 @@ public class TeamSelector : ITeamSelector
 	public Confederation ConfederationFilter { get; private set; }
 
 	/// <summary> Return the specified number of teams sorted by elo, optionally filtered for the given confederation</summary>
-	public IList<Team> DrawTeamsWeightedByElo(int amount, Confederation? from = null)
+	public List<Team> DrawTeamsWeightedByElo(int amount, Confederation? from = null)
 	{
 		var eligibleTeams = _pool.Where(t => from == null || t.Country.Confederation.Equals(from));
+		var eligible = eligibleTeams.ToList();
 		// Each team gets (team.elo - 1000 (but a minimum of 10)) balls into the drawing urn ...
 		var urn = eligibleTeams.SelectMany(t => Enumerable.Repeat(t, Math.Max(t.Elo - 1000, 10))).ToList();
 		// Order balls randomly, then remove duplicates and draw the desired amount

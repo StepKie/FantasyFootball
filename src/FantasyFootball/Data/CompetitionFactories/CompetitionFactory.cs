@@ -20,9 +20,9 @@ public abstract class CompetitionFactory
 		StartDate = startDate;
 	}
 
-	protected abstract void SelectParticipants();
-	protected abstract void CreateGroups();
-	protected abstract IList<Stage> CreateStages();
+	protected abstract List<Team> SelectParticipants();
+	protected abstract List<Group> CreateGroups();
+	protected abstract List<Stage> CreateStages();
 
 	[Time]
 	/// <summary>
@@ -32,18 +32,18 @@ public abstract class CompetitionFactory
 	public virtual async Task<Competition> Create()
 	{
 		_participantPool = await _repo.GetAllAsync<Team>();
-		CreateGroups();
+		Participants = SelectParticipants();
+		Groups = CreateGroups();
 		_competition = new()
 		{
 			Name = CompetitionType.Name().Long + " 2020",
 			ShortName = CompetitionType.Name().Short + " 2020",
 			SimulationStart = DateTime.Now,
-			Stages = CreateStages().ToList(),
-
+			Stages = CreateStages(),
 		};
 
 		return _competition;
 	}
 
-	public Team Team(string shortName) => _participantPool.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
+	public Team Team(string shortName) => Participants.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
 }
