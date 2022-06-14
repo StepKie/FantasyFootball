@@ -165,6 +165,9 @@
   <data name="Games" xml:space="preserve">
     <value>Games</value>
   </data>
+  <data name="GamesShort" xml:space="preserve">
+    <value>G.</value>
+  </data>
   <data name="Go" xml:space="preserve">
     <value>Go!</value>
   </data>
@@ -205,6 +208,9 @@
     <value>Australia and Oceania</value>
   </data>
   <data name="Points" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="PointsShort" xml:space="preserve">
     <value>Pts.</value>
   </data>
   <data name="PPG" xml:space="preserve">

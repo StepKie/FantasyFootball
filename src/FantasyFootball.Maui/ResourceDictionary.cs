@@ -2,5 +2,5 @@
 
 static class ResourceConstants
 {
-	public static readonly Color DefaultHighlightColor = Colors.AntiqueWhite;
+	public static readonly Color DefaultHighlightColor = (Color)App.Current!.Resources["Primary"];
 }

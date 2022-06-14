@@ -205,6 +205,15 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to G..
+        /// </summary>
+        public static string GamesShort {
+            get {
+                return ResourceManager.GetString("GamesShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Go!.
         /// </summary>
         public static string Go {
@@ -322,11 +331,20 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pts..
+        ///   Looks up a localized string similar to Points.
         /// </summary>
         public static string Points {
             get {
                 return ResourceManager.GetString("Points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pts..
+        /// </summary>
+        public static string PointsShort {
+            get {
+                return ResourceManager.GetString("PointsShort", resourceCulture);
             }
         }
         

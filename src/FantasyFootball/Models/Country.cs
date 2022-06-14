@@ -12,7 +12,7 @@ public class Country : NamedUniqueId
 	[ForeignKey(typeof(Confederation))]
 	public int ConfederationId { get; set; }
 
-	[ManyToOne]
+	[ManyToOne(CascadeOperations = CascadeOperation.CascadeRead)]
 	public Confederation Confederation { get; set; }
 
 	[OneToMany]

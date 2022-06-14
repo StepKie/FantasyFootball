@@ -17,10 +17,10 @@
           FontAttributes="Bold"
           Text="{Binding Title}"
           TextTransform="Uppercase" />
-        <Label Grid.Column="3" Text="{xct:Translate Games}" />
+        <Label Grid.Column="3" Text="{xct:Translate GamesShort}" />
         <Label Grid.Column="4" Text="{xct:Translate Goals}" />
         <Label Grid.Column="5" Text="{xct:Translate GoalDifference}" />
-        <Label Grid.Column="6" Text="{xct:Translate Points}" />
+        <Label Grid.Column="6" Text="{xct:Translate PointsShort}" />
       </Grid>
       <CollectionView
         VerticalOptions="FillAndExpand"

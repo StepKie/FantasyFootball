@@ -12,7 +12,7 @@ public class Team : NamedUniqueId
 	[ForeignKey(typeof(Country))]
 	public int CountryId { get; set; }
 
-	[ManyToOne(CascadeOperations = CascadeOperation.All)]
+	[ManyToOne(CascadeOperations = CascadeOperation.CascadeRead)]
 	public Country Country { get; init; }
 
 	[ForeignKey(typeof(Group))]
