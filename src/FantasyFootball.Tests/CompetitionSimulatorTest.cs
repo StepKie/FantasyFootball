@@ -48,8 +48,8 @@ public class CompetitionSimulatorTest : BaseTest
 		Repo.Save(em2020);
 
 		var fromDb = Repo.Get<Competition>(em2020.Id);
-		var finalDb = fromDb.GamesByDate.Last();
-		Assert.Equal(winner, finalDb.Winner);
+		var finalDb = fromDb?.GamesByDate.Last();
+		Assert.Equal(winner, finalDb?.Winner);
 	}
 
 	[Fact]

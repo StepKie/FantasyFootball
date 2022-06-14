@@ -13,11 +13,12 @@ public class Round : NamedUniqueId
 	public Stage Stage { get; set; }
 
 	[Ignore]
-	public bool IsFinished => CurrentGame == null;
+	public bool IsFinished => CurrentGame is null;
 
 	[Ignore]
 	public Game? CurrentGame => Games.FirstOrDefault(g => !g.IsFinished);
 
+	/// <summary> This should not be asked of a Round </summary>
 	[Ignore]
 	public Round? NextRoundInStage => Stage.Rounds.FirstOrDefault(r => Stage.Rounds.IndexOf(this) + 1 == Stage.Rounds.IndexOf(r));
 }

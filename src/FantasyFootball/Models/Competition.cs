@@ -17,7 +17,7 @@ public class Competition : NamedUniqueId
 	public virtual List<Stage> Stages { get; set; } = new();
 
 	[Ignore] public Stage? CurrentStage => Stages.FirstOrDefault(s => !s.IsFinished);
-	[Ignore] public bool IsFinished => CurrentStage == null;
+	[Ignore] public bool IsFinished => CurrentStage is null;
 	[Ignore] public IList<Group> Groups => Stages.SelectMany(stage => stage.Groups).ToList();
 	[Ignore] public IList<Round> Rounds => Stages.SelectMany(stage => stage.Rounds).ToList();
 	[Ignore] public IList<Game> GamesByDate => Rounds.SelectMany(round => round.Games).OrderBy(g => g.PlayedOn).ToList();

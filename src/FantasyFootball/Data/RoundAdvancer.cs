@@ -59,7 +59,7 @@ public class RoundAdvancer
 
 	IList<Game> FillKoStage()
 	{
-		//Check validity
+		// TODO Check validity!
 		var groupStage = Competition.Stages[0];
 		var firstKoRound = Competition.Stages[1].Rounds[0];
 		var gamesInKoStage = firstKoRound.Games;

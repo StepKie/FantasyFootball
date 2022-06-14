@@ -2,6 +2,9 @@
 
 namespace FantasyFootball.Models;
 
+/// <summary>
+/// TODO There is no good way to create a Game from a string, or create a Game with a result already set, or clear an existing result
+/// </summary>
 [Table(nameof(Game))]
 public class Game : NamedUniqueId
 {
@@ -55,6 +58,7 @@ public class Game : NamedUniqueId
 	[Ignore]
 	public Team? Winner => (HomeScore > AwayScore) ? HomeTeam : (AwayScore > HomeScore) ? AwayTeam : null;
 
+	/// <summary> TODO Is it really be the responsibility of Game to "simulate itself"? However, otherwise there would be "feature envy" </summary>
 	public void Simulate()
 	{
 		if (!IsReadyToStart)
@@ -130,12 +134,14 @@ public class Game : NamedUniqueId
 
 	public void AddParticipants(Team? home, Team? away)
 	{
+		// TODO Seems fishy (both are checked for not null?!)
 		if (HomeTeam != null || AwayTeam != null) { throw new ArgumentException($"Can't add {home} and {away} to game {this} with at least one participant set"); }
 
 		HomeTeam = home;
 		AwayTeam = away;
 	}
 
+	/// <summary> TODO Never used, refactor to use constructor </summary>
 	public void SetResult(int homeGoals, int awayGoals, GameEnd end)
 	{
 		HomeScore = homeGoals;

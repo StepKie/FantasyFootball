@@ -54,6 +54,7 @@ public class CsvDataService : IDataService
 		return countries.Select(country => country.NationalTeam).ToList();
 	}
 
+	/// <summary> TODO Check whether the creation of teams/countries can be done more efficiently/if the persistence is safe and not misusable </summary>
 	public void Reset()
 	{
 		_repo.Reset();

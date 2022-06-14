@@ -33,9 +33,9 @@ public class CompetitionSimulator
 	{
 		Log.Debug($"Starting Stage: {stage.Name}");
 		Log.Debug("------------------------------------");
-		while (stage.CurrentRound != null)
+		while (!stage.IsFinished)
 		{
-			await SimulateRound(stage.CurrentRound);
+			await SimulateRound(stage.CurrentRound!);
 			foreach (var group in stage.Groups)
 			{
 				Print(group);
@@ -47,9 +47,9 @@ public class CompetitionSimulator
 	{
 		Log.Debug($"Starting Round: {round.Name}");
 		Log.Debug("------------------------------------");
-		while (round.CurrentGame is Game currentGame)
+		while (!round.IsFinished)
 		{
-			await SimulateGame(currentGame);
+			await SimulateGame(round.CurrentGame!);
 		}
 	}
 

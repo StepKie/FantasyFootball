@@ -14,4 +14,7 @@ public static class ExtensionMethods
 			_ => throw new ArgumentException("Unknown Competition Type"),
 		};
 	}
+
+	/// <summary> Shuffle items</summary>
+	public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) => source.OrderBy(x => Guid.NewGuid());
 }

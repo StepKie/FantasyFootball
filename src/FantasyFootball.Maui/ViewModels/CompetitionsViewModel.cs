@@ -6,6 +6,8 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	public ObservableCollection<Competition> StoredCompetitionsForSelectedType => new(DataStore.GetAll<Competition>().Where(c => c.Type == SelectedCompetitionType));
 
 	public IList<CompetitionType> CompetitionTypes { get; } = Enum.GetValues(typeof(CompetitionType)).Cast<CompetitionType>().ToList();
+
+	// TODO Has no influence yet - remove or use
 	public IList<int> Years { get; } = new[] { 2020, 2016 };
 	public IList<TeamSelectionType> ParticipantSelectionTypes { get; } = Enum.GetValues(typeof(TeamSelectionType)).Cast<TeamSelectionType>().ToList();
 
@@ -34,11 +36,9 @@ public partial class CompetitionsViewModel : GeneralViewModel
 
 	[Time]
 	[ICommand]
-	async Task SimulateCompetition()
+	async Task OpenNewCompetition()
 	{
 		IsBusy = true;
-		//_competitionFactory = await CompetitionFactories.CreateEm(DataStore, SelectedParticipantMode);
-		//_competitionFactory = new Em2020CompetitionFactory(DataStore);
 		var competition = await CompetitionFactories.CreateEm(DataStore, SelectedParticipantMode);
 		DataStore.Save(competition);
 		Log.Debug("Competition created");

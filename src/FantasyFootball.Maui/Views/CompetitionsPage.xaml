@@ -53,8 +53,7 @@
         WidthRequest="150"
         Margin="20"
         HorizontalOptions="CenterAndExpand"
-        Command="{Binding SimulateCompetitionCommand}"
-        CommandParameter="true"
+        Command="{Binding OpenNewCompetitionCommand}"
         ImageSource="{x:StaticResource PlayIcon}"
         Text="{xct:Translate Go}" />
       <!--  History of past competitions  -->

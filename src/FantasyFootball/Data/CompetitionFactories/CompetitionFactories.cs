@@ -1,19 +1,21 @@
 ﻿namespace FantasyFootball.Data;
 
+/// <summary> TODO In general, check how to best create Competitions for different scenarios. abstract strategy pattern seems not the most stable.
+/// What about ITeamSelector, and what about GroupCreator/StageCreator.
+/// What about creating historic competitions with known results.
+/// </summary>
 public static class CompetitionFactories
 {
-	public static int[] HISTORIC_WM_YEARS = new[] { 1998, 2002, 2006, 2010, 2014, 2018, 2022 };
+	public static readonly int[] HISTORIC_WM_YEARS = new[] { 1998, 2002, 2006, 2010, 2014, 2018, 2022 };
 	public async static Task<Competition> CreateEm(IRepository repo, TeamSelectionType selection)
 	{
-		return selection switch
+		CompetitionFactory factory = selection switch
 		{
-			TeamSelectionType.HISTORIC => await new Em2020CompetitionFactory(repo).Create(),
-			TeamSelectionType.WITH_DRAWING => await new RandomEmCompetitionFactory(repo).Create(),
+			TeamSelectionType.HISTORIC => new Em2020CompetitionFactory(repo),
+			TeamSelectionType.WITH_DRAWING => new RandomEmCompetitionFactory(repo),
+			_ => throw new ArgumentException($"No CompetitionFactory found for {selection}"),
 		};
-	}
 
-	public static Competition CreateEm(int year, ITeamSelector teamSelector)
-	{
-		return null;
+		return await factory.Create();
 	}
 }

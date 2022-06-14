@@ -18,7 +18,7 @@ public abstract class DefaultTournamentFactory : CompetitionFactory
 		while (teams.Any())
 		{
 			// Distribute teams into groups by selecting a random group from all groups with the least amount of teams in them
-			var eligibleGroup = groups.Where(g => g.Teams.Count < GroupSize).OrderBy(g => g.Teams.Count).ThenBy(g => new Guid()).FirstOrDefault();
+			var eligibleGroup = groups.Where(g => g.Teams.Count < GroupSize).OrderBy(g => g.Teams.Count).Shuffle().FirstOrDefault();
 			if (eligibleGroup is null)
 			{
 				break;
