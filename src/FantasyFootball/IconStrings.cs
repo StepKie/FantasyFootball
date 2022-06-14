@@ -12,7 +12,9 @@ public class IconStrings
 		competitionType switch
 		{
 			CompetitionType.EM => "logo_uefa",
-			CompetitionType.WM or CompetitionType.CHAMPIONS_LEAGUE or CompetitionType.DOMESTIC_LEAGUE => null,
+			CompetitionType.WM => "world",
+			CompetitionType.CHAMPIONS_LEAGUE => "logo_uefa_cl",
+			CompetitionType.DOMESTIC_LEAGUE => null,
 			_ => null,
 		};
 

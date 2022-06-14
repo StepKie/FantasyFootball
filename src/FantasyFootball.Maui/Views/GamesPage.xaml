@@ -9,10 +9,9 @@
   Title="{Binding Title}"
   x:DataType="vm:GamesViewModel">
   <ContentPage.Content>
-    <StackLayout Margin="20,20,20,20">
+    <StackLayout>
       <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding Stages}" SelectedItem="{Binding SelectedStage, Mode=TwoWay}" />
       <Picker
-        Title="Moo"
         HorizontalOptions="FillAndExpand"
         ItemDisplayBinding="{Binding Name}"
         ItemsSource="{Binding Rounds}"
@@ -20,9 +19,7 @@
       <CollectionView
         x:Name="gamesCollection"
         VerticalOptions="FillAndExpand"
-        HorizontalScrollBarVisibility="Always"
         IsGrouped="True"
-        ItemSizingStrategy="MeasureAllItems"
         ItemsSource="{Binding GamesByRound}">
         <CollectionView.ItemsLayout>
           <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />

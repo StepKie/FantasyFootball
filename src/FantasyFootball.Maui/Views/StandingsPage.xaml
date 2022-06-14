@@ -9,7 +9,7 @@
   Title="{Binding Title}"
   x:DataType="vm:StandingsViewModel">
   <ContentPage.Content>
-    <StackLayout Margin="10">
+    <StackLayout>
       <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="20,20,170,30,40,30,30,30">
         <Label
           Grid.Column="0"

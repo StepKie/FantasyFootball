@@ -51,6 +51,11 @@
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Images\eu.png" />
+    <None Remove="Resources\Images\world.png" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0-preview3" />

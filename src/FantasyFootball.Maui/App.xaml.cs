@@ -19,7 +19,6 @@ public partial class App : Application
 		MainPage = new AppShell();
 
 		Routing.RegisterRoute(nameof(CompetitionsPage), typeof(CompetitionsPage));
-		Routing.RegisterRoute(nameof(CompetitionDetailPage), typeof(CompetitionDetailPage));
 		Routing.RegisterRoute(nameof(GamesPage), typeof(GamesPage));
 		Routing.RegisterRoute(nameof(StandingsPage), typeof(StandingsPage));
 		Routing.RegisterRoute(nameof(CompetitionStatisticsPage), typeof(CompetitionStatisticsPage));

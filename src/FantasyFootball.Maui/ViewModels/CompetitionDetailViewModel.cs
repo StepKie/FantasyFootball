@@ -59,6 +59,4 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 			Log.Error($"Failed to load competition: {e}");
 		}
 	}
-
-	public IEnumerable<StandingsViewModel> StandingsByGroup => Competition.Groups.Select(group => new StandingsViewModel(group.Name, group.Games));
 }

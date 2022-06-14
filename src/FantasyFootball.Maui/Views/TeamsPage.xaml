@@ -12,15 +12,16 @@
   <ContentPage.Behaviors>
     <!--  xct:EventToCommandBehavior Command="{Binding LoadTeamsCommand}" EventName="Appearing" /  -->
   </ContentPage.Behaviors>
-  <StackLayout Padding="20,20,0,0">
-    <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding Confederations}" SelectedItem="{Binding SelectedConfederation}" />
-    <CollectionView ItemsSource="{Binding Teams}" SelectionMode="None">
+  <StackLayout>
+    <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+    <Picker
+      Margin="0,0,0,20"
+      HorizontalOptions="FillAndExpand"
+      ItemsSource="{Binding Confederations}"
+      SelectedItem="{Binding SelectedConfederation}" />
+    <CollectionView VerticalOptions="FillAndExpand" ItemsSource="{Binding Teams}" SelectionMode="None">
       <CollectionView.Header>
-        <Grid
-          Grid.Row="0"
-          RowDefinitions="30"
-          ColumnDefinitions="30,60,180,60"
-          BackgroundColor="White">
+        <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="30,60,180,60">
           <Label Grid.Column="2" FontAttributes="Bold" Text="{xct:Translate Team}" />
           <Label Grid.Column="3" Text="Rating" />
         </Grid>
@@ -28,36 +29,27 @@
       <CollectionView.ItemTemplate>
         <DataTemplate x:DataType="vm:TeamViewModel">
           <StackLayout>
-            <Grid
-              Grid.Row="0"
-              RowDefinitions="40"
-              ColumnDefinitions="30,60,180,60"
-              BackgroundColor="White">
-              <Label Grid.Column="0" Text="{Binding Rank}" VerticalOptions="Center" />
+            <Grid Grid.Row="0" RowDefinitions="40" ColumnDefinitions="30,60,180,60">
+              <Label Grid.Column="0" VerticalOptions="Center" Text="{Binding Rank}" />
               <Image WidthRequest="30" HeightRequest="30" Source="{Binding Team.Logo}" />
-              <Label Grid.Column="2" Text="{Binding Team.Name}" VerticalOptions="Center" />
+              <Label Grid.Column="2" VerticalOptions="Center" Text="{Binding Team.Name}" />
               <Entry
                 Grid.Column="3"
+                VerticalOptions="Center"
                 HorizontalTextAlignment="Center"
                 IsEnabled="True"
                 Keyboard="Numeric"
-                Text="{Binding EloString}"
-                VerticalOptions="Center">
+                Text="{Binding EloString}">
                 <Entry.Behaviors>
                   <xct:EventToCommandBehavior Command="{Binding SaveEloChangeCommand}" EventName="Unfocused" />
                 </Entry.Behaviors>
               </Entry>
             </Grid>
             <!--  Separator  -->
-            <BoxView HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+            <BoxView HeightRequest="1" VerticalOptions="End" BackgroundColor="LightGray" />
           </StackLayout>
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>
-    <ActivityIndicator
-      IsEnabled="{Binding IsBusy}"
-      IsRunning="{Binding IsBusy}"
-      IsVisible="{Binding IsBusy}"
-      VerticalOptions="CenterAndExpand" />
   </StackLayout>
 </ContentPage>

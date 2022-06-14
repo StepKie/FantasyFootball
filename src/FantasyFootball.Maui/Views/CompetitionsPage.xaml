@@ -9,80 +9,88 @@
   x:Name="BrowseItemsPage"
   Title="{xct:Translate Competitions}"
   x:DataType="vm:CompetitionsViewModel">
-  <StackLayout Padding="10,10,10,10">
-    <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-    <Grid RowDefinitions="40,40,40" ColumnDefinitions="50,*">
-      <Image Grid.Row="0" Grid.Column="0" Source="{Binding CompetitionLogo}" />
-      <Picker
-        Grid.Row="0"
-        Grid.Column="1"
-        HorizontalOptions="FillAndExpand"
-        ItemsSource="{Binding CompetitionTypes}"
-        SelectedItem="{Binding SelectedCompetitionType}" />
-      <Label
-        Grid.Row="1"
-        HorizontalOptions="End"
-        Text="{xct:Translate Year}"
-        VerticalOptions="Center" />
-      <Picker
-        Grid.Row="1"
-        Grid.Column="1"
-        HorizontalOptions="FillAndExpand"
-        ItemsSource="{Binding Years}"
-        SelectedItem="{Binding SelectedYear}" />
-      <Label
-        Grid.Row="2"
-        HorizontalOptions="End"
-        Text="{xct:Translate Teams}"
-        VerticalOptions="Center" />
-      <Picker
-        Grid.Row="2"
-        Grid.Column="1"
-        HorizontalOptions="FillAndExpand"
-        ItemsSource="{Binding ParticipantSelectionTypes}"
-        SelectedItem="{Binding SelectedParticipantMode}" />
-    </Grid>
-    <Button
-      WidthRequest="150"
-      Margin="20"
-      Command="{Binding SimulateCompetitionCommand}"
-      CommandParameter="true"
-      HorizontalOptions="CenterAndExpand"
-      ImageSource="{x:StaticResource PlayIcon}"
-      Text="{xct:Translate Go}" />
-    <!--  History of past competitions  -->
-    <CollectionView ItemsSource="{Binding StoredCompetitionsForSelectedType}" SelectionMode="Single">
-      <CollectionView.ItemTemplate>
-        <DataTemplate x:DataType="model:Competition">
-          <StackLayout>
-            <StackLayout.GestureRecognizers>
-              <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CompetitionsViewModel}}, Path=OpenCompetitionCommand}" CommandParameter="{Binding Id}" />
-            </StackLayout.GestureRecognizers>
-            <StackLayout Padding="10" Orientation="Horizontal">
-              <StackLayout>
+  <Grid>
+    <Image
+      Grid.Row="0"
+      Grid.RowSpan="6"
+      IsOpaque="False"
+      Opacity="0.2"
+      Source="ball" />
+    <StackLayout>
+      <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+      <Grid RowDefinitions="40,40,40" ColumnDefinitions="50,*">
+        <Image Grid.Row="0" Grid.Column="0" Source="{Binding CompetitionLogo}" />
+        <Picker
+          Grid.Row="0"
+          Grid.Column="1"
+          HorizontalOptions="FillAndExpand"
+          ItemsSource="{Binding CompetitionTypes}"
+          SelectedItem="{Binding SelectedCompetitionType}" />
+        <Label
+          Grid.Row="1"
+          HorizontalOptions="End"
+          VerticalOptions="Center"
+          Text="{xct:Translate Year}" />
+        <Picker
+          Grid.Row="1"
+          Grid.Column="1"
+          HorizontalOptions="FillAndExpand"
+          ItemsSource="{Binding Years}"
+          SelectedItem="{Binding SelectedYear}" />
+        <Label
+          Grid.Row="2"
+          HorizontalOptions="End"
+          VerticalOptions="Center"
+          Text="{xct:Translate Teams}" />
+        <Picker
+          Grid.Row="2"
+          Grid.Column="1"
+          HorizontalOptions="FillAndExpand"
+          ItemsSource="{Binding ParticipantSelectionTypes}"
+          SelectedItem="{Binding SelectedParticipantMode}" />
+      </Grid>
+      <Button
+        WidthRequest="150"
+        Margin="20"
+        HorizontalOptions="CenterAndExpand"
+        Command="{Binding SimulateCompetitionCommand}"
+        CommandParameter="true"
+        ImageSource="{x:StaticResource PlayIcon}"
+        Text="{xct:Translate Go}" />
+      <!--  History of past competitions  -->
+      <CollectionView VerticalOptions="FillAndExpand" ItemsSource="{Binding StoredCompetitionsForSelectedType}" SelectionMode="Single">
+        <CollectionView.ItemTemplate>
+          <DataTemplate x:DataType="model:Competition">
+            <StackLayout>
+              <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CompetitionsViewModel}}, Path=OpenCompetitionCommand}" CommandParameter="{Binding Id}" />
+              </StackLayout.GestureRecognizers>
+              <StackLayout Padding="10" Orientation="Horizontal">
+                <StackLayout>
+                  <Label
+                    VerticalOptions="Center"
+                    FontSize="16"
+                    LineBreakMode="NoWrap"
+                    Text="{Binding Name}" />
+                  <Label
+                    VerticalOptions="Center"
+                    FontSize="12"
+                    LineBreakMode="NoWrap"
+                    Text="{Binding Start, StringFormat='{0:t}'}" />
+                </StackLayout>
+                <Image WidthRequest="30" HeightRequest="30" Source="{Binding Winner.Logo}" />
                 <Label
+                  VerticalOptions="Center"
                   FontSize="16"
                   LineBreakMode="NoWrap"
-                  Text="{Binding Name}"
-                  VerticalOptions="Center" />
-                <Label
-                  FontSize="12"
-                  LineBreakMode="NoWrap"
-                  Text="{Binding Start, StringFormat='{0:t}'}"
-                  VerticalOptions="Center" />
+                  Text="{Binding Winner, TargetNullValue='Not Finished'}" />
               </StackLayout>
-              <Image WidthRequest="30" HeightRequest="30" Source="{Binding Winner.Logo}" />
-              <Label
-                FontSize="16"
-                LineBreakMode="NoWrap"
-                Text="{Binding Winner, TargetNullValue='Not Finished'}"
-                VerticalOptions="Center" />
+              <!--  Separator  -->
+              <BoxView HeightRequest="1" VerticalOptions="End" BackgroundColor="LightGray" />
             </StackLayout>
-            <!--  Separator  -->
-            <BoxView HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
-          </StackLayout>
-        </DataTemplate>
-      </CollectionView.ItemTemplate>
-    </CollectionView>
-  </StackLayout>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+    </StackLayout>
+  </Grid>
 </ContentPage>
