@@ -7,4 +7,6 @@ public partial class TeamsPage : ContentPage
 		InitializeComponent();
 		BindingContext = viewmodel;
 	}
+
+	protected override void OnNavigatedTo(NavigatedToEventArgs args) => (BindingContext as TeamsViewModel)?.LoadTeams();
 }

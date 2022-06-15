@@ -3,7 +3,7 @@
 [QueryProperty(nameof(SelectedCompetitionType), nameof(SelectedCompetitionType))]
 public partial class CompetitionsViewModel : GeneralViewModel
 {
-	public ObservableCollection<Competition> StoredCompetitionsForSelectedType => new(DataStore.GetAll<Competition>().Where(c => c.Type == SelectedCompetitionType));
+	public List<Competition> StoredCompetitionsForSelectedType { get; private set; } = new();
 
 	public IList<CompetitionType> CompetitionTypes { get; } = Enum.GetValues(typeof(CompetitionType)).Cast<CompetitionType>().ToList();
 
@@ -19,13 +19,10 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	[ObservableProperty]
 	TeamSelectionType _selectedParticipantMode = TeamSelectionType.HISTORIC;
 
-	public string SelectedCompetitionWinner => Res.InProgress;
 	[ObservableProperty]
 	int _selectedYear = 2020;
 
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
-
-	CompetitionFactory _competitionFactory;
 
 	[ICommand]
 	async Task OpenCompetition(int competitionId)
@@ -39,7 +36,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	async Task OpenNewCompetition()
 	{
 		IsBusy = true;
-		var competition = await CompetitionFactories.CreateEm(DataStore, SelectedParticipantMode);
+		var competition = await CompetitionFactories.Create(DataStore, SelectedCompetitionType, SelectedParticipantMode);
 		DataStore.Save(competition);
 		Log.Debug("Competition created");
 		ServiceHelper.GetService<StandingsViewModel>()!.LoadCompetition(competition);
@@ -47,6 +44,19 @@ public partial class CompetitionsViewModel : GeneralViewModel
 		IsBusy = false;
 	}
 
+	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
+	{
+		_ = ReloadCompetitions();
+	}
+
 	/// <summary> Enable reloading from OnNavigatedTo (when db is reset from another page) </summary>
-	public void ReloadCompetitions() => OnPropertyChanged(nameof(StoredCompetitionsForSelectedType));
+	public async Task ReloadCompetitions()
+	{
+		IsBusy = true;
+		var results = await DataStore.GetAllAsync<Competition>();
+		StoredCompetitionsForSelectedType = new(results.Where(c => c.Type == SelectedCompetitionType));
+		IsBusy = false;
+		OnPropertyChanged(nameof(StoredCompetitionsForSelectedType));
+
+	}
 }

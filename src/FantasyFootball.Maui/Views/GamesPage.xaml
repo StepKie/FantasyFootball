@@ -39,34 +39,42 @@
           </DataTemplate>
         </CollectionView.GroupHeaderTemplate>
       </CollectionView>
-      <StackLayout Orientation="Horizontal">
-        <ImageButton
-          WidthRequest="40"
-          HeightRequest="40"
-          HorizontalOptions="CenterAndExpand"
-          Command="{Binding SimulateGameCommand}"
-          IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-          IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-          Source="{x:StaticResource PlayIcon}" />
-        <ImageButton
-          WidthRequest="40"
-          HeightRequest="40"
-          HorizontalOptions="CenterAndExpand"
-          BackgroundColor="Transparent"
-          Command="{Binding SimulateCurrentStageCommand}"
-          IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-          IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-          Source="{x:StaticResource SkipNextIcon}" />
-        <ImageButton
-          WidthRequest="40"
-          HeightRequest="40"
-          HorizontalOptions="CenterAndExpand"
-          BackgroundColor="Transparent"
-          Command="{Binding SimulateAgainCommand}"
-          IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-          IsVisible="{Binding Competition.IsFinished}"
-          Source="{x:StaticResource ReplayIcon}" />
-      </StackLayout>
+      <Border
+        Margin="0,10,0,0"
+        Padding="10"
+        HorizontalOptions="Center"
+        Stroke="LightGrey"
+        StrokeShape="RoundRectangle 30,30,30,30"
+        StrokeThickness="2">
+        <StackLayout Orientation="Horizontal">
+          <ImageButton
+            WidthRequest="40"
+            HeightRequest="40"
+            HorizontalOptions="CenterAndExpand"
+            Command="{Binding SimulateGameCommand}"
+            IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
+            IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
+            Source="{x:StaticResource PlayIcon}" />
+          <ImageButton
+            WidthRequest="40"
+            HeightRequest="40"
+            HorizontalOptions="CenterAndExpand"
+            BackgroundColor="Transparent"
+            Command="{Binding SimulateCurrentStageCommand}"
+            IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
+            IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
+            Source="{x:StaticResource SkipNextIcon}" />
+          <ImageButton
+            WidthRequest="40"
+            HeightRequest="40"
+            HorizontalOptions="CenterAndExpand"
+            BackgroundColor="Transparent"
+            Command="{Binding SimulateAgainCommand}"
+            IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
+            IsVisible="{Binding Competition.IsFinished}"
+            Source="{x:StaticResource ReplayIcon}" />
+        </StackLayout>
+      </Border>
     </StackLayout>
   </ContentPage.Content>
 </ContentPage>

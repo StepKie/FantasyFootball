@@ -13,13 +13,19 @@
     <!--  xct:EventToCommandBehavior Command="{Binding LoadTeamsCommand}" EventName="Appearing" /  -->
   </ContentPage.Behaviors>
   <StackLayout>
+    <Label Text="{Binding TestLabel1}" />
+    <Label Text="{Binding TestLabel2}" />
     <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
     <Picker
       Margin="0,0,0,20"
       HorizontalOptions="FillAndExpand"
       ItemsSource="{Binding Confederations}"
       SelectedItem="{Binding SelectedConfederation}" />
-    <CollectionView VerticalOptions="FillAndExpand" ItemsSource="{Binding Teams}" SelectionMode="None">
+    <CollectionView
+      VerticalOptions="Start"
+      ItemSizingStrategy="MeasureAllItems"
+      ItemsSource="{Binding Teams}"
+      SelectionMode="None">
       <CollectionView.Header>
         <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="30,60,180,60">
           <Label Grid.Column="2" FontAttributes="Bold" Text="{xct:Translate Team}" />
