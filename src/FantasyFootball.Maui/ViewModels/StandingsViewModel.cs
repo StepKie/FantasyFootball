@@ -25,7 +25,7 @@ public partial class StandingsViewModel : GeneralViewModel
 		Title = $"{competitions.Count()} {SelectedCompetitionType}s";
 		var competitionTypeGameHistory = competitions.SelectMany(c => c.GamesByDate).ToList();
 		Log.Debug($"Set competition type to {Title}, found {competitionTypeGameHistory.Count} relevant games");
-		Records = Standings.CreateFrom(competitionTypeGameHistory).Select(r => new TeamRecordViewModel(r, Colors.White)).ToList();
+		Records = Standings.CreateFrom(competitionTypeGameHistory).Select(r => new TeamRecordViewModel(r, ResourceConstants.DefaultHighlightColor)).ToList();
 		OnPropertyChanged(nameof(Records));
 		OnPropertyChanged(nameof(CompetitionLogo));
 	}

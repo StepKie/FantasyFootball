@@ -1,6 +1,6 @@
 ﻿namespace FantasyFootball.Models;
 
-public abstract class NamedUniqueId : IComparable
+public abstract class NamedUniqueId
 {
 	[PrimaryKey, AutoIncrement]
 	public int Id { get; set; }
@@ -15,6 +15,4 @@ public abstract class NamedUniqueId : IComparable
 	public override bool Equals(object? obj) => GetType() == obj?.GetType() && Id != 0 && Id == (obj as NamedUniqueId)?.Id;
 
 	public override int GetHashCode() => HashCode.Combine(Id, Name, GetType().Name);
-
-	public int CompareTo(object? obj) => Id.CompareTo((obj as NamedUniqueId)?.Id);
 }

@@ -38,6 +38,7 @@ public abstract class CompetitionFactory
 		{
 			Name = CompetitionType.Name().Long + " 2020",
 			ShortName = CompetitionType.Name().Short + " 2020",
+			Type = CompetitionType,
 			SimulationStart = DateTime.Now,
 			Stages = CreateStages(),
 		};

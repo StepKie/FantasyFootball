@@ -17,13 +17,13 @@
       HorizontalOptions="End"
       VerticalOptions="Center"
       Text="{Binding HomeName}" />
-    <Image Grid.Column="1" Source="{Binding Game.HomeTeam.Logo}" />
+    <Image Grid.Column="1" Source="{Binding HomeLogo}" />
     <Label
       Grid.Column="2"
       HorizontalOptions="Center"
       VerticalOptions="Center"
       Text="{Binding Game.Result}" />
-    <Image Grid.Column="3" Source="{Binding Game.AwayTeam.Logo}" />
+    <Image Grid.Column="3" Source="{Binding AwayLogo}" />
     <Label Grid.Column="4" VerticalOptions="Center" Text="{Binding AwayName}" />
   </Grid>
 </ContentView>

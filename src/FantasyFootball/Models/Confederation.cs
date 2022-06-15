@@ -5,18 +5,20 @@ public class Confederation : NamedUniqueId
 {
 	public static List<Confederation> ALL => new() { UEFA, CAF, CONMEBOL, CONCACAF, OFC, AFC };
 
-	public static readonly Confederation UEFA = new(1, nameof(UEFA), "Europe", 14);
-	public static readonly Confederation CAF = new(2, nameof(CAF), "Africa", 5);
-	public static readonly Confederation CONMEBOL = new(3, nameof(CONMEBOL), "South America", 5);
-	public static readonly Confederation CONCACAF = new(4, nameof(CONCACAF), "North and Middle America", 3);
-	public static readonly Confederation OFC = new(5, nameof(OFC), "Australia and Oceania", 1);
-	public static readonly Confederation AFC = new(6, nameof(AFC), "Asia", 4);
+	public static readonly Confederation UEFA = new(nameof(UEFA), "Europe", 14);
+	public static readonly Confederation CAF = new(nameof(CAF), "Africa", 5);
+	public static readonly Confederation CONMEBOL = new(nameof(CONMEBOL), "South America", 5);
+	public static readonly Confederation CONCACAF = new(nameof(CONCACAF), "North and Middle America", 3);
+	public static readonly Confederation OFC = new(nameof(OFC), "Australia and Oceania", 1);
+	public static readonly Confederation AFC = new(nameof(AFC), "Asia", 4);
 
-	public static readonly Confederation UNKNOWN = new(7, "?", "?", 0);
+	public static readonly Confederation UNKNOWN = new("?", "?", 0);
 
-	public Confederation(int id, string name, string continent, int noOfWmPartipants)
+	public Confederation() { /* Ignore: public parameterless constructor for SQLite, DO NOT USE */ }
+
+	/// <summary> Do not set Id manually, rather let SQLite assign the id! </summary>
+	public Confederation(string name, string continent, int noOfWmPartipants)
 	{
-		Id = id;
 		Name = name;
 		Continent = continent;
 		NoOfWmParticipants = noOfWmPartipants;

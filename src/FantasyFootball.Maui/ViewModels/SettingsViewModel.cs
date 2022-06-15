@@ -43,16 +43,9 @@ public partial class SettingsViewModel : GeneralViewModel
 	[ICommand]
 	async void ResetDatabase()
 	{
+		// TODO What is up with this ActivityIndicator?
 		IsBusy = true;
-		IsBusyA = true;
-		IsBusyB = true;
-		OnPropertyChanged(nameof(IsBusy));
-		OnPropertyChanged(nameof(IsBusyA));
-		OnPropertyChanged(nameof(IsBusyB));
 		await Task.Run(() => _dataService.Reset());
-		IsBusyA = false;
-		IsBusyB = false;
 		IsBusy = false;
-		OnPropertyChanged(nameof(IsBusyB));
 	}
 }

@@ -7,12 +7,14 @@
 public static class CompetitionFactories
 {
 	public static readonly int[] HISTORIC_WM_YEARS = new[] { 1998, 2002, 2006, 2010, 2014, 2018, 2022 };
-	public async static Task<Competition> CreateEm(IRepository repo, TeamSelectionType selection)
+
+	public async static Task<Competition> Create(IRepository repo, CompetitionType selectedCompetitionType, TeamSelectionType selection)
 	{
-		CompetitionFactory factory = selection switch
+		CompetitionFactory factory = (selectedCompetitionType, selection) switch
 		{
-			TeamSelectionType.HISTORIC => new Em2020CompetitionFactory(repo),
-			TeamSelectionType.WITH_DRAWING => new RandomEmCompetitionFactory(repo),
+			(CompetitionType.EM, TeamSelectionType.HISTORIC) => new Em2020CompetitionFactory(repo),
+			(CompetitionType.EM, TeamSelectionType.WITH_DRAWING) => new RandomEmCompetitionFactory(repo),
+			(CompetitionType.WM, TeamSelectionType.HISTORIC) => new Wm2021CompetitionFactory(repo),
 			_ => throw new ArgumentException($"No CompetitionFactory found for {selection}"),
 		};
 
