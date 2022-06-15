@@ -295,6 +295,15 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loser.
+        /// </summary>
+        public static string Loser {
+            get {
+                return ResourceManager.GetString("Loser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manual Selection.
         /// </summary>
         public static string ManualSelection {
@@ -484,11 +493,29 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Third Place Match.
+        /// </summary>
+        public static string ThirdPlaceMatch {
+            get {
+                return ResourceManager.GetString("ThirdPlaceMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WC.
         /// </summary>
         public static string WC {
             get {
                 return ResourceManager.GetString("WC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Winner.
+        /// </summary>
+        public static string Winner {
+            get {
+                return ResourceManager.GetString("Winner", resourceCulture);
             }
         }
         

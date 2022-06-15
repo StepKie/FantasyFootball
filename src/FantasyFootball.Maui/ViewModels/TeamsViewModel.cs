@@ -15,7 +15,7 @@ public partial class TeamsViewModel : GeneralViewModel
 
 	public ObservableCollection<TeamViewModel> Teams => new(AllTeams.Where(tvm => _selectedConfederation == Res.All || tvm.Team.Country.Confederation.Name == SelectedConfederation));
 
-	public IList<string> Confederations { get; } = Confederation.All.Select(c => c.Name).Prepend(Res.All).ToList();
+	public IList<string> Confederations { get; } = Confederation.ALL.Select(c => c.Name).Prepend(Res.All).ToList();
 
 	public TeamsViewModel()
 	{

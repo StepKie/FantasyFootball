@@ -18,7 +18,7 @@ public class CsvDataService : IDataService
 	}
 	public IList<Country> CreateCountries()
 	{
-		Confederation.All.ForEach(c => _repo.Save(c));
+		Confederation.ALL.ForEach(c => _repo.Save(c));
 
 		using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(teamsFile);
 		_ = stream ?? throw new FileNotFoundException($"{teamsFile} not found in embedded resource");
