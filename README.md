@@ -10,8 +10,10 @@ In a first iteration, this should work for hardcoded World and European Champion
 	- Add Replay Button (10x)
 	- Remove unused competitions
 	- Rename CompetitionName to integrate Id when multiple Competitions of the same type
-- CompetitionDetailPage
-	- Add Delete Button
+	
+- CompetitionDetailViewModel
+	- Singleton creates problems when sharing between StatisticsPage and GroupStandings
+	- Also CompetitionsPage really wants CompetitionViewModels, currently certain properties needed for display only are in the model (Competition)
 
 - Add: CompetitionSetupPage
 	- With Drawing, Manual Selection go to a new page

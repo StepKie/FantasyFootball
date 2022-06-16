@@ -6,7 +6,8 @@
 /// </summary>
 public static class CompetitionFactories
 {
-	public static readonly int[] HISTORIC_WM_YEARS = new[] { 1998, 2002, 2006, 2010, 2014, 2018, 2022 };
+	public static readonly int[] HISTORIC_WM_YEARS = new[] { 2018, 2022 };
+	public static readonly int[] HISTORIC_EM_YEARS = new[] { 2016, 2020 };
 
 	public static async Task<Competition> Create(IRepository repo, CompetitionType selectedCompetitionType, TeamSelectionType selection)
 	{
@@ -19,5 +20,15 @@ public static class CompetitionFactories
 		};
 
 		return await factory.Create();
+	}
+
+	public static IEnumerable<int> AvailableYears(this CompetitionType type)
+	{
+		return type switch
+		{
+			CompetitionType.EM => HISTORIC_EM_YEARS,
+			CompetitionType.WM => HISTORIC_WM_YEARS,
+			_ => Enumerable.Empty<int>(),
+		};
 	}
 }

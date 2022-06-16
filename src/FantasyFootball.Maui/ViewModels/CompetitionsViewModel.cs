@@ -7,20 +7,22 @@ public partial class CompetitionsViewModel : GeneralViewModel
 
 	// TODO Support remaining types
 	public IList<CompetitionType> CompetitionTypes { get; } = new[] { CompetitionType.WM, CompetitionType.EM };
-	// TODO Has no influence yet - remove or use
-	public IList<int> Years { get; } = new[] { 2020, 2016 };
+
+	public IList<int> Years => SelectedCompetitionType.AvailableYears().ToList();
 	public IList<TeamSelectionType> ParticipantSelectionTypes { get; } = Enum.GetValues(typeof(TeamSelectionType)).Cast<TeamSelectionType>().ToList();
 
 	[ObservableProperty]
 	[AlsoNotifyChangeFor(nameof(StoredCompetitionsForSelectedType))]
 	[AlsoNotifyChangeFor(nameof(CompetitionLogo))]
+	[AlsoNotifyChangeFor(nameof(Years))]
+	[AlsoNotifyChangeFor(nameof(SelectedYear))]
 	CompetitionType _selectedCompetitionType = CompetitionType.EM;
 
 	[ObservableProperty]
 	TeamSelectionType _selectedParticipantMode = TeamSelectionType.HISTORIC;
 
 	[ObservableProperty]
-	int _selectedYear = 2020;
+	int _selectedYear;
 
 	[ObservableProperty]
 	int _defaultAmountOfBatchSimulations = 5;
