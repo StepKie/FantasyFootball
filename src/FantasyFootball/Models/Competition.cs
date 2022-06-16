@@ -16,13 +16,16 @@ public class Competition : NamedUniqueId
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
 	public virtual List<Stage> Stages { get; set; } = new();
 
-	[Ignore] public Stage? CurrentStage => Stages.FirstOrDefault(s => !s.IsFinished);
-	[Ignore] public bool IsFinished => CurrentStage is null;
 	[Ignore] public IList<Group> Groups => Stages.SelectMany(stage => stage.Groups).ToList();
+	[Ignore] public List<Team> Participants => Groups.SelectMany(group => group.Teams).ToList();
 	[Ignore] public IList<Round> Rounds => Stages.SelectMany(stage => stage.Rounds).ToList();
 	[Ignore] public IList<Game> GamesByDate => Rounds.SelectMany(round => round.Games).OrderBy(g => g.PlayedOn).ToList();
 	[Ignore] public Game? LastGame => GamesByDate.LastOrDefault(g => g.IsFinished);
+
+	[Ignore] public Stage? CurrentStage => Stages.FirstOrDefault(s => !s.IsFinished);
 	[Ignore] public Game? CurrentGame => GamesByDate.FirstOrDefault(g => !g.IsFinished);
-	[Ignore] public List<Team> Participants => Groups.SelectMany(group => group.Teams).ToList();
+
+	[Ignore] public bool IsFinished => CurrentStage is null;
 	[Ignore] public Team? Winner => IsFinished ? LastGame?.Winner : null;
+	[Ignore] public string CurrentStatus => IsFinished ? Winner!.Name : $"{CurrentGame!.Round.Stage.Name}, {CurrentGame!.Round.Name}";
 }

@@ -13,8 +13,6 @@
     <!--  xct:EventToCommandBehavior Command="{Binding LoadTeamsCommand}" EventName="Appearing" /  -->
   </ContentPage.Behaviors>
   <StackLayout>
-    <Label Text="{Binding TestLabel1}" />
-    <Label Text="{Binding TestLabel2}" />
     <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
     <Picker
       Margin="0,0,0,20"
@@ -22,9 +20,9 @@
       ItemsSource="{Binding Confederations}"
       SelectedItem="{Binding SelectedConfederation}" />
     <CollectionView
-      VerticalOptions="Start"
+      VerticalOptions="FillAndExpand"
       ItemSizingStrategy="MeasureAllItems"
-      ItemsSource="{Binding Teams}"
+      ItemsSource="{Binding TeamsInSelectedConfederation}"
       SelectionMode="None">
       <CollectionView.Header>
         <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="30,60,180,60">
@@ -35,9 +33,9 @@
       <CollectionView.ItemTemplate>
         <DataTemplate x:DataType="vm:TeamViewModel">
           <StackLayout>
-            <Grid Grid.Row="0" RowDefinitions="40" ColumnDefinitions="30,60,180,60">
+            <Grid RowDefinitions="40" ColumnDefinitions="30,30,180,60" ColumnSpacing="10">
               <Label Grid.Column="0" VerticalOptions="Center" Text="{Binding Rank}" />
-              <Image WidthRequest="30" HeightRequest="30" Source="{Binding Team.Logo}" />
+              <Image Grid.Column="1" Source="{Binding Team.Logo, FallbackValue='question_mark'}" />
               <Label Grid.Column="2" VerticalOptions="Center" Text="{Binding Team.Name}" />
               <Entry
                 Grid.Column="3"
@@ -52,7 +50,7 @@
               </Entry>
             </Grid>
             <!--  Separator  -->
-            <BoxView HeightRequest="1" VerticalOptions="End" BackgroundColor="LightGray" />
+            <BoxView HeightRequest="1" VerticalOptions="End" Color="LightGray" />
           </StackLayout>
         </DataTemplate>
       </CollectionView.ItemTemplate>

@@ -63,35 +63,33 @@
       SelectionMode="Single">
       <CollectionView.ItemTemplate>
         <DataTemplate x:DataType="model:Competition">
-          <StackLayout>
-            <StackLayout.GestureRecognizers>
+          <VerticalStackLayout>
+            <VerticalStackLayout.GestureRecognizers>
               <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CompetitionsViewModel}}, Path=OpenCompetitionCommand}" CommandParameter="{Binding Id}" />
-            </StackLayout.GestureRecognizers>
-            <StackLayout Padding="10" Orientation="Horizontal">
-              <StackLayout WidthRequest="100">
-                <Label
-                  VerticalOptions="Center"
-                  FontSize="16"
-                  LineBreakMode="NoWrap"
-                  Text="{Binding ShortName}" />
-                <Label
-                  VerticalOptions="Center"
-                  FontSize="12"
-                  LineBreakMode="NoWrap"
-                  Text="{Binding SimulationStart, StringFormat='{0:g}'}" />
+            </VerticalStackLayout.GestureRecognizers>
+            <StackLayout Orientation="Horizontal">
+              <Label Margin="0,0,10,0" VerticalOptions="Center" Text="{Binding Id}" />
+              <StackLayout WidthRequest="100" VerticalOptions="Center">
+                <Label FontSize="16" LineBreakMode="NoWrap" Text="{Binding ShortName}" />
+                <Label FontSize="12" LineBreakMode="NoWrap" Text="{Binding SimulationStart, StringFormat='{0:g}'}" />
               </StackLayout>
-              <StackLayout Padding="10" HorizontalOptions="EndAndExpand" Orientation="Horizontal">
+              <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal">
                 <Image
                   WidthRequest="30"
                   HeightRequest="30"
                   Margin="0,0,10,0"
-                  Source="{Binding Winner.Logo}" />
-                <Label VerticalOptions="Center" FontSize="16" Text="{Binding Winner, TargetNullValue='Not Finished'}" />
+                  VerticalOptions="Center"
+                  Source="{Binding Winner.Logo, FallbackValue='question_mark'}" />
+                <Label WidthRequest="100" VerticalOptions="Center" Text="{Binding CurrentStatus}" />
               </StackLayout>
             </StackLayout>
             <!--  Separator  -->
-            <BoxView HeightRequest="1" VerticalOptions="End" BackgroundColor="LightGray" />
-          </StackLayout>
+            <BoxView
+              HeightRequest="1"
+              Margin="0,10,0,10"
+              VerticalOptions="End"
+              Color="LightGray" />
+          </VerticalStackLayout>
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>
