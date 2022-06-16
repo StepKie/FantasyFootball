@@ -7,7 +7,7 @@
 public abstract partial class GeneralViewModel : ObservableObject
 {
 	// Different dependency resolution than dependency injection
-	public IRepository DataStore => ServiceHelper.GetService<IRepository>()!;
+	public IRepository Repo { get; } = ServiceHelper.GetService<IRepository>()!;
 
 	[ObservableProperty]
 	bool _isBusy;

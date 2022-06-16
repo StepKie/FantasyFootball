@@ -71,6 +71,7 @@ public class CompetitionSimulator
 		{
 			Repo.Save(Competition);
 		}
+
 		MessagingCenter.Send(game, MessageKeys.GameFinished);
 	}
 

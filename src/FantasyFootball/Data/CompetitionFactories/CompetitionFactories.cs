@@ -1,4 +1,4 @@
-﻿namespace FantasyFootball.Data;
+﻿namespace FantasyFootball.Data.CompetitionFactories;
 
 /// <summary> TODO In general, check how to best create Competitions for different scenarios. abstract strategy pattern seems not the most stable.
 /// What about ITeamSelector, and what about GroupCreator/StageCreator.
@@ -8,7 +8,7 @@ public static class CompetitionFactories
 {
 	public static readonly int[] HISTORIC_WM_YEARS = new[] { 1998, 2002, 2006, 2010, 2014, 2018, 2022 };
 
-	public async static Task<Competition> Create(IRepository repo, CompetitionType selectedCompetitionType, TeamSelectionType selection)
+	public static async Task<Competition> Create(IRepository repo, CompetitionType selectedCompetitionType, TeamSelectionType selection)
 	{
 		CompetitionFactory factory = (selectedCompetitionType, selection) switch
 		{

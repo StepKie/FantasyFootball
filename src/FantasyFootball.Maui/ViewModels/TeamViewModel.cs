@@ -26,7 +26,7 @@ public partial class TeamViewModel : GeneralViewModel
 			return;
 		}
 		Team.Elo = elo;
-		DataStore.Save(Team);
+		Repo.Save(Team);
 		MessagingCenter.Send(Team, MessageKeys.RatingChanged);
 	}
 }

@@ -21,7 +21,7 @@ public partial class StandingsViewModel : GeneralViewModel
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
 	{
-		var competitions = DataStore.GetAll<Competition>().Where(c => c.Type == value);
+		var competitions = Repo.GetAll<Competition>().Where(c => c.Type == value);
 		Title = $"{competitions.Count()} {SelectedCompetitionType}s";
 		var competitionTypeGameHistory = competitions.SelectMany(c => c.GamesByDate).ToList();
 		Log.Debug($"Set competition type to {Title}, found {competitionTypeGameHistory.Count} relevant games");

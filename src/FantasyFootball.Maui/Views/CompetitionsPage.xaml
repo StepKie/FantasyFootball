@@ -48,16 +48,21 @@
         ItemsSource="{Binding ParticipantSelectionTypes}"
         SelectedItem="{Binding SelectedParticipantMode}" />
     </Grid>
-    <Button
-      WidthRequest="150"
-      Margin="20"
-      HorizontalOptions="CenterAndExpand"
-      Command="{Binding OpenNewCompetitionCommand}"
-      ImageSource="{x:StaticResource PlayIcon}"
-      Text="{xct:Translate Go}" />
+    <StackLayout Margin="10" HorizontalOptions="Center" Orientation="Horizontal">
+      <Button
+        WidthRequest="100"
+        Command="{Binding OpenNewCompetitionCommand}"
+        ImageSource="{x:StaticResource PlayIcon}"
+        Text="{xct:Translate Go}" />
+      <Button
+        WidthRequest="50"
+        Margin="10,0,0,0"
+        Command="{Binding BatchSimulateCommand}"
+        ImageSource="{x:StaticResource SimulateFiveIcon}" />
+    </StackLayout>
     <!--  History of past competitions  -->
     <CollectionView
-      VerticalOptions="Start"
+      VerticalOptions="FillAndExpand"
       ItemSizingStrategy="MeasureAllItems"
       ItemsSource="{Binding StoredCompetitionsForSelectedType}"
       SelectionMode="Single">

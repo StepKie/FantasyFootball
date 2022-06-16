@@ -1,4 +1,5 @@
 using FantasyFootball.Data;
+using FantasyFootball.Data.CompetitionFactories;
 using FantasyFootball.Models;
 
 namespace FantasyFootball.Tests;

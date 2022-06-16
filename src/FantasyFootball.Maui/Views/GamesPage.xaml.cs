@@ -13,11 +13,11 @@ public partial class GamesPage : ContentPage
 	void ScrollToGame(Game game)
 	{
 		GamesViewModel gvm = (BindingContext as GamesViewModel)!;
-		var gamesByRound = gvm.GamesByRound;
-		_ = gamesByRound ?? throw new MemberAccessException("Did not find gamesByRound as gamesCollection.ItemSource");
-		var round = game.Round;
-		var roundIndex = gvm.Competition.Rounds.IndexOf(round);
-		var roundGroup = gamesByRound[roundIndex];
+
+		var roundIndex = gvm.Competition.Rounds.IndexOf(game.Round);
+		// Nothing to scroll if we get notified from a background thread for another competition
+		if (roundIndex == -1) { return; }
+		var roundGroup = gvm.GamesByRound[roundIndex];
 		var gameIndex = roundGroup.FindIndex(gvm => gvm.Game.Id == game.Id);
 		var target = roundGroup[gameIndex];
 

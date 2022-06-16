@@ -5,8 +5,8 @@ public partial class CompetitionsViewModel : GeneralViewModel
 {
 	public List<Competition> StoredCompetitionsForSelectedType { get; private set; } = new();
 
-	public IList<CompetitionType> CompetitionTypes { get; } = Enum.GetValues(typeof(CompetitionType)).Cast<CompetitionType>().ToList();
-
+	// TODO Support remaining types
+	public IList<CompetitionType> CompetitionTypes { get; } = new[] { CompetitionType.WM, CompetitionType.EM };
 	// TODO Has no influence yet - remove or use
 	public IList<int> Years { get; } = new[] { 2020, 2016 };
 	public IList<TeamSelectionType> ParticipantSelectionTypes { get; } = Enum.GetValues(typeof(TeamSelectionType)).Cast<TeamSelectionType>().ToList();
@@ -22,6 +22,9 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	[ObservableProperty]
 	int _selectedYear = 2020;
 
+	[ObservableProperty]
+	int _defaultAmountOfBatchSimulations = 5;
+
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
 
 	[ICommand]
@@ -36,12 +39,12 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	async Task OpenNewCompetition()
 	{
 		IsBusy = true;
-		var competition = await CompetitionFactories.Create(DataStore, SelectedCompetitionType, SelectedParticipantMode);
-		DataStore.Save(competition);
+		var competition = await CompetitionFactories.Create(Repo, SelectedCompetitionType, SelectedParticipantMode);
+		Repo.Save(competition);
 		Log.Debug("Competition created");
 		ServiceHelper.GetService<StandingsViewModel>()!.LoadCompetition(competition);
-		await OpenCompetition(competition.Id);
 		IsBusy = false;
+		await OpenCompetition(competition.Id);
 	}
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
@@ -53,10 +56,26 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	public async Task ReloadCompetitions()
 	{
 		IsBusy = true;
-		var results = await DataStore.GetAllAsync<Competition>();
+		var results = await Repo.GetAllAsync<Competition>().ConfigureAwait(false);
 		StoredCompetitionsForSelectedType = new(results.Where(c => c.Type == SelectedCompetitionType));
 		IsBusy = false;
 		OnPropertyChanged(nameof(StoredCompetitionsForSelectedType));
 
+	}
+
+	[ICommand]
+	async Task BatchSimulate()
+	{
+		for (int i = 0; i < DefaultAmountOfBatchSimulations; i++)
+		{
+			IsBusy = true;
+			var competition = await CompetitionFactories.Create(Repo, SelectedCompetitionType, SelectedParticipantMode);
+			Repo.Save(competition);
+			var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 0);
+			await simulator.Simulate().ConfigureAwait(false);
+			IsBusy = false;
+			await ReloadCompetitions().ConfigureAwait(false);
+			Log.Debug($"Simulation {i} of {DefaultAmountOfBatchSimulations} complete.");
+		}
 	}
 }

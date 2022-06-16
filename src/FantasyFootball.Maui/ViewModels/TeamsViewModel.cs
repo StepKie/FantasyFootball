@@ -26,7 +26,7 @@ public partial class TeamsViewModel : GeneralViewModel
 	public async void LoadTeams()
 	{
 		IsBusy = true;
-		var teamsDb = await DataStore.GetAllAsync<Team>();
+		var teamsDb = await Repo.GetAllAsync<Team>();
 		_allTeams = new(teamsDb.OrderByDescending(t => t.Elo).Select((t, rank) => new TeamViewModel(rank + 1, t)));
 		IsBusy = false;
 		UpdateSelectedTeams();

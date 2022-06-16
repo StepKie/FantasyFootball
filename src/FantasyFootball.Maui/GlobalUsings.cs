@@ -10,6 +10,7 @@ global using Serilog;
 
 global using Res = FantasyFootball.Resources.AppResources;
 global using FantasyFootball.Data;
+global using FantasyFootball.Data.CompetitionFactories;
 global using FantasyFootball.Helpers;
 global using FantasyFootball.Models;
 global using FantasyFootball.Repositories;

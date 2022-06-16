@@ -8,6 +8,9 @@
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
   Title="{Binding Title}"
   x:DataType="vm:GamesViewModel">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Command="{Binding DeleteCompetitionCommand}" IconImageSource="{StaticResource DeleteIcon}" />
+  </ContentPage.ToolbarItems>
   <ContentPage.Content>
     <StackLayout>
       <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding Stages}" SelectedItem="{Binding SelectedStage, Mode=TwoWay}" />

@@ -1,4 +1,4 @@
-﻿namespace FantasyFootball.Data;
+﻿namespace FantasyFootball.Data.CompetitionFactories;
 
 public abstract class DefaultTournamentFactory : CompetitionFactory
 {

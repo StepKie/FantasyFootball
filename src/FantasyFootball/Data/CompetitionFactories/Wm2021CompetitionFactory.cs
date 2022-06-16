@@ -1,4 +1,4 @@
-﻿namespace FantasyFootball.Data;
+﻿namespace FantasyFootball.Data.CompetitionFactories;
 
 public class Wm2021CompetitionFactory : CompetitionFactory
 {

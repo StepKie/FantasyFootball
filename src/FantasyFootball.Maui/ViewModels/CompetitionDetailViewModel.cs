@@ -43,7 +43,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 	{
 		try
 		{
-			var loadedCompetitionFromDbById = DataStore.Get<Competition>(CompetitionId);
+			var loadedCompetitionFromDbById = Repo.Get<Competition>(CompetitionId);
 			if (loadedCompetitionFromDbById is null)
 			{
 				Log.Error($"Unable to find {CompetitionId} in db");
@@ -51,12 +51,19 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 			}
 			Competition = loadedCompetitionFromDbById;
 			GamesByRound = new(Competition.Rounds.Select(r => new RoundGroup(r.Name, r.Games.OrderBy(g => g.PlayedOn).Select(g => new GameViewModel(g)))));
-			Simulator = new CompetitionSimulator(Competition, DataStore);
+			Simulator = new CompetitionSimulator(Competition, Repo);
 			Title = $"{Competition.ShortName}-{Competition.Id}";
 		}
 		catch (Exception e)
 		{
 			Log.Error($"Failed to load competition: {e}");
 		}
+	}
+
+	[ICommand]
+	async Task DeleteCompetition()
+	{
+		Repo.Delete(Competition);
+		await Shell.Current.GoToAsync(nameof(CompetitionsPage));
 	}
 }

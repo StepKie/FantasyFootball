@@ -64,6 +64,11 @@ public class Repository : IRepository
 		}
 	}
 
+	public void Delete<T>(T item) where T : NamedUniqueId, new()
+	{
+		_dbConnection.Delete(item, recursive: true);
+	}
+
 	protected virtual void Dispose(bool disposing)
 	{
 		if (!_isDisposed)
