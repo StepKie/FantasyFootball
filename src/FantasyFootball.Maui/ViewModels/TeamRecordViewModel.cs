@@ -8,10 +8,10 @@ public partial class TeamRecordViewModel : GeneralViewModel
 
 	public Color BgColor { get; init; }
 
-	public TeamRecordViewModel(TeamRecord record, Color bgColor, bool isVisible = true)
+	public TeamRecordViewModel(TeamRecord record, Color? bgColor = null, bool isVisible = true)
 	{
 		Record = record;
-		BgColor = bgColor;
+		BgColor = bgColor ?? ResourceConstants.DefaultPageColor;
 		IsVisible = isVisible;
 	}
 }

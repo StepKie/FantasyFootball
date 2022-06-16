@@ -23,6 +23,7 @@ public partial class SettingsViewModel : GeneralViewModel
 		_dataService = dataService;
 		_selectedLanguage = settingsService.LastUsedLanguage;
 
+		Title = Res.Settings;
 		SimulationSpeedMs = _settings.SimulationSpeed.TotalMilliseconds;
 		SupportedLanguages = new List<CultureInfo>() { new("en"), new("de"), };
 	}

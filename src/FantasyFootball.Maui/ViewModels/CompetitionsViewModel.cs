@@ -30,9 +30,10 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
 
 	[ICommand]
-	async Task OpenCompetition(int competitionId)
-	{
-		var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competitionId}";
+	async Task OpenCompetition(Competition competition)
+{
+		ServiceHelper.GetService<StandingsViewModel>()!.LoadCompetition(competition);
+		var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competition.Id}";
 		await Shell.Current.GoToAsync(route);
 	}
 
@@ -44,9 +45,8 @@ public partial class CompetitionsViewModel : GeneralViewModel
 		var competition = await CompetitionFactories.Create(Repo, SelectedCompetitionType, SelectedParticipantMode);
 		Repo.Save(competition);
 		Log.Debug("Competition created");
-		ServiceHelper.GetService<StandingsViewModel>()!.LoadCompetition(competition);
 		IsBusy = false;
-		await OpenCompetition(competition.Id);
+		await OpenCompetition(competition);
 	}
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
