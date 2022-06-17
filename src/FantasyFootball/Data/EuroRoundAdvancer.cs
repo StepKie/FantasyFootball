@@ -1,7 +1,7 @@
 ﻿namespace FantasyFootball.Data;
 
 //TODO Refactor for reuse in other tournaments
-public class RoundAdvancer
+public class EuroRoundAdvancer
 {
 	public static readonly Dictionary<int[], int[]> thirdPlaceCombinations = new()
 	{
@@ -25,7 +25,7 @@ public class RoundAdvancer
 
 	public Competition Competition { get; init; }
 
-	public RoundAdvancer(Competition competition) => Competition = competition;
+	public EuroRoundAdvancer(Competition competition) => Competition = competition;
 
 	public void CheckAdvanceRound(Game game)
 	{

@@ -244,4 +244,11 @@ public class Wm2021CompetitionFactory : CompetitionFactory
 			}
 		};
 	}
+
+	// TODO Replace all the Home/AwayTeamTentatives, pass in this Func
+	// This can eliminate all the manual RoundAdvancer code, just use a backing field in Team.HomeTeam/Team.AwayTeam, and return _homeTeam ?? GetQualifier(...).Invoke() ?? new Team("Placeholder", isVirtual: true)
+	public Func<Competition, Team> GetQualifier(string roundName, int gameNr, string standin)
+	{
+		return c => new Models.Team();
+	}
 }
