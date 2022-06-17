@@ -11,14 +11,13 @@
         <Image WidthRequest="30" HeightRequest="30" Source="{Binding CompetitionLogo}" />
         <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding CompetitionTypes}" SelectedItem="{Binding SelectedCompetitionType}" />
       </StackLayout>
-      <CollectionView  VerticalOptions="FillAndExpand" ItemsSource="{Binding Records}">
+      <CollectionView VerticalOptions="FillAndExpand" ItemsSource="{Binding OverallRecords}" SelectionMode="None">
         <CollectionView.Header>
           <Grid
             Grid.Row="0"
             RowDefinitions="40"
             ColumnDefinitions="20,20,80,30,40,30,30,30,50"
-            ColumnSpacing="5"
-            BackgroundColor="White">
+            ColumnSpacing="5">
             <Label
               Grid.Column="0"
               Grid.ColumnSpan="3"
@@ -42,7 +41,7 @@
           <LinearItemsLayout ItemSpacing="1" Orientation="Vertical" />
         </CollectionView.ItemsLayout>
         <CollectionView.ItemTemplate>
-          <DataTemplate>
+          <DataTemplate x:DataType="vm:TeamRecordViewModel">
             <Grid
               Grid.Row="0"
               RowDefinitions="25"

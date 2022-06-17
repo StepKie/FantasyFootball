@@ -7,9 +7,7 @@ In a first iteration, this should work for hardcoded World and European Champion
 ## TODOS
 
 - CompetitionsPage
-	- Add Replay Button (10x)
-	- Remove unused competitions
-	- Rename CompetitionName to integrate Id when multiple Competitions of the same type
+	- disable BatchSimulation when manual teams are selected
 	
 - CompetitionDetailViewModel
 	- Singleton creates problems when sharing between StatisticsPage and GroupStandings

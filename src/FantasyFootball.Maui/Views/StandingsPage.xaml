@@ -6,7 +6,6 @@
   xmlns:ctrls="clr-namespace:FantasyFootball.Controls"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-  Title="{Binding Title}"
   x:DataType="vm:StandingsViewModel">
   <ContentPage.Content>
     <StackLayout>

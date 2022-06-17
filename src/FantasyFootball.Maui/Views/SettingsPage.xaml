@@ -5,13 +5,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-  Title="{Binding Title}"
   x:DataType="vm:SettingsViewModel">
-  <ContentPage.Resources>
-    <ResourceDictionary>
-      <Color x:Key="Accent">#96d1ff</Color>
-    </ResourceDictionary>
-  </ContentPage.Resources>
   <StackLayout>
     <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
     <Button Margin="10" Command="{Binding ResetDatabaseCommand}" Text="{xct:Translate ResetDatabase}" />

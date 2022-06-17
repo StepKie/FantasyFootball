@@ -6,8 +6,6 @@
   xmlns:model="clr-namespace:FantasyFootball.Data;assembly=FantasyFootball"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-  x:Name="BrowseItemsPage"
-  Title="{Binding Title}"
   x:DataType="vm:TeamsViewModel">
   <ContentPage.Behaviors>
     <!--  xct:EventToCommandBehavior Command="{Binding LoadTeamsCommand}" EventName="Appearing" /  -->

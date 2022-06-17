@@ -23,7 +23,6 @@ public partial class SettingsViewModel : GeneralViewModel
 		_dataService = dataService;
 		_selectedLanguage = settingsService.LastUsedLanguage;
 
-		Title = Res.Settings;
 		SimulationSpeedMs = _settings.SimulationSpeed.TotalMilliseconds;
 		SupportedLanguages = new List<CultureInfo>() { new("en"), new("de"), };
 	}
@@ -44,9 +43,9 @@ public partial class SettingsViewModel : GeneralViewModel
 	[ICommand]
 	async void ResetDatabase()
 	{
-		// TODO What is up with this ActivityIndicator?
+		// TODO The ActivityIndicator will not show on Android: https://github.com/dotnet/maui/issues/8135
 		IsBusy = true;
-		await Task.Run(() => _dataService.Reset());
+		await Task.Run(() => _dataService.Reset()).ConfigureAwait(false);
 		IsBusy = false;
 	}
 }

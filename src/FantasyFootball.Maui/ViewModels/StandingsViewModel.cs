@@ -2,54 +2,52 @@
 
 public partial class StandingsViewModel : GeneralViewModel
 {
-	[ObservableProperty] CompetitionType _selectedCompetitionType;
+	[ObservableProperty]
+	[AlsoNotifyChangeFor(nameof(OverallRecords))]
+	List<Competition> _allCompetitions = new();
+
+	[ObservableProperty]
+	[AlsoNotifyChangeFor(nameof(OverallRecords))]
+	[AlsoNotifyChangeFor(nameof(CompetitionLogo))]
+	CompetitionType _selectedCompetitionType = CompetitionType.EM;
+
 	[ObservableProperty] Competition _selectedCompetition;
 
 	public StandingsViewModel()
 	{
-		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, UpdateStandings);
-		// This is not called during initialization?!
-		OnSelectedCompetitionTypeChanged(SelectedCompetitionType);
+		// TODO Revisit, this is really expensive, especially during batch simulation
+		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, g => UpdateStandings(g.Round.Stage.Competition, g));
+		LoadAllCompetitions();
 	}
 
 	public IList<CompetitionType> CompetitionTypes { get; } = Enum.GetValues(typeof(CompetitionType)).Cast<CompetitionType>().ToList();
 
-	public ObservableCollection<RecordsGroup> RecordsByGroup { get; private set; }
-	public IList<TeamRecordViewModel> Records { get; set; }
+	public List<RecordsGroup> RecordsByGroup { get; set; } = new();
+
+	public List<TeamRecordViewModel> OverallRecords
+	{
+		get
+		{
+			var result = Standings.CreateFrom(AllCompetitions
+				.Where(c => c.Type == SelectedCompetitionType)
+				.SelectMany(c => c.GamesByDate))
+				.Select(r => new TeamRecordViewModel(r, ResourceConstants.DefaultPageColor)).ToList();
+			return result;
+		}
+	}
 
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
 
-	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
+	public void UpdateStandings(Competition competition, Game? justFinished = null)
 	{
-		var competitions = Repo.GetAll<Competition>().Where(c => c.Type == value);
-		Title = $"{competitions.Count()} {SelectedCompetitionType}s";
-		var competitionTypeGameHistory = competitions.SelectMany(c => c.GamesByDate).ToList();
-		Log.Debug($"Set competition type to {Title}, found {competitionTypeGameHistory.Count} relevant games");
-		Records = Standings.CreateFrom(competitionTypeGameHistory).Select(r => new TeamRecordViewModel(r, ResourceConstants.DefaultHighlightColor)).ToList();
-		OnPropertyChanged(nameof(Records));
-		OnPropertyChanged(nameof(CompetitionLogo));
-	}
-
-	public void UpdateStandings(Game justFinished)
-	{
-		Title = "";
-		RecordsByGroup = new(justFinished.Round.Stage.Groups.Select(group => new RecordsGroup(group.Name, Standings.CreateFrom(group.Games).Select(r => new TeamRecordViewModel(r, GetColor(r))))));
+		RecordsByGroup = new(competition.Groups.Select(group => new RecordsGroup(group.Name, Standings.CreateFrom(group.Games).Select(r => new TeamRecordViewModel(r, GetColor(r))))));
 		OnPropertyChanged(nameof(RecordsByGroup));
 
-		Color GetColor(TeamRecord r) => r.Team.Equals(justFinished?.HomeTeam) || r.Team.Equals(justFinished?.AwayTeam) ? ResourceConstants.DefaultHighlightColor : ResourceConstants.DefaultPageColor;
+		Color? GetColor(TeamRecord r) => r.Team.Equals(justFinished?.HomeTeam) || r.Team.Equals(justFinished?.AwayTeam) ? ResourceConstants.DefaultHighlightColor : null;
 	}
 
-	public virtual void LoadCompetition(Competition competition)
+	public void LoadAllCompetitions()
 	{
-		try
-		{
-			RecordsByGroup = new(competition.Groups.Select(group => new RecordsGroup(group.Name, Standings.CreateFrom(group.Games).Select(r => new TeamRecordViewModel(r, ResourceConstants.DefaultPageColor)))));
-			OnPropertyChanged(nameof(Records));
-			OnPropertyChanged(nameof(RecordsByGroup));
-		}
-		catch (Exception e)
-		{
-			Log.Error($"Failed to load competition: {e}");
-		}
+		AllCompetitions = Repo.GetAll<Competition>().ToList();
 	}
 }
