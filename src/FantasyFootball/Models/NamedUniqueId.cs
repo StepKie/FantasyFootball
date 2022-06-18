@@ -5,7 +5,7 @@ public abstract class NamedUniqueId
 	[PrimaryKey, AutoIncrement]
 	public int Id { get; set; }
 
-	public virtual string Name { get; set; }
+	public virtual string Name { get; init; }
 
 	/// <summary> Public parameterless constructor necessary for SQLite </summary>
 	public NamedUniqueId() { }

@@ -12,6 +12,6 @@ public static class ServiceHelper
 #elif IOS || MACCATALYST
 			MauiUIApplicationDelegate.Current.Services;
 #else
-			null;
+			throw new ArgumentException("Unknown Platform");
 #endif
 }

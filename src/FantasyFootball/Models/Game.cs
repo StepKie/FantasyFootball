@@ -8,6 +8,20 @@ namespace FantasyFootball.Models;
 [Table(nameof(Game))]
 public class Game : NamedUniqueId
 {
+
+	public override string Name => $"{Round.Name} {Round.Stage.Games.IndexOf(this)}";
+
+	public Game()
+	{
+		// TODO Control access?
+	}
+
+	public Game(int idInCompetition, Qualifier qualifierHome, Qualifier qualifierAway, DateTime playedOn)
+	{
+		IsKo = true;
+		PlayedOn = playedOn;
+	}
+
 	public DateTime PlayedOn { get; init; }
 
 	[ForeignKey(typeof(Team))]
@@ -47,7 +61,7 @@ public class Game : NamedUniqueId
 		_ => $"{HomeScore}-{AwayScore}",
 	};
 
-	public GameEnd Ending { get; set; }
+	public GameEnd Ending { get; private set; }
 
 	[ForeignKey(typeof(Round))]
 	public int RoundId { get; set; }
@@ -57,6 +71,9 @@ public class Game : NamedUniqueId
 
 	[Ignore]
 	public Team? Winner => (HomeScore > AwayScore) ? HomeTeam : (AwayScore > HomeScore) ? AwayTeam : null;
+
+	[Ignore]
+	public Team? Loser => (HomeScore > AwayScore) ? AwayTeam : (AwayScore > HomeScore) ? HomeTeam : null;
 
 	/// <summary> TODO Is it really be the responsibility of Game to "simulate itself"? However, otherwise there would be "feature envy" </summary>
 	public void Simulate()
