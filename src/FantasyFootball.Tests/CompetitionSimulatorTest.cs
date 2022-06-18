@@ -60,7 +60,7 @@ public class CompetitionSimulatorTest : BaseTest
 		var teams = Repo.GetAll<Team>();
 		var games = Repo.GetAll<Game>();
 		var countries = Repo.GetAll<Country>();
-		var em2020 = await new RandomEmCompetitionFactory(Repo).Create();
+		var em2020 = await new DefaultEmCompetitionFactory(Repo).Create();
 		Repo.Save(em2020);
 		var teamsAfterEm2020 = Repo.GetAll<Team>();
 

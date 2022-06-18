@@ -4,7 +4,7 @@ public class Standings
 {
 	public static IList<TeamRecord> CreateFrom(IEnumerable<Game> games)
 	{
-		var teams = games.SelectMany(g => new[] { g.HomeTeam, g.AwayTeam }).Where(t => t != null).Distinct() as IEnumerable<Team>;
+		var teams = games.SelectMany(g => new[] { g.HomeTeam, g.AwayTeam }).Where(t => t != null).Distinct();
 
 		//TODO Make ordering configurable
 		var records = teams

@@ -54,7 +54,7 @@ public class EuroRoundAdvancer
 		var OrderInCurrentRound = game.Round.Games.IndexOf(game);
 		var noInNextRound = OrderInCurrentRound / 2;
 		var nextRoundGame = game.Round.NextRoundInStage!.Games[noInNextRound];
-		nextRoundGame?.AddParticipant(game.Winner!);
+		//nextRoundGame?.AddParticipant(game.Winner!);
 	}
 
 	IList<Game> FillKoStage()
@@ -71,14 +71,14 @@ public class EuroRoundAdvancer
 
 		var groups = groupStage.Groups;
 
-		gamesInKoStage[0].AddParticipants(GetQualifier("B", 1), null);
-		gamesInKoStage[1].AddParticipants(GetQualifier("A", 1), GetQualifier("C", 2));
-		gamesInKoStage[2].AddParticipants(GetQualifier("F", 1), null);
-		gamesInKoStage[3].AddParticipants(GetQualifier("D", 2), GetQualifier("E", 2));
-		gamesInKoStage[4].AddParticipants(GetQualifier("E", 1), null);
-		gamesInKoStage[5].AddParticipants(GetQualifier("D", 1), GetQualifier("F", 2));
-		gamesInKoStage[6].AddParticipants(GetQualifier("C", 1), null);
-		gamesInKoStage[7].AddParticipants(GetQualifier("A", 2), GetQualifier("B", 2));
+		//gamesInKoStage[0].AddParticipants(GetQualifier("B", 1), null);
+		//gamesInKoStage[1].AddParticipants(GetQualifier("A", 1), GetQualifier("C", 2));
+		//gamesInKoStage[2].AddParticipants(GetQualifier("F", 1), null);
+		//gamesInKoStage[3].AddParticipants(GetQualifier("D", 2), GetQualifier("E", 2));
+		//gamesInKoStage[4].AddParticipants(GetQualifier("E", 1), null);
+		//gamesInKoStage[5].AddParticipants(GetQualifier("D", 1), GetQualifier("F", 2));
+		//gamesInKoStage[6].AddParticipants(GetQualifier("C", 1), null);
+		//gamesInKoStage[7].AddParticipants(GetQualifier("A", 2), GetQualifier("B", 2));
 
 		var thirdPlaceFinishers = groups.Select(g => g.GetStandings()[2]).Select(tr => tr.Team);
 		var bestFourThirdPlace = groups
@@ -94,7 +94,7 @@ public class EuroRoundAdvancer
 		foreach (var team in bestFourThirdPlace)
 		{
 			//For now, we cheat and assign randomly
-			gamesInKoStage.First(g => !g.IsReadyToStart).AddParticipant(team);
+			//gamesInKoStage.First(g => !g.IsReadyToStart).AddParticipant(team);
 		}
 
 		return gamesInKoStage;

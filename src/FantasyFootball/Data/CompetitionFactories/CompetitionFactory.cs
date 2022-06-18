@@ -20,9 +20,9 @@ public abstract class CompetitionFactory
 		StartDate = startDate;
 	}
 
-	protected abstract List<Team> SelectParticipants();
-	protected abstract List<Group> CreateGroups();
-	protected abstract List<Stage> CreateStages();
+	public abstract List<Team> SelectParticipants();
+	public abstract List<Group> CreateGroups();
+	public abstract List<Stage> CreateStages();
 
 	[Time]
 	/// <summary>

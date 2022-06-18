@@ -32,7 +32,6 @@ public partial class TeamsViewModel : GeneralViewModel
 		UpdateSelectedTeams();
 	}
 
-
 	partial void OnSelectedConfederationChanged(string value)
 	{
 		Log.Debug($"Selected confederation changed to {value}");

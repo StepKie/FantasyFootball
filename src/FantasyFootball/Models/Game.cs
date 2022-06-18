@@ -16,36 +16,26 @@ public class Game : NamedUniqueId
 		// TODO Control access?
 	}
 
-	public Game(int idInCompetition, Qualifier qualifierHome, Qualifier qualifierAway, DateTime playedOn)
-	{
-		IsKo = true;
-		PlayedOn = playedOn;
-	}
-
 	public DateTime PlayedOn { get; init; }
 
 	[ForeignKey(typeof(Team))]
-	public int HomeTeamId { get; set; }
+	public int HomeTeamId { get; init; }
 
 	[OneToOne(foreignKey: "HomeTeamId", CascadeOperations = CascadeOperation.CascadeRead)]
-	public virtual Team? HomeTeam { get; set; }
-
-	public string HomeTeamTentative { get; init; } = "TBD";
+	public virtual Team HomeTeam { get; init; }
 
 	[ForeignKey(typeof(Team))]
-	public int AwayTeamId { get; set; }
+	public int AwayTeamId { get; init; }
 
 	[OneToOne(foreignKey: "AwayTeamId", CascadeOperations = CascadeOperation.CascadeRead)]
-	public virtual Team? AwayTeam { get; set; }
+	public virtual Team AwayTeam { get; init; }
 
-	public string AwayTeamTentative { get; init; } = "TBD";
-
-	public int HomeScore { get; set; }
-	public int AwayScore { get; set; }
+	public int HomeScore { get; protected set; }
+	public int AwayScore { get; protected set; }
 
 	public bool IsKo { get; init; }
 
-	public GameState State { get; set; }
+	public GameState State { get; protected set; }
 
 	[Ignore] public bool IsFinished => State == GameState.FINISHED;
 	[Ignore] public bool IsNextInRound => Equals(Round?.CurrentGame);
@@ -61,7 +51,7 @@ public class Game : NamedUniqueId
 		_ => $"{HomeScore}-{AwayScore}",
 	};
 
-	public GameEnd Ending { get; private set; }
+	public GameEnd Ending { get; protected set; }
 
 	[ForeignKey(typeof(Round))]
 	public int RoundId { get; set; }
@@ -76,7 +66,7 @@ public class Game : NamedUniqueId
 	public Team? Loser => (HomeScore > AwayScore) ? AwayTeam : (AwayScore > HomeScore) ? HomeTeam : null;
 
 	/// <summary> TODO Is it really be the responsibility of Game to "simulate itself"? However, otherwise there would be "feature envy" </summary>
-	public void Simulate()
+	public virtual void Simulate()
 	{
 		if (!IsReadyToStart)
 		{
@@ -84,6 +74,7 @@ public class Game : NamedUniqueId
 			return;
 		}
 
+		State = GameState.IN_PROGRESS;
 		Ending = GameEnd.NORMAL;
 		HomeScore = 0;
 		AwayScore = 0;
@@ -109,53 +100,8 @@ public class Game : NamedUniqueId
 			}
 			totalGoalsExpected--;
 		}
-		//TODO Extra time hack
-		if (IsKo && HomeScore == AwayScore)
-		{
-			Ending = GameEnd.EXTRA_TIME;
-			var rd = new Random().NextDouble();
-			if (rd < 0.1)
-			{
-				HomeScore += 2;
-			}
-			else if (rd < 0.5)
-			{
-				HomeScore += 1;
-			}
-			else if (rd < 0.9)
-			{
-				AwayScore += 1;
-			}
-			else
-			{
-				AwayScore += 2;
-			}
-		}
 
 		State = GameState.FINISHED;
-	}
-
-	public void AddParticipant(Team participant)
-	{
-		if (IsReadyToStart) { throw new ArgumentException($"Can't add {participant} to finalized game {this}"); }
-
-		if (HomeTeam == null)
-		{
-			HomeTeam = participant;
-		}
-		else
-		{
-			AwayTeam = participant;
-		}
-	}
-
-	public void AddParticipants(Team? home, Team? away)
-	{
-		// TODO Seems fishy (both are checked for not null?!)
-		if (HomeTeam != null || AwayTeam != null) { throw new ArgumentException($"Can't add {home} and {away} to game {this} with at least one participant set"); }
-
-		HomeTeam = home;
-		AwayTeam = away;
 	}
 
 	/// <summary> TODO Never used, refactor to use constructor </summary>
@@ -167,5 +113,5 @@ public class Game : NamedUniqueId
 		State = GameState.FINISHED;
 	}
 
-	public override string ToString() => $"{PlayedOn,-5:g}, {HomeTeam?.ShortName ?? HomeTeamTentative,-2} {Result} {AwayTeam?.ShortName ?? AwayTeamTentative,2}";
+	public override string ToString() => $"{PlayedOn,-5:g}, {HomeTeam?.ShortName,-2} {Result} {AwayTeam?.ShortName,2}";
 }

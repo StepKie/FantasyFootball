@@ -4,7 +4,7 @@ public class Wm2021CompetitionFactory : CompetitionFactory
 {
 	public Wm2021CompetitionFactory(IRepository repo) : base(CompetitionType.WM, startDate: HistoricalData.WM_2021_START, repo) { }
 
-	protected override List<Group> CreateGroups()
+	public override List<Group> CreateGroups()
 	{
 		return new()
 		{
@@ -99,9 +99,9 @@ public class Wm2021CompetitionFactory : CompetitionFactory
 		};
 	}
 
-	protected override List<Team> SelectParticipants() => _participantPool.ToList();
+	public override List<Team> SelectParticipants() => _participantPool.ToList();
 
-	protected override List<Stage> CreateStages()
+	public override List<Stage> CreateStages()
 	{
 		return new()
 		{
@@ -193,14 +193,14 @@ public class Wm2021CompetitionFactory : CompetitionFactory
 						Games = new()
 						{
 							// Order is not chronological since UEFA is weird
-							new(49, Qualifier.FromGroup("A1"), Qualifier.FromGroup("B2"), new(2020, 12, 03, 16, 0, 0)),
-							new(50, Qualifier.FromGroup("C1"), Qualifier.FromGroup("D2"), new(2020, 12, 03, 20, 0, 0)),
-							new(51, Qualifier.FromGroup("D1"), Qualifier.FromGroup("C2"), new(2020, 12, 04, 16, 0, 0)),
-							new(52, Qualifier.FromGroup("B1"), Qualifier.FromGroup("A2"), new(2020, 12, 04, 20, 0, 0)),
-							new(53, Qualifier.FromGroup("E1"), Qualifier.FromGroup("F2"), new(2020, 12, 05, 16, 0, 0)),
-							new(54, Qualifier.FromGroup("G1"), Qualifier.FromGroup("H2"), new(2020, 12, 05, 20, 0, 0)),
-							new(55, Qualifier.FromGroup("F1"), Qualifier.FromGroup("E2"), new(2020, 12, 06, 16, 0, 0)),
-							new(56, Qualifier.FromGroup("H1"), Qualifier.FromGroup("G2"), new(2020, 12, 06, 20, 0, 0)),
+							new KoGame(49, Qualifier.FromGroup("A1"), Qualifier.FromGroup("B2"), new(2020, 12, 03, 16, 0, 0)),
+							new KoGame(50, Qualifier.FromGroup("C1"), Qualifier.FromGroup("D2"), new(2020, 12, 03, 20, 0, 0)),
+							new KoGame(51, Qualifier.FromGroup("D1"), Qualifier.FromGroup("C2"), new(2020, 12, 04, 16, 0, 0)),
+							new KoGame(52, Qualifier.FromGroup("B1"), Qualifier.FromGroup("A2"), new(2020, 12, 04, 20, 0, 0)),
+							new KoGame(53, Qualifier.FromGroup("E1"), Qualifier.FromGroup("F2"), new(2020, 12, 05, 16, 0, 0)),
+							new KoGame(54, Qualifier.FromGroup("G1"), Qualifier.FromGroup("H2"), new(2020, 12, 05, 20, 0, 0)),
+							new KoGame(55, Qualifier.FromGroup("F1"), Qualifier.FromGroup("E2"), new(2020, 12, 06, 16, 0, 0)),
+							new KoGame(56, Qualifier.FromGroup("H1"), Qualifier.FromGroup("G2"), new(2020, 12, 06, 20, 0, 0)),
 						}
 					},
 					new()
@@ -208,10 +208,10 @@ public class Wm2021CompetitionFactory : CompetitionFactory
 						Name = Res.Quarterfinal,
 						Games = new()
 						{
-							new(57, Qualifier.FromGame(53), Qualifier.FromGame(54), new(2020, 12, 09, 16, 0, 0)),
-							new(58, Qualifier.FromGame(49), Qualifier.FromGame(50), new(2020, 12, 09, 20, 0, 0)),
-							new(59, Qualifier.FromGame(55), Qualifier.FromGame(56), new(2020, 12, 10, 16, 0, 0)),
-							new(60, Qualifier.FromGame(51), Qualifier.FromGame(52), new(2020, 12, 10, 20, 0, 0)),
+							new KoGame(57, Qualifier.FromGame(53), Qualifier.FromGame(54), new(2020, 12, 09, 16, 0, 0)),
+							new KoGame(58, Qualifier.FromGame(49), Qualifier.FromGame(50), new(2020, 12, 09, 20, 0, 0)),
+							new KoGame(59, Qualifier.FromGame(55), Qualifier.FromGame(56), new(2020, 12, 10, 16, 0, 0)),
+							new KoGame(60, Qualifier.FromGame(51), Qualifier.FromGame(52), new(2020, 12, 10, 20, 0, 0)),
 						}
 					},
 					new()
@@ -219,8 +219,8 @@ public class Wm2021CompetitionFactory : CompetitionFactory
 						Name = Res.Semifinal,
 						Games = new()
 						{
-							new(61, Qualifier.FromGame(57), Qualifier.FromGame(58), new(2020, 12, 13, 16, 0, 0)),
-							new(62, Qualifier.FromGame(59), Qualifier.FromGame(60), new(2020, 12, 14, 16, 0, 0)),
+							new KoGame(61, Qualifier.FromGame(57), Qualifier.FromGame(58), new(2020, 12, 13, 16, 0, 0)),
+							new KoGame(62, Qualifier.FromGame(59), Qualifier.FromGame(60), new(2020, 12, 14, 16, 0, 0)),
 						}
 					},
 					new()
@@ -228,7 +228,7 @@ public class Wm2021CompetitionFactory : CompetitionFactory
 						Name = Res.ThirdPlaceMatch,
 						Games = new()
 						{
-							new(63, Qualifier.FromGame(61, loserQualifies: true), Qualifier.FromGame(62, loserQualifies: true), new(2020, 12, 17, 16, 0, 0)),
+							new KoGame(63, Qualifier.FromGame(61, loserQualifies: true), Qualifier.FromGame(62, loserQualifies: true), new(2020, 12, 17, 16, 0, 0)),
 						},
 					},
 					new()
@@ -236,7 +236,7 @@ public class Wm2021CompetitionFactory : CompetitionFactory
 						Name = Res.Final,
 						Games = new()
 						{
-							new(64, Qualifier.FromGame(61), Qualifier.FromGame(62), new(2020, 12, 18, 16, 0, 0)),
+							new KoGame(64, Qualifier.FromGame(61), Qualifier.FromGame(62), new(2020, 12, 18, 16, 0, 0)),
 						},
 					}
 				}

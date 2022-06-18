@@ -11,7 +11,7 @@ public abstract class DefaultTournamentFactory : CompetitionFactory
 		GroupSize = groupSize;
 	}
 
-	protected override List<Group> CreateGroups()
+	public override List<Group> CreateGroups()
 	{
 		var groups = "ABCDEFGHIJK".Take(NoOfGroups).Select(letter => new Group { Name = $"{Res.Group} {letter}", }).ToList();
 		var teams = new Queue<Team>(Participants);

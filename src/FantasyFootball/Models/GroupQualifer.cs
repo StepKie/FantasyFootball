@@ -6,14 +6,9 @@ public class GroupQualifer : Qualifier
 	public int GroupId { get; init; }
 	public int FinalPlacement { get; init; }
 
-	public override Team Get()
-	{
-		var group = Competition.Groups[GroupId];
-		if (!Competition.Stages[0].IsFinished)
-		{
-			return new Team() { Name = $"{FinalPlacement}. {group.Name}" };
-		}
+	public Group Group => Competition.Groups[GroupId];
 
-		return Competition.Groups[GroupId].GetStandings()[FinalPlacement].Team;
-	}
+	public override Team? Get() => Competition.Stages[0].IsFinished ? Group.GetStandings()[FinalPlacement - 1].Team : null;
+
+	public override Team GetStandin() => new() { Name = $"{FinalPlacement}. {Group.Name}", ShortName = "TBD" };
 }

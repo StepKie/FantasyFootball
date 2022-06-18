@@ -1,6 +1,5 @@
 ﻿namespace FantasyFootball.Models;
 
-
 [Table(nameof(Stage))]
 public class Stage : NamedUniqueId
 {

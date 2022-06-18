@@ -25,7 +25,6 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 
 	public ObservableCollection<RoundGroup> GamesByRound { get; private set; }
 
-
 	public Team? Winner => Competition.IsFinished ? Competition.LastGame?.Winner : null;
 
 	public CompetitionSimulator Simulator { get; private set; }
