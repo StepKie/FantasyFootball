@@ -71,15 +71,6 @@ public class EuroRoundAdvancer
 
 		var groups = groupStage.Groups;
 
-		//gamesInKoStage[0].AddParticipants(GetQualifier("B", 1), null);
-		//gamesInKoStage[1].AddParticipants(GetQualifier("A", 1), GetQualifier("C", 2));
-		//gamesInKoStage[2].AddParticipants(GetQualifier("F", 1), null);
-		//gamesInKoStage[3].AddParticipants(GetQualifier("D", 2), GetQualifier("E", 2));
-		//gamesInKoStage[4].AddParticipants(GetQualifier("E", 1), null);
-		//gamesInKoStage[5].AddParticipants(GetQualifier("D", 1), GetQualifier("F", 2));
-		//gamesInKoStage[6].AddParticipants(GetQualifier("C", 1), null);
-		//gamesInKoStage[7].AddParticipants(GetQualifier("A", 2), GetQualifier("B", 2));
-
 		var thirdPlaceFinishers = groups.Select(g => g.GetStandings()[2]).Select(tr => tr.Team);
 		var bestFourThirdPlace = groups
 			.SelectMany(g => g.GetStandings())
@@ -98,7 +89,5 @@ public class EuroRoundAdvancer
 		}
 
 		return gamesInKoStage;
-
-		Team? GetQualifier(string groupLetter, int place) => groups.Find(g => g.Name.EndsWith(groupLetter))?.GetStandings()[place - 1].Team;
 	}
 }

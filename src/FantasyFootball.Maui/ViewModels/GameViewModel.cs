@@ -7,11 +7,11 @@ public partial class GameViewModel : GeneralViewModel
 
 	public Game Game { get; init; }
 
-	public string HomeName => Game.HomeTeam?.Name ?? Game.HomeTeamTentative;
-	public string AwayName => Game.AwayTeam?.Name ?? Game.AwayTeamTentative;
+	public string HomeName => Game.HomeTeam.Name;
+	public string AwayName => Game.AwayTeam.Name;
 
-	public ImageSource HomeLogo => Game.HomeTeam is not null ? Game.HomeTeam.Logo : ResourceConstants.QuestionMark;
-	public ImageSource AwayLogo => Game.AwayTeam is not null ? Game.AwayTeam.Logo : ResourceConstants.QuestionMark;
+	public ImageSource HomeLogo => Game.HomeTeam.Logo;
+	public ImageSource AwayLogo => Game.AwayTeam.Logo;
 
 	public GameViewModel(Game game)
 	{

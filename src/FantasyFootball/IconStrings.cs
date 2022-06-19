@@ -19,5 +19,5 @@ public class IconStrings
 		};
 
 	// TODO Return (from folder?) based on club id
-	public static string GetTeamLogo(Team team) => team.IsNationalTeam ? GetNationalFlagWeb(team.Country) : "";
+	public static string GetTeamLogo(Team team) => team.IsNationalTeam ? GetNationalFlagWeb(team.Country) : "question_mark";
 }
