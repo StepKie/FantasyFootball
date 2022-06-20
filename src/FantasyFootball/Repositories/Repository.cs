@@ -1,4 +1,6 @@
-﻿namespace FantasyFootball.Repositories;
+﻿using System.Reflection;
+
+namespace FantasyFootball.Repositories;
 
 public class Repository : IRepository
 {
@@ -16,19 +18,8 @@ public class Repository : IRepository
 	void Initialize(string fullPath)
 	{
 		_dbConnection = new SQLiteConnection(fullPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache | SQLiteOpenFlags.FullMutex);
-		_ = _dbConnection.CreateTables(CreateFlags.None,
-			typeof(NamedUniqueId),
-			typeof(Group),
-			typeof(Team),
-			typeof(TeamGroupAssignment),
-			typeof(Competition),
-			typeof(Stage),
-			typeof(Round),
-			typeof(Game),
-			typeof(Country),
-			typeof(Confederation),
-			typeof(TeamRecord)
-		);
+		var modelTables = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && t.Namespace == "FantasyFootball.Models" && !t.Attributes.HasFlag(TypeAttributes.NestedPrivate)).ToArray();
+		_ = _dbConnection.CreateTables(CreateFlags.None, modelTables);
 	}
 
 	[Time]

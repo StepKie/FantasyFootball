@@ -8,8 +8,8 @@ namespace FantasyFootball.Models;
 [Table(nameof(Game))]
 public class Game : NamedUniqueId
 {
-
-	public override string Name => $"{Round.Name} {Round.Stage.Games.IndexOf(this)}";
+	[Ignore]
+	public override string Name => Round is not null ? $"{Round.Name} {Round.Stage.Games.IndexOf(this)}" : "Unknown";
 
 	public Game()
 	{

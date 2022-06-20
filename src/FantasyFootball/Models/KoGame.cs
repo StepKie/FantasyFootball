@@ -6,48 +6,32 @@
 [Table(nameof(KoGame))]
 public class KoGame : Game
 {
-	Team? _homeTeam;
-	Team? _awayTeam;
+	[ForeignKey(typeof(Qualifier))]
+	public int HomeQualifierId { get; init; }
 
-	readonly Qualifier _homeQualifier;
-	readonly Qualifier _awayQualifier;
+	[OneToOne(foreignKey: "HomeQualifierId", CascadeOperations = CascadeOperation.CascadeRead)]
+	public Qualifier HomeQualifier { get; init; }
+
+	[ForeignKey(typeof(Qualifier))]
+	public int AwayQualifierId { get; init; }
+
+	[OneToOne(foreignKey: "AwayQualifierId", CascadeOperations = CascadeOperation.CascadeRead)]
+	public Qualifier AwayQualifier { get; init; }
 
 	public KoGame()
 	{
 		// TODO Control access?
 	}
 
-	public override Team HomeTeam
-	{
-		// When accessing this property, try to fetch the value from the Qualifier and assign to backing field
-		// If it is still null, return the standin
-		// This is so convoluted because this is kind of a lazy initialized property, but it might be called several times before the initialization occurs
-		get
-		{
-			var team = _homeTeam ??= _homeQualifier.Get();
-			return team ?? _homeQualifier.GetStandin();
-		}
-		init => _homeTeam = value;
-	}
+	public override Team HomeTeam => HomeQualifier.Get() ?? HomeQualifier.GetStandin();
 
-	public override Team AwayTeam
-	{
-		// When accessing this property, try to fetch the value from the Qualifier and assign to backing field
-		// If it is still null, return the standin
-		// This is so convoluted because this is kind of a lazy initialized property, but it might be called several times before the initialization occurs
-		get
-		{
-			var team = _awayTeam ??= _awayQualifier.Get();
-			return team ?? _awayQualifier.GetStandin();
-		}
-		init => _awayTeam = value;
-	}
+	public override Team AwayTeam => AwayQualifier.Get() ?? HomeQualifier.GetStandin();
 
 	public KoGame(int idInCompetition, Qualifier qualifierHome, Qualifier qualifierAway, DateTime playedOn)
 	{
 		PlayedOn = playedOn;
-		_homeQualifier = qualifierHome;
-		_awayQualifier = qualifierAway;
+		HomeQualifier = qualifierHome;
+		AwayQualifier = qualifierAway;
 
 	}
 
@@ -83,4 +67,5 @@ public class KoGame : Game
 
 		State = GameState.FINISHED;
 	}
+
 }

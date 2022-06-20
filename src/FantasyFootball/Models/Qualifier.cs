@@ -3,7 +3,16 @@
 [Table(nameof(Qualifier))]
 public abstract class Qualifier : NamedUniqueId
 {
-	public Competition Competition { get; set; }
+
+	[ForeignKey(typeof(KoGame))]
+	public int GameId { get; init; }
+
+	[OneToOne]
+	public KoGame Game { get; set; }
+
+	/// <summary> Can only be resolved after update/insert with children </summary>
+	[Ignore]
+	public Competition? Competition => Game?.Round?.Stage?.Competition;
 
 	public abstract Team? Get();
 	public abstract Team GetStandin();

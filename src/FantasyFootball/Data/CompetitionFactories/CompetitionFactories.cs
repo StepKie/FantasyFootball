@@ -15,7 +15,7 @@ public static class CompetitionFactories
 		{
 			(CompetitionType.EM, TeamSelectionType.HISTORIC) => new Em2020CompetitionFactory(repo),
 			(CompetitionType.EM, TeamSelectionType.WITH_DRAWING) => new DefaultEmCompetitionFactory(repo),
-			(CompetitionType.WM, TeamSelectionType.HISTORIC) => new Wm2021CompetitionFactory(repo),
+			(CompetitionType.WM, TeamSelectionType.HISTORIC) => new Wm2022CompetitionFactory(repo),
 			_ => throw new ArgumentException($"No CompetitionFactory found for {selection}"),
 		};
 

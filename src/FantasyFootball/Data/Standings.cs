@@ -1,4 +1,4 @@
-﻿namespace FantasyFootball.Models;
+﻿namespace FantasyFootball.Data;
 
 public class Standings
 {

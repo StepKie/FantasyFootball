@@ -29,10 +29,8 @@ public class CompetitionSimulatorTest : BaseTest
 		var teamsDb = Repo.GetAll<Team>();
 		var gamesDb = Repo.GetAll<Game>();
 		var emFromDb = Repo.Get<Competition>(em2020.Id);
-		var teamsAfterEm2020 = Repo.GetAll<Team>();
 
 		Assert.Equal(6, em2020.Stages[0].Groups.Count);
-		Assert.Equal(teams.Count, teamsAfterEm2020.Count);
 
 		var simulator = new CompetitionSimulator(em2020, Repo);
 		await simulator.Simulate();
@@ -49,6 +47,43 @@ public class CompetitionSimulatorTest : BaseTest
 		Repo.Save(em2020);
 
 		var fromDb = Repo.Get<Competition>(em2020.Id);
+		var finalDb = fromDb?.GamesByDate.Last();
+		Assert.Equal(winner, finalDb?.Winner);
+	}
+
+	[Time]
+	[Fact]
+	public async Task TestRunWm2022()
+	{
+		var wm2022 = await new Wm2022CompetitionFactory(Repo).Create();
+		Repo.Save(wm2022);
+
+		// To check whether  the save operation inserts correctly with cascades and child relationships
+		var competitionsDb = Repo.GetAll<Competition>();
+		var stagesDb = Repo.GetAll<Stage>();
+		var roundsDb = Repo.GetAll<Round>();
+		var groupsDb = Repo.GetAll<Group>();
+		var teamsDb = Repo.GetAll<Team>();
+		var gamesDb = Repo.GetAll<Game>();
+		var wmFromDb = Repo.Get<Competition>(wm2022.Id);
+
+		Assert.Equal(8, wm2022.Stages[0].Groups.Count);
+
+		var simulator = new CompetitionSimulator(wm2022, Repo);
+		await simulator.Simulate();
+
+		foreach (var game in wm2022.GamesByDate)
+		{
+			Repo.Save(game);
+		}
+
+		var final = wm2022.LastGame;
+		var winner = final?.Winner;
+		Assert.True(final?.Round.Name == "Final");
+		Assert.NotNull(winner);
+		Repo.Save(wm2022);
+
+		var fromDb = Repo.Get<Competition>(wm2022.Id);
 		var finalDb = fromDb?.GamesByDate.Last();
 		Assert.Equal(winner, finalDb?.Winner);
 	}
