@@ -9,18 +9,19 @@ public class KoGame : Game
 	[ForeignKey(typeof(Qualifier))]
 	public int HomeQualifierId { get; init; }
 
-	[OneToOne(foreignKey: "HomeQualifierId", CascadeOperations = CascadeOperation.CascadeRead)]
-	public Qualifier HomeQualifier { get; init; }
+	[OneToOne(foreignKey: "Home", CascadeOperations = CascadeOperation.All)]
+	public Qualifier? HomeQualifier { get; init; }
+
 
 	[ForeignKey(typeof(Qualifier))]
-	public int AwayQualifierId { get; init; }
+	public int? AwayQualifierId { get; init; }
 
-	[OneToOne(foreignKey: "AwayQualifierId", CascadeOperations = CascadeOperation.CascadeRead)]
-	public Qualifier AwayQualifier { get; init; }
+	[OneToOne(foreignKey: "Away", CascadeOperations = CascadeOperation.All)]
+	public Qualifier? AwayQualifier { get; init; }
 
 	public KoGame()
 	{
-		// TODO Control access?
+
 	}
 
 	public override Team HomeTeam => HomeQualifier.Get() ?? HomeQualifier.GetStandin();

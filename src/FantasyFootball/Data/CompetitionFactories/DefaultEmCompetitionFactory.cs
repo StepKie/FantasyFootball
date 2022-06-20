@@ -94,45 +94,45 @@ public class DefaultEmCompetitionFactory : DefaultTournamentFactory
 				new()
 				{
 					Name = Res.RoundOf16,
-					Games = new()
+					KoGames = new()
 					{
 						// Order is not chronological since UEFA is weird
-						new KoGame(37, Qualifier.FromGroup("A1"), Qualifier.FromGroup("C2"),  new(2020, 6, 26, 21, 0, 0)),
-						new KoGame(38, Qualifier.FromGroup("A2"), Qualifier.FromGroup("B2"),  new(2020, 6, 26, 18, 0, 0)),
-						new KoGame(39, Qualifier.FromGroup("B1"), Qualifier.ThirdPlace("A/D/E/F"), new(2020, 6, 27, 21, 0, 0)),
-						new KoGame(40, Qualifier.FromGroup("C1"), Qualifier.ThirdPlace("D/E/F"), new(2020, 6, 27, 18, 0, 0)),
-						new KoGame(41, Qualifier.FromGroup("F1"), Qualifier.ThirdPlace("A/B/C"), new(2020, 6, 28, 21, 0, 0)),
-						new KoGame(42, Qualifier.FromGroup("D2"), Qualifier.FromGroup("E2"), new(2020, 6, 28, 18, 0, 0)),
-						new KoGame(43, Qualifier.FromGroup("E1"), Qualifier.ThirdPlace("A/B/C/D"), new(2020, 6, 29, 21, 0, 0)),
-						new KoGame(44, Qualifier.FromGroup("D1"), Qualifier.FromGroup("F2"), new(2020, 6, 29, 18, 0, 0)),
+						new(37, Qualifier.FromGroup("A1"), Qualifier.FromGroup("C2"),  new(2020, 6, 26, 21, 0, 0)),
+						new(38, Qualifier.FromGroup("A2"), Qualifier.FromGroup("B2"),  new(2020, 6, 26, 18, 0, 0)),
+						new(39, Qualifier.FromGroup("B1"), Qualifier.ThirdPlace("A/D/E/F"), new(2020, 6, 27, 21, 0, 0)),
+						new(40, Qualifier.FromGroup("C1"), Qualifier.ThirdPlace("D/E/F"), new(2020, 6, 27, 18, 0, 0)),
+						new(41, Qualifier.FromGroup("F1"), Qualifier.ThirdPlace("A/B/C"), new(2020, 6, 28, 21, 0, 0)),
+						new(42, Qualifier.FromGroup("D2"), Qualifier.FromGroup("E2"), new(2020, 6, 28, 18, 0, 0)),
+						new(43, Qualifier.FromGroup("E1"), Qualifier.ThirdPlace("A/B/C/D"), new(2020, 6, 29, 21, 0, 0)),
+						new(44, Qualifier.FromGroup("D1"), Qualifier.FromGroup("F2"), new(2020, 6, 29, 18, 0, 0)),
 					}
 				},
 				new()
 				{
 					Name = Res.Quarterfinal,
-					Games = new()
+					KoGames = new()
 					{
-						new KoGame(45, Qualifier.FromGame(41), Qualifier.FromGame(42), new(2020, 7, 2, 18, 0, 0)),
-						new KoGame(46, Qualifier.FromGame(39), Qualifier.FromGame(37), new(2020, 7, 2, 21, 0, 0)),
-						new KoGame(47, Qualifier.FromGame(40), Qualifier.FromGame(38), new(2020, 7, 3, 18, 0, 0)),
-						new KoGame(48, Qualifier.FromGame(43), Qualifier.FromGame(44), new(2020, 7, 3, 21, 0, 0)),
+						new(45, Qualifier.FromGame(41), Qualifier.FromGame(42), new(2020, 7, 2, 18, 0, 0)),
+						new(46, Qualifier.FromGame(39), Qualifier.FromGame(37), new(2020, 7, 2, 21, 0, 0)),
+						new(47, Qualifier.FromGame(40), Qualifier.FromGame(38), new(2020, 7, 3, 18, 0, 0)),
+						new(48, Qualifier.FromGame(43), Qualifier.FromGame(44), new(2020, 7, 3, 21, 0, 0)),
 					}
 				},
 				new()
 				{
 					Name = Res.Semifinal,
-					Games = new()
+					KoGames = new()
 					{
-						new KoGame(49, Qualifier.FromGame(46), Qualifier.FromGame(45), new(2020, 7, 6, 21, 0, 0)),
-						new KoGame(50, Qualifier.FromGame(48), Qualifier.FromGame(47), new(2020, 7, 7, 21, 0, 0)),
+						new(49, Qualifier.FromGame(46), Qualifier.FromGame(45), new(2020, 7, 6, 21, 0, 0)),
+						new(50, Qualifier.FromGame(48), Qualifier.FromGame(47), new(2020, 7, 7, 21, 0, 0)),
 					}
 				},
 				new()
 				{
 					Name = Res.Final,
-					Games = new()
+					KoGames = new()
 					{
-						new KoGame(51, Qualifier.FromGame(49), Qualifier.FromGame(50), new(2020, 7, 11, 21, 0, 0)),
+						new(51, Qualifier.FromGame(49), Qualifier.FromGame(50), new(2020, 7, 11, 21, 0, 0)),
 					},
 				}
 			}

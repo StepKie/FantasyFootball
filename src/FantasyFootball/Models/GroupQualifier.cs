@@ -1,7 +1,7 @@
 ﻿namespace FantasyFootball.Models;
 
-[Table(nameof(GroupQualifer))]
-public class GroupQualifer : Qualifier
+[Table(nameof(GroupQualifier))]
+public class GroupQualifier : Qualifier
 {
 	public int GroupId { get; init; }
 	public int FinalPlacement { get; init; }

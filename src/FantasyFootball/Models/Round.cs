@@ -6,6 +6,9 @@ public class Round : NamedUniqueId
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
 	public virtual List<Game> Games { get; init; } = new();
 
+	[OneToMany(CascadeOperations = CascadeOperation.All)]
+	public virtual List<KoGame> KoGames { get; init; } = new();
+
 	[ForeignKey(typeof(Stage))]
 	public int StageId { get; set; }
 

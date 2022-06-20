@@ -57,16 +57,13 @@ public class CompetitionSimulatorTest : BaseTest
 	{
 		var wm2022 = await new Wm2022CompetitionFactory(Repo).Create();
 		Repo.Save(wm2022);
-
+		var roundOf16 = wm2022.Rounds[3].KoGames;
 		// To check whether  the save operation inserts correctly with cascades and child relationships
 		var competitionsDb = Repo.GetAll<Competition>();
-		var stagesDb = Repo.GetAll<Stage>();
-		var roundsDb = Repo.GetAll<Round>();
-		var groupsDb = Repo.GetAll<Group>();
-		var teamsDb = Repo.GetAll<Team>();
-		var gamesDb = Repo.GetAll<Game>();
+		var qualifiers = Repo.GetAll<GroupQualifier>();
+		var qualifiersG = Repo.GetAll<Qualifier>();
 		var wmFromDb = Repo.Get<Competition>(wm2022.Id);
-
+		var roundOf16Db = wmFromDb.Rounds[3].KoGames;
 		Assert.Equal(8, wm2022.Stages[0].Groups.Count);
 
 		var simulator = new CompetitionSimulator(wm2022, Repo);
@@ -101,5 +98,39 @@ public class CompetitionSimulatorTest : BaseTest
 
 		Assert.Equal(6, em2020.Stages[0].Groups.Count);
 		Assert.Equal(teams.Count, teamsAfterEm2020.Count);
+	}
+
+	[Fact]
+	public void TestKoGameSerialization()
+	{
+		var koGame = new KoGame
+		{
+			HomeQualifier = new Qualifier { Name = "Moo" },
+			AwayQualifier = new Qualifier { Name = "Meh" },
+			//HomeGroupQualifier = Qualifier.FromGroup("A1"),
+		};
+		Repo.Save(koGame);
+		var qualifiers = Repo.GetAll<Qualifier>();
+		var groupqualifiers = Repo.GetAll<GroupQualifier>();
+		var koGameDb = Repo.Get<KoGame>(1)!;
+		var qual = koGameDb.HomeQualifier;
+		var qual2 = koGameDb.AwayQualifier;
+		Log.Debug("Finito");
+	}
+
+	[Fact]
+	public void TestGameSerialization()
+	{
+		var game = new Game
+		{
+			HomeTeam = new Team { Name = "Team 1" },
+			AwayTeam = new Team { Name = "Team 2" },
+		};
+		Repo.Save(game);
+
+		var gameDb = Repo.Get<Game>(1)!;
+		var team1 = gameDb.HomeTeam;
+		var team2 = gameDb.AwayTeam;
+		Log.Debug("Finito");
 	}
 }

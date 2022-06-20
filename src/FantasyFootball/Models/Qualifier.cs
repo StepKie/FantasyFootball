@@ -1,7 +1,7 @@
 ﻿namespace FantasyFootball.Models;
 
 [Table(nameof(Qualifier))]
-public abstract class Qualifier : NamedUniqueId
+public class Qualifier : NamedUniqueId
 {
 
 	[ForeignKey(typeof(KoGame))]
@@ -14,12 +14,12 @@ public abstract class Qualifier : NamedUniqueId
 	[Ignore]
 	public Competition? Competition => Game?.Round?.Stage?.Competition;
 
-	public abstract Team? Get();
-	public abstract Team GetStandin();
+	public virtual Team? Get() => null;
+	public virtual Team GetStandin() => new();
 
-	public static GroupQualifer FromGroup(int groupNo, int place) => new() { GroupId = groupNo, FinalPlacement = place, };
-	public static GroupQualifer FromGroup(string letterPlusPlace) => new() { GroupId = "ABCDEFGH".IndexOf(letterPlusPlace[0]), FinalPlacement = letterPlusPlace[1], };
-	public static GroupQualifer ThirdPlace(string identifier) => new() { /* TODO */ };
+	public static GroupQualifier FromGroup(int groupNo, int place) => new() { GroupId = groupNo, FinalPlacement = place, };
+	public static GroupQualifier FromGroup(string letterPlusPlace) => new() { GroupId = "ABCDEFGH".IndexOf(letterPlusPlace[0]), FinalPlacement = int.Parse(letterPlusPlace.Substring(1, 1)), };
+	public static GroupQualifier ThirdPlace(string identifier) => new() { /* TODO */ };
 
 	public static GameQualifier FromGame(int gameNo, bool loserQualifies = false) => new() { QualifierGameId = gameNo, LoserQualifies = loserQualifies };
 }
