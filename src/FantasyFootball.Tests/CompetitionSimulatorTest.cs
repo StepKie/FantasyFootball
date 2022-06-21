@@ -105,9 +105,12 @@ public class CompetitionSimulatorTest : BaseTest
 	{
 		var koGame = new KoGame
 		{
-			HomeQualifier = new Qualifier { Name = "Moo" },
-			AwayQualifier = new Qualifier { Name = "Meh" },
-			//HomeGroupQualifier = Qualifier.FromGroup("A1"),
+			Qualifiers = new() 
+			{
+				GroupQualifier.FromGroup("A1"),
+				//new() { Name = "Moo" },
+				new() { Name = "Meh" }
+			},
 		};
 		Repo.Save(koGame);
 		var qualifiers = Repo.GetAll<Qualifier>();

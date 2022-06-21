@@ -7,7 +7,7 @@ public class Qualifier : NamedUniqueId
 	[ForeignKey(typeof(KoGame))]
 	public int GameId { get; init; }
 
-	[OneToOne]
+	[ManyToOne]
 	public KoGame Game { get; set; }
 
 	/// <summary> Can only be resolved after update/insert with children </summary>

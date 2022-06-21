@@ -7,17 +7,13 @@
 public class KoGame : Game
 {
 	[ForeignKey(typeof(Qualifier))]
-	public int HomeQualifierId { get; init; }
+	public int QualifierId { get; init; }
 
-	[OneToOne(foreignKey: "Home", CascadeOperations = CascadeOperation.All)]
-	public Qualifier? HomeQualifier { get; init; }
+	[OneToMany(CascadeOperations = CascadeOperation.All)]
+	public List<Qualifier> Qualifiers { get; init; }
 
-
-	[ForeignKey(typeof(Qualifier))]
-	public int? AwayQualifierId { get; init; }
-
-	[OneToOne(foreignKey: "Away", CascadeOperations = CascadeOperation.All)]
-	public Qualifier? AwayQualifier { get; init; }
+	[Ignore] public Qualifier HomeQualifier => Qualifiers[0];
+	[Ignore] public Qualifier AwayQualifier => Qualifiers[1];
 
 	public KoGame()
 	{
@@ -31,8 +27,7 @@ public class KoGame : Game
 	public KoGame(int idInCompetition, Qualifier qualifierHome, Qualifier qualifierAway, DateTime playedOn)
 	{
 		PlayedOn = playedOn;
-		HomeQualifier = qualifierHome;
-		AwayQualifier = qualifierAway;
+		Qualifiers = new() { qualifierHome, qualifierAway };
 
 	}
 

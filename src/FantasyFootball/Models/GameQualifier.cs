@@ -10,5 +10,5 @@ public class GameQualifier : Qualifier
 
 	public override Team? Get() => LoserQualifies ? QualifierGame?.Winner : QualifierGame?.Loser;
 
-	public override Team GetStandin() => new() { Name = $"{Res.Winner} {Game.Name}", ShortName = "TBD" };
+	public override Team GetStandin() => new() { Name = $"{Res.Winner} {QualifierGame.Name}", ShortName = "TBD" };
 }
