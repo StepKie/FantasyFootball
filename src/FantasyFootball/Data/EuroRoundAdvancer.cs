@@ -51,9 +51,9 @@ public class EuroRoundAdvancer
 
 		if (!(game.IsKo && game.IsFinished)) { throw new ArgumentException($"{game} is not finished or not K.O. game", nameof(game)); }
 
-		var OrderInCurrentRound = game.Round.Games.IndexOf(game);
+		var OrderInCurrentRound = game.Round.RegularGames.IndexOf(game);
 		var noInNextRound = OrderInCurrentRound / 2;
-		var nextRoundGame = game.Round.NextRoundInStage!.Games[noInNextRound];
+		var nextRoundGame = game.Round.NextRoundInStage!.RegularGames[noInNextRound];
 		//nextRoundGame?.AddParticipant(game.Winner!);
 	}
 
@@ -62,7 +62,7 @@ public class EuroRoundAdvancer
 		// TODO Check validity!
 		var groupStage = Competition.Stages[0];
 		var firstKoRound = Competition.Stages[1].Rounds[0];
-		var gamesInKoStage = firstKoRound.Games;
+		var gamesInKoStage = firstKoRound.RegularGames;
 
 		if (!groupStage.IsFinished || gamesInKoStage.Any(g => g.IsFinished))
 		{

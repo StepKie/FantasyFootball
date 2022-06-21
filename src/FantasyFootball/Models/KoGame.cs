@@ -6,28 +6,42 @@
 [Table(nameof(KoGame))]
 public class KoGame : Game
 {
-	[ForeignKey(typeof(Qualifier))]
-	public int QualifierId { get; init; }
+	#region Qualifiers
 
-	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public List<Qualifier> Qualifiers { get; init; }
+	// Collapse, ugly...
+	// It is implemented like that because we can not simply add Qualifier base class in SQLite, during retrieval this will not find the correct subclass since it is in a different table
 
-	[Ignore] public Qualifier HomeQualifier => Qualifiers[0];
-	[Ignore] public Qualifier AwayQualifier => Qualifiers[1];
+	[ForeignKey(typeof(GroupQualifier))] public int HomeGroupQualifierId { get; init; }
+	[ForeignKey(typeof(GroupQualifier))] public int AwayGroupQualifierId { get; init; }
+	[ForeignKey(typeof(GameQualifier))] public int HomeGameQualifierId { get; init; }
+	[ForeignKey(typeof(GameQualifier))] public int AwayGameQualifierId { get; init; }
+
+	[OneToOne(foreignKey: "HomeGroupQualifierId", CascadeOperations = CascadeOperation.All)] public GroupQualifier? HomeGroupQualifier { get; init; }
+	[OneToOne(foreignKey: "AwayGroupQualifierId", CascadeOperations = CascadeOperation.All)] public GroupQualifier? AwayGroupQualifier { get; init; }
+	[OneToOne(foreignKey: "HomeGameQualifierId", CascadeOperations = CascadeOperation.All)] public GameQualifier? HomeGameQualifier { get; init; }
+	[OneToOne(foreignKey: "AwayGameQualifierId", CascadeOperations = CascadeOperation.All)] public GameQualifier? AwayGameQualifier { get; init; }
+
+	[Ignore] public Qualifier HomeQualifier => HomeGroupQualifier as Qualifier ?? HomeGameQualifier!;
+	[Ignore] public Qualifier AwayQualifier => AwayGroupQualifier as Qualifier ?? AwayGameQualifier!;
+
+	#endregion
 
 	public KoGame()
 	{
-
+		// Needed for SQLite
 	}
 
 	public override Team HomeTeam => HomeQualifier.Get() ?? HomeQualifier.GetStandin();
 
-	public override Team AwayTeam => AwayQualifier.Get() ?? HomeQualifier.GetStandin();
+	public override Team AwayTeam => AwayQualifier.Get() ?? AwayQualifier.GetStandin();
 
 	public KoGame(int idInCompetition, Qualifier qualifierHome, Qualifier qualifierAway, DateTime playedOn)
 	{
 		PlayedOn = playedOn;
-		Qualifiers = new() { qualifierHome, qualifierAway };
+		HomeGroupQualifier = qualifierHome as GroupQualifier;
+		HomeGameQualifier = qualifierHome as GameQualifier;
+		AwayGroupQualifier = qualifierAway as GroupQualifier;
+		AwayGameQualifier = qualifierAway as GameQualifier;
 
 	}
 

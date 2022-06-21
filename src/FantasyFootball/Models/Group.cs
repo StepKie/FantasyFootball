@@ -6,7 +6,7 @@ public class Group : NamedUniqueId
 	[ForeignKey(typeof(Stage))]
 	public int StageId { get; set; }
 
-	[ManyToOne(CascadeOperations = CascadeOperation.CascadeRead)]
+	[ManyToOne]
 	public Stage Stage { get; set; }
 
 	//TODO May be ManyToMany (i.e. a Team can be in a Cup and a National League ...)

@@ -57,7 +57,7 @@ public class Game : NamedUniqueId
 	public int RoundId { get; set; }
 
 	[ManyToOne]
-	public Round Round { get; set; }
+	public virtual Round Round { get; init; }
 
 	[Ignore]
 	public Team? Winner => (HomeScore > AwayScore) ? HomeTeam : (AwayScore > HomeScore) ? AwayTeam : null;

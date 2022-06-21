@@ -26,7 +26,7 @@ public class DefaultEmCompetitionFactory : DefaultTournamentFactory
 				new()
 				{
 					Name = Res.Round + " 1",
-					Games = new()
+					RegularGames = new()
 					{
 						new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[2], PlayedOn = new DateTime(2020, 6, 11, 21, 0, 0), },
 						new() { HomeTeam = Groups[0].Teams[1], AwayTeam = Groups[0].Teams[3], PlayedOn = new DateTime(2020, 6, 12, 15, 0, 0), },
@@ -45,7 +45,7 @@ public class DefaultEmCompetitionFactory : DefaultTournamentFactory
 				new()
 				{
 					Name = Res.Round + " 2",
-					Games = new()
+					RegularGames = new()
 					{
 						new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[3], PlayedOn = new DateTime(2020, 6, 16, 15, 0, 0), },
 						new() { HomeTeam = Groups[0].Teams[1], AwayTeam = Groups[0].Teams[2], PlayedOn = new DateTime(2020, 6, 16, 18, 0, 0), },
@@ -64,7 +64,7 @@ public class DefaultEmCompetitionFactory : DefaultTournamentFactory
 				new()
 				{
 					Name = Res.Round + " 3",
-					Games = new()
+					RegularGames = new()
 					{
 						new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[1], PlayedOn = new DateTime(2020, 6, 20, 18, 0, 0), },
 						new() { HomeTeam = Groups[0].Teams[2], AwayTeam = Groups[0].Teams[3], PlayedOn = new DateTime(2020, 6, 20, 18, 0, 0), },

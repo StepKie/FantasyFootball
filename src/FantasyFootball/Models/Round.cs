@@ -3,8 +3,11 @@
 [Table(nameof(Round))]
 public class Round : NamedUniqueId
 {
+	[Ignore]
+	public List<Game> AllGames => RegularGames.Concat(KoGames).ToList();
+
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public virtual List<Game> Games { get; init; } = new();
+	public virtual List<Game> RegularGames { get; init; } = new();
 
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
 	public virtual List<KoGame> KoGames { get; init; } = new();
@@ -19,7 +22,7 @@ public class Round : NamedUniqueId
 	public bool IsFinished => CurrentGame is null;
 
 	[Ignore]
-	public Game? CurrentGame => Games.FirstOrDefault(g => !g.IsFinished);
+	public Game? CurrentGame => AllGames.FirstOrDefault(g => !g.IsFinished);
 
 	/// <summary> This should not be asked of a Round </summary>
 	[Ignore]

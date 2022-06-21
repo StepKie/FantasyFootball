@@ -26,6 +26,6 @@ public class Stage : NamedUniqueId
 	public Competition Competition { get; }
 
 	[Ignore] public Round? CurrentRound => Rounds.FirstOrDefault(r => !r.IsFinished);
-	[Ignore] public IList<Game> Games => Rounds.SelectMany(round => round.Games).OrderBy(g => g.PlayedOn).ToList();
+	[Ignore] public IList<Game> Games => Rounds.SelectMany(round => round.AllGames).OrderBy(g => g.PlayedOn).ToList();
 	[Ignore] public bool IsFinished => CurrentRound is null;
 }

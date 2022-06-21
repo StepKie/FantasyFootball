@@ -1,3 +1,4 @@
+using System;
 using FantasyFootball.Data;
 using FantasyFootball.Data.CompetitionFactories;
 using FantasyFootball.Models;
@@ -103,21 +104,14 @@ public class CompetitionSimulatorTest : BaseTest
 	[Fact]
 	public void TestKoGameSerialization()
 	{
-		var koGame = new KoGame
-		{
-			Qualifiers = new() 
-			{
-				GroupQualifier.FromGroup("A1"),
-				//new() { Name = "Moo" },
-				new() { Name = "Meh" }
-			},
-		};
+		var koGame = new KoGame(2, Qualifier.FromGroup("A1"), Qualifier.FromGame(13), DateTime.Now);
+
 		Repo.Save(koGame);
 		var qualifiers = Repo.GetAll<Qualifier>();
 		var groupqualifiers = Repo.GetAll<GroupQualifier>();
 		var koGameDb = Repo.Get<KoGame>(1)!;
-		var qual = koGameDb.HomeQualifier;
-		var qual2 = koGameDb.AwayQualifier;
+		var qual = koGameDb.HomeTeam;
+		var qual2 = koGameDb.AwayTeam;
 		Log.Debug("Finito");
 	}
 

@@ -114,7 +114,7 @@ public class Wm2022CompetitionFactory : CompetitionFactory
 					new()
 					{
 						Name = Res.Round + " 1",
-						Games = new()
+						RegularGames = new()
 						{
 							new() { HomeTeam = Team("SEN"), AwayTeam = Team("NED"), PlayedOn = new(2022, 11, 21, 11, 0, 0), },
 							new() { HomeTeam = Team("ENG"), AwayTeam = Team("IRN"), PlayedOn = new(2022, 11, 21, 14, 0, 0), },
@@ -137,7 +137,7 @@ public class Wm2022CompetitionFactory : CompetitionFactory
 					new()
 					{
 						Name = Res.Round + " 2",
-						Games = new()
+						RegularGames = new()
 						{
 							new() { HomeTeam = Team("WAL"), AwayTeam = Team("IRN"), PlayedOn = new(2022, 11, 25, 11, 0, 0), },
 							new() { HomeTeam = Team("QAT"), AwayTeam = Team("SEN"), PlayedOn = new(2022, 11, 25, 14, 0, 0), },
@@ -160,7 +160,7 @@ public class Wm2022CompetitionFactory : CompetitionFactory
 					new()
 					{
 						Name = Res.Round + " 3",
-						Games = new()
+						RegularGames = new()
 						{
 							new() { HomeTeam = Team("ECU"), AwayTeam = Team("SEN"), PlayedOn = new(2022, 11, 29, 16, 0, 0), },
 							new() { HomeTeam = Team("NED"), AwayTeam = Team("QAT"), PlayedOn = new(2022, 11, 29, 16, 0, 0), },

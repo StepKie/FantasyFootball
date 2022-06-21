@@ -90,7 +90,7 @@ public class Em2020CompetitionFactory : DefaultEmCompetitionFactory
 				new()
 				{
 					Name = Res.Round + " 1",
-					Games = new()
+					RegularGames = new()
 					{
 						new() { HomeTeam = Team("TUR"), AwayTeam = Team("ITA"), PlayedOn = new DateTime(2020, 6, 11, 21, 0, 0), },
 						new() { HomeTeam = Team("WAL"), AwayTeam = Team("SUI"), PlayedOn = new DateTime(2020, 6, 12, 15, 0, 0), },
@@ -109,7 +109,7 @@ public class Em2020CompetitionFactory : DefaultEmCompetitionFactory
 				new()
 				{
 					Name = Res.Round + " 2",
-					Games = new()
+					RegularGames = new()
 					{
 						new() { HomeTeam = Team("FIN"), AwayTeam = Team("RUS"), PlayedOn = new DateTime(2020, 6, 16, 15, 0, 0), },
 						new() { HomeTeam = Team("TUR"), AwayTeam = Team("WAL"), PlayedOn = new DateTime(2020, 6, 16, 18, 0, 0), },
@@ -128,7 +128,7 @@ public class Em2020CompetitionFactory : DefaultEmCompetitionFactory
 				new()
 				{
 					Name = Res.Round + " 3",
-					Games = new()
+					RegularGames = new()
 					{
 						new() { HomeTeam = Team("ITA"), AwayTeam = Team("WAL"), PlayedOn = new DateTime(2020, 6, 20, 18, 0, 0), },
 						new() { HomeTeam = Team("SUI"), AwayTeam = Team("TUR"), PlayedOn = new DateTime(2020, 6, 20, 18, 0, 0), },
