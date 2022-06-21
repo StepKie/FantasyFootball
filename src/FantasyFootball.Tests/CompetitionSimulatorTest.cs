@@ -13,25 +13,7 @@ public class CompetitionSimulatorTest : BaseTest
 	[Fact]
 	public async Task TestRunEm2020()
 	{
-		var competitions = Repo.GetAll<Competition>();
-		var stages = Repo.GetAll<Stage>();
-		var rounds = Repo.GetAll<Round>();
-		var groups = Repo.GetAll<Group>();
-		var teams = Repo.GetAll<Team>();
-		var games = Repo.GetAll<Game>();
-		var em2020 = await new Em2020CompetitionFactory(Repo).Create();
-		Repo.Save(em2020);
-
-		// To check whether  the save operation inserts correctly with cascades and child relationships
-		var competitionsDb = Repo.GetAll<Competition>();
-		var stagesDb = Repo.GetAll<Stage>();
-		var roundsDb = Repo.GetAll<Round>();
-		var groupsDb = Repo.GetAll<Group>();
-		var teamsDb = Repo.GetAll<Team>();
-		var gamesDb = Repo.GetAll<Game>();
-		var emFromDb = Repo.Get<Competition>(em2020.Id);
-
-		Assert.Equal(6, em2020.Stages[0].Groups.Count);
+		var em2020 = await InitCompetition(CompetitionType.EM, TeamSelectionType.HISTORIC);
 
 		var simulator = new CompetitionSimulator(em2020, Repo);
 		await simulator.Simulate();
@@ -56,25 +38,43 @@ public class CompetitionSimulatorTest : BaseTest
 	[Fact]
 	public async Task TestRunWm2022()
 	{
-		var wm2022 = await new Wm2022CompetitionFactory(Repo).Create();
-		Repo.Save(wm2022);
-		var roundOf16 = wm2022.Rounds[3].KoGames;
-		// To check whether  the save operation inserts correctly with cascades and child relationships
-		var competitionsDb = Repo.GetAll<Competition>();
-		var qualifiers = Repo.GetAll<GroupQualifier>();
-		var qualifiersG = Repo.GetAll<Qualifier>();
-		var wmFromDb = Repo.Get<Competition>(wm2022.Id);
-		var roundOf16Db = wmFromDb.Rounds[3].KoGames;
-		Assert.Equal(8, wm2022.Stages[0].Groups.Count);
+		var wm2022 = await InitCompetition(CompetitionType.WM, TeamSelectionType.HISTORIC);
 
 		var simulator = new CompetitionSimulator(wm2022, Repo);
-		await simulator.Simulate();
+		var groups = wm2022.Groups;
+		var groupRounds = wm2022.Rounds.GetRange(0, 3);
+		var roundOf16 = wm2022.Stages[1].Rounds.First();
+
+		Assert.All(roundOf16.KoGames, g =>
+		{
+			Assert.True(g.HomeQualifier is GroupQualifier);
+			Assert.Null(g.HomeQualifier.Get());
+			Assert.True(g.HomeTeam.ShortName == "TBD");
+		});
+
+		foreach (var round in groupRounds)
+		{
+			await simulator.SimulateRound(round);
+		}
+
+		var groupTables = groups.Select(g => Standings.CreateFrom(g.Games));
+		var firstPlaceTeams = groupTables.Select(table => table[0].Team).ToList();
+		var secondPlaceTeams = groupTables.Select(table => table[1].Team).ToList();
+		Assert.All(roundOf16.KoGames, g =>
+		{
+			Assert.NotNull(g.HomeQualifier.Get());
+			Assert.Contains(g.HomeTeam, firstPlaceTeams);
+			Assert.Contains(g.AwayTeam, secondPlaceTeams);
+		});
+
+		Assert.Equal(roundOf16.KoGames.First().HomeTeam, Standings.CreateFrom(groups[1].Games)[2].Team);
 
 		foreach (var game in wm2022.GamesByDate)
 		{
 			Repo.Save(game);
 		}
 
+		Assert.True(wm2022.IsFinished);
 		var final = wm2022.LastGame;
 		var winner = final?.Winner;
 		Assert.True(final?.Round.Name == "Final");
@@ -87,47 +87,9 @@ public class CompetitionSimulatorTest : BaseTest
 	}
 
 	[Fact]
-	public async Task TestInitializeRandomEm()
+	public void TestStandings()
 	{
-		var groups = Repo.GetAll<Group>();
-		var teams = Repo.GetAll<Team>();
-		var games = Repo.GetAll<Game>();
-		var countries = Repo.GetAll<Country>();
-		var em2020 = await new DefaultEmCompetitionFactory(Repo).Create();
-		Repo.Save(em2020);
-		var teamsAfterEm2020 = Repo.GetAll<Team>();
-
-		Assert.Equal(6, em2020.Stages[0].Groups.Count);
-		Assert.Equal(teams.Count, teamsAfterEm2020.Count);
-	}
-
-	[Fact]
-	public void TestKoGameSerialization()
-	{
-		var koGame = new KoGame(2, Qualifier.FromGroup("A1"), Qualifier.FromGame(13), DateTime.Now);
-
-		Repo.Save(koGame);
-		var qualifiers = Repo.GetAll<Qualifier>();
-		var groupqualifiers = Repo.GetAll<GroupQualifier>();
-		var koGameDb = Repo.Get<KoGame>(1)!;
-		var qual = koGameDb.HomeTeam;
-		var qual2 = koGameDb.AwayTeam;
-		Log.Debug("Finito");
-	}
-
-	[Fact]
-	public void TestGameSerialization()
-	{
-		var game = new Game
-		{
-			HomeTeam = new Team { Name = "Team 1" },
-			AwayTeam = new Team { Name = "Team 2" },
-		};
-		Repo.Save(game);
-
-		var gameDb = Repo.Get<Game>(1)!;
-		var team1 = gameDb.HomeTeam;
-		var team2 = gameDb.AwayTeam;
-		Log.Debug("Finito");
+		// TODO Test different rules:
+		// goal difference, head-to-head, more goals scored etc.
 	}
 }

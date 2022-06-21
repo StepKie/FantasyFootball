@@ -4,6 +4,10 @@ global using System.Threading.Tasks;
 
 global using MethodTimer;
 
+global using FantasyFootball.Data;
+global using FantasyFootball.Data.CompetitionFactories;
+global using FantasyFootball.Models;
+
 global using Serilog;
 global using Serilog.Events;
 
