@@ -73,6 +73,8 @@ public class CompetitionDbConsistencyTests : BaseTest
 
 		Repo.Save(koGame);
 		var koGameDb = Repo.Get<KoGame>(1)!;
+		Assert.NotNull(koGameDb);
+		// TODO More
 	}
 
 	[Fact]
@@ -88,5 +90,9 @@ public class CompetitionDbConsistencyTests : BaseTest
 		var gameDb = Repo.Get<Game>(1)!;
 		var team1 = gameDb.HomeTeam;
 		var team2 = gameDb.AwayTeam;
+
+		Assert.True(team1.Name == "Team 1");
+		Assert.True(team2.Name == "Team 2");
+		// TODO More
 	}
 }

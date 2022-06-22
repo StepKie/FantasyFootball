@@ -46,7 +46,7 @@ public class EuroRoundAdvancer
 		}
 	}
 
-	void AdvanceInKoRound(Game game)
+	static void AdvanceInKoRound(Game game)
 	{
 
 		if (!(game.IsKo && game.IsFinished)) { throw new ArgumentException($"{game} is not finished or not K.O. game", nameof(game)); }

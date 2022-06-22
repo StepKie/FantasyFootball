@@ -6,7 +6,9 @@ public class IconStrings
 	// $"https://flagcdn.com/h80/{country.Code2.ToLower()}.png"
 	// $"https://hatscripts.github.io/circle-flags/flags/{country.Code2.ToLower()}.svg"
 	public static string GetNationalFlagWeb(Country country) => $"{country.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "_")}.png";
-	public static string GetConfederationLogo(Confederation confederation) => "";
+
+	/// <summary> TODO Add confederation logos if they are found </summary>
+	public static string GetConfederationLogo(Confederation confederation) => $"{confederation.Name.ToLower()}.png";
 
 	public static string? GetCompetitionLogo(CompetitionType competitionType) =>
 		competitionType switch
