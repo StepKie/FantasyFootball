@@ -1,7 +1,4 @@
 ﻿using System.Globalization;
-using FantasyFootball.Data;
-using FantasyFootball.Data.CompetitionFactories;
-using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
 

@@ -1,7 +1,4 @@
-﻿using FantasyFootball.Data;
-using FantasyFootball.Models;
-
-namespace FantasyFootball.Tests;
+﻿namespace FantasyFootball.Tests;
 
 public class TeamSelectorTests : BaseTest
 {

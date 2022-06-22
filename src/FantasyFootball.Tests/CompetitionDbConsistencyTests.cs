@@ -13,8 +13,12 @@ public class CompetitionDbConsistencyTests : BaseTest
 		Assert.Equal(2, em2020.Stages.Count);
 		Assert.Equal(6, em2020.Groups.Count);
 		Assert.Equal(7, em2020.Rounds.Count);
+		Assert.Equal(24, em2020.Participants.Count);
 		Assert.Equal(51, em2020.GamesByDate.Count);
 		Assert.Equal(15, em2020.GamesByDate.Count(g => g is KoGame));
+
+		var groupGames = em2020.Stages.First().Games;
+		Assert.All(em2020.Participants, team => { Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))); });
 
 	}
 
@@ -25,6 +29,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 		Assert.Equal(2, wm2022.Stages.Count);
 		Assert.Equal(8, wm2022.Groups.Count);
 		Assert.Equal(8, wm2022.Rounds.Count);
+		Assert.Equal(32, wm2022.Participants.Count);
 		Assert.Equal(64, wm2022.GamesByDate.Count);
 		Assert.Equal(16, wm2022.GamesByDate.Count(g => g is KoGame));
 
@@ -38,6 +43,8 @@ public class CompetitionDbConsistencyTests : BaseTest
 
 		var allGames = wm2022.GamesByDate;
 		var groupGames = allGames.Where(g => g is not KoGame);
+		var teams = wm2022.Participants;
+
 		var koGames = allGames.Where(g => g is KoGame);
 
 		foreach (var groupGame in groupGames)
