@@ -1,4 +1,5 @@
 using System;
+using FantasyFootball.Models;
 
 namespace FantasyFootball.Tests;
 
@@ -18,7 +19,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 		Assert.Equal(15, em2020.GamesByDate.Count(g => g is KoGame));
 
 		var groupGames = em2020.Stages.First().Games;
-		Assert.All(em2020.Participants, team => { Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))); });
+		Assert.All(em2020.Participants, team => Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))));
 
 	}
 
@@ -32,6 +33,9 @@ public class CompetitionDbConsistencyTests : BaseTest
 		Assert.Equal(32, wm2022.Participants.Count);
 		Assert.Equal(64, wm2022.GamesByDate.Count);
 		Assert.Equal(16, wm2022.GamesByDate.Count(g => g is KoGame));
+
+		var groupGames = wm2022.Stages.First().Games;
+		Assert.All(wm2022.Participants, team => Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))));
 
 	}
 
@@ -47,22 +51,28 @@ public class CompetitionDbConsistencyTests : BaseTest
 
 		var koGames = allGames.Where(g => g is KoGame);
 
-		foreach (var groupGame in groupGames)
+		foreach (var group in wm2022.Groups)
 		{
-			var round = groupGame.Round;
-			Assert.NotNull(round);
-			Assert.Equal(groupGame.RoundId, round.Id);
-			Assert.Contains(groupGame, round.RegularGames);
+			var groupStage = group.Stage;
+			Assert.NotNull(groupStage);
+			Assert.Equal(group.StageId, groupStage.Id);
 
-			var stage = round.Stage;
-			Assert.NotNull(stage);
-			Assert.Equal(round.StageId, stage.Id);
-			Assert.Contains(groupGame, round.RegularGames);
+			foreach (var groupGame in group.Games)
+			{
+				var round = groupGame.Round;
+				Assert.NotNull(round);
+				Assert.Equal(groupGame.RoundId, round.Id);
+				Assert.Contains(groupGame, round.RegularGames);
+				var stage = round.Stage;
+				Assert.NotNull(stage);
+				Assert.Equal(round.StageId, stage.Id);
+				Assert.Contains(groupGame, round.RegularGames);
 
-			var competition = stage.Competition;
-			Assert.NotNull(competition);
-			Assert.Equal(stage.CompetitionId, competition.Id);
-			Assert.Contains(groupGame, round.RegularGames);
+				var competition = stage.Competition;
+				Assert.NotNull(competition);
+				Assert.Equal(stage.CompetitionId, competition.Id);
+				Assert.Contains(groupGame, round.RegularGames);
+			}
 		}
 	}
 
@@ -75,6 +85,46 @@ public class CompetitionDbConsistencyTests : BaseTest
 		var koGameDb = Repo.Get<KoGame>(1)!;
 		Assert.NotNull(koGameDb);
 		// TODO More
+	}
+
+	[Fact]
+	public void TestManyToOneStageRounds()
+	{
+		Stage stage = new()
+		{
+			Name = "Stage 1",
+			Rounds = new()
+			{
+				new Round { Name = "Round 1", }
+			}
+		};
+
+		Repo.Save(stage);
+		Stage stageDb = Repo.Get<Stage>(1)!;
+		Round roundDb = Repo.Get<Round>(1)!;
+		Assert.Equal(stageDb.Id, roundDb.StageId);
+		Assert.Equal(stageDb, roundDb.Stage);
+		Assert.Equal("Stage 1", stageDb.Name);
+	}
+
+	[Fact]
+	public void TestManyToOneCompetitionStages()
+	{
+		Competition competition = new()
+		{
+			Name = "Competition 1",
+			Stages = new()
+			{
+				new Stage { Name = "Stage 1", }
+			}
+		};
+
+		Repo.Save(competition);
+		Stage stageDb = Repo.Get<Stage>(1)!;
+		Competition competitionDb = Repo.Get<Competition>(1)!;
+		Assert.Equal(competitionDb.Id, stageDb.CompetitionId);
+		Assert.Equal(competitionDb, stageDb.Competition);
+		Assert.Equal("Competition 1", competitionDb.Name);
 	}
 
 	[Fact]
