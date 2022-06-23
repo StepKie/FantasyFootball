@@ -1,5 +1,4 @@
 using System;
-using FantasyFootball.Models;
 
 namespace FantasyFootball.Tests;
 

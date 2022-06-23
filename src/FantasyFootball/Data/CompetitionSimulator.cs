@@ -31,6 +31,7 @@ public class CompetitionSimulator
 
 	public async Task SimulateStage(Stage stage)
 	{
+		Log.Debug("------------------------------------");
 		Log.Debug($"Starting Stage: {stage.Name}");
 		Log.Debug("------------------------------------");
 		while (!stage.IsFinished)
@@ -41,16 +42,19 @@ public class CompetitionSimulator
 				Print(group);
 			}
 		}
+		Log.Debug("------------------------------------");
 	}
 
 	public async Task SimulateRound(Round round)
 	{
+		Log.Debug("--------------------------------------");
 		Log.Debug($"Starting Round: {round.Name}");
-		Log.Debug("------------------------------------");
+		Log.Debug("--------------------------------------");
 		while (!round.IsFinished)
 		{
 			await SimulateGame(round.CurrentGame!);
 		}
+		Log.Debug("--------------------------------------");
 	}
 
 	public async Task SimulateGame(Game game)
@@ -64,7 +68,7 @@ public class CompetitionSimulator
 		game.Simulate();
 		Repo.Save(game);
 		Log.Debug(game.ToString());
-		RoundAdvancer.CheckAdvanceRound(game);
+		// RoundAdvancer.CheckAdvanceRound(game);
 		await Task.Delay(GameDelay);
 
 		if (Competition.IsFinished)
@@ -80,7 +84,7 @@ public class CompetitionSimulator
 		Log.Debug($"{Res.Group} {group.Name}");
 		Log.Debug("------------------------------------");
 		Log.Debug($"{"Name",-30} {Res.Games,5}  | {Res.Goals,5}  | {Res.GoalDifference,5}  | {Res.Points,2}");
-		foreach (var record in Standings.CreateFrom(group.Stage.Games))
+		foreach (var record in group.GetStandings())
 		{
 			Log.Debug($"{record.Team.Name,-20} {record.MatchesPlayed,5}  | {record.GoalsFor,2}:{record.GoalsAgainst,2}  | {record.GoalDifference,5}  | {record.Points,5}");
 		}

@@ -13,7 +13,7 @@ public class Group : NamedUniqueId
 	[ManyToMany(typeof(TeamGroupAssignment), CascadeOperations = CascadeOperation.CascadeRead)]
 	public List<Team> Teams { get; set; } = new();
 
-	public IList<TeamRecord> GetStandings() => Standings.CreateFrom(Stage.Games);
+	public IList<TeamRecord> GetStandings() => Standings.CreateFrom(Games);
 
 	[Ignore]
 	public IList<Game> Games => Stage.Games.Where(g => Teams.Contains(g.HomeTeam!) && Teams.Contains(g.AwayTeam!)).ToList();

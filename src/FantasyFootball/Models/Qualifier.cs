@@ -13,7 +13,7 @@ public class Qualifier : NamedUniqueId
 	public virtual Team? Get() => null;
 	public virtual Team GetStandin() => new();
 
-	public Team GetOrStandIn() => Get() ?? GetStandin();
+	public Team QualifiedTeam => Get() ?? GetStandin();
 
 	public static GroupQualifier FromGroup(int groupNo, int place) => new() { GroupId = groupNo, FinalPlacement = place, };
 	public static GroupQualifier FromGroup(string letterPlusPlace) => new() { GroupId = "ABCDEFGH".IndexOf(letterPlusPlace[0]), FinalPlacement = int.Parse(letterPlusPlace.Substring(1, 1)), };

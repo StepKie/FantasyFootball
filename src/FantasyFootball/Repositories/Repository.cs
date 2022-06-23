@@ -42,7 +42,6 @@ public class Repository : IRepository
 		}
 	}
 
-	[Time]
 	public void Save<T>(T item) where T : NamedUniqueId, new()
 	{
 		if (item.Id != 0)

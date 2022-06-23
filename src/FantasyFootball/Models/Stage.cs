@@ -23,7 +23,7 @@ public class Stage : NamedUniqueId
 	public int CompetitionId { get; set; }
 
 	[ManyToOne]
-	public Competition Competition { get; }
+	public Competition Competition { get; set; }
 
 	[Ignore] public Round? CurrentRound => Rounds.FirstOrDefault(r => !r.IsFinished);
 	[Ignore] public IList<Game> Games => Rounds.SelectMany(round => round.AllGames).OrderBy(g => g.PlayedOn).ToList();

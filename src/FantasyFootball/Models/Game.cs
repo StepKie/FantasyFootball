@@ -9,7 +9,7 @@ namespace FantasyFootball.Models;
 public class Game : NamedUniqueId
 {
 	[Ignore]
-	public override string Name => Round is not null ? $"{Round.Name} {Round.Stage.Games.IndexOf(this)}" : "Unknown";
+	public override string Name => $"{Round.Name} {(Round.AllGames.Count > 1 ? Round.AllGames.IndexOf(this) + 1 : "")}";
 
 	public Game()
 	{
@@ -33,8 +33,6 @@ public class Game : NamedUniqueId
 	public int HomeScore { get; protected set; }
 	public int AwayScore { get; protected set; }
 
-	public bool IsKo { get; init; }
-
 	public GameState State { get; protected set; }
 
 	[Ignore] public bool IsFinished => State == GameState.FINISHED;
@@ -57,7 +55,7 @@ public class Game : NamedUniqueId
 	public int RoundId { get; set; }
 
 	[ManyToOne]
-	public virtual Round Round { get; init; }
+	public virtual Round Round { get; init; } = new Round { Name = "Not initialized" };
 
 	[Ignore]
 	public Team? Winner => (HomeScore > AwayScore) ? HomeTeam : (AwayScore > HomeScore) ? AwayTeam : null;
@@ -113,5 +111,5 @@ public class Game : NamedUniqueId
 		State = GameState.FINISHED;
 	}
 
-	public override string ToString() => $"{PlayedOn,-5:g}, {HomeTeam?.ShortName,-2} {Result} {AwayTeam?.ShortName,2}";
+	public override string ToString() => $"{PlayedOn,-5:g}, {HomeTeam?.ShortName,-2}-{AwayTeam?.ShortName,2} {Result}";
 }

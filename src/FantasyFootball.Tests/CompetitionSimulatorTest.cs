@@ -37,8 +37,10 @@ public class CompetitionSimulatorTest : BaseTest
 
 		var simulator = new CompetitionSimulator(wm2022, Repo);
 		var groups = wm2022.Groups;
+		var groupStage = wm2022.Stages[0];
+		var koStage = wm2022.Stages[1];
 		var groupRounds = wm2022.Rounds.GetRange(0, 3);
-		var roundOf16 = wm2022.Stages[1].Rounds.First();
+		var roundOf16 = koStage.Rounds.First();
 
 		Assert.All(roundOf16.KoGames, g =>
 		{
@@ -47,12 +49,9 @@ public class CompetitionSimulatorTest : BaseTest
 			Assert.True(g.HomeTeam.ShortName == "TBD");
 		});
 
-		foreach (var round in groupRounds)
-		{
-			await simulator.SimulateRound(round);
-		}
+		await simulator.SimulateStage(groupStage);
 
-		var groupTables = groups.Select(g => Standings.CreateFrom(g.Games));
+		var groupTables = groups.Select(g => g.GetStandings());
 		var firstPlaceTeams = groupTables.Select(table => table[0].Team).ToList();
 		var secondPlaceTeams = groupTables.Select(table => table[1].Team).ToList();
 		Assert.All(roundOf16.KoGames, g =>
@@ -62,11 +61,15 @@ public class CompetitionSimulatorTest : BaseTest
 			Assert.Contains(g.AwayTeam, secondPlaceTeams);
 		});
 
-		Assert.Equal(roundOf16.KoGames.First().HomeTeam, Standings.CreateFrom(groups[1].Games)[2].Team);
+		Assert.Equal(roundOf16.KoGames.First().HomeTeam, groups[0].GetStandings()[0].Team);
+		Assert.Equal(roundOf16.KoGames.First().AwayTeam, groups[1].GetStandings()[1].Team);
 
-		foreach (var game in wm2022.GamesByDate)
+		//await simulator.SimulateStage(koStage);
+
+		foreach (var koRound in koStage.Rounds)
 		{
-			Repo.Save(game);
+			await simulator.SimulateRound(koRound);
+			Log.Debug("Test");
 		}
 
 		Assert.True(wm2022.IsFinished);

@@ -40,7 +40,7 @@ public class EuroRoundAdvancer
 		}
 
 		// If it was a game in a K.O. Round which was not the final, advance the winner to the next round
-		if (game.IsKo && game.Round.NextRoundInStage != null)
+		if (game is KoGame && game.Round.NextRoundInStage != null)
 		{
 			AdvanceInKoRound(game);
 		}
@@ -49,7 +49,7 @@ public class EuroRoundAdvancer
 	static void AdvanceInKoRound(Game game)
 	{
 
-		if (!(game.IsKo && game.IsFinished)) { throw new ArgumentException($"{game} is not finished or not K.O. game", nameof(game)); }
+		if (!(game is KoGame && game.IsFinished)) { throw new ArgumentException($"{game} is not finished or not K.O. game", nameof(game)); }
 
 		var OrderInCurrentRound = game.Round.RegularGames.IndexOf(game);
 		var noInNextRound = OrderInCurrentRound / 2;

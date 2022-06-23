@@ -50,7 +50,7 @@ public class KoGame : Game
 		base.Simulate();
 
 		//TODO Extra time hack
-		if (IsKo && HomeScore == AwayScore)
+		if (HomeScore == AwayScore)
 		{
 			State = GameState.IN_PROGRESS;
 			Ending = GameEnd.EXTRA_TIME;
