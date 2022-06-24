@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="FantasyFootball.Views.CompetitionSetupPage"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:ctrls="clr-namespace:FantasyFootball.Controls"
+  xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
+  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  x:DataType="vm:CompetitionSetupViewModel">
+  <ContentPage.Content>
+    <StackLayout>
+      <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="20,20,170,30,40,30,30,30">
+        <Label
+          Grid.Column="0"
+          Grid.ColumnSpan="3"
+          FontAttributes="Bold"
+          Text="{Binding Title}"
+          TextTransform="Uppercase" />
+        <Label Grid.Column="3" Text="{xct:Translate GamesShort}" />
+        <Label Grid.Column="4" Text="{xct:Translate Goals}" />
+        <Label Grid.Column="5" Text="{xct:Translate GoalDifference}" />
+        <Label Grid.Column="6" Text="{xct:Translate PointsShort}" />
+      </Grid>
+      <CollectionView
+        VerticalOptions="FillAndExpand"
+        HorizontalScrollBarVisibility="Always"
+        IsGrouped="True"
+        ItemSizingStrategy="MeasureAllItems"
+        ItemsSource="{Binding RecordsByGroup}">
+        <CollectionView.ItemsLayout>
+          <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.GroupHeaderTemplate>
+          <DataTemplate>
+            <Label
+              x:DataType="vm:RecordsGroup"
+              BackgroundColor="LightGrey"
+              FontAttributes="Bold"
+              Text="{Binding Name}"
+              TextTransform="Uppercase" />
+          </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
+        <CollectionView.ItemTemplate>
+          <DataTemplate x:DataType="vm:TeamRecordViewModel">
+            <Grid
+              Grid.Row="0"
+              RowDefinitions="25"
+              ColumnDefinitions="20,20,170,30,40,30,30,30"
+              BackgroundColor="{Binding BgColor}">
+              <Label
+                Grid.Column="0"
+                VerticalOptions="Center"
+                FontAttributes="Bold"
+                Text="{Binding Record.Position}" />
+              <Image
+                Grid.Column="1"
+                WidthRequest="20"
+                HeightRequest="20"
+                VerticalOptions="Center"
+                Source="{Binding Record.Team.Logo}" />
+              <Label
+                Grid.Column="2"
+                Margin="10,0,0,0"
+                VerticalOptions="Center"
+                Text="{Binding Record.Team.Name}" />
+              <Label Grid.Column="3" VerticalOptions="Center" Text="{Binding Record.MatchesPlayed}" />
+              <Label Grid.Column="4" VerticalOptions="Center">
+                <Label.Text>
+                  <MultiBinding StringFormat="{}{0}:{1}">
+                    <Binding Path="Record.GoalsFor" />
+                    <Binding Path="Record.GoalsAgainst" />
+                  </MultiBinding>
+                </Label.Text>
+              </Label>
+              <Label Grid.Column="5" VerticalOptions="Center" Text="{Binding Record.GoalDifference}" />
+              <Label
+                Grid.Column="6"
+                VerticalOptions="Center"
+                FontAttributes="Bold"
+                Text="{Binding Record.Points}" />
+              <!--  Label Grid.Column="7" FontAttributes="Bold" Text="{Binding Record.AveragePointsPerGame}" /  -->
+            </Grid>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>
