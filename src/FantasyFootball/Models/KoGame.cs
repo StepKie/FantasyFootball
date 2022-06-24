@@ -31,9 +31,9 @@ public class KoGame : Game
 		// Needed for SQLite
 	}
 
-	public override Team HomeTeam => HomeQualifier.Get() ?? HomeQualifier.GetStandin();
+	public override Team HomeTeam => HomeQualifier.Get() ?? HomeQualifier.GetPlaceholder();
 
-	public override Team AwayTeam => AwayQualifier.Get() ?? AwayQualifier.GetStandin();
+	public override Team AwayTeam => AwayQualifier.Get() ?? AwayQualifier.GetPlaceholder();
 
 	public KoGame(int idInCompetition, Qualifier qualifierHome, Qualifier qualifierAway, DateTime playedOn)
 	{

@@ -11,13 +11,13 @@ public class Qualifier : NamedUniqueId
 	public Competition? Competition => Game?.Round?.Stage?.Competition;
 
 	public virtual Team? Get() => null;
-	public virtual Team GetStandin() => new();
+	public virtual Team GetPlaceholder() => new();
 
-	public Team QualifiedTeam => Get() ?? GetStandin();
+	public Team QualifiedTeam => Get() ?? GetPlaceholder();
 
 	public static GroupQualifier FromGroup(int groupNo, int place) => new() { GroupId = groupNo, FinalPlacement = place, };
 	public static GroupQualifier FromGroup(string letterPlusPlace) => new() { GroupId = "ABCDEFGH".IndexOf(letterPlusPlace[0]), FinalPlacement = int.Parse(letterPlusPlace.Substring(1, 1)), };
-	public static GroupQualifier ThirdPlace(string identifier) => new() { /* TODO */ };
+	public static GroupQualifier ThirdPlace(string combination) => new() { FinalPlacement = 3, ThirdPlaceCombination = combination };
 
 	public static GameQualifier FromGame(int gameNo, bool loserQualifies = false) => new() { GameNoInCompetition = gameNo, LoserQualifies = loserQualifies };
 }

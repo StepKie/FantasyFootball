@@ -2,6 +2,7 @@
 
 public enum TeamType
 {
+	PLACEHOLDER,
 	ALL,
 	NATIONAL_WOMEN,
 	NATIONAL_MEN,

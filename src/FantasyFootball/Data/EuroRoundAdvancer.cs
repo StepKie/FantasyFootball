@@ -3,91 +3,55 @@
 //TODO Refactor for reuse in other tournaments
 public class EuroRoundAdvancer
 {
-	public static readonly Dictionary<int[], int[]> thirdPlaceCombinations = new()
+	public static readonly Dictionary<string, int> combinationToId = new()
 	{
-		[new[] { 1, 2, 3, 4 }] = new[] { 1, 4, 2, 3 },
-		[new[] { 1, 2, 3, 5 }] = new[] { 1, 5, 2, 3 },
-		[new[] { 1, 2, 3, 6 }] = new[] { 1, 6, 2, 3 },
-		[new[] { 1, 2, 4, 5 }] = new[] { 4, 5, 1, 2 },
-		[new[] { 1, 2, 4, 6 }] = new[] { 4, 6, 1, 2 },
-		[new[] { 1, 2, 5, 6 }] = new[] { 5, 6, 2, 1 },
-		[new[] { 1, 3, 4, 5 }] = new[] { 5, 4, 3, 1 },
-		[new[] { 1, 3, 4, 6 }] = new[] { 6, 4, 3, 1 },
-		[new[] { 1, 3, 5, 6 }] = new[] { 5, 6, 3, 1 },
-		[new[] { 1, 4, 5, 6 }] = new[] { 5, 6, 4, 1 },
-		[new[] { 2, 3, 4, 5 }] = new[] { 5, 4, 2, 3 },
-		[new[] { 2, 3, 4, 6 }] = new[] { 6, 4, 3, 2 },
-		[new[] { 2, 3, 5, 6 }] = new[] { 6, 5, 3, 2 },
-		[new[] { 2, 4, 5, 6 }] = new[] { 6, 5, 4, 2 },
-		[new[] { 3, 4, 5, 6 }] = new[] { 6, 5, 4, 3 },
-
+		["A/D/E/F"] = 0,
+		["D/E/F"] = 1,
+		["A/B/C"] = 2,
+		["A/B/C/D"] = 3,
 	};
 
-	public Competition Competition { get; init; }
-
-	public EuroRoundAdvancer(Competition competition) => Competition = competition;
-
-	public void CheckAdvanceRound(Game game)
+	/// <summary>
+	/// Assignments to the four possible Round of 16 games according to combinationToId
+	/// </summary>
+	public static readonly Dictionary<(int, int, int, int), int[]> thirdPlaceCombinations = new()
 	{
-		// If it was the last game in a group stage, fill the subsequent K.O. stage
-		if (game.Equals(Competition.Stages.First().Games.Last()))
-		{
-			var koGames = FillKoStage();
-			if (koGames.FirstOrDefault(g => !g.IsReadyToStart) is Game notInitialized)
-			{
-				Log.Error($"{notInitialized} not initalized");
-			}
-		}
+		[(1, 2, 3, 4)] = new[] { 1, 4, 3, 2 },
+		[(1, 2, 3, 5)] = new[] { 1, 5, 3, 2 },
+		[(1, 2, 3, 6)] = new[] { 1, 6, 3, 2 },
+		[(1, 2, 4, 5)] = new[] { 4, 5, 2, 1 },
+		[(1, 2, 4, 6)] = new[] { 4, 6, 2, 1 },
+		[(1, 2, 5, 6)] = new[] { 5, 6, 1, 2 },
+		[(1, 3, 4, 5)] = new[] { 5, 4, 1, 3 },
+		[(1, 3, 4, 6)] = new[] { 6, 4, 1, 3 },
+		[(1, 3, 5, 6)] = new[] { 5, 6, 1, 3 },
+		[(1, 4, 5, 6)] = new[] { 5, 6, 1, 4 },
+		[(2, 3, 4, 5)] = new[] { 5, 4, 3, 2 },
+		[(2, 3, 4, 6)] = new[] { 6, 4, 2, 3 },
+		[(2, 3, 5, 6)] = new[] { 6, 5, 2, 3 },
+		[(2, 4, 5, 6)] = new[] { 6, 5, 2, 4 },
+		[(3, 4, 5, 6)] = new[] { 6, 5, 3, 4 },
+	};
 
-		// If it was a game in a K.O. Round which was not the final, advance the winner to the next round
-		if (game is KoGame && game.Round.NextRoundInStage != null)
-		{
-			AdvanceInKoRound(game);
-		}
-	}
-
-	static void AdvanceInKoRound(Game game)
+	// TODO Make a little easier to understand
+	public static Team GetThirdPlaceQualifier(Stage groupStage, string thirdPlaceCombination)
 	{
-
-		if (!(game is KoGame && game.IsFinished)) { throw new ArgumentException($"{game} is not finished or not K.O. game", nameof(game)); }
-
-		var OrderInCurrentRound = game.Round.RegularGames.IndexOf(game);
-		var noInNextRound = OrderInCurrentRound / 2;
-		var nextRoundGame = game.Round.NextRoundInStage!.RegularGames[noInNextRound];
-		//nextRoundGame?.AddParticipant(game.Winner!);
-	}
-
-	IList<Game> FillKoStage()
-	{
-		// TODO Check validity!
-		var groupStage = Competition.Stages[0];
-		var firstKoRound = Competition.Stages[1].Rounds[0];
-		var gamesInKoStage = firstKoRound.RegularGames;
-
-		if (!groupStage.IsFinished || gamesInKoStage.Any(g => g.IsFinished))
-		{
-			throw new ArgumentException("Ko stage should be filled when group stage is finished and no K.O. games have been played!");
-		}
-
 		var groups = groupStage.Groups;
 
-		var thirdPlaceFinishers = groups.Select(g => g.GetStandings()[2]).Select(tr => tr.Team);
-		var bestFourThirdPlace = groups
-			.SelectMany(g => g.GetStandings())
-			.Where(tr => thirdPlaceFinishers.Contains(tr.Team))
-			.OrderByDescending(tr => tr)
-			.Take(4)
-			.Select(tr => tr.Team);
+		var thirdPlaceFinishers = groups.Select(g => g.GetStandings()[2]).OrderByDescending(thirdPlaceRecord => thirdPlaceRecord);
+		var bestFourThirdPlace = thirdPlaceFinishers.Take(4).Select(r => r.Team);
+		int[] qualifierIds = bestFourThirdPlace
+			.Select(team => groups.First(g => g.Teams.Contains(team)))
+			.Select(group => group.Id)
+			.OrderBy(id => id).ToArray();
 
-		Log.Debug($"Best 4 3rd place finishers: {string.Join(",", bestFourThirdPlace)}");
-		//TODO Assign correctly based on thirdPlaceCombinations
+		Log.Debug($"Best 4 3rd place finishers: {string.Join(",", bestFourThirdPlace)}, qualifier group ids ordered: {string.Join(",", qualifierIds)}");
+		(int, int, int, int) asTuple = (qualifierIds[0], qualifierIds[1], qualifierIds[2], qualifierIds[3]);
+		var realizedCombination = thirdPlaceCombinations[asTuple];
+		int groupId = realizedCombination[combinationToId[thirdPlaceCombination]];
+		var team = groups.First(g => g.Id == groupId).GetStandings()[2].Team;
+		Log.Debug($"Qualifier for {thirdPlaceCombination} is {team}");
 
-		foreach (var team in bestFourThirdPlace)
-		{
-			//For now, we cheat and assign randomly
-			//gamesInKoStage.First(g => !g.IsReadyToStart).AddParticipant(team);
-		}
-
-		return gamesInKoStage;
+		return team;
 	}
 }

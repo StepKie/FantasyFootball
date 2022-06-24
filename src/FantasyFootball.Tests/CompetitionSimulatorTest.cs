@@ -11,13 +11,10 @@ public class CompetitionSimulatorTest : BaseTest
 		var em2020 = await InitCompetition(CompetitionType.EM, TeamSelectionType.HISTORIC);
 
 		var simulator = new CompetitionSimulator(em2020, Repo);
-		await simulator.Simulate();
-
-		foreach (var game in em2020.GamesByDate)
-		{
-			Repo.Save(game);
-		}
-
+		var groupStage = em2020.Stages[0];
+		var koStage = em2020.Stages[1];
+		await simulator.SimulateStage(groupStage);
+		await simulator.SimulateStage(koStage);
 		var final = em2020.LastGame;
 		var winner = final?.Winner;
 		Assert.True(final?.Round.Name == "Final");
@@ -64,12 +61,9 @@ public class CompetitionSimulatorTest : BaseTest
 		Assert.Equal(roundOf16.KoGames.First().HomeTeam, groups[0].GetStandings()[0].Team);
 		Assert.Equal(roundOf16.KoGames.First().AwayTeam, groups[1].GetStandings()[1].Team);
 
-		//await simulator.SimulateStage(koStage);
-
 		foreach (var koRound in koStage.Rounds)
 		{
 			await simulator.SimulateRound(koRound);
-			Log.Debug("Test");
 		}
 
 		Assert.True(wm2022.IsFinished);
@@ -77,8 +71,6 @@ public class CompetitionSimulatorTest : BaseTest
 		var winner = final?.Winner;
 		Assert.True(final?.Round.Name == "Final");
 		Assert.NotNull(winner);
-		Repo.Save(wm2022);
-
 		var fromDb = Repo.Get<Competition>(wm2022.Id);
 		var finalDb = fromDb?.GamesByDate.Last();
 		Assert.Equal(winner, finalDb?.Winner);

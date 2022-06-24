@@ -21,23 +21,23 @@ public class Game : NamedUniqueId
 	[ForeignKey(typeof(Team))]
 	public int HomeTeamId { get; init; }
 
-	[OneToOne(foreignKey: "HomeTeamId", CascadeOperations = CascadeOperation.CascadeRead)]
+	[OneToOne(foreignKey: "HomeTeamId", CascadeOperations = CascadeOperation.All)]
 	public virtual Team HomeTeam { get; init; }
 
 	[ForeignKey(typeof(Team))]
 	public int AwayTeamId { get; init; }
 
-	[OneToOne(foreignKey: "AwayTeamId", CascadeOperations = CascadeOperation.CascadeRead)]
+	[OneToOne(foreignKey: "AwayTeamId", CascadeOperations = CascadeOperation.All)]
 	public virtual Team AwayTeam { get; init; }
 
-	public int HomeScore { get; protected set; }
-	public int AwayScore { get; protected set; }
+	public int HomeScore { get; set; }
+	public int AwayScore { get; set; }
 
-	public GameState State { get; protected set; }
+	public GameState State { get; set; }
 
 	[Ignore] public bool IsFinished => State == GameState.FINISHED;
 	[Ignore] public bool IsNextInRound => Equals(Round?.CurrentGame);
-	[Ignore] public bool IsReadyToStart => HomeTeam != null && AwayTeam != null && State == GameState.SCHEDULED;
+	[Ignore] public bool IsReadyToStart => HomeTeam.Type != TeamType.PLACEHOLDER && AwayTeam.Type != TeamType.PLACEHOLDER && State == GameState.SCHEDULED;
 
 	[Ignore]
 	public string Result => (State, Ending) switch
@@ -49,7 +49,7 @@ public class Game : NamedUniqueId
 		_ => $"{HomeScore}-{AwayScore}",
 	};
 
-	public GameEnd Ending { get; protected set; }
+	public GameEnd Ending { get; set; }
 
 	[ForeignKey(typeof(Round))]
 	public int RoundId { get; set; }

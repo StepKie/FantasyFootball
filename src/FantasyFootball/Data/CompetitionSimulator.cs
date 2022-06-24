@@ -5,7 +5,6 @@ public class CompetitionSimulator
 	public TimeSpan GameDelay { get; init; }
 
 	public Competition Competition { get; init; }
-	public EuroRoundAdvancer RoundAdvancer { get; init; }
 
 	public IRepository Repo { get; init; }
 
@@ -14,7 +13,6 @@ public class CompetitionSimulator
 		Competition = competition;
 		Repo = repo;
 		// TODO Select based on competition
-		RoundAdvancer = new EuroRoundAdvancer(Competition);
 		GameDelay = TimeSpan.FromMilliseconds(msGameDelay);
 	}
 
@@ -68,7 +66,7 @@ public class CompetitionSimulator
 		game.Simulate();
 		Repo.Save(game);
 		Log.Debug(game.ToString());
-		// RoundAdvancer.CheckAdvanceRound(game);
+
 		await Task.Delay(GameDelay);
 
 		if (Competition.IsFinished)

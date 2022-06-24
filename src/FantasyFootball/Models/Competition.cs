@@ -28,5 +28,5 @@ public class Competition : NamedUniqueId
 
 	[Ignore] public bool IsFinished => CurrentStage is null;
 	[Ignore] public Team? Winner => IsFinished ? LastGame?.Winner : null;
-	[Ignore] public string CurrentStatus => IsFinished ? Winner!.Name : $"{CurrentGame!.Round.Stage.Name}, {CurrentGame!.Round.Name}";
+	[Ignore] public string CurrentStatus => IsFinished ? $"{Res.Winner}: {Winner!.Name}" : $"{CurrentGame!.Round.Stage.Name}, {CurrentGame!.Round.Name}";
 }

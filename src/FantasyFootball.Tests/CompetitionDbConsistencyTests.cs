@@ -6,6 +6,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 {
 	public CompetitionDbConsistencyTests(ITestOutputHelper output) : base(output, level: LogEventLevel.Debug) { }
 
+	/// <summary> TODO Use Theory to remove duplication with other competition types </summary>
 	[Fact]
 	public async Task TestInitializeEm2020()
 	{
@@ -114,7 +115,31 @@ public class CompetitionDbConsistencyTests : BaseTest
 			Name = "Competition 1",
 			Stages = new()
 			{
-				new Stage { Name = "Stage 1", }
+				new Stage
+				{
+					Name = "Stage 1",
+					Rounds = new()
+					{
+						new Round()
+						{
+							Name = "Round 1",
+							RegularGames = new()
+							{
+								new Game
+								{
+									Name = "Game 1",
+									PlayedOn = DateTime.Now,
+									HomeTeam = new Team { Name = "Team 1", ShortName = "T1" },
+									AwayTeam = new Team { Name = "Team 2", ShortName = "T2" },
+									HomeScore = 2,
+									AwayScore = 1,
+									State = GameState.FINISHED,
+									Ending = GameEnd.EXTRA_TIME,
+								}
+							}
+						}
+					}
+				}
 			}
 		};
 

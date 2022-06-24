@@ -7,10 +7,10 @@ public class Round : NamedUniqueId
 	public List<Game> AllGames => RegularGames.Concat(KoGames).ToList();
 
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public virtual List<Game> RegularGames { get; init; } = new();
+	public List<Game> RegularGames { get; init; } = new();
 
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public virtual List<KoGame> KoGames { get; init; } = new();
+	public List<KoGame> KoGames { get; init; } = new();
 
 	[ForeignKey(typeof(Stage))]
 	public int StageId { get; set; }

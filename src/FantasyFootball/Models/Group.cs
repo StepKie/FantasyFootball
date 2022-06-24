@@ -17,4 +17,6 @@ public class Group : NamedUniqueId
 
 	[Ignore]
 	public IList<Game> Games => Stage.Games.Where(g => Teams.Contains(g.HomeTeam!) && Teams.Contains(g.AwayTeam!)).ToList();
+
+	[Ignore] public bool IsFinished => Games.All(g => g.IsFinished);
 }
