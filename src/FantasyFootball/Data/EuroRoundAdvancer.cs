@@ -40,16 +40,16 @@ public class EuroRoundAdvancer
 
 		var thirdPlaceFinishers = groups.Select(g => g.GetStandings()[2]).OrderByDescending(thirdPlaceRecord => thirdPlaceRecord);
 		var bestFourThirdPlace = thirdPlaceFinishers.Take(4).Select(r => r.Team);
-		int[] qualifierIds = bestFourThirdPlace
+		int[] qualifierGroupIndices = bestFourThirdPlace
 			.Select(team => groups.First(g => g.Teams.Contains(team)))
-			.Select(group => group.Id)
-			.OrderBy(id => id).ToArray();
+			.Select(group => groups.IndexOf(group) + 1)
+			.OrderBy(noInCompetition => noInCompetition).ToArray();
 
-		Log.Debug($"Best 4 3rd place finishers: {string.Join(",", bestFourThirdPlace)}, qualifier group ids ordered: {string.Join(",", qualifierIds)}");
-		(int, int, int, int) asTuple = (qualifierIds[0], qualifierIds[1], qualifierIds[2], qualifierIds[3]);
+		Log.Debug($"Best 4 3rd place finishers: {string.Join(",", bestFourThirdPlace)}, qualifier group ids ordered: {string.Join(",", qualifierGroupIndices)}");
+		(int, int, int, int) asTuple = (qualifierGroupIndices[0], qualifierGroupIndices[1], qualifierGroupIndices[2], qualifierGroupIndices[3]);
 		var realizedCombination = thirdPlaceCombinations[asTuple];
-		int groupId = realizedCombination[combinationToId[thirdPlaceCombination]];
-		var team = groups.First(g => g.Id == groupId).GetStandings()[2].Team;
+		int groupIndex = realizedCombination[combinationToId[thirdPlaceCombination]] - 1;
+		var team = groups[groupIndex].GetStandings()[2].Team;
 		Log.Debug($"Qualifier for {thirdPlaceCombination} is {team}");
 
 		return team;

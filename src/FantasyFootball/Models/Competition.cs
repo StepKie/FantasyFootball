@@ -15,7 +15,7 @@ public class Competition : NamedUniqueId
 
 	/// <summary> TODO Figure out the Cascade behavior with the inverse relationships (ManyToOne). For example, currently Round->Stage is resolved, but Stage->Competition is not?! </summary>
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public List<Stage> Stages { get; init; }
+	public List<Stage> Stages { get; init; } = new();
 
 	[Ignore] public IList<Group> Groups => Stages.SelectMany(stage => stage.Groups).ToList();
 	[Ignore] public List<Team> Participants => Groups.SelectMany(group => group.Teams).ToList();

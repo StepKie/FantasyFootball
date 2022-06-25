@@ -49,7 +49,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 				return;
 			}
 			Competition = loadedCompetitionFromDbById;
-			GamesByRound = new(Competition.Rounds.Select(r => new RoundGroup(r.Name, r.RegularGames.OrderBy(g => g.PlayedOn).Select(g => new GameViewModel(g)))));
+			GamesByRound = new(Competition.Rounds.Select(r => new RoundGroup(r.Name, r.AllGames.OrderBy(g => g.PlayedOn).Select(g => new GameViewModel(g)))));
 			Simulator = new CompetitionSimulator(Competition, Repo);
 			Title = $"{Competition.ShortName}-{Competition.Id}";
 		}
