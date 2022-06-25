@@ -157,16 +157,13 @@ public class CompetitionDbConsistencyTests : BaseTest
 		var game = new Game
 		{
 			HomeTeam = new Team { Name = "Team 1" },
-			AwayTeam = new Team { Name = "Team 2" },
+			AwayTeam = Repo.Get<Team>(1)!,
 		};
 		Repo.Save(game);
 
 		var gameDb = Repo.Get<Game>(1)!;
-		var team1 = gameDb.HomeTeam;
-		var team2 = gameDb.AwayTeam;
-
-		Assert.True(team1.Name == "Team 1");
-		Assert.True(team2.Name == "Team 2");
-		// TODO More
+		// This should not work due to CascadeOperation.Read (we always assume Teams are in the db, not supposed to be inserted indirectly via competition
+		Assert.Null(gameDb.HomeTeam);
+		Assert.NotNull(gameDb.AwayTeam);
 	}
 }

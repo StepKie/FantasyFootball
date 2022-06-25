@@ -21,13 +21,13 @@ public class Game : NamedUniqueId
 	[ForeignKey(typeof(Team))]
 	public int HomeTeamId { get; init; }
 
-	[OneToOne(foreignKey: "HomeTeamId", CascadeOperations = CascadeOperation.All)]
+	[OneToOne(foreignKey: "HomeTeamId", CascadeOperations = CascadeOperation.CascadeRead)]
 	public virtual Team HomeTeam { get; init; }
 
 	[ForeignKey(typeof(Team))]
 	public int AwayTeamId { get; init; }
 
-	[OneToOne(foreignKey: "AwayTeamId", CascadeOperations = CascadeOperation.All)]
+	[OneToOne(foreignKey: "AwayTeamId", CascadeOperations = CascadeOperation.CascadeRead)]
 	public virtual Team AwayTeam { get; init; }
 
 	public int HomeScore { get; set; }
