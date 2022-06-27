@@ -25,6 +25,9 @@ public static class MauiProgram
 			.AddSingleton<CompetitionsPage>()
 			.AddSingleton<CompetitionsViewModel>()
 
+			.AddSingleton<CompetitionSetupPage>()
+			.AddSingleton<CompetitionSetupViewModel>()
+
 			.AddSingleton<CompetitionStatisticsPage>()
 			.AddSingleton<StandingsPage>()
 			.AddSingleton<StandingsViewModel>()

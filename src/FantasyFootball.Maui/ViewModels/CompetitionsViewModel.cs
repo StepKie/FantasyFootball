@@ -33,7 +33,9 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	async Task OpenCompetition(Competition competition)
 	{
 		ServiceHelper.GetService<StandingsViewModel>()!.UpdateStandings(competition);
-		var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competition.Id}";
+		//var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competition.Id}";
+
+		var route = $"{nameof(CompetitionSetupPage)}";
 		await Shell.Current.GoToAsync(route);
 	}
 

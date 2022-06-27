@@ -6,6 +6,7 @@
   xmlns:ctrls="clr-namespace:FantasyFootball.Controls"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  x:Name="setupPage"
   x:DataType="vm:CompetitionSetupViewModel">
   <ContentPage.Content>
     <StackLayout>
@@ -63,6 +64,14 @@
                 Margin="10,0,0,0"
                 VerticalOptions="Center"
                 Text="{Binding Record.Team.Name}" />
+              <ImageButton
+                WidthRequest="20"
+                HeightRequest="20"
+                HorizontalOptions="CenterAndExpand"
+                BackgroundColor="Transparent"
+                Command="{Binding Source={x:Reference setupPage}, Path=BindingContext.SelectTeamCommand}"
+                CommandParameter="{Binding .}"
+                Source="{x:StaticResource EditIcon}" />
               <Label Grid.Column="3" VerticalOptions="Center" Text="{Binding Record.MatchesPlayed}" />
               <Label Grid.Column="4" VerticalOptions="Center">
                 <Label.Text>

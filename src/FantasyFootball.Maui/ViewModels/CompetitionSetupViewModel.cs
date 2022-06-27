@@ -2,5 +2,12 @@
 
 public partial class CompetitionSetupViewModel : StandingsViewModel
 {
-	// TODO
+	public List<Group> Groups { get; set; }
+
+	[ICommand]
+	async void SelectTeam(TeamRecordViewModel old)
+	{
+		await Shell.Current.Navigation.PushModalAsync(ServiceHelper.GetService<TeamsPage>());
+		// TODO Handle result/listen/pass in object/callback ...
+	}
 }

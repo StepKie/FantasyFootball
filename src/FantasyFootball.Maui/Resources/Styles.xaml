@@ -42,6 +42,11 @@
     Glyph="{x:Static fonts:IconFont.Add_circle_outline}"
     Color="Black" />
   <FontImageSource
+    x:Key="EditIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Edit}"
+    Color="Black" />
+  <FontImageSource
     x:Key="DeleteIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Delete_forever}"

@@ -162,7 +162,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 		Repo.Save(game);
 
 		var gameDb = Repo.Get<Game>(1)!;
-		// This should not work due to CascadeOperation.Read (we always assume Teams are in the db, not supposed to be inserted indirectly via competition
+		// Null due to CascadeOperation.Read test is expected to fail when we change the annotation
 		Assert.Null(gameDb.HomeTeam);
 		Assert.NotNull(gameDb.AwayTeam);
 	}
