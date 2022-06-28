@@ -4,37 +4,77 @@
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:ctrls="clr-namespace:FantasyFootball.Controls"
+  xmlns:models="clr-namespace:FantasyFootball.Models;assembly=FantasyFootball"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
   x:Name="setupPage"
   x:DataType="vm:CompetitionSetupViewModel">
   <ContentPage.Content>
     <StackLayout>
-      <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="20,20,170,30,40,30,30,30">
+      <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+      <Grid RowDefinitions="40,40" ColumnDefinitions="50,*">
+        <Image
+          Grid.RowSpan="2"
+          Grid.ColumnSpan="2"
+          IsOpaque="False"
+          Opacity="0.2"
+          Source="ball" />
+        <Image Grid.Row="0" Grid.Column="0" Source="{Binding CompetitionLogo}" />
+        <Picker
+          Grid.Row="0"
+          Grid.Column="1"
+          HorizontalOptions="FillAndExpand"
+          ItemsSource="{Binding CompetitionTypes}"
+          SelectedItem="{Binding SelectedCompetitionType}" />
+        <Label
+          Grid.Row="1"
+          HorizontalOptions="End"
+          VerticalOptions="Center"
+          Text="{xct:Translate Year}" />
+        <Picker
+          Grid.Row="1"
+          Grid.Column="1"
+          HorizontalOptions="FillAndExpand"
+          ItemsSource="{Binding Years}"
+          SelectedItem="{Binding SelectedYear, Mode=TwoWay}" />
+      </Grid>
+      <StackLayout Margin="10" HorizontalOptions="Center" Orientation="Horizontal">
+        <Button
+          WidthRequest="100"
+          Command="{Binding ResetToHistoricTeamsCommand}"
+          ImageSource="{x:StaticResource PlayIcon}"
+          Text="{xct:Translate Go}" />
+        <Button
+          WidthRequest="50"
+          Margin="10,0,0,0"
+          Command="{Binding FillRandomTeamsCommand}"
+          ImageSource="{x:StaticResource SimulateFiveIcon}" />
+      </StackLayout>
+
+      <Grid RowDefinitions="25" ColumnDefinitions="20,20,170,60,40">
         <Label
           Grid.Column="0"
           Grid.ColumnSpan="3"
           FontAttributes="Bold"
           Text="{Binding Title}"
           TextTransform="Uppercase" />
-        <Label Grid.Column="3" Text="{xct:Translate GamesShort}" />
-        <Label Grid.Column="4" Text="{xct:Translate Goals}" />
-        <Label Grid.Column="5" Text="{xct:Translate GoalDifference}" />
-        <Label Grid.Column="6" Text="{xct:Translate PointsShort}" />
+        <Label Grid.Column="2" Margin="10,0,0,0" Text="{xct:Translate Team}" />
+        <Label Grid.Column="3" Margin="10,0,0,0" Text="{xct:Translate Elo}" />
       </Grid>
       <CollectionView
         VerticalOptions="FillAndExpand"
         HorizontalScrollBarVisibility="Always"
         IsGrouped="True"
         ItemSizingStrategy="MeasureAllItems"
-        ItemsSource="{Binding RecordsByGroup}">
+        ItemsSource="{Binding TeamsByGroup}">
         <CollectionView.ItemsLayout>
           <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
         </CollectionView.ItemsLayout>
         <CollectionView.GroupHeaderTemplate>
           <DataTemplate>
             <Label
-              x:DataType="vm:RecordsGroup"
+              Padding="5"
+              x:DataType="vm:TeamsGroup"
               BackgroundColor="LightGrey"
               FontAttributes="Bold"
               Text="{Binding Name}"
@@ -42,56 +82,53 @@
           </DataTemplate>
         </CollectionView.GroupHeaderTemplate>
         <CollectionView.ItemTemplate>
-          <DataTemplate x:DataType="vm:TeamRecordViewModel">
-            <Grid
-              Grid.Row="0"
-              RowDefinitions="25"
-              ColumnDefinitions="20,20,170,30,40,30,30,30"
-              BackgroundColor="{Binding BgColor}">
+          <DataTemplate x:DataType="vm:TeamViewModel">
+            <Grid RowDefinitions="25" ColumnDefinitions="20,20,170,60,40">
               <Label
                 Grid.Column="0"
                 VerticalOptions="Center"
                 FontAttributes="Bold"
-                Text="{Binding Record.Position}" />
+                Text="{Binding Rank}" />
               <Image
                 Grid.Column="1"
                 WidthRequest="20"
                 HeightRequest="20"
                 VerticalOptions="Center"
-                Source="{Binding Record.Team.Logo}" />
+                Source="{Binding Team.Logo}" />
               <Label
                 Grid.Column="2"
                 Margin="10,0,0,0"
                 VerticalOptions="Center"
-                Text="{Binding Record.Team.Name}" />
+                Text="{Binding Team.Name}" />
+              <Label
+                Grid.Column="3"
+                Margin="10,0,0,0"
+                VerticalOptions="Center"
+                Text="{Binding Team.Elo}" />
               <ImageButton
+                Grid.Column="4"
                 WidthRequest="20"
                 HeightRequest="20"
-                HorizontalOptions="CenterAndExpand"
                 BackgroundColor="Transparent"
                 Command="{Binding Source={x:Reference setupPage}, Path=BindingContext.SelectTeamCommand}"
                 CommandParameter="{Binding .}"
                 Source="{x:StaticResource EditIcon}" />
-              <Label Grid.Column="3" VerticalOptions="Center" Text="{Binding Record.MatchesPlayed}" />
-              <Label Grid.Column="4" VerticalOptions="Center">
-                <Label.Text>
-                  <MultiBinding StringFormat="{}{0}:{1}">
-                    <Binding Path="Record.GoalsFor" />
-                    <Binding Path="Record.GoalsAgainst" />
-                  </MultiBinding>
-                </Label.Text>
-              </Label>
-              <Label Grid.Column="5" VerticalOptions="Center" Text="{Binding Record.GoalDifference}" />
-              <Label
-                Grid.Column="6"
-                VerticalOptions="Center"
-                FontAttributes="Bold"
-                Text="{Binding Record.Points}" />
-              <!--  Label Grid.Column="7" FontAttributes="Bold" Text="{Binding Record.AveragePointsPerGame}" /  -->
             </Grid>
           </DataTemplate>
         </CollectionView.ItemTemplate>
       </CollectionView>
+      <StackLayout Margin="10" HorizontalOptions="Center" Orientation="Horizontal">
+        <Button
+          WidthRequest="100"
+          Command="{Binding SimulateSingleCommand}"
+          ImageSource="{x:StaticResource PlayIcon}"
+          Text="{xct:Translate Go}" />
+        <Button
+          WidthRequest="50"
+          Margin="10,0,0,0"
+          Command="{Binding SimulateBatchCommand}"
+          ImageSource="{x:StaticResource SimulateFiveIcon}" />
+      </StackLayout>
     </StackLayout>
   </ContentPage.Content>
 </ContentPage>

@@ -142,6 +142,15 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Elo.
+        /// </summary>
+        public static string Elo {
+            get {
+                return ResourceManager.GetString("Elo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EC 2020.
         /// </summary>
         public static string EM_Standard {

@@ -6,7 +6,7 @@ public abstract class CompetitionFactory
 	protected readonly IRepository _repo;
 	Competition _competition;
 
-	protected CompetitionType CompetitionType { get; init; }
+	public CompetitionType CompetitionType { get; init; }
 	protected DateTime StartDate { get; init; }
 	public ITeamSelector TeamSelector { get; init; }
 	public List<Group> Groups { get; set; }
@@ -16,6 +16,7 @@ public abstract class CompetitionFactory
 	public CompetitionFactory(CompetitionType type, DateTime startDate, IRepository repo)
 	{
 		_repo = repo;
+		_participantPool = repo.GetAll<Team>();
 		CompetitionType = type;
 		StartDate = startDate;
 	}
@@ -33,7 +34,7 @@ public abstract class CompetitionFactory
 	{
 		_participantPool = await _repo.GetAllAsync<Team>();
 		Participants = SelectParticipants();
-		Groups = CreateGroups();
+		Groups ??= CreateGroups();
 		_competition = new()
 		{
 			Name = CompetitionType.Name().Long + " 2020",
@@ -46,5 +47,5 @@ public abstract class CompetitionFactory
 		return _competition;
 	}
 
-	public Team Team(string shortName) => Participants.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
+	public Team Team(string shortName) => _participantPool.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
 }

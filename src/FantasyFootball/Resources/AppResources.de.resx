@@ -144,6 +144,9 @@
   <data name="EC" xml:space="preserve">
     <value>EM</value>
   </data>
+  <data name="Elo" xml:space="preserve">
+    <value>Elo</value>
+  </data>
   <data name="EM_Standard" xml:space="preserve">
     <value>EM 2020</value>
   </data>

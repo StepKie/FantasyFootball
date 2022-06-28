@@ -21,7 +21,8 @@
       VerticalOptions="FillAndExpand"
       ItemSizingStrategy="MeasureAllItems"
       ItemsSource="{Binding TeamsInSelectedConfederation}"
-      SelectionMode="None">
+      SelectedItem="{Binding SelectedTeam}"
+      SelectionMode="Single">
       <CollectionView.Header>
         <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="30,60,180,60">
           <Label Grid.Column="2" FontAttributes="Bold" Text="{xct:Translate Team}" />

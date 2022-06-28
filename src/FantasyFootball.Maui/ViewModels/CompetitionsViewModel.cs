@@ -9,7 +9,6 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	public IList<CompetitionType> CompetitionTypes { get; } = new[] { CompetitionType.WM, CompetitionType.EM };
 
 	public IList<int> Years => SelectedCompetitionType.AvailableYears().ToList();
-	public IList<TeamSelectionType> ParticipantSelectionTypes { get; } = Enum.GetValues(typeof(TeamSelectionType)).Cast<TeamSelectionType>().ToList();
 
 	[ObservableProperty]
 	[AlsoNotifyChangeFor(nameof(StoredCompetitionsForSelectedType))]
@@ -17,9 +16,6 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	[AlsoNotifyChangeFor(nameof(Years))]
 	[AlsoNotifyChangeFor(nameof(SelectedYear))]
 	CompetitionType _selectedCompetitionType = CompetitionType.EM;
-
-	[ObservableProperty]
-	TeamSelectionType _selectedParticipantMode = TeamSelectionType.HISTORIC;
 
 	[ObservableProperty]
 	int _selectedYear;
@@ -33,22 +29,14 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	async Task OpenCompetition(Competition competition)
 	{
 		ServiceHelper.GetService<StandingsViewModel>()!.UpdateStandings(competition);
-		//var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competition.Id}";
-
-		var route = $"{nameof(CompetitionSetupPage)}";
+		var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competition.Id}";
 		await Shell.Current.GoToAsync(route);
 	}
 
-	[Time]
 	[ICommand]
-	async Task OpenNewCompetition()
+	async Task SetupNewCompetition()
 	{
-		IsBusy = true;
-		var competition = await CompetitionFactories.Create(Repo, SelectedCompetitionType, SelectedParticipantMode);
-		Repo.Save(competition);
-		Log.Debug("Competition created");
-		IsBusy = false;
-		await OpenCompetition(competition);
+		await Shell.Current.GoToAsync($"{nameof(CompetitionSetupPage)}");
 	}
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
@@ -65,21 +53,5 @@ public partial class CompetitionsViewModel : GeneralViewModel
 		IsBusy = false;
 		OnPropertyChanged(nameof(StoredCompetitionsForSelectedType));
 
-	}
-
-	[ICommand]
-	async Task BatchSimulate()
-	{
-		for (int i = 0; i < DefaultAmountOfBatchSimulations; i++)
-		{
-			IsBusy = true;
-			var competition = await CompetitionFactories.Create(Repo, SelectedCompetitionType, SelectedParticipantMode);
-			Repo.Save(competition);
-			var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 0);
-			await simulator.Simulate().ConfigureAwait(false);
-			IsBusy = false;
-			await ReloadCompetitions().ConfigureAwait(false);
-			Log.Debug($"Simulation {i} of {DefaultAmountOfBatchSimulations} complete.");
-		}
 	}
 }

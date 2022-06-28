@@ -11,9 +11,9 @@
   x:DataType="vm:CompetitionsViewModel">
   <StackLayout>
     <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-    <Grid RowDefinitions="40,40,40" ColumnDefinitions="50,*">
+    <Grid RowDefinitions="40" ColumnDefinitions="50,*">
       <Image
-        Grid.RowSpan="3"
+        Grid.RowSpan="1"
         Grid.ColumnSpan="2"
         IsOpaque="False"
         Opacity="0.2"
@@ -25,40 +25,13 @@
         HorizontalOptions="FillAndExpand"
         ItemsSource="{Binding CompetitionTypes}"
         SelectedItem="{Binding SelectedCompetitionType}" />
-      <Label
-        Grid.Row="1"
-        HorizontalOptions="End"
-        VerticalOptions="Center"
-        Text="{xct:Translate Year}" />
-      <Picker
-        Grid.Row="1"
-        Grid.Column="1"
-        HorizontalOptions="FillAndExpand"
-        ItemsSource="{Binding Years}"
-        SelectedItem="{Binding SelectedYear, Mode=TwoWay}" />
-      <Label
-        Grid.Row="2"
-        HorizontalOptions="End"
-        VerticalOptions="Center"
-        Text="{xct:Translate Teams}" />
-      <Picker
-        Grid.Row="2"
-        Grid.Column="1"
-        HorizontalOptions="FillAndExpand"
-        ItemsSource="{Binding ParticipantSelectionTypes}"
-        SelectedItem="{Binding SelectedParticipantMode}" />
     </Grid>
     <StackLayout Margin="10" HorizontalOptions="Center" Orientation="Horizontal">
       <Button
         WidthRequest="100"
-        Command="{Binding OpenNewCompetitionCommand}"
+        Command="{Binding SetupNewCompetitionCommand}"
         ImageSource="{x:StaticResource PlayIcon}"
         Text="{xct:Translate Go}" />
-      <Button
-        WidthRequest="50"
-        Margin="10,0,0,0"
-        Command="{Binding BatchSimulateCommand}"
-        ImageSource="{x:StaticResource SimulateFiveIcon}" />
     </StackLayout>
     <!--  History of past competitions  -->
     <CollectionView

@@ -2,14 +2,22 @@
 
 namespace FantasyFootball.ViewModels;
 
+[QueryProperty(nameof(SelectionMode), nameof(SelectionMode))]
+[QueryProperty(nameof(SelectedConfederation), nameof(SelectedConfederation))]
 public partial class TeamsViewModel : GeneralViewModel
 {
 	[ObservableProperty]
 	string _selectedConfederation = Res.All;
 
+	[ObservableProperty]
+	int _selectionMode;
+
 	/// <summary> Currently unused </summary>
 	[ObservableProperty]
 	TeamType _selectedType;
+
+	[ObservableProperty]
+	TeamViewModel _selectedTeam;
 
 	List<TeamViewModel> _allTeams = new();
 
@@ -36,6 +44,19 @@ public partial class TeamsViewModel : GeneralViewModel
 	{
 		Log.Debug($"Selected confederation changed to {value}");
 		UpdateSelectedTeams();
+	}
+
+	partial void OnSelectedTeamChanged(TeamViewModel value)
+	{
+		var route = (SelectionType)SelectionMode switch
+		{
+			SelectionType.SHOW_DETAILS => $"",
+			SelectionType.RETURN_ID => $"//{nameof(CompetitionsPage)}/{nameof(CompetitionSetupPage)}?{nameof(CompetitionSetupViewModel.NewTeamIdSelected)}={value.Team.Id}",
+			_ => throw new ArgumentOutOfRangeException($"Unexpected SelectionType {SelectionMode}"),
+		};
+
+		Shell.Current.GoToAsync(route);
+
 	}
 
 	void UpdateSelectedTeams()

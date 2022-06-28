@@ -9,7 +9,7 @@ public static class CompetitionFactories
 	public static readonly int[] HISTORIC_WM_YEARS = new[] { 2018, 2022 };
 	public static readonly int[] HISTORIC_EM_YEARS = new[] { 2016, 2020 };
 
-	public static async Task<Competition> Create(IRepository repo, CompetitionType selectedCompetitionType, TeamSelectionType selection)
+	public static CompetitionFactory For(IRepository repo, CompetitionType selectedCompetitionType, TeamSelectionType selection)
 	{
 		CompetitionFactory factory = (selectedCompetitionType, selection) switch
 		{
@@ -19,7 +19,7 @@ public static class CompetitionFactories
 			_ => throw new ArgumentException($"No CompetitionFactory found for {selection}"),
 		};
 
-		return await factory.Create();
+		return factory;
 	}
 
 	public static IEnumerable<int> AvailableYears(this CompetitionType type)

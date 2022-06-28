@@ -23,7 +23,7 @@ public class BaseTest
 	/// <summary> For tests, create a default competition using the Factory class </summary>
 	public async Task<Competition> InitCompetition(CompetitionType type, TeamSelectionType teamSelection)
 	{
-		var competition = await CompetitionFactories.Create(Repo, type, teamSelection);
+		var competition = await CompetitionFactories.For(Repo, type, teamSelection).Create();
 		Repo.Save(competition);
 
 		var competitions = Repo.GetAll<Competition>();

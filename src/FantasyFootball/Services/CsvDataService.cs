@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using CsvHelper;
+using FantasyFootball.Data.CompetitionFactories;
 
 namespace FantasyFootball.Services;
 
@@ -14,8 +15,13 @@ public class CsvDataService : IDataService
 	public CsvDataService(IRepository repo, CultureInfo? language = null)
 	{
 		_repo = repo;
+		CompetitionFactory = new Em2020CompetitionFactory(_repo);
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
 	}
+
+	/// <summary> Global CompetitionFactory used to setup new Competitions </summary>
+	public CompetitionFactory CompetitionFactory { get; set; }
+
 	public IList<Country> CreateCountries()
 	{
 		Confederation.ALL.ForEach(c => _repo.Save(c));
@@ -65,6 +71,7 @@ public class CsvDataService : IDataService
 			_repo.Save(team);
 		}
 
+		CompetitionFactory = new Em2020CompetitionFactory(_repo);
 		Log.Debug($"Added {teams.Count} teams to repo, repo now has {_repo.Count<Team>()} teams");
 	}
 }

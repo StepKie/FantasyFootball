@@ -7,8 +7,8 @@ public partial class TeamViewModel : GeneralViewModel
 	[ObservableProperty]
 	string _eloString;
 
-	public Team Team { get; init; }
-	public int Rank { get; init; }
+	public Team Team { get; set; }
+	public int Rank { get; set; }
 
 	public TeamViewModel(int rank, Team team)
 	{
