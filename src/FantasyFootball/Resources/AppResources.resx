@@ -141,6 +141,9 @@
   <data name="Competitions" xml:space="preserve">
     <value>Competitions</value>
   </data>
+  <data name="Drawing" xml:space="preserve">
+    <value>Drawing</value>
+  </data>
   <data name="EC" xml:space="preserve">
     <value>EC</value>
   </data>
@@ -186,9 +189,6 @@
   <data name="GroupStage" xml:space="preserve">
     <value>Group Stage</value>
   </data>
-  <data name="Historic" xml:space="preserve">
-    <value>Historic</value>
-  </data>
   <data name="InProgress" xml:space="preserve">
     <value>In Progress ...</value>
   </data>
@@ -212,6 +212,9 @@
   </data>
   <data name="Oceania" xml:space="preserve">
     <value>Australia and Oceania</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Original</value>
   </data>
   <data name="Points" xml:space="preserve">
     <value>Points</value>
@@ -272,9 +275,6 @@
   </data>
   <data name="Winner" xml:space="preserve">
     <value>Winner</value>
-  </data>
-  <data name="WithDrawing" xml:space="preserve">
-    <value>Random Teams</value>
   </data>
   <data name="Won" xml:space="preserve">
     <value>Won</value>

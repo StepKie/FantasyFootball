@@ -133,6 +133,15 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drawing.
+        /// </summary>
+        public static string Drawing {
+            get {
+                return ResourceManager.GetString("Drawing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EC.
         /// </summary>
         public static string EC {
@@ -268,15 +277,6 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Historic.
-        /// </summary>
-        public static string Historic {
-            get {
-                return ResourceManager.GetString("Historic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to In Progress ....
         /// </summary>
         public static string InProgress {
@@ -345,6 +345,15 @@ namespace FantasyFootball.Resources {
         public static string Oceania {
             get {
                 return ResourceManager.GetString("Oceania", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original.
+        /// </summary>
+        public static string Original {
+            get {
+                return ResourceManager.GetString("Original", resourceCulture);
             }
         }
         
@@ -525,15 +534,6 @@ namespace FantasyFootball.Resources {
         public static string Winner {
             get {
                 return ResourceManager.GetString("Winner", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Random Teams.
-        /// </summary>
-        public static string WithDrawing {
-            get {
-                return ResourceManager.GetString("WithDrawing", resourceCulture);
             }
         }
         

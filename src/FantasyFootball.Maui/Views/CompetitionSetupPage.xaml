@@ -40,15 +40,16 @@
       </Grid>
       <StackLayout Margin="10" HorizontalOptions="Center" Orientation="Horizontal">
         <Button
-          WidthRequest="100"
+          WidthRequest="150"
           Command="{Binding ResetToHistoricTeamsCommand}"
-          ImageSource="{x:StaticResource PlayIcon}"
-          Text="{xct:Translate Go}" />
+          ImageSource="{x:StaticResource HistoricIcon}"
+          Text="{xct:Translate Original}" />
         <Button
-          WidthRequest="50"
+          WidthRequest="150"
           Margin="10,0,0,0"
           Command="{Binding FillRandomTeamsCommand}"
-          ImageSource="{x:StaticResource SimulateFiveIcon}" />
+          ImageSource="{x:StaticResource ShuffleIcon}"
+          Text="{xct:Translate Drawing}" />
       </StackLayout>
 
       <Grid RowDefinitions="25" ColumnDefinitions="20,20,170,60,40">

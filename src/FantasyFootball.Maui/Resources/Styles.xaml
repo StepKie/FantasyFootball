@@ -52,6 +52,11 @@
     Glyph="{x:Static fonts:IconFont.Delete_forever}"
     Color="Black" />
   <FontImageSource
+    x:Key="HistoricIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Event_repeat}"
+    Color="Black" />
+  <FontImageSource
     x:Key="PlayIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Play_circle}"
