@@ -15,14 +15,15 @@ public class CsvDataService : IDataService
 	public CsvDataService(IRepository repo, CultureInfo? language = null)
 	{
 		_repo = repo;
-		CompetitionFactory = new Em2020CompetitionFactory(_repo);
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
 	}
 
 	/// <summary> Global CompetitionFactory used to setup new Competitions </summary>
 	public CompetitionFactory CompetitionFactory { get; set; }
 
-	public IList<Country> CreateCountries()
+	public IList<Team> AllTeams { get; private set; }
+
+	IList<Country> CreateCountries()
 	{
 		Confederation.ALL.ForEach(c => _repo.Save(c));
 
@@ -71,7 +72,37 @@ public class CsvDataService : IDataService
 			_repo.Save(team);
 		}
 
-		CompetitionFactory = new Em2020CompetitionFactory(_repo);
-		Log.Debug($"Added {teams.Count} teams to repo, repo now has {_repo.Count<Team>()} teams");
+		ReloadTeams();
+		CompetitionFactory = EmCompetitionFactory.Default(this);
 	}
+
+	void ReloadTeams()
+	{
+		AllTeams = _repo.GetAll<Team>();
+		Log.Debug($"Reloaded teams, repo now has {AllTeams.Count} teams");
+	}
+
+	public List<Group> CreateFromHistoricalData(CompetitionType competitionType)
+	{
+		Dictionary<string, string[]> historicalData = competitionType switch
+		{
+			CompetitionType.EM => HistoricalData.EM_2020_TEAMS,
+			CompetitionType.WM => HistoricalData.WM_2021_TEAMS,
+			_ => throw new ArgumentException($"No historical data for {competitionType}"),
+		};
+
+		List<Group> groups = new();
+
+		foreach (var entry in historicalData)
+		{
+			Group group = new() { Name = $"{Res.Group} {entry.Key}" };
+			List<Team> teamsInGroup = entry.Value.Select(shortName => Team(shortName)).ToList();
+			group.Teams.AddRange(teamsInGroup);
+			groups.Add(group);
+		}
+
+		return groups;
+	}
+
+	public Team Team(string shortName) => AllTeams.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
 }

@@ -33,7 +33,7 @@ public class EuroRoundAdvancer
 		[(3, 4, 5, 6)] = new[] { 6, 5, 3, 4 },
 	};
 
-	// TODO Make a little easier to understand
+	/// <summary> string is expected in the format of group letters delimited by slashes, e.g. "A/D/E/F" </summary>
 	public static Team GetThirdPlaceQualifier(Stage groupStage, string thirdPlaceCombination)
 	{
 		var groups = groupStage.Groups;

@@ -1,105 +1,10 @@
 ﻿namespace FantasyFootball.Data.CompetitionFactories;
 
-public class Wm2022CompetitionFactory : CompetitionFactory
+public class WmCompetitionFactory : CompetitionFactory
 {
-	public Wm2022CompetitionFactory(IRepository repo) : base(CompetitionType.WM, startDate: HistoricalData.WM_2022_START, repo) { }
+	public WmCompetitionFactory(List<Group> groups) : base(CompetitionType.WM, HistoricalData.WM_2021_START, groups) { }
 
-	public override List<Group> CreateGroups()
-	{
-		return new()
-		{
-			new()
-			{
-				Name = Res.Group + " A",
-				Teams = new()
-				{
-					Team("QAT"),
-					Team("ECU"),
-					Team("SEN"),
-					Team("NED"),
-				},
-			},
-			new()
-			{
-				Name = Res.Group + " B",
-				Teams = new()
-				{
-					Team("ENG"),
-					Team("IRN"),
-					Team("USA"),
-					Team("WAL"),
-				},
-			},
-			new()
-			{
-				Name = Res.Group + " C",
-				Teams = new()
-				{
-					Team("ARG"),
-					Team("RSA"),
-					Team("MEX"),
-					Team("POL"),
-				},
-			},
-			new()
-			{
-				Name = Res.Group + " D",
-				Teams = new()
-				{
-					Team("FRA"),
-					Team("AUS"),
-					Team("DEN"),
-					Team("TUN"),
-				},
-			},
-			new()
-			{
-				Name = Res.Group + " E",
-				Teams = new()
-				{
-					Team("ESP"),
-					Team("CRC"),
-					Team("GER"),
-					Team("JPN"),
-				},
-			},
-			new()
-			{
-				Name = Res.Group + " F",
-				Teams = new()
-				{
-					Team("BEL"),
-					Team("CAN"),
-					Team("MAR"),
-					Team("CRO"),
-				},
-			},
-			new()
-			{
-				Name = Res.Group + " G",
-				Teams = new()
-				{
-					Team("BRA"),
-					Team("SRB"),
-					Team("SUI"),
-					Team("CMR"),
-				},
-			},
-			new()
-			{
-				Name = Res.Group + " H",
-				Teams = new()
-				{
-					Team("POR"),
-					Team("GHA"),
-					Team("URU"),
-					Team("KOR"),
-				},
-			},
-		};
-	}
-
-	public override List<Team> SelectParticipants() => _participantPool.ToList();
+	public static WmCompetitionFactory Default(IDataService dataService) => new WmCompetitionFactory(dataService.CreateFromHistoricalData(CompetitionType.WM));
 
 	public override List<Stage> CreateStages()
 	{
@@ -243,4 +148,7 @@ public class Wm2022CompetitionFactory : CompetitionFactory
 			}
 		};
 	}
+
+	public Team Team(string shortName) => null;
+	// public Team Team(string shortName) => AllTeams.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
 }

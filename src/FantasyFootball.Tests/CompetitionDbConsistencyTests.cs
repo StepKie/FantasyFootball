@@ -10,7 +10,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 	[Fact]
 	public async Task TestInitializeEm2020()
 	{
-		var em2020 = await InitCompetition(CompetitionType.EM, TeamSelectionType.HISTORIC);
+		var em2020 = await InitCompetition(CompetitionType.EM);
 		Assert.Equal(2, em2020.Stages.Count);
 		Assert.Equal(6, em2020.Groups.Count);
 		Assert.Equal(7, em2020.Rounds.Count);
@@ -26,7 +26,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 	[Fact]
 	public async Task TestInitializeWm2022()
 	{
-		var wm2022 = await InitCompetition(CompetitionType.WM, TeamSelectionType.HISTORIC);
+		var wm2022 = await InitCompetition(CompetitionType.WM);
 		Assert.Equal(2, wm2022.Stages.Count);
 		Assert.Equal(8, wm2022.Groups.Count);
 		Assert.Equal(8, wm2022.Rounds.Count);
@@ -43,7 +43,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 	[Fact]
 	public async Task TestManyToOneCompetition()
 	{
-		var wm2022 = await InitCompetition(CompetitionType.WM, TeamSelectionType.HISTORIC);
+		var wm2022 = await InitCompetition(CompetitionType.WM);
 
 		var allGames = wm2022.GamesByDate;
 		var groupGames = allGames.Where(g => g is not KoGame);

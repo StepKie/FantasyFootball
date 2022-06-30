@@ -4,6 +4,7 @@
 [QueryProperty(nameof(NewTeamIdSelected), nameof(NewTeamIdSelected))]
 public partial class CompetitionSetupViewModel : GeneralViewModel
 {
+	IDataService _dataService;
 	[ObservableProperty]
 	int _newTeamIdSelected;
 
@@ -20,14 +21,13 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	int _defaultAmountOfBatchSimulations = 5;
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(Groups))]
 	[AlsoNotifyChangeFor(nameof(TeamsByGroup))]
-	CompetitionFactory _factory;
+	List<Group> _groups;
 
-	public CompetitionSetupViewModel(IDataService dataService, IRepository repo)
+	public CompetitionSetupViewModel(IDataService dataService)
 	{
-		Factory = dataService.CompetitionFactory;
-		Factory.Participants = repo.GetAll<Team>();
+		_dataService = dataService;
+		ResetToHistoricTeams();
 	}
 
 	public IList<CompetitionType> CompetitionTypes { get; } = new[] { CompetitionType.WM, CompetitionType.EM };
@@ -35,19 +35,18 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	public IList<int> Years => SelectedCompetitionType.AvailableYears().ToList();
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
 	public TeamViewModel? SelectedTeam { get; set; }
-	public List<Group> Groups => _factory.CreateGroups();
 	public List<TeamsGroup> TeamsByGroup => new(Groups.Select(group => new TeamsGroup(group)));
 
 	[ICommand]
 	void ResetToHistoricTeams()
 	{
-		Factory = CompetitionFactories.For(Repo, SelectedCompetitionType, TeamSelectionType.HISTORIC);
+		Groups = _dataService.CreateFromHistoricalData(SelectedCompetitionType);
 	}
 
 	[ICommand]
 	async Task FillRandomTeams()
 	{
-		Factory = CompetitionFactories.For(Repo, SelectedCompetitionType, TeamSelectionType.WITH_DRAWING);
+		Groups = _dataService.CreateFromHistoricalData(SelectedCompetitionType);
 	}
 
 	[ICommand]
@@ -100,8 +99,9 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	async Task<Competition> CreateCompetition()
 	{
 		IsBusy = true;
-		_factory.Groups = TeamsByGroup.Select(tg => tg.Group).ToList();
-		var competition = await _factory.Create();
+		var groups = TeamsByGroup.Select(tg => tg.Group).ToList();
+		var factory = CompetitionFactory.For(SelectedCompetitionType, Groups);
+		var competition = factory.Create();
 		Repo.Save(competition);
 		Log.Debug("Competition created");
 		IsBusy = false;

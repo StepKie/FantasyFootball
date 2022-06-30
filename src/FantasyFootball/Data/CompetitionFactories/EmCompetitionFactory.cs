@@ -1,11 +1,10 @@
 ﻿namespace FantasyFootball.Data.CompetitionFactories;
 
-public class DefaultEmCompetitionFactory : DefaultTournamentFactory
+public class EmCompetitionFactory : CompetitionFactory
 {
-	public DefaultEmCompetitionFactory(IRepository repo) : base(CompetitionType.EM, startDate: HistoricalData.EM_2020_START, noOfGroups: 6, groupSize: 4, repo) { }
+	public EmCompetitionFactory(List<Group> groups) : base(CompetitionType.EM, HistoricalData.EM_2020_START, groups) { }
 
-	public override List<Team> SelectParticipants() => new TeamSelector(_participantPool).DrawTeamsWeightedByElo(24, Confederation.UEFA);
-
+	public static EmCompetitionFactory Default(IDataService dataService) => new EmCompetitionFactory(dataService.CreateFromHistoricalData(CompetitionType.EM));
 	public override List<Stage> CreateStages()
 	{
 		return new()

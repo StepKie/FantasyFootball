@@ -8,7 +8,7 @@ public class CompetitionSimulatorTest : BaseTest
 	[Fact]
 	public async Task TestRunEm2020()
 	{
-		var em2020 = await InitCompetition(CompetitionType.EM, TeamSelectionType.HISTORIC);
+		var em2020 = await InitCompetition(CompetitionType.EM);
 
 		var simulator = new CompetitionSimulator(em2020, Repo);
 		var groupStage = em2020.Stages[0];
@@ -30,7 +30,7 @@ public class CompetitionSimulatorTest : BaseTest
 	[Fact]
 	public async Task TestRunWm2022()
 	{
-		var wm2022 = await InitCompetition(CompetitionType.WM, TeamSelectionType.HISTORIC);
+		var wm2022 = await InitCompetition(CompetitionType.WM);
 
 		var simulator = new CompetitionSimulator(wm2022, Repo);
 		var groups = wm2022.Groups;

@@ -2,27 +2,41 @@
 
 public abstract class CompetitionFactory
 {
-	protected IList<Team> _participantPool;
-	protected readonly IRepository _repo;
-	Competition _competition;
-
 	public CompetitionType CompetitionType { get; init; }
 	protected DateTime StartDate { get; init; }
-	public ITeamSelector TeamSelector { get; init; }
-	public List<Group> Groups { get; set; }
+	public virtual List<Group> Groups { get; protected set; }
 
-	public IList<Team> Participants { get; set; }
-
-	public CompetitionFactory(CompetitionType type, DateTime startDate, IRepository repo)
+	public CompetitionFactory(CompetitionType type, DateTime startDate, List<Group> groups)
 	{
-		_repo = repo;
-		_participantPool = repo.GetAll<Team>();
 		CompetitionType = type;
 		StartDate = startDate;
+		Groups = groups;
 	}
 
-	public abstract List<Team> SelectParticipants();
-	public abstract List<Group> CreateGroups();
+	public static CompetitionFactory For(CompetitionType type, List<Group> groups = null)
+	{
+		CompetitionFactory factory = type switch
+		{
+			CompetitionType.EM => new EmCompetitionFactory(groups),
+			CompetitionType.WM => new WmCompetitionFactory(groups),
+			_ => throw new ArgumentException($"No CompetitionFactory found for {type}"),
+		};
+
+		return factory;
+	}
+
+	public static CompetitionFactory Default(CompetitionType type, IDataService dataService)
+	{
+		CompetitionFactory factory = type switch
+		{
+			CompetitionType.EM => EmCompetitionFactory.Default(dataService),
+			CompetitionType.WM => WmCompetitionFactory.Default(dataService),
+			_ => throw new ArgumentException($"No CompetitionFactory found for {type}"),
+		};
+
+		return factory;
+	}
+
 	public abstract List<Stage> CreateStages();
 
 	[Time]
@@ -30,12 +44,11 @@ public abstract class CompetitionFactory
 	/// Creates an (unsaved) competition
 	/// </summary>
 	/// <returns></returns>
-	public virtual async Task<Competition> Create()
+	public virtual Competition Create()
 	{
-		_participantPool = await _repo.GetAllAsync<Team>();
-		Participants = SelectParticipants();
-		Groups ??= CreateGroups();
-		_competition = new()
+		if (Groups is null || !Groups.Any()) { throw new InvalidOperationException("Groups must be not empty or initialized before calling Create()"); }
+
+		Competition competition = new()
 		{
 			Name = CompetitionType.Name().Long + " 2020",
 			ShortName = CompetitionType.Name().Short + " 2020",
@@ -44,8 +57,6 @@ public abstract class CompetitionFactory
 			Stages = CreateStages(),
 		};
 
-		return _competition;
+		return competition;
 	}
-
-	public Team Team(string shortName) => _participantPool.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
 }

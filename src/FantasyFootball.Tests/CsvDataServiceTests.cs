@@ -10,7 +10,7 @@ public class CsvDataServiceTests : BaseTest
 	public void TestCsvImport()
 	{
 		Assert.True(DataService is CsvDataService);
-		var countries = DataService.CreateTeams();
-		Assert.NotEmpty(countries);
+		var teams = DataService.CreateTeams();
+		Assert.NotEmpty(teams);
 	}
 }
