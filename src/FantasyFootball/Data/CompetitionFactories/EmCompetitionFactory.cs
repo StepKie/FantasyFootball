@@ -4,7 +4,7 @@ public class EmCompetitionFactory : CompetitionFactory
 {
 	public EmCompetitionFactory(List<Group> groups) : base(CompetitionType.EM, HistoricalData.EM_2020_START, groups) { }
 
-	public static EmCompetitionFactory Default(IDataService dataService) => new EmCompetitionFactory(dataService.CreateFromHistoricalData(CompetitionType.EM));
+	public static EmCompetitionFactory Default(IDataService dataService) => new(GroupFactory.For(dataService, CompetitionType.EM).CreateFromHistoricalData());
 	public override List<Stage> CreateStages()
 	{
 		return new()

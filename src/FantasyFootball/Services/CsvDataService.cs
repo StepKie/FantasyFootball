@@ -81,28 +81,4 @@ public class CsvDataService : IDataService
 		AllTeams = _repo.GetAll<Team>();
 		Log.Debug($"Reloaded teams, repo now has {AllTeams.Count} teams");
 	}
-
-	public List<Group> CreateFromHistoricalData(CompetitionType competitionType)
-	{
-		Dictionary<string, string[]> historicalData = competitionType switch
-		{
-			CompetitionType.EM => HistoricalData.EM_2020_TEAMS,
-			CompetitionType.WM => HistoricalData.WM_2021_TEAMS,
-			_ => throw new ArgumentException($"No historical data for {competitionType}"),
-		};
-
-		List<Group> groups = new();
-
-		foreach (var entry in historicalData)
-		{
-			Group group = new() { Name = $"{Res.Group} {entry.Key}" };
-			List<Team> teamsInGroup = entry.Value.Select(shortName => Team(shortName)).ToList();
-			group.Teams.AddRange(teamsInGroup);
-			groups.Add(group);
-		}
-
-		return groups;
-	}
-
-	public Team Team(string shortName) => AllTeams.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
 }

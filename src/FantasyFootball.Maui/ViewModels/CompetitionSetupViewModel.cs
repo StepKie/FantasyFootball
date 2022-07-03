@@ -40,13 +40,13 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	[ICommand]
 	void ResetToHistoricTeams()
 	{
-		Groups = _dataService.CreateFromHistoricalData(SelectedCompetitionType);
+		Groups = GroupFactory.For(_dataService, SelectedCompetitionType).CreateFromHistoricalData();
 	}
 
 	[ICommand]
 	async Task FillRandomTeams()
 	{
-		Groups = _dataService.CreateFromHistoricalData(SelectedCompetitionType);
+		Groups = GroupFactory.For(_dataService, SelectedCompetitionType).DrawRandom();
 	}
 
 	[ICommand]

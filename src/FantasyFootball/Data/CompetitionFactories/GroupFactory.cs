@@ -16,14 +16,14 @@ public class GroupFactory
 		GroupSize = groupSize;
 	}
 
-	public static GroupFactory Random(IDataService dataService, CompetitionType type) => type switch
+	public static GroupFactory For(IDataService dataService, CompetitionType type) => type switch
 	{
 		CompetitionType.EM => new(CompetitionType.EM, noOfGroups: 6, groupSize: 4, dataService),
 		CompetitionType.WM => new(CompetitionType.WM, noOfGroups: 8, groupSize: 4, dataService),
 		_ => throw new InvalidOperationException(),
 	};
 
-	public List<Group> CreateGroups()
+	public List<Group> DrawRandom()
 	{
 		Confederation? confederation = CompetitionType == CompetitionType.EM ? Confederation.UEFA : null;
 		var participants = DrawTeamsWeightedByElo(NoOfGroups * GroupSize, confederation);
@@ -53,5 +53,29 @@ public class GroupFactory
 		}
 
 		return groups;
+	}
+
+	public List<Group> CreateFromHistoricalData()
+	{
+		Dictionary<string, string[]> historicalData = CompetitionType switch
+		{
+			CompetitionType.EM => HistoricalData.EM_2020_TEAMS,
+			CompetitionType.WM => HistoricalData.WM_2021_TEAMS,
+			_ => throw new ArgumentException($"No historical data for {CompetitionType}"),
+		};
+
+		List<Group> groups = new();
+
+		foreach (var entry in historicalData)
+		{
+			Group group = new() { Name = $"{Res.Group} {entry.Key}" };
+			List<Team> teamsInGroup = entry.Value.Select(shortName => Team(shortName)).ToList();
+			group.Teams.AddRange(teamsInGroup);
+			groups.Add(group);
+		}
+
+		return groups;
+
+		Team Team(string shortName) => _dataService.AllTeams.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
 	}
 }

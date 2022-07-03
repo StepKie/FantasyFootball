@@ -14,8 +14,6 @@ public interface IDataService
 
 	IList<Team> CreateTeams();
 
-	public List<Group> CreateFromHistoricalData(CompetitionType competitionType);
-
 	/// <summary> Important: Only call once in app lifecycle! </summary>
 	void Reset();
 

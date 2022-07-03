@@ -4,7 +4,7 @@ public class WmCompetitionFactory : CompetitionFactory
 {
 	public WmCompetitionFactory(List<Group> groups) : base(CompetitionType.WM, HistoricalData.WM_2021_START, groups) { }
 
-	public static WmCompetitionFactory Default(IDataService dataService) => new WmCompetitionFactory(dataService.CreateFromHistoricalData(CompetitionType.WM));
+	public static WmCompetitionFactory Default(IDataService dataService) => new(GroupFactory.For(dataService, CompetitionType.WM).CreateFromHistoricalData());
 
 	public override List<Stage> CreateStages()
 	{
