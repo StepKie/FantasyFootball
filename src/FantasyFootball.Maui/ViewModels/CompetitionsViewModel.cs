@@ -34,10 +34,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	}
 
 	[ICommand]
-	async Task SetupNewCompetition()
-	{
-		await Shell.Current.GoToAsync($"{nameof(CompetitionSetupPage)}");
-	}
+	async Task SetupNewCompetition() => await Shell.Current.GoToAsync($"{nameof(CompetitionSetupPage)}");
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
 	{

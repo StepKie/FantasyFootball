@@ -16,17 +16,20 @@ public class CsvDataService : IDataService
 	{
 		_repo = repo;
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
+		ReloadTeams();
+		if (!AllTeams.Any())
+		{
+			Reset();
+		}
 	}
 
 	/// <summary> Global CompetitionFactory used to setup new Competitions </summary>
 	public CompetitionFactory CompetitionFactory { get; set; }
 
-	public IList<Team> AllTeams { get; private set; }
+	public List<Team> AllTeams { get; private set; } = new();
 
 	IList<Country> CreateCountries()
 	{
-		Confederation.ALL.ForEach(c => _repo.Save(c));
-
 		using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(teamsFile);
 		_ = stream ?? throw new FileNotFoundException($"{teamsFile} not found in embedded resource");
 
@@ -55,7 +58,7 @@ public class CsvDataService : IDataService
 		return countries;
 	}
 
-	public IList<Team> CreateTeams()
+	public List<Team> CreateTeams()
 	{
 		var countries = CreateCountries();
 		return countries.Select(country => country.NationalTeam).ToList();
@@ -65,11 +68,12 @@ public class CsvDataService : IDataService
 	public void Reset()
 	{
 		_repo.Reset();
+		Confederation.ALL.ForEach(c => _repo.Insert(c));
 		var teams = CreateTeams();
 
 		foreach (var team in teams)
 		{
-			_repo.Save(team);
+			_repo.Insert(team);
 		}
 
 		ReloadTeams();

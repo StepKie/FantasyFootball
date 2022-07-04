@@ -17,7 +17,6 @@ public class BaseTest
 		Log.Logger = ISettingsService.StandardLoggerConfig.WriteTo.TestOutput(Output, level).CreateLogger();
 		Repo = new Repository(inMemory: true);
 		DataService = new CsvDataService(Repo, new CultureInfo("de"));
-		DataService.Reset();
 	}
 
 	/// <summary> For tests, create a default competition using the Factory class </summary>
@@ -25,7 +24,7 @@ public class BaseTest
 	{
 		var factory = CompetitionFactory.Default(type, DataService);
 		var competition = factory.Create();
-		Repo.Save(competition);
+		Repo.Insert(competition);
 
 		var competitions = Repo.GetAll<Competition>();
 		Assert.Single(competitions);

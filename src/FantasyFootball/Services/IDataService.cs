@@ -8,11 +8,11 @@ namespace FantasyFootball.Services;
 public interface IDataService
 {
 	/// <summary> Provides access to all available teams. Implementors should ensure that this is updated whenever a Team is changed (Name, Elo, etc.) </summary>
-	IList<Team> AllTeams { get; }
+	List<Team> AllTeams { get; }
 
 	CompetitionFactory CompetitionFactory { get; set; }
 
-	IList<Team> CreateTeams();
+	List<Team> CreateTeams();
 
 	/// <summary> Important: Only call once in app lifecycle! </summary>
 	void Reset();

@@ -10,7 +10,7 @@ public class GroupFactoryTests : BaseTest
 	public void TestDrawTeamsWeightedByElo()
 	{
 		var fromConfederation = Confederation.UEFA;
-		var groups = GroupFactory.Random(DataService, CompetitionType.EM).CreateGroups();
+		var groups = GroupFactory.For(DataService, CompetitionType.EM).DrawRandom();
 		var drawn = groups.SelectMany(g => g.Teams).ToList();
 		Assert.Equal(24, drawn.Count);
 		Assert.All(drawn, t => Assert.True(t.Country.Confederation.Equals(Confederation.UEFA)));

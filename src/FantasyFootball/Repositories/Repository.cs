@@ -23,7 +23,7 @@ public class Repository : IRepository
 	}
 
 	[Time]
-	public IList<T> GetAll<T>() where T : NamedUniqueId, new() => _dbConnection.GetAllWithChildren<T>(recursive: true);
+	public List<T> GetAll<T>() where T : NamedUniqueId, new() => _dbConnection.GetAllWithChildren<T>(recursive: true);
 
 	public Task<List<T>> GetAllAsync<T>() where T : NamedUniqueId, new() => Task.Run(() => _dbConnection.GetAllWithChildren<T>(recursive: true));
 
@@ -42,17 +42,9 @@ public class Repository : IRepository
 		}
 	}
 
-	public void Save<T>(T item) where T : NamedUniqueId, new()
-	{
-		if (item.Id != 0)
-		{
-			_dbConnection.UpdateWithChildren(item);
-		}
-		else
-		{
-			_dbConnection.InsertWithChildren(item, recursive: true);
-		}
-	}
+	public void Insert<T>(T item) where T : NamedUniqueId, new() => _dbConnection.InsertWithChildren(item, recursive: true);
+
+	public void Update<T>(T item) where T : NamedUniqueId, new() => _dbConnection.UpdateWithChildren(item);
 
 	public void Delete<T>(T item) where T : NamedUniqueId, new() => _dbConnection.Delete(item, recursive: true);
 

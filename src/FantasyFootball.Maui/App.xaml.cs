@@ -10,12 +10,7 @@ public partial class App : Application
 		InitializeComponent();
 		Log.Logger = ISettingsService.StandardLoggerConfig.CreateLogger();
 
-		var repoService = ServiceHelper.GetService<IRepository>()!;
-		if (!repoService.GetAll<Team>().Any())
-		{
-			ServiceHelper.GetService<IDataService>()!.Reset();
-		}
-
+		// TODO: Do we need explicit initialization of DataService on app start?
 		MainPage = new AppShell();
 
 		Routing.RegisterRoute(nameof(CompetitionsPage), typeof(CompetitionsPage));

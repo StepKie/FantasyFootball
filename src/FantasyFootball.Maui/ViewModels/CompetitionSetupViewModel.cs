@@ -102,7 +102,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 		var groups = TeamsByGroup.Select(tg => tg.Group).ToList();
 		var factory = CompetitionFactory.For(SelectedCompetitionType, Groups);
 		var competition = factory.Create();
-		Repo.Save(competition);
+		Repo.Insert(competition);
 		Log.Debug("Competition created");
 		IsBusy = false;
 
