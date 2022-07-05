@@ -73,7 +73,7 @@ public class CompetitionSimulator
 		if (Competition.IsFinished)
 		{
 			Repo.Save(Competition);
-			MessagingCenter.Send(this, MessageKeys.CompetitionUpdated);
+			MessagingCenter.Send(this, MessageKeys.CompetitionFinished);
 		}
 	}
 

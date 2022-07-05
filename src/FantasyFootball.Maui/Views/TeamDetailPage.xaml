@@ -10,7 +10,7 @@
     <ToolbarItem Command="{Binding SaveAndExitCommand}" IconImageSource="{x:StaticResource SaveIcon}" />
   </ContentPage.ToolbarItems>
   <ContentPage.Resources>
-    <!--  Implicit style  -->
+    <!--  Implicit styles  -->
     <Style TargetType="Label">
       <Setter Property="VerticalOptions" Value="Center" />
     </Style>
@@ -21,6 +21,7 @@
   </ContentPage.Resources>
   <StackLayout HorizontalOptions="Center">
     <Image Source="{Binding Team.Logo, FallbackValue='question_mark'}" />
+    <!--  TODO Make these nicer looking using a custom entry integrating the label  -->
     <Grid RowDefinitions="40,40,40" ColumnDefinitions="100,100">
       <Label Grid.Row="0" Grid.Column="0" Text="{xct:Translate WorldRank}" />
       <Label Grid.Row="0" Grid.Column="1" Text="{Binding Rank}" />

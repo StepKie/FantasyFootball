@@ -58,7 +58,7 @@
                   Margin="0,0,10,0"
                   VerticalOptions="Center"
                   Source="{Binding Winner.Logo, FallbackValue='question_mark'}" />
-                <Label WidthRequest="100" VerticalOptions="Center" Text="{Binding CurrentStatus}" />
+                <Label WidthRequest="150" VerticalOptions="Center" Text="{Binding CurrentStatus}" />
               </StackLayout>
             </StackLayout>
             <!--  Separator  -->

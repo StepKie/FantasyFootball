@@ -5,6 +5,18 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+  <ContentPage.Resources>
+    <!--  Implicit styles  -->
+    <Style TargetType="Label">
+      <Setter Property="VerticalOptions" Value="Center" />
+      <Setter Property="HorizontalOptions" Value="End" />
+    </Style>
+    <Style x:Key="HeaderStyle" TargetType="Label">
+      <Setter Property="VerticalOptions" Value="Center" />
+      <Setter Property="HorizontalOptions" Value="Center" />
+      <Setter Property="FontSize" Value="Micro" />
+    </Style>
+  </ContentPage.Resources>
   <ContentPage.Content>
     <StackLayout>
       <StackLayout Orientation="Horizontal">
@@ -13,27 +25,16 @@
       </StackLayout>
       <CollectionView VerticalOptions="FillAndExpand" ItemsSource="{Binding OverallRecords}" SelectionMode="None">
         <CollectionView.Header>
-          <Grid
-            Grid.Row="0"
-            RowDefinitions="40"
-            ColumnDefinitions="20,20,80,30,40,30,30,30,50"
-            ColumnSpacing="5">
-            <Label
-              Grid.Column="0"
-              Grid.ColumnSpan="3"
-              VerticalOptions="Center"
-              FontAttributes="Bold"
-              Text="{Binding Title}"
-              TextTransform="Uppercase" />
-            <Label Grid.Column="3" VerticalOptions="Center" Text="{xct:Translate GamesShort}" />
-            <Label Grid.Column="4" VerticalOptions="Center" Text="{xct:Translate Goals}" />
-            <Label Grid.Column="5" VerticalOptions="Center" Text="{xct:Translate GoalDifference}" />
-            <Label Grid.Column="6" VerticalOptions="Center" Text="{xct:Translate PointsShort}" />
-            <Label Grid.Column="7" VerticalOptions="Center" Text="{xct:Translate PPG}" />
+          <Grid RowDefinitions="40" ColumnDefinitions="20,20,80,30,50,30,30,40,30" ColumnSpacing="5">
+            <Label Grid.Column="3" Style="{StaticResource HeaderStyle}" Text="{xct:Translate GamesShort}" />
+            <Label Grid.Column="4" Style="{StaticResource HeaderStyle}" Text="{xct:Translate Goals}" />
+            <Label Grid.Column="5" Style="{StaticResource HeaderStyle}" Text="{xct:Translate GoalDifference}" />
+            <Label Grid.Column="6" Style="{StaticResource HeaderStyle}" Text="{xct:Translate PointsShort}" />
+            <Label Grid.Column="7" Style="{StaticResource HeaderStyle}" Text="{xct:Translate PPG}" />
             <Label
               Grid.Column="8"
               HorizontalOptions="End"
-              VerticalOptions="Center"
+              FontSize="Micro"
               Text="{xct:Translate Won}" />
           </Grid>
         </CollectionView.Header>
@@ -45,12 +46,12 @@
             <Grid
               Grid.Row="0"
               RowDefinitions="25"
-              ColumnDefinitions="20,20,80,30,40,30,30,30,50"
+              ColumnDefinitions="20,20,80,30,50,30,30,40,30"
               ColumnSpacing="5"
               BackgroundColor="{Binding BgColor}">
               <Label
                 Grid.Column="0"
-                VerticalOptions="Center"
+                HorizontalOptions="Start"
                 FontAttributes="Bold"
                 Text="{Binding Record.Position}" />
               <Image
@@ -58,16 +59,10 @@
                 WidthRequest="20"
                 HeightRequest="20"
                 Margin="0,0,10,0"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
                 Source="{Binding Record.Team.Logo}" />
-              <Label Grid.Column="2" VerticalOptions="Center" Text="{Binding Record.Team.Name}" />
-              <Label
-                Grid.Column="3"
-                HorizontalOptions="End"
-                VerticalOptions="Center"
-                Text="{Binding Record.MatchesPlayed}" />
-              <Label Grid.Column="4" HorizontalOptions="End" VerticalOptions="Center">
+              <Label Grid.Column="2" HorizontalOptions="Start" Text="{Binding Record.Team.Name}" />
+              <Label Grid.Column="3" Text="{Binding Record.MatchesPlayed}" />
+              <Label Grid.Column="4">
                 <Label.Text>
                   <MultiBinding StringFormat="{}{0}:{1}">
                     <Binding Path="Record.GoalsFor" />
@@ -75,27 +70,10 @@
                   </MultiBinding>
                 </Label.Text>
               </Label>
-              <Label
-                Grid.Column="5"
-                HorizontalOptions="End"
-                VerticalOptions="Center"
-                Text="{Binding Record.GoalDifference}" />
-              <Label
-                Grid.Column="6"
-                HorizontalOptions="End"
-                VerticalOptions="Center"
-                Text="{Binding Record.Points}" />
-              <Label
-                Grid.Column="7"
-                HorizontalOptions="End"
-                VerticalOptions="Center"
-                Text="{Binding Record.AveragePointsPerGame, StringFormat='{0:F2}'}" />
-              <Label
-                Grid.Column="8"
-                HorizontalOptions="End"
-                VerticalOptions="Center"
-                FontAttributes="Bold"
-                Text="{Binding Record.CompetitionWins}" />
+              <Label Grid.Column="5" Text="{Binding Record.GoalDifference}" />
+              <Label Grid.Column="6" Text="{Binding Record.Points}" />
+              <Label Grid.Column="7" Text="{Binding Record.AveragePointsPerGame, StringFormat='{0:F2}'}" />
+              <Label Grid.Column="8" FontAttributes="Bold" Text="{Binding Record.CompetitionWins}" />
             </Grid>
           </DataTemplate>
         </CollectionView.ItemTemplate>

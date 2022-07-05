@@ -58,6 +58,7 @@ public partial class TeamsViewModel : GeneralViewModel
 			_ => throw new ArgumentOutOfRangeException($"Unexpected SelectionType {SelectionMode}"),
 		};
 
+		// Clear selection, reset selection mode and navigate away
 		SelectedTeam = null;
 		SelectionMode = (int)SelectionType.SHOW_DETAILS;
 		await Shell.Current.GoToAsync(route);

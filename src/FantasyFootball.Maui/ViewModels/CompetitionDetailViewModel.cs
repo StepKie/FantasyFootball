@@ -33,7 +33,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 
 	public CompetitionDetailViewModel()
 	{
-		MessagingCenter.Subscribe<Competition>(this, MessageKeys.CompetitionUpdated, _ => OnPropertyChanged(nameof(Competition)));
+		MessagingCenter.Subscribe<Competition>(this, MessageKeys.CompetitionFinished, _ => OnPropertyChanged(nameof(Competition)));
 	}
 
 	partial void OnCompetitionIdChanged(int value) => LoadCompetition();

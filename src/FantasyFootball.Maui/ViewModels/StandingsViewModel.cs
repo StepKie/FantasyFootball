@@ -2,6 +2,8 @@
 
 public partial class StandingsViewModel : GeneralViewModel
 {
+	Dictionary<CompetitionType, List<TeamRecordViewModel>> _standingsCache = new() { [CompetitionType.EM] = new(), [CompetitionType.WM] = new(), };
+
 	[ObservableProperty]
 	[AlsoNotifyChangeFor(nameof(OverallRecords))]
 	List<Competition> _allCompetitions = new();
@@ -17,24 +19,15 @@ public partial class StandingsViewModel : GeneralViewModel
 	{
 		// TODO Revisit, this is really expensive, especially during batch simulation
 		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, g => UpdateStandings(g.Round.Stage.Competition, g));
-		LoadAllCompetitions();
+		MessagingCenter.Subscribe<CompetitionSimulator>(this, MessageKeys.CompetitionFinished, async _ => await LoadAllCompetitions());
+		_ = LoadAllCompetitions();
 	}
 
 	public IList<CompetitionType> CompetitionTypes { get; } = Enum.GetValues(typeof(CompetitionType)).Cast<CompetitionType>().ToList();
 
 	public List<RecordsGroup> RecordsByGroup { get; set; } = new();
 
-	public List<TeamRecordViewModel> OverallRecords
-	{
-		get
-		{
-			var result = Standings.CreateFrom(AllCompetitions
-				.Where(c => c.Type == SelectedCompetitionType)
-				.SelectMany(c => c.GamesByDate))
-				.Select(r => new TeamRecordViewModel(r, ResourceConstants.DefaultPageColor)).ToList();
-			return result;
-		}
-	}
+	public List<TeamRecordViewModel> OverallRecords => _standingsCache[SelectedCompetitionType];
 
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
 
@@ -46,8 +39,19 @@ public partial class StandingsViewModel : GeneralViewModel
 		Color? GetColor(TeamRecord r) => r.Team.Equals(justFinished?.HomeTeam) || r.Team.Equals(justFinished?.AwayTeam) ? ResourceConstants.DefaultHighlightColor : null;
 	}
 
-	public void LoadAllCompetitions()
+	public async Task LoadAllCompetitions()
 	{
-		AllCompetitions = Repo.GetAll<Competition>().ToList();
+		var competitionsFromDb = (await Repo.GetAllAsync<Competition>()).Where(c => c.IsFinished).ToList();
+
+		foreach (var competitionType in CompetitionTypes)
+		{
+			var relevantGames = competitionsFromDb.Where(c => c.Type == competitionType).SelectMany(c => c.GamesByDate);
+			var records = Standings.CreateFrom(relevantGames);
+			var recordVms = records.Select(r => new TeamRecordViewModel(r)).ToList();
+
+			_standingsCache[competitionType] = recordVms;
+		}
+
+		AllCompetitions = competitionsFromDb;
 	}
 }
