@@ -24,7 +24,7 @@ public class BaseTest
 	{
 		var factory = CompetitionFactory.Default(type, DataService);
 		var competition = factory.Create();
-		Repo.Insert(competition);
+		Repo.Save(competition);
 
 		var competitions = Repo.GetAll<Competition>();
 		Assert.Single(competitions);

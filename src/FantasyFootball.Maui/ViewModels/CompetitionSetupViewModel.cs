@@ -38,16 +38,10 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	public List<TeamsGroup> TeamsByGroup => new(Groups.Select(group => new TeamsGroup(group)));
 
 	[ICommand]
-	void ResetToHistoricTeams()
-	{
-		Groups = GroupFactory.For(_dataService, SelectedCompetitionType).CreateFromHistoricalData();
-	}
+	void ResetToHistoricTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).CreateFromHistoricalData();
 
 	[ICommand]
-	async Task FillRandomTeams()
-	{
-		Groups = GroupFactory.For(_dataService, SelectedCompetitionType).DrawRandom();
-	}
+	void FillRandomTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).DrawRandom();
 
 	[ICommand]
 	async Task SimulateSingle()
@@ -61,9 +55,9 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	[ICommand]
 	async Task SimulateBatch()
 	{
-		await Shell.Current.GoToAsync("..");
+		await Shell.Current.GoToAsync("..").ConfigureAwait(false);
 		// TODO Show Progress on CompetitionsPage
-		for (int i = 0; i < DefaultAmountOfBatchSimulations; i++)
+		for (int i = 1; i <= DefaultAmountOfBatchSimulations; i++)
 		{
 			var competition = await CreateCompetition();
 			var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 0);
@@ -90,8 +84,11 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	{
 		if (SelectedTeam is not null)
 		{
-			// Update TeamViewModel in TeamsByGroup, then clear the selection
-			SelectedTeam.Team = Repo.Get<Team>(value)!;
+			Group containingGroup = Groups.First(g => g.Teams.Contains(SelectedTeam.Team));
+			containingGroup.Teams.Replace(t => t.Equals(SelectedTeam.Team), Repo.Get<Team>(value)!);
+			OnPropertyChanged(nameof(Groups));
+			// AlsoNotifyChangeFor only notifies via setter, so we need to notify manually
+			OnPropertyChanged(nameof(TeamsByGroup));
 			SelectedTeam = null;
 		}
 	}
@@ -99,10 +96,9 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	async Task<Competition> CreateCompetition()
 	{
 		IsBusy = true;
-		var groups = TeamsByGroup.Select(tg => tg.Group).ToList();
 		var factory = CompetitionFactory.For(SelectedCompetitionType, Groups);
 		var competition = factory.Create();
-		Repo.Insert(competition);
+		Repo.Save(competition);
 		Log.Debug("Competition created");
 		IsBusy = false;
 

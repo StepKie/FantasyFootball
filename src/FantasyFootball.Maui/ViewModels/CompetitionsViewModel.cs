@@ -23,6 +23,12 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	[ObservableProperty]
 	int _defaultAmountOfBatchSimulations = 5;
 
+	public CompetitionsViewModel()
+	{
+		MessagingCenter.Subscribe<CompetitionSimulator>(this, MessageKeys.CompetitionUpdated, async _ => await ReloadCompetitions());
+		_ = ReloadCompetitions();
+	}
+
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
 
 	[ICommand]

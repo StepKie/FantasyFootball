@@ -17,7 +17,7 @@ public partial class TeamsViewModel : GeneralViewModel
 	TeamType _selectedType;
 
 	[ObservableProperty]
-	TeamViewModel _selectedTeam;
+	TeamViewModel? _selectedTeam;
 
 	List<TeamViewModel> _allTeams = new();
 
@@ -27,7 +27,8 @@ public partial class TeamsViewModel : GeneralViewModel
 
 	public TeamsViewModel()
 	{
-		MessagingCenter.Subscribe<Team>(this, MessageKeys.RatingChanged, _ => LoadTeams());
+		MessagingCenter.Subscribe<Team>(this, MessageKeys.TeamUpdated, _ => LoadTeams());
+		LoadTeams();
 	}
 
 	[ICommand]
@@ -35,7 +36,7 @@ public partial class TeamsViewModel : GeneralViewModel
 	{
 		IsBusy = true;
 		var teamsDb = await Repo.GetAllAsync<Team>();
-		_allTeams = new(teamsDb.OrderByDescending(t => t.Elo).Select((t, rank) => new TeamViewModel(rank + 1, t)));
+		_allTeams = new(teamsDb.OrderByDescending(t => t.Elo).Select((t, rank) => TeamViewModel.Create(rank + 1, t.Id)));
 		IsBusy = false;
 		UpdateSelectedTeams();
 	}
@@ -46,16 +47,20 @@ public partial class TeamsViewModel : GeneralViewModel
 		UpdateSelectedTeams();
 	}
 
-	partial void OnSelectedTeamChanged(TeamViewModel value)
+	async partial void OnSelectedTeamChanged(TeamViewModel? value)
 	{
+		if (value is null) { return; }
+
 		var route = (SelectionType)SelectionMode switch
 		{
-			SelectionType.SHOW_DETAILS => $"",
+			SelectionType.SHOW_DETAILS => $"{nameof(TeamDetailPage)}?{nameof(TeamViewModel.TeamId)}={value.TeamId}&{nameof(TeamViewModel.Rank)}={value.Rank}",
 			SelectionType.RETURN_ID => $"//{nameof(CompetitionsPage)}/{nameof(CompetitionSetupPage)}?{nameof(CompetitionSetupViewModel.NewTeamIdSelected)}={value.Team.Id}",
 			_ => throw new ArgumentOutOfRangeException($"Unexpected SelectionType {SelectionMode}"),
 		};
 
-		Shell.Current.GoToAsync(route);
+		SelectedTeam = null;
+		SelectionMode = (int)SelectionType.SHOW_DETAILS;
+		await Shell.Current.GoToAsync(route);
 
 	}
 
@@ -65,5 +70,8 @@ public partial class TeamsViewModel : GeneralViewModel
 	}
 
 	[ICommand]
-	Task OpenSelectedTeam(Team selected) => throw new NotImplementedException();
+	Task AddNewTeam() => Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
+
+	[ICommand]
+	Task OpenSelectedTeam(Team selected) => Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
 }

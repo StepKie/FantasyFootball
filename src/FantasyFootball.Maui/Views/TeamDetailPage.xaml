@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="FantasyFootball.Views.TeamDetailPage"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
+  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  x:DataType="vm:TeamViewModel">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Command="{Binding SaveAndExitCommand}" IconImageSource="{x:StaticResource SaveIcon}" />
+  </ContentPage.ToolbarItems>
+  <ContentPage.Resources>
+    <!--  Implicit style  -->
+    <Style TargetType="Label">
+      <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+    <Style TargetType="Entry">
+      <Setter Property="VerticalOptions" Value="Center" />
+      <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+  </ContentPage.Resources>
+  <StackLayout HorizontalOptions="Center">
+    <Image Source="{Binding Team.Logo, FallbackValue='question_mark'}" />
+    <Grid RowDefinitions="40,40,40" ColumnDefinitions="100,100">
+      <Label Grid.Row="0" Grid.Column="0" Text="{xct:Translate WorldRank}" />
+      <Label Grid.Row="0" Grid.Column="1" Text="{Binding Rank}" />
+      <Label Grid.Row="1" Grid.Column="0" Text="Name" />
+      <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Team.Name}">
+        <Entry.Behaviors>
+          <xct:EventToCommandBehavior Command="{Binding TrackEditingCommand}" EventName="Focused" />
+        </Entry.Behaviors>
+      </Entry>
+      <Label Grid.Row="2" Grid.Column="0" Text="{xct:Translate Elo}" />
+      <Entry
+        Grid.Row="2"
+        Grid.Column="1"
+        Keyboard="Numeric"
+        Text="{Binding EloString}">
+        <Entry.Behaviors>
+          <xct:EventToCommandBehavior Command="{Binding TrackEditingCommand}" EventName="Focused" />
+        </Entry.Behaviors>
+      </Entry>
+    </Grid>
+  </StackLayout>
+</ContentPage>

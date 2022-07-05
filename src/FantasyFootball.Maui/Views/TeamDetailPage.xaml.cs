@@ -1,8 +1,8 @@
 ﻿namespace FantasyFootball.Views;
 
-public partial class TeamsPage : ContentPage
+public partial class TeamDetailPage : ContentPage
 {
-	public TeamsPage(TeamsViewModel viewmodel)
+	public TeamDetailPage(TeamViewModel viewmodel)
 	{
 		InitializeComponent();
 		BindingContext = viewmodel;

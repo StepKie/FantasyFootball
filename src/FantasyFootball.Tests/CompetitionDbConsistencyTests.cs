@@ -81,7 +81,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 	{
 		var koGame = new KoGame(2, Qualifier.FromGroup("A1"), Qualifier.FromGame(13), DateTime.Now);
 
-		Repo.Insert(koGame);
+		Repo.Save(koGame);
 		var koGameDb = Repo.Get<KoGame>(1)!;
 		Assert.NotNull(koGameDb);
 		// TODO More
@@ -99,7 +99,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 			}
 		};
 
-		Repo.Insert(stage);
+		Repo.Save(stage);
 		Stage stageDb = Repo.Get<Stage>(1)!;
 		Round roundDb = Repo.Get<Round>(1)!;
 		Assert.Equal(stageDb.Id, roundDb.StageId);
@@ -143,7 +143,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 			}
 		};
 
-		Repo.Insert(competition);
+		Repo.Save(competition);
 		Stage stageDb = Repo.Get<Stage>(1)!;
 		Competition competitionDb = Repo.Get<Competition>(1)!;
 		Assert.Equal(competitionDb.Id, stageDb.CompetitionId);
@@ -159,7 +159,7 @@ public class CompetitionDbConsistencyTests : BaseTest
 			HomeTeam = new Team { Name = "Team 1" },
 			AwayTeam = Repo.Get<Team>(1)!,
 		};
-		Repo.Insert(game);
+		Repo.Save(game);
 
 		var gameDb = Repo.Get<Game>(1)!;
 		// Null due to CascadeOperation.Read test is expected to fail when we change the annotation

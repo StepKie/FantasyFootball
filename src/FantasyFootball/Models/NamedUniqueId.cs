@@ -12,6 +12,7 @@ public abstract class NamedUniqueId
 
 	public override string ToString() => Name;
 
+	/// <summary> Per default, this will always return false when using unsaved objects in comparisons </summary>
 	public override bool Equals(object? obj) => GetType() == obj?.GetType() && Id != 0 && Id == (obj as NamedUniqueId)?.Id;
 
 	public override int GetHashCode() => HashCode.Combine(Id, Name, GetType().Name);

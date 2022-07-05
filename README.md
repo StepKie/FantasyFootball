@@ -6,22 +6,27 @@ In a first iteration, this should work for hardcoded World and European Champion
 
 ## TODOS
 
-- CompetitionsPage
-	- disable BatchSimulation when manual teams are selected
+- TeamViewModel/TeamPage:
+	- allow editing name, elo
+	- allow creating new team
+	
+- Game
+	- allow setting result on unfinished games
 	
 - CompetitionDetailViewModel
 	- Singleton creates problems when sharing between StatisticsPage and GroupStandings
 	- Also CompetitionsPage really wants CompetitionViewModels, currently certain properties needed for display only are in the model (Competition)
+	- use in CompetitionsPage to show ActivityIndicator when running, move CurrentStatus from Model to ViewModel etc
 
-- Add: CompetitionSetupPage
-	- With Drawing, Manual Selection go to a new page
-	- looks like Groups (StandingsPage), where you can select Teams via Picker or click to add a random team - one-by-one or all at once
+- CompetitionSetupPage
+	- batch simulation: Navigation to previous page not happening
 
-- RoundAdvancer
-	- For EM (FIX)
-	- For WM (new)
-	- integrate in CompetitionFactory (?)
+- StandingsPage
+	- Not updating/Not showing?
 
+- IDataService
+	- more robust initialization routine
+	
 - Fix various TODO tags in code
 - Bindings not updating for certain CollectionViews during OnNavigatedTo()
 

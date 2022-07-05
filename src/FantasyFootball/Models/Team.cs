@@ -15,6 +15,7 @@ public class Team : NamedUniqueId
 	[ManyToOne(CascadeOperations = CascadeOperation.All)]
 	public Country Country { get; init; }
 
+	// TODO Check how this works with ManyToMany, should not work like this ...
 	[ForeignKey(typeof(Group))]
 	public int GroupId { get; set; }
 

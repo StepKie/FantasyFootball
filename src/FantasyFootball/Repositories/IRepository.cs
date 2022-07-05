@@ -8,8 +8,7 @@ public interface IRepository : IDisposable
 	T? Get<T>(int id) where T : NamedUniqueId, new();
 	int Count<T>() where T : NamedUniqueId, new();
 
-	void Insert<T>(T item) where T : NamedUniqueId, new();
-	void Update<T>(T item) where T : NamedUniqueId, new();
+	void Save<T>(T item) where T : NamedUniqueId, new();
 
 	void Delete<T>(T item) where T : NamedUniqueId, new();
 

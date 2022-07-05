@@ -64,17 +64,17 @@ public class CompetitionSimulator
 		}
 
 		game.Simulate();
-		Repo.Update(game);
+		Repo.Save(game);
 		Log.Debug(game.ToString());
+		MessagingCenter.Send(game, MessageKeys.GameFinished);
 
 		await Task.Delay(GameDelay);
 
 		if (Competition.IsFinished)
 		{
-			Repo.Update(Competition);
+			Repo.Save(Competition);
+			MessagingCenter.Send(this, MessageKeys.CompetitionUpdated);
 		}
-
-		MessagingCenter.Send(game, MessageKeys.GameFinished);
 	}
 
 	public static void Print(Group group)

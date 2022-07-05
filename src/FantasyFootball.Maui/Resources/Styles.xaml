@@ -47,6 +47,11 @@
     Glyph="{x:Static fonts:IconFont.Edit}"
     Color="Black" />
   <FontImageSource
+    x:Key="SaveIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Save}"
+    Color="Black" />
+  <FontImageSource
     x:Key="DeleteIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Delete_forever}"

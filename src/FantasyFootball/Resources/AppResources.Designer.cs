@@ -556,6 +556,15 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to World Rank.
+        /// </summary>
+        public static string WorldRank {
+            get {
+                return ResourceManager.GetString("WorldRank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Year.
         /// </summary>
         public static string Year {

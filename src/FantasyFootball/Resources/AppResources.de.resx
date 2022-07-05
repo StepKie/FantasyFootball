@@ -282,6 +282,9 @@
   <data name="WorldCup" xml:space="preserve">
     <value>Weltmeisterschaft</value>
   </data>
+  <data name="WorldRank" xml:space="preserve">
+    <value>Weltrangliste</value>
+  </data>
   <data name="Year" xml:space="preserve">
     <value>Jahr</value>
   </data>

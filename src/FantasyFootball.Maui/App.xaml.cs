@@ -20,6 +20,7 @@ public partial class App : Application
 		Routing.RegisterRoute(nameof(CompetitionStatisticsPage), typeof(CompetitionStatisticsPage));
 		Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
 		Routing.RegisterRoute(nameof(TeamsPage), typeof(TeamsPage));
+		Routing.RegisterRoute(nameof(TeamDetailPage), typeof(TeamDetailPage));
 	}
 
 	static void LoadLanguage()

@@ -68,12 +68,12 @@ public class CsvDataService : IDataService
 	public void Reset()
 	{
 		_repo.Reset();
-		Confederation.ALL.ForEach(c => _repo.Insert(c));
+		Confederation.ALL.ForEach(c => _repo.Save(c));
 		var teams = CreateTeams();
 
 		foreach (var team in teams)
 		{
-			_repo.Insert(team);
+			_repo.Save(team);
 		}
 
 		ReloadTeams();

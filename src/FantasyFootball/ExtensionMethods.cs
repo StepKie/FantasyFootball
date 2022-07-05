@@ -18,6 +18,12 @@ public static class ExtensionMethods
 	/// <summary> Shuffle items</summary>
 	public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) => source.OrderBy(x => Guid.NewGuid());
 
+	public static void Replace<T>(this List<T> list, Predicate<T> oldItemSelector, T newItem)
+	{
+		var oldItemIndex = list.FindIndex(oldItemSelector);
+		list[oldItemIndex] = newItem;
+	}
+
 	/// <summary>
 	/// Same as CompareTo but returns null instead of 0 if both items are equal.
 	/// </summary>

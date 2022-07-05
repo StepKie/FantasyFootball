@@ -38,6 +38,9 @@ public static class MauiProgram
 			.AddSingleton<TeamsPage>()
 			.AddSingleton<TeamsViewModel>()
 
+			.AddTransient<TeamDetailPage>()
+			.AddTransient<TeamViewModel>()
+
 			.AddTransient<CompetitionDetailViewModel>()
 
 			.AddSingleton<GamesPage>()

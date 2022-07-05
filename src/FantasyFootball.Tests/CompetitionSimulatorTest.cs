@@ -19,7 +19,7 @@ public class CompetitionSimulatorTest : BaseTest
 		var winner = final?.Winner;
 		Assert.True(final?.Round.Name == "Final");
 		Assert.NotNull(winner);
-		Repo.Update(em2020);
+		Repo.Save(em2020);
 
 		var fromDb = Repo.Get<Competition>(em2020.Id);
 		var finalDb = fromDb?.GamesByDate.Last();

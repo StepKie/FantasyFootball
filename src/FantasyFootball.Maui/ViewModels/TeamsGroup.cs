@@ -10,7 +10,7 @@ public class TeamsGroup : List<TeamViewModel>
 		Group = group;
 		Name = Group.Name;
 
-		IEnumerable<TeamViewModel> tvms = Group.Teams.Select((t, index) => new TeamViewModel(index + 1, t));
+		IEnumerable<TeamViewModel> tvms = Group.Teams.Select((t, index) => TeamViewModel.Create(index + 1, t.Id));
 		AddRange(tvms);
 
 	}

@@ -1,32 +1,62 @@
-﻿using System.Windows.Input;
+﻿namespace FantasyFootball.ViewModels;
 
-namespace FantasyFootball.ViewModels;
-
+[QueryProperty(nameof(TeamId), nameof(TeamId))]
+[QueryProperty(nameof(Rank), nameof(Rank))]
 public partial class TeamViewModel : GeneralViewModel
 {
 	[ObservableProperty]
 	string _eloString;
 
-	public Team Team { get; set; }
-	public int Rank { get; set; }
+	[ObservableProperty]
+	int _rank;
 
-	public TeamViewModel(int rank, Team team)
+	[ObservableProperty]
+	int _teamId;
+
+	[ObservableProperty]
+	Team _team = new();
+
+	[ObservableProperty]
+	[AlsoNotifyCanExecuteFor(nameof(SaveAndExitCommand))]
+	bool _teamWasEdited;
+
+	public static TeamViewModel Create(int rank, int teamId) => new() { Rank = rank, TeamId = teamId };
+
+	partial void OnTeamIdChanged(int value)
 	{
-		Team = team;
+		Team = Repo.Get<Team>(value)!;
 		EloString = Team.Elo.ToString();
-		Rank = rank;
+		TeamWasEdited = false;
 	}
 
-	[ICommand]
-	void SaveEloChange()
+	partial void OnEloStringChanged(string value)
 	{
-		var canParse = int.TryParse(EloString, out var elo);
+		// All other changes should be in Team via bindings, Elo needs to be parsed
+		var canParse = int.TryParse(value, out var elo);
+
 		if (!canParse || elo == Team.Elo)
 		{
 			return;
 		}
+
 		Team.Elo = elo;
-		Repo.Update(Team);
-		MessagingCenter.Send(Team, MessageKeys.RatingChanged);
+		Rank = Repo.GetAll<Team>().Count(t => t.Elo > elo) + 1;
 	}
+
+	[ICommand(CanExecute = nameof(TeamWasEdited))]
+	void SaveChanges()
+	{
+		Repo.Save(Team);
+		MessagingCenter.Send(Team, MessageKeys.TeamUpdated);
+	}
+
+	[ICommand(CanExecute = nameof(TeamWasEdited))]
+	async Task SaveAndExit()
+	{
+		SaveChanges();
+		await Shell.Current.Navigation.PopAsync();
+	}
+
+	[ICommand]
+	void TrackEditing() => TeamWasEdited = true;
 }
