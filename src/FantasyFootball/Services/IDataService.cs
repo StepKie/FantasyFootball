@@ -4,6 +4,7 @@ namespace FantasyFootball.Services;
 
 /// <summary>
 /// Retrieve data from external sources - APIs, files (csv, txt ...)
+/// Provide performant/cached access to data like list of all teams that should not repeatedly be loaded from db in data-intensive contexts
 /// </summary>
 public interface IDataService
 {
@@ -14,7 +15,7 @@ public interface IDataService
 
 	List<Team> CreateTeams();
 
-	/// <summary> Important: Only call once in app lifecycle! </summary>
-	void Reset();
+	void Initialize();
 
+	void Reset();
 }

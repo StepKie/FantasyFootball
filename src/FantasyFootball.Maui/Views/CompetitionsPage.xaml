@@ -57,7 +57,7 @@
                   HeightRequest="30"
                   Margin="0,0,10,0"
                   VerticalOptions="Center"
-                  Source="{Binding Winner.Logo, FallbackValue='question_mark'}" />
+                  Source="{Binding Winner.Logo, FallbackValue={x:StaticResource PauseIcon}}" />
                 <Label WidthRequest="150" VerticalOptions="Center" Text="{Binding CurrentStatus}" />
               </StackLayout>
             </StackLayout>

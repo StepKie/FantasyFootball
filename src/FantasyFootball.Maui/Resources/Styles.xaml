@@ -34,76 +34,102 @@
   <Color x:Key="Blue200Accent">#72ACF1</Color>
   <Color x:Key="Blue300Accent">#A7CBF6</Color>
 
-  <FontImageSource x:Key="SettingsIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Settings}" />
+  <Color x:Key="FisColor" />
+
+  <FontImageSource
+    x:Key="SettingsIcon"
+    FontFamily="MaterialIcons"
+    Glyph="{x:Static fonts:IconFont.Settings}"
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource x:Key="StatsIcon" FontFamily="MaterialIcons" Glyph="{x:Static fonts:IconFont.Stacked_bar_chart}" />
   <FontImageSource
     x:Key="NewIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Add_circle_outline}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="EditIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Edit}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="SaveIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Save}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="DeleteIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Delete_forever}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="HistoricIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Event_repeat}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="PlayIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Play_circle}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="SimulateFiveIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Forward_5}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="ReplayIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Replay}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="PauseIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Pause_circle}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="ShuffleIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Shuffle}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="FastForwardIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Fast_forward}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="SkipNextIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Skip_next}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
   <FontImageSource
     x:Key="SoccerIcon"
     FontFamily="MaterialIcons"
     Glyph="{x:Static fonts:IconFont.Sports_soccer}"
-    Color="Black" />
+    Color="{AppThemeBinding Light={StaticResource Black},
+                            Dark={StaticResource White}}" />
 
   <Style TargetType="ActivityIndicator">
     <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+  </Style>
+
+  <Style TargetType="FontImageSource">
+    <!--  Unfortunately, this does not work ...  -->
+    <!--  Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" /  -->
+    <!--  Setter Property="FontFamily" Value="MaterialIcons" /  -->
   </Style>
 
   <Style TargetType="IndicatorView">
@@ -123,7 +149,7 @@
 
   <Style TargetType="Button">
     <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}" />
-    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource MidGray}}" />
     <Setter Property="FontFamily" Value="OpenSansRegular" />
     <Setter Property="FontSize" Value="14" />
     <Setter Property="CornerRadius" Value="8" />

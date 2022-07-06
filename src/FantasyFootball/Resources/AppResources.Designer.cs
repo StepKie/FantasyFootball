@@ -520,6 +520,24 @@ namespace FantasyFootball.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Under Construction.
+        /// </summary>
+        public static string UnderConstruction {
+            get {
+                return ResourceManager.GetString("UnderConstruction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This feature will be available at a later date..
+        /// </summary>
+        public static string UnderConstructionDetailMsg {
+            get {
+                return ResourceManager.GetString("UnderConstructionDetailMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WC.
         /// </summary>
         public static string WC {

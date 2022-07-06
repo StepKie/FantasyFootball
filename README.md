@@ -12,6 +12,12 @@ In a first iteration, this should work for hardcoded World and European Champion
 	
 - Game
 	- allow setting result on unfinished games
+
+- Shell
+	- do not use separate PlayTab, makes no sense in the hierarchy
+	
+- Theme
+	- lock to light theme
 	
 - CompetitionDetailViewModel
 	- Singleton creates problems when sharing between StatisticsPage and GroupStandings

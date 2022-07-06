@@ -8,7 +8,12 @@ public partial class App : Application
 	{
 		LoadLanguage();
 		InitializeComponent();
+
+		// TODO Force Light AppTheme until there is time to fine-tune the AppThemeBindings
+		Current!.UserAppTheme = AppTheme.Light;
 		Log.Logger = ISettingsService.StandardLoggerConfig.CreateLogger();
+
+		ServiceHelper.GetService<IDataService>()!.Initialize();
 
 		// TODO: Do we need explicit initialization of DataService on app start?
 		MainPage = new AppShell();

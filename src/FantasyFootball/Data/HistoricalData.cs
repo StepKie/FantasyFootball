@@ -22,7 +22,7 @@ public static class HistoricalData
 	{
 		["A"] = new[] { "QAT", "ECU", "SEN", "NED" },
 		["B"] = new[] { "ENG", "IRN", "USA", "WAL" },
-		["C"] = new[] { "ARG", "RSA", "MEX", "POL" },
+		["C"] = new[] { "ARG", "KSA", "MEX", "POL" },
 		["D"] = new[] { "FRA", "AUS", "DEN", "TUN" },
 		["E"] = new[] { "ESP", "CRC", "GER", "JPN" },
 		["F"] = new[] { "BEL", "CAN", "MAR", "CRO" },

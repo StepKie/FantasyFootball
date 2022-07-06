@@ -270,6 +270,12 @@
   <data name="ThirdPlaceMatch" xml:space="preserve">
     <value>Third Place Match</value>
   </data>
+  <data name="UnderConstruction" xml:space="preserve">
+    <value>Under Construction</value>
+  </data>
+  <data name="UnderConstructionDetailMsg" xml:space="preserve">
+    <value>This feature will be available at a later date.</value>
+  </data>
   <data name="WC" xml:space="preserve">
     <value>WC</value>
   </data>

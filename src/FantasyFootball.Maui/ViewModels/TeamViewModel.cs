@@ -4,6 +4,8 @@
 [QueryProperty(nameof(Rank), nameof(Rank))]
 public partial class TeamViewModel : GeneralViewModel
 {
+	List<Team> _teamCache;
+
 	[ObservableProperty]
 	string _eloString;
 
@@ -14,7 +16,7 @@ public partial class TeamViewModel : GeneralViewModel
 	int _teamId;
 
 	[ObservableProperty]
-	Team _team = new();
+	Team _team;
 
 	[ObservableProperty]
 	[AlsoNotifyCanExecuteFor(nameof(SaveAndExitCommand))]
@@ -24,6 +26,8 @@ public partial class TeamViewModel : GeneralViewModel
 
 	partial void OnTeamIdChanged(int value)
 	{
+		_teamCache = DataService.AllTeams;
+
 		Team = Repo.Get<Team>(value)!;
 		EloString = Team.Elo.ToString();
 		TeamWasEdited = false;
@@ -40,7 +44,7 @@ public partial class TeamViewModel : GeneralViewModel
 		}
 
 		Team.Elo = elo;
-		Rank = Repo.GetAll<Team>().Count(t => t.Elo > elo) + 1;
+		Rank = _teamCache.Count(t => t.Elo > elo) + 1;
 	}
 
 	[ICommand(CanExecute = nameof(TeamWasEdited))]

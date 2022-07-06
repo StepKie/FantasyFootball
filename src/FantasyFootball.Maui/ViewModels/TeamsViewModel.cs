@@ -32,10 +32,10 @@ public partial class TeamsViewModel : GeneralViewModel
 	}
 
 	[ICommand]
-	public async void LoadTeams()
+	void LoadTeams()
 	{
 		IsBusy = true;
-		var teamsDb = await Repo.GetAllAsync<Team>();
+		var teamsDb = DataService.AllTeams;
 		_allTeams = new(teamsDb.OrderByDescending(t => t.Elo).Select((t, rank) => TeamViewModel.Create(rank + 1, t.Id)));
 		IsBusy = false;
 		UpdateSelectedTeams();
@@ -71,7 +71,7 @@ public partial class TeamsViewModel : GeneralViewModel
 	}
 
 	[ICommand]
-	Task AddNewTeam() => Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
+	Task AddNewTeam() => Shell.Current.DisplayAlert(Res.UnderConstruction, Res.UnderConstructionDetailMsg, "OK"); // Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
 
 	[ICommand]
 	Task OpenSelectedTeam(Team selected) => Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");

@@ -8,6 +8,7 @@ public class CsvDataService : IDataService
 {
 	public const string teamsFile = "FantasyFootball.Resources.Data.fifa_elo_new.csv";
 
+	List<Team>? _teamCache;
 	readonly IRepository _repo;
 
 	readonly string _languageId;
@@ -16,7 +17,13 @@ public class CsvDataService : IDataService
 	{
 		_repo = repo;
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
-		ReloadTeams();
+		Initialize();
+		// This class invalidates the cache of AllTeams and forces reload whenever a Team is updated, relieving clients of this necessity
+		MessagingCenter.Subscribe<Team>(this, MessageKeys.TeamUpdated, _ => _teamCache = null);
+	}
+
+	public void Initialize()
+	{
 		if (!AllTeams.Any())
 		{
 			Reset();
@@ -26,7 +33,7 @@ public class CsvDataService : IDataService
 	/// <summary> Global CompetitionFactory used to setup new Competitions </summary>
 	public CompetitionFactory CompetitionFactory { get; set; }
 
-	public List<Team> AllTeams { get; private set; } = new();
+	public List<Team> AllTeams => _teamCache ??= ReloadTeams();
 
 	IList<Country> CreateCountries()
 	{
@@ -67,6 +74,7 @@ public class CsvDataService : IDataService
 	/// <summary> TODO Check whether the creation of teams/countries can be done more efficiently/if the persistence is safe and not misusable </summary>
 	public void Reset()
 	{
+		_teamCache = null;
 		_repo.Reset();
 		Confederation.ALL.ForEach(c => _repo.Save(c));
 		var teams = CreateTeams();
@@ -76,13 +84,13 @@ public class CsvDataService : IDataService
 			_repo.Save(team);
 		}
 
-		ReloadTeams();
 		CompetitionFactory = EmCompetitionFactory.Default(this);
 	}
 
-	void ReloadTeams()
+	List<Team> ReloadTeams()
 	{
-		AllTeams = _repo.GetAll<Team>();
-		Log.Debug($"Reloaded teams, repo now has {AllTeams.Count} teams");
+		var teams = _repo.GetAll<Team>();
+		Log.Debug($"Reloaded teams, repo now has {teams.Count} teams");
+		return teams;
 	}
 }
