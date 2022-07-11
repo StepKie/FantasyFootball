@@ -14,38 +14,39 @@
     <ToolbarItem Command="{Binding AddNewTeamCommand}" IconImageSource="{x:StaticResource NewIcon}" />
   </ContentPage.ToolbarItems>
   <StackLayout>
-    <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
     <Picker
       Margin="0,0,0,20"
       HorizontalOptions="FillAndExpand"
       ItemsSource="{Binding Confederations}"
       SelectedItem="{Binding SelectedConfederation}" />
-    <CollectionView
-      VerticalOptions="FillAndExpand"
-      ItemSizingStrategy="MeasureAllItems"
-      ItemsSource="{Binding TeamsInSelectedConfederation}"
-      SelectedItem="{Binding SelectedTeam}"
-      SelectionMode="Single">
-      <CollectionView.Header>
-        <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="30,60,180,60">
-          <Label Grid.Column="2" FontAttributes="Bold" Text="{xct:Translate Team}" />
-          <Label Grid.Column="3" Text="Rating" />
-        </Grid>
-      </CollectionView.Header>
-      <CollectionView.ItemTemplate>
-        <DataTemplate x:DataType="vm:TeamViewModel">
-          <StackLayout>
-            <Grid RowDefinitions="40" ColumnDefinitions="30,30,180,60" ColumnSpacing="10">
-              <Label Grid.Column="0" VerticalOptions="Center" Text="{Binding Rank}" />
-              <Image Grid.Column="1" Source="{Binding Team.Logo, FallbackValue='question_mark'}" />
-              <Label Grid.Column="2" VerticalOptions="Center" Text="{Binding Team.Name}" />
-              <Label Grid.Column="3" VerticalOptions="Center" Text="{Binding Team.Elo}" />
-            </Grid>
-            <!--  Separator  -->
-            <BoxView HeightRequest="1" VerticalOptions="End" Color="LightGray" />
-          </StackLayout>
-        </DataTemplate>
-      </CollectionView.ItemTemplate>
-    </CollectionView>
+    <RefreshView IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+      <CollectionView
+        VerticalOptions="FillAndExpand"
+        ItemSizingStrategy="MeasureAllItems"
+        ItemsSource="{Binding TeamsInSelectedConfederation}"
+        SelectedItem="{Binding SelectedTeam}"
+        SelectionMode="Single">
+        <CollectionView.Header>
+          <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="30,60,180,60">
+            <Label Grid.Column="2" FontAttributes="Bold" Text="{xct:Translate Team}" />
+            <Label Grid.Column="3" Text="Rating" />
+          </Grid>
+        </CollectionView.Header>
+        <CollectionView.ItemTemplate>
+          <DataTemplate x:DataType="vm:TeamViewModel">
+            <StackLayout>
+              <Grid RowDefinitions="40" ColumnDefinitions="30,30,180,60" ColumnSpacing="10">
+                <Label Grid.Column="0" VerticalOptions="Center" Text="{Binding Rank}" />
+                <Image Grid.Column="1" Source="{Binding Team.Logo, FallbackValue='question_mark'}" />
+                <Label Grid.Column="2" VerticalOptions="Center" Text="{Binding Team.Name}" />
+                <Label Grid.Column="3" VerticalOptions="Center" Text="{Binding Team.Elo}" />
+              </Grid>
+              <!--  Separator  -->
+              <BoxView HeightRequest="1" VerticalOptions="End" Color="LightGray" />
+            </StackLayout>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+    </RefreshView>
   </StackLayout>
 </ContentPage>

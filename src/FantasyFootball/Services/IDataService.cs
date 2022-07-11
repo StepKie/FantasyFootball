@@ -1,6 +1,4 @@
-﻿using FantasyFootball.Data.CompetitionFactories;
-
-namespace FantasyFootball.Services;
+﻿namespace FantasyFootball.Services;
 
 /// <summary>
 /// Retrieve data from external sources - APIs, files (csv, txt ...)
@@ -11,7 +9,8 @@ public interface IDataService
 	/// <summary> Provides access to all available teams. Implementors should ensure that this is updated whenever a Team is changed (Name, Elo, etc.) </summary>
 	List<Team> AllTeams { get; }
 
-	CompetitionFactory CompetitionFactory { get; set; }
+	CompetitionType SelectedCompetitionType { get; set; }
+	int SelectedCompetitionYear { get; set; }
 
 	List<Team> CreateTeams();
 

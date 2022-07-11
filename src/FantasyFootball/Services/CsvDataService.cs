@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using CsvHelper;
-using FantasyFootball.Data.CompetitionFactories;
+using Microsoft.Maui;
 
 namespace FantasyFootball.Services;
 
@@ -30,8 +30,11 @@ public class CsvDataService : IDataService
 		}
 	}
 
-	/// <summary> Global CompetitionFactory used to setup new Competitions </summary>
-	public CompetitionFactory CompetitionFactory { get; set; }
+	/// <summary> Global selected competition type to sync across all relevant pages </summary>
+	public CompetitionType SelectedCompetitionType { get; set; } = CompetitionType.WM;
+
+	/// <summary> Global selected competition year to sync across all relevant pages </summary>
+	public int SelectedCompetitionYear { get; set; } = CompetitionType.WM.AvailableYears().Last();
 
 	public List<Team> AllTeams => _teamCache ??= ReloadTeams();
 
@@ -84,7 +87,8 @@ public class CsvDataService : IDataService
 			_repo.Save(team);
 		}
 
-		CompetitionFactory = EmCompetitionFactory.Default(this);
+		SelectedCompetitionType = CompetitionType.WM;
+		SelectedCompetitionYear = SelectedCompetitionType.AvailableYears().Last();
 	}
 
 	List<Team> ReloadTeams()

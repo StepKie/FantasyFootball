@@ -4,8 +4,6 @@ global using System.Globalization;
 
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
-
-global using MethodTimer;
 global using Serilog;
 
 global using Res = FantasyFootball.Resources.AppResources;

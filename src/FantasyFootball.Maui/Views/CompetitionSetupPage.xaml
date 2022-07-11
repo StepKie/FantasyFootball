@@ -11,7 +11,6 @@
   x:DataType="vm:CompetitionSetupViewModel">
   <ContentPage.Content>
     <StackLayout>
-      <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
       <Grid RowDefinitions="40,40" ColumnDefinitions="50,*">
         <Image
           Grid.RowSpan="2"
@@ -62,62 +61,64 @@
         <Label Grid.Column="2" Margin="10,0,0,0" Text="{xct:Translate Team}" />
         <Label Grid.Column="3" Margin="10,0,0,0" Text="{xct:Translate Elo}" />
       </Grid>
-      <CollectionView
-        VerticalOptions="FillAndExpand"
-        HorizontalScrollBarVisibility="Always"
-        IsGrouped="True"
-        ItemSizingStrategy="MeasureAllItems"
-        ItemsSource="{Binding TeamsByGroup}">
-        <CollectionView.ItemsLayout>
-          <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
-        </CollectionView.ItemsLayout>
-        <CollectionView.GroupHeaderTemplate>
-          <DataTemplate>
-            <Label
-              Padding="5"
-              x:DataType="vm:TeamsGroup"
-              BackgroundColor="LightGrey"
-              FontAttributes="Bold"
-              Text="{Binding Name}"
-              TextTransform="Uppercase" />
-          </DataTemplate>
-        </CollectionView.GroupHeaderTemplate>
-        <CollectionView.ItemTemplate>
-          <DataTemplate x:DataType="vm:TeamViewModel">
-            <Grid RowDefinitions="25" ColumnDefinitions="20,20,170,60,40">
+      <RefreshView IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <CollectionView
+          VerticalOptions="FillAndExpand"
+          HorizontalScrollBarVisibility="Always"
+          IsGrouped="True"
+          ItemSizingStrategy="MeasureAllItems"
+          ItemsSource="{Binding TeamsByGroup}">
+          <CollectionView.ItemsLayout>
+            <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+          </CollectionView.ItemsLayout>
+          <CollectionView.GroupHeaderTemplate>
+            <DataTemplate>
               <Label
-                Grid.Column="0"
-                VerticalOptions="Center"
+                Padding="5"
+                x:DataType="vm:TeamsGroup"
+                BackgroundColor="LightGrey"
                 FontAttributes="Bold"
-                Text="{Binding Rank}" />
-              <Image
-                Grid.Column="1"
-                WidthRequest="20"
-                HeightRequest="20"
-                VerticalOptions="Center"
-                Source="{Binding Team.Logo}" />
-              <Label
-                Grid.Column="2"
-                Margin="10,0,0,0"
-                VerticalOptions="Center"
-                Text="{Binding Team.Name}" />
-              <Label
-                Grid.Column="3"
-                Margin="10,0,0,0"
-                VerticalOptions="Center"
-                Text="{Binding Team.Elo}" />
-              <ImageButton
-                Grid.Column="4"
-                WidthRequest="20"
-                HeightRequest="20"
-                BackgroundColor="Transparent"
-                Command="{Binding Source={x:Reference setupPage}, Path=BindingContext.SelectTeamCommand}"
-                CommandParameter="{Binding .}"
-                Source="{x:StaticResource EditIcon}" />
-            </Grid>
-          </DataTemplate>
-        </CollectionView.ItemTemplate>
-      </CollectionView>
+                Text="{Binding Name}"
+                TextTransform="Uppercase" />
+            </DataTemplate>
+          </CollectionView.GroupHeaderTemplate>
+          <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="vm:TeamViewModel">
+              <Grid RowDefinitions="25" ColumnDefinitions="20,20,170,60,40">
+                <Label
+                  Grid.Column="0"
+                  VerticalOptions="Center"
+                  FontAttributes="Bold"
+                  Text="{Binding Rank}" />
+                <Image
+                  Grid.Column="1"
+                  WidthRequest="20"
+                  HeightRequest="20"
+                  VerticalOptions="Center"
+                  Source="{Binding Team.Logo}" />
+                <Label
+                  Grid.Column="2"
+                  Margin="10,0,0,0"
+                  VerticalOptions="Center"
+                  Text="{Binding Team.Name}" />
+                <Label
+                  Grid.Column="3"
+                  Margin="10,0,0,0"
+                  VerticalOptions="Center"
+                  Text="{Binding Team.Elo}" />
+                <ImageButton
+                  Grid.Column="4"
+                  WidthRequest="20"
+                  HeightRequest="20"
+                  BackgroundColor="Transparent"
+                  Command="{Binding Source={x:Reference setupPage}, Path=BindingContext.SelectTeamCommand}"
+                  CommandParameter="{Binding .}"
+                  Source="{x:StaticResource EditIcon}" />
+              </Grid>
+            </DataTemplate>
+          </CollectionView.ItemTemplate>
+        </CollectionView>
+      </RefreshView>
       <StackLayout Margin="10" HorizontalOptions="Center" Orientation="Horizontal">
         <Button
           WidthRequest="100"

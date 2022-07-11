@@ -12,7 +12,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	[AlsoNotifyChangeFor(nameof(CompetitionLogo))]
 	[AlsoNotifyChangeFor(nameof(Years))]
 	[AlsoNotifyChangeFor(nameof(SelectedYear))]
-	CompetitionType _selectedCompetitionType = CompetitionType.EM;
+	CompetitionType _selectedCompetitionType;
 
 	[ObservableProperty]
 	int _selectedYear;
@@ -27,6 +27,8 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	public CompetitionSetupViewModel(IDataService dataService)
 	{
 		_dataService = dataService;
+		SelectedCompetitionType = _dataService.SelectedCompetitionType;
+		SelectedYear = _dataService.SelectedCompetitionYear;
 		ResetToHistoricTeams();
 	}
 
@@ -38,7 +40,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	public List<TeamsGroup> TeamsByGroup => new(Groups.Select(group => new TeamsGroup(group)));
 
 	[ICommand]
-	void ResetToHistoricTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).CreateFromHistoricalData();
+	void ResetToHistoricTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).CreateFromHistoricalData(SelectedYear);
 
 	[ICommand]
 	void FillRandomTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).DrawRandom();
@@ -77,6 +79,13 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
 	{
+		_dataService.SelectedCompetitionType = value;
+		SelectedYear = value.AvailableYears().Last();
+	}
+
+	partial void OnSelectedYearChanged(int value)
+	{
+		_dataService.SelectedCompetitionYear = value;
 		ResetToHistoricTeams();
 	}
 

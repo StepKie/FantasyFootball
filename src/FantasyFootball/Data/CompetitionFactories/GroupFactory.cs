@@ -47,7 +47,7 @@ public class GroupFactory
 			// Each team gets (team.elo - 1000 (but a minimum of 10)) balls into the drawing urn ...
 			var urn = eligibleTeams.SelectMany(t => Enumerable.Repeat(t, Math.Max(t.Elo - 1000, 10))).ToList();
 			// Order balls randomly, then remove duplicates and draw the desired amount
-			var selected = urn.Distinct().Shuffle().Take(amount).OrderBy(t => t.Elo).ToList();
+			var selected = urn.Distinct().Shuffle().Take(amount).OrderByDescending(t => t.Elo).ToList();
 
 			return selected;
 		}
@@ -55,12 +55,14 @@ public class GroupFactory
 		return groups;
 	}
 
-	public List<Group> CreateFromHistoricalData()
+	public List<Group> CreateFromHistoricalData(int year)
 	{
-		Dictionary<string, string[]> historicalData = CompetitionType switch
+		Dictionary<string, string[]> historicalData = (year, CompetitionType) switch
 		{
-			CompetitionType.EM => HistoricalData.EM_2020_TEAMS,
-			CompetitionType.WM => HistoricalData.WM_2021_TEAMS,
+			(2020, CompetitionType.EM) => HistoricalData.EM_2020_TEAMS,
+			(2016, CompetitionType.EM) => HistoricalData.EM_2016_TEAMS,
+			(2021, CompetitionType.WM) => HistoricalData.WM_2021_TEAMS,
+			(2018, CompetitionType.WM) => HistoricalData.WM_2018_TEAMS,
 			_ => throw new ArgumentException($"No historical data for {CompetitionType}"),
 		};
 

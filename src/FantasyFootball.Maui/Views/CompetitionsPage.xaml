@@ -10,7 +10,6 @@
   Title="{xct:Translate Competitions}"
   x:DataType="vm:CompetitionsViewModel">
   <StackLayout>
-    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
     <Grid RowDefinitions="40" ColumnDefinitions="50,*">
       <Image
         Grid.RowSpan="1"
@@ -34,42 +33,44 @@
         Text="{xct:Translate Go}" />
     </StackLayout>
     <!--  History of past competitions  -->
-    <CollectionView
-      VerticalOptions="FillAndExpand"
-      ItemSizingStrategy="MeasureAllItems"
-      ItemsSource="{Binding StoredCompetitionsForSelectedType}"
-      SelectionMode="Single">
-      <CollectionView.ItemTemplate>
-        <DataTemplate x:DataType="model:Competition">
-          <VerticalStackLayout>
-            <VerticalStackLayout.GestureRecognizers>
-              <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CompetitionsViewModel}}, Path=OpenCompetitionCommand}" CommandParameter="{Binding .}" />
-            </VerticalStackLayout.GestureRecognizers>
-            <StackLayout Orientation="Horizontal">
-              <Label Margin="0,0,10,0" VerticalOptions="Center" Text="{Binding Id}" />
-              <StackLayout WidthRequest="100" VerticalOptions="Center">
-                <Label FontSize="16" LineBreakMode="NoWrap" Text="{Binding ShortName}" />
-                <Label FontSize="12" LineBreakMode="NoWrap" Text="{Binding SimulationStart, StringFormat='{0:g}'}" />
+    <RefreshView IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+      <CollectionView
+        VerticalOptions="FillAndExpand"
+        ItemSizingStrategy="MeasureAllItems"
+        ItemsSource="{Binding StoredCompetitionsForSelectedType}"
+        SelectionMode="Single">
+        <CollectionView.ItemTemplate>
+          <DataTemplate x:DataType="model:Competition">
+            <VerticalStackLayout>
+              <VerticalStackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CompetitionsViewModel}}, Path=OpenCompetitionCommand}" CommandParameter="{Binding .}" />
+              </VerticalStackLayout.GestureRecognizers>
+              <StackLayout Orientation="Horizontal">
+                <Label Margin="0,0,10,0" VerticalOptions="Center" Text="{Binding Id}" />
+                <StackLayout WidthRequest="100" VerticalOptions="Center">
+                  <Label FontSize="16" LineBreakMode="NoWrap" Text="{Binding ShortName}" />
+                  <Label FontSize="12" LineBreakMode="NoWrap" Text="{Binding SimulationStart, StringFormat='{0:g}'}" />
+                </StackLayout>
+                <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal">
+                  <Image
+                    WidthRequest="30"
+                    HeightRequest="30"
+                    Margin="0,0,10,0"
+                    VerticalOptions="Center"
+                    Source="{Binding Winner.Logo, FallbackValue={x:StaticResource PauseIcon}}" />
+                  <Label WidthRequest="150" VerticalOptions="Center" Text="{Binding CurrentStatus}" />
+                </StackLayout>
               </StackLayout>
-              <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal">
-                <Image
-                  WidthRequest="30"
-                  HeightRequest="30"
-                  Margin="0,0,10,0"
-                  VerticalOptions="Center"
-                  Source="{Binding Winner.Logo, FallbackValue={x:StaticResource PauseIcon}}" />
-                <Label WidthRequest="150" VerticalOptions="Center" Text="{Binding CurrentStatus}" />
-              </StackLayout>
-            </StackLayout>
-            <!--  Separator  -->
-            <BoxView
-              HeightRequest="1"
-              Margin="0,10,0,10"
-              VerticalOptions="End"
-              Color="LightGray" />
-          </VerticalStackLayout>
-        </DataTemplate>
-      </CollectionView.ItemTemplate>
-    </CollectionView>
+              <!--  Separator  -->
+              <BoxView
+                HeightRequest="1"
+                Margin="0,10,0,10"
+                VerticalOptions="End"
+                Color="LightGray" />
+            </VerticalStackLayout>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+    </RefreshView>
   </StackLayout>
 </ContentPage>
