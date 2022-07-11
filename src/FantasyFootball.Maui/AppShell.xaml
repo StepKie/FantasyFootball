@@ -7,14 +7,23 @@
   xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
 
   <TabBar>
-    <ShellContent
-      Title="{xct:Translate Competitions}"
-      ContentTemplate="{DataTemplate views:CompetitionsPage}"
-      Icon="cup"
-      Route="CompetitionsPage" />
+
     <Tab Title="Play" Icon="{x:StaticResource SoccerIcon}" Route="PlayTab">
-      <ShellContent Title="{xct:Translate Games}" ContentTemplate="{DataTemplate views:GamesPage}" Route="GamesPage" />
-      <ShellContent Title="{xct:Translate Standings}" ContentTemplate="{DataTemplate views:StandingsPage}" Route="StandingsPage" />
+      <ShellContent
+        Title="{xct:Translate Competitions}"
+        ContentTemplate="{DataTemplate views:CompetitionsPage}"
+        Icon="cup"
+        Route="CompetitionsPage" />
+      <ShellContent
+        Title="{xct:Translate Games}"
+        ContentTemplate="{DataTemplate views:GamesPage}"
+        IsVisible="{Binding GamesVisible}"
+        Route="GamesPage" />
+      <ShellContent
+        Title="{xct:Translate Standings}"
+        ContentTemplate="{DataTemplate views:StandingsPage}"
+        IsVisible="{Binding GamesVisible}"
+        Route="StandingsPage" />
     </Tab>
     <Tab Title="{xct:Translate Stats}" Icon="{x:StaticResource StatsIcon}" Route="StatsTab">
       <ShellContent Title="{xct:Translate Teams}" ContentTemplate="{DataTemplate views:TeamsPage}" Route="TeamsPage" />

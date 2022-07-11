@@ -2,9 +2,9 @@
 
 public class EmCompetitionFactory : CompetitionFactory
 {
-	public EmCompetitionFactory(List<Group> groups) : base(CompetitionType.EM, HistoricalData.EM_2020_START, groups) { }
+	public EmCompetitionFactory(DateTime startDate, List<Group> groups) : base(CompetitionType.EM, startDate, groups) { }
 
-	public static EmCompetitionFactory Default(IDataService dataService, int year) => new(GroupFactory.For(dataService, CompetitionType.EM).CreateFromHistoricalData(year));
+	public static EmCompetitionFactory Default(IDataService dataService, int year) => new(CompetitionType.EM.StartDate(year), GroupFactory.For(dataService, CompetitionType.EM).CreateFromHistoricalData(year));
 	public override List<Stage> CreateStages()
 	{
 		return new()

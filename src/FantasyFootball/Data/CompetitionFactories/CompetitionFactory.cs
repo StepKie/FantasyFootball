@@ -13,12 +13,12 @@ public abstract class CompetitionFactory
 		Groups = groups;
 	}
 
-	public static CompetitionFactory For(CompetitionType type, List<Group> groups = null)
+	public static CompetitionFactory For(CompetitionType type, int year, List<Group> groups = null)
 	{
 		CompetitionFactory factory = type switch
 		{
-			CompetitionType.EM => new EmCompetitionFactory(groups),
-			CompetitionType.WM => new WmCompetitionFactory(groups),
+			CompetitionType.EM => new EmCompetitionFactory(CompetitionType.EM.StartDate(year), groups),
+			CompetitionType.WM => new WmCompetitionFactory(CompetitionType.WM.StartDate(year), groups),
 			_ => throw new ArgumentException($"No CompetitionFactory found for {type}"),
 		};
 
@@ -50,8 +50,8 @@ public abstract class CompetitionFactory
 
 		Competition competition = new()
 		{
-			Name = CompetitionType.Name().Long + " 2020",
-			ShortName = CompetitionType.Name().Short + " 2020",
+			Name = $"{CompetitionType.Name().Long} {StartDate.Year}",
+			ShortName = $"{CompetitionType.Name().Short} {StartDate.Year}",
 			Type = CompetitionType,
 			SimulationStart = DateTime.Now,
 			Stages = CreateStages(),

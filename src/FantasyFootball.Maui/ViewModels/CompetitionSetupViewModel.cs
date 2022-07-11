@@ -48,6 +48,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	[ICommand]
 	async Task SimulateSingle()
 	{
+		AppShell.SetGamesVisible(true);
 		var competition = await CreateCompetition();
 		ServiceHelper.GetService<StandingsViewModel>()!.UpdateStandings(competition);
 		var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competition.Id}";
@@ -105,7 +106,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	async Task<Competition> CreateCompetition()
 	{
 		IsBusy = true;
-		var factory = CompetitionFactory.For(SelectedCompetitionType, Groups);
+		var factory = CompetitionFactory.For(SelectedCompetitionType, SelectedYear, Groups);
 		var competition = factory.Create();
 		Repo.Save(competition);
 		Log.Debug("Competition created");

@@ -21,6 +21,9 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	int _selectedYear;
 
 	[ObservableProperty]
+	Competition? _selectedCompetition;
+
+	[ObservableProperty]
 	int _defaultAmountOfBatchSimulations = 5;
 
 	public CompetitionsViewModel()
@@ -40,14 +43,19 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	}
 
 	[ICommand]
-	async Task SetupNewCompetition() => await Shell.Current.GoToAsync($"{nameof(CompetitionSetupPage)}");
-
-	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
+	async Task SetupNewCompetition()
 	{
-		_ = ReloadCompetitions();
+		AppShell.SetGamesVisible(true);
+		await Shell.Current.GoToAsync($"{nameof(CompetitionSetupPage)}");
+	}
+
+	async partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
+	{
+		await ReloadCompetitions();
 	}
 
 	/// <summary> Enable reloading from OnNavigatedTo (when db is reset from another page) </summary>
+	[ICommand]
 	public async Task ReloadCompetitions()
 	{
 		IsBusy = true;
@@ -55,6 +63,23 @@ public partial class CompetitionsViewModel : GeneralViewModel
 		StoredCompetitionsForSelectedType = new(results.Where(c => c.Type == SelectedCompetitionType));
 		IsBusy = false;
 		OnPropertyChanged(nameof(StoredCompetitionsForSelectedType));
+
+	}
+
+	/// <summary> Enable reloading from OnNavigatedTo (when db is reset from another page) </summary>
+	[ICommand]
+	public async Task SelectedCompetitionChanged()
+	{
+		AppShell.SetGamesVisible(SelectedCompetition is not null);
+		if (SelectedCompetition is null)
+		{
+			return;
+		}
+
+		IsBusy = true;
+		await OpenCompetition(SelectedCompetition);
+		Log.Debug("Selected competition changed");
+		IsBusy = false;
 
 	}
 }

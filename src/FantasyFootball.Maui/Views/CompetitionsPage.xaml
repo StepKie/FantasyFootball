@@ -33,18 +33,17 @@
         Text="{xct:Translate Go}" />
     </StackLayout>
     <!--  History of past competitions  -->
-    <RefreshView IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+    <RefreshView Command="{Binding ReloadCompetitionsCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
       <CollectionView
         VerticalOptions="FillAndExpand"
         ItemSizingStrategy="MeasureAllItems"
         ItemsSource="{Binding StoredCompetitionsForSelectedType}"
+        SelectedItem="{Binding SelectedCompetition}"
+        SelectionChangedCommand="{Binding SelectedCompetitionChangedCommand}"
         SelectionMode="Single">
         <CollectionView.ItemTemplate>
           <DataTemplate x:DataType="model:Competition">
             <VerticalStackLayout>
-              <VerticalStackLayout.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CompetitionsViewModel}}, Path=OpenCompetitionCommand}" CommandParameter="{Binding .}" />
-              </VerticalStackLayout.GestureRecognizers>
               <StackLayout Orientation="Horizontal">
                 <Label Margin="0,0,10,0" VerticalOptions="Center" Text="{Binding Id}" />
                 <StackLayout WidthRequest="100" VerticalOptions="Center">
@@ -60,6 +59,8 @@
                     Source="{Binding Winner.Logo, FallbackValue={x:StaticResource PauseIcon}}" />
                   <Label WidthRequest="150" VerticalOptions="Center" Text="{Binding CurrentStatus}" />
                 </StackLayout>
+
+
               </StackLayout>
               <!--  Separator  -->
               <BoxView
@@ -67,6 +68,15 @@
                 Margin="0,10,0,10"
                 VerticalOptions="End"
                 Color="LightGray" />
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup Name="CommonStates">
+                  <VisualState Name="Selected">
+                    <VisualState.Setters>
+                      <Setter Property="BackgroundColor" Value="LightBlue" />
+                    </VisualState.Setters>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
             </VerticalStackLayout>
           </DataTemplate>
         </CollectionView.ItemTemplate>

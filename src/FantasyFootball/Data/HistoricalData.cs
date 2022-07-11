@@ -63,4 +63,16 @@ public static class HistoricalData
 			_ => Enumerable.Empty<int>(),
 		};
 	}
+
+	public static DateTime StartDate(this CompetitionType type, int year)
+	{
+		return (type, year) switch
+		{
+			(CompetitionType.EM, 2016) => EM_2016_START,
+			(CompetitionType.EM, 2020) => EM_2020_START,
+			(CompetitionType.WM, 2018) => WM_2018_START,
+			(CompetitionType.EM, 2021) => WM_2021_START,
+			_ => new DateTime(year, 1, 1),
+		};
+	}
 }
