@@ -19,7 +19,7 @@ public partial class TeamViewModel : GeneralViewModel
 	Team _team;
 
 	[ObservableProperty]
-	[AlsoNotifyCanExecuteFor(nameof(SaveAndExitCommand))]
+	[NotifyCanExecuteChangedFor(nameof(SaveAndExitCommand))]
 	bool _teamWasEdited;
 
 	public static TeamViewModel Create(int rank, int teamId) => new() { Rank = rank, TeamId = teamId };
@@ -47,20 +47,20 @@ public partial class TeamViewModel : GeneralViewModel
 		Rank = _teamCache.Count(t => t.Elo > elo) + 1;
 	}
 
-	[ICommand(CanExecute = nameof(TeamWasEdited))]
+	[RelayCommand(CanExecute = nameof(TeamWasEdited))]
 	void SaveChanges()
 	{
 		Repo.Save(Team);
 		MessagingCenter.Send(Team, MessageKeys.TeamUpdated);
 	}
 
-	[ICommand(CanExecute = nameof(TeamWasEdited))]
+	[RelayCommand(CanExecute = nameof(TeamWasEdited))]
 	async Task SaveAndExit()
 	{
 		SaveChanges();
 		await Shell.Current.Navigation.PopAsync();
 	}
 
-	[ICommand]
+	[RelayCommand]
 	void TrackEditing() => TeamWasEdited = true;
 }

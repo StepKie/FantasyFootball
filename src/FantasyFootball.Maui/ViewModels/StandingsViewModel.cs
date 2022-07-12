@@ -5,12 +5,12 @@ public partial class StandingsViewModel : GeneralViewModel
 	Dictionary<CompetitionType, List<TeamRecordViewModel>> _standingsCache = new() { [CompetitionType.EM] = new(), [CompetitionType.WM] = new(), };
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(OverallRecords))]
+	[NotifyPropertyChangedFor(nameof(OverallRecords))]
 	List<Competition> _allCompetitions = new();
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(OverallRecords))]
-	[AlsoNotifyChangeFor(nameof(CompetitionLogo))]
+	[NotifyPropertyChangedFor(nameof(OverallRecords))]
+	[NotifyPropertyChangedFor(nameof(CompetitionLogo))]
 	CompetitionType _selectedCompetitionType = CompetitionType.EM;
 
 	[ObservableProperty] Competition _selectedCompetition;

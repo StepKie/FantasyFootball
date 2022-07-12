@@ -19,7 +19,7 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 		SelectedRound = SelectedStage.CurrentRound ?? SelectedStage.Rounds.Last();
 	}
 
-	[ICommand]
+	[RelayCommand]
 	async Task SimulateGame()
 	{
 		var game = Competition.CurrentGame;
@@ -32,14 +32,14 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 		await Simulator.SimulateGame(game);
 	}
 
-	[ICommand]
+	[RelayCommand]
 	async Task SimulateAgain()
 	{
 		await Shell.Current.GoToAsync("..");
 		// await new CompetitionsViewModel(Competition.Type).SimulateCompetitionCommand.ExecuteAsync(false);
 	}
 
-	[ICommand]
+	[RelayCommand]
 	async Task SimulateCurrentStage()
 	{
 		_ = Competition.CurrentStage ?? throw new InvalidOperationException($"Can't call {nameof(SimulateCurrentStage)}, {nameof(Competition.CurrentStage)} is null");
@@ -48,7 +48,7 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 		IsBusy = false;
 	}
 
-	[ICommand]
+	[RelayCommand]
 	async Task SimulateCurrentRound()
 	{
 		_ = Competition.CurrentStage?.CurrentRound ?? throw new InvalidOperationException($"Can't call {nameof(SimulateCurrentRound)}, {nameof(Competition.CurrentStage.CurrentRound)} is null");

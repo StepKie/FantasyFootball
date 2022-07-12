@@ -31,7 +31,7 @@ public partial class TeamsViewModel : GeneralViewModel
 		LoadTeams();
 	}
 
-	[ICommand]
+	[RelayCommand]
 	void LoadTeams()
 	{
 		IsBusy = true;
@@ -70,9 +70,9 @@ public partial class TeamsViewModel : GeneralViewModel
 		TeamsInSelectedConfederation.ReplaceRange(_allTeams.Where(tvm => SelectedConfederation == Res.All || tvm.Team.Country.Confederation.Name == SelectedConfederation));
 	}
 
-	[ICommand]
+	[RelayCommand]
 	Task AddNewTeam() => Shell.Current.DisplayAlert(Res.UnderConstruction, Res.UnderConstructionDetailMsg, "OK"); // Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
 
-	[ICommand]
+	[RelayCommand]
 	Task OpenSelectedTeam(Team selected) => Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
 }

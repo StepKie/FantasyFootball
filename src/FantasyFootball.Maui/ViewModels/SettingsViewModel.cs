@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using Xamarin.CommunityToolkit.Helpers;
+﻿using Xamarin.CommunityToolkit.Helpers;
 
 namespace FantasyFootball.ViewModels;
 
@@ -40,7 +39,7 @@ public partial class SettingsViewModel : GeneralViewModel
 
 	partial void OnSimulationSpeedMsChanged(double value) => _settings.SimulationSpeed = TimeSpan.FromMilliseconds(value);
 
-	[ICommand]
+	[RelayCommand]
 	async void ResetDatabase()
 	{
 		// TODO The ActivityIndicator will not show on Android: https://github.com/dotnet/maui/issues/8135

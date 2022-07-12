@@ -13,7 +13,7 @@ public abstract class CompetitionFactory
 		Groups = groups;
 	}
 
-	public static CompetitionFactory For(CompetitionType type, int year, List<Group> groups = null)
+	public static CompetitionFactory For(CompetitionType type, int year, List<Group> groups)
 	{
 		CompetitionFactory factory = type switch
 		{

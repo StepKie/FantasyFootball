@@ -11,10 +11,10 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	public IList<int> Years => SelectedCompetitionType.AvailableYears().ToList();
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(StoredCompetitionsForSelectedType))]
-	[AlsoNotifyChangeFor(nameof(CompetitionLogo))]
-	[AlsoNotifyChangeFor(nameof(Years))]
-	[AlsoNotifyChangeFor(nameof(SelectedYear))]
+	[NotifyPropertyChangedFor(nameof(StoredCompetitionsForSelectedType))]
+	[NotifyPropertyChangedFor(nameof(CompetitionLogo))]
+	[NotifyPropertyChangedFor(nameof(Years))]
+	[NotifyPropertyChangedFor(nameof(SelectedYear))]
 	CompetitionType _selectedCompetitionType = CompetitionType.EM;
 
 	[ObservableProperty]
@@ -34,7 +34,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
 
-	[ICommand]
+	[RelayCommand]
 	async Task OpenCompetition(Competition competition)
 	{
 		ServiceHelper.GetService<StandingsViewModel>()!.UpdateStandings(competition);
@@ -42,7 +42,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 		await Shell.Current.GoToAsync(route);
 	}
 
-	[ICommand]
+	[RelayCommand]
 	async Task SetupNewCompetition()
 	{
 		AppShell.SetGamesVisible(true);
@@ -55,7 +55,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	}
 
 	/// <summary> Enable reloading from OnNavigatedTo (when db is reset from another page) </summary>
-	[ICommand]
+	[RelayCommand]
 	public async Task ReloadCompetitions()
 	{
 		IsBusy = true;
@@ -67,7 +67,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	}
 
 	/// <summary> Enable reloading from OnNavigatedTo (when db is reset from another page) </summary>
-	[ICommand]
+	[RelayCommand]
 	public async Task SelectedCompetitionChanged()
 	{
 		AppShell.SetGamesVisible(SelectedCompetition is not null);

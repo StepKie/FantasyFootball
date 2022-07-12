@@ -4,20 +4,20 @@
 public partial class CompetitionDetailViewModel : GeneralViewModel
 {
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(Competition))]
+	[NotifyPropertyChangedFor(nameof(Competition))]
 	int _competitionId;
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(Stages))]
-	[AlsoNotifyChangeFor(nameof(Winner))]
+	[NotifyPropertyChangedFor(nameof(Stages))]
+	[NotifyPropertyChangedFor(nameof(Winner))]
 	Competition _competition = new();
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(Rounds))]
+	[NotifyPropertyChangedFor(nameof(Rounds))]
 	Stage? _selectedStage = new();
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(GamesByRound))]
+	[NotifyPropertyChangedFor(nameof(GamesByRound))]
 	Round? _selectedRound = new();
 
 	public IList<Stage> Stages => Competition.Stages;
@@ -59,7 +59,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 		}
 	}
 
-	[ICommand]
+	[RelayCommand]
 	async Task DeleteCompetition()
 	{
 		Repo.Delete(Competition);

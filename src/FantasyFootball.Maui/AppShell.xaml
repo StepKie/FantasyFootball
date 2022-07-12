@@ -8,7 +8,7 @@
 
   <TabBar>
 
-    <Tab Title="Play" Icon="{x:StaticResource SoccerIcon}" Route="PlayTab">
+    <Tab Title="{xct:Translate Simulate}" Icon="{x:StaticResource SoccerIcon}" Route="PlayTab">
       <ShellContent
         Title="{xct:Translate Competitions}"
         ContentTemplate="{DataTemplate views:CompetitionsPage}"

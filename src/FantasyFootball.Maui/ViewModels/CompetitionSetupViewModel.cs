@@ -9,9 +9,9 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	int _newTeamIdSelected;
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(CompetitionLogo))]
-	[AlsoNotifyChangeFor(nameof(Years))]
-	[AlsoNotifyChangeFor(nameof(SelectedYear))]
+	[NotifyPropertyChangedFor(nameof(CompetitionLogo))]
+	[NotifyPropertyChangedFor(nameof(Years))]
+	[NotifyPropertyChangedFor(nameof(SelectedYear))]
 	CompetitionType _selectedCompetitionType;
 
 	[ObservableProperty]
@@ -21,7 +21,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	int _defaultAmountOfBatchSimulations = 5;
 
 	[ObservableProperty]
-	[AlsoNotifyChangeFor(nameof(TeamsByGroup))]
+	[NotifyPropertyChangedFor(nameof(TeamsByGroup))]
 	List<Group> _groups;
 
 	public CompetitionSetupViewModel(IDataService dataService)
@@ -39,13 +39,13 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	public TeamViewModel? SelectedTeam { get; set; }
 	public List<TeamsGroup> TeamsByGroup => new(Groups.Select(group => new TeamsGroup(group)));
 
-	[ICommand]
+	[RelayCommand]
 	void ResetToHistoricTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).CreateFromHistoricalData(SelectedYear);
 
-	[ICommand]
+	[RelayCommand]
 	void FillRandomTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).DrawRandom();
 
-	[ICommand]
+	[RelayCommand]
 	async Task SimulateSingle()
 	{
 		AppShell.SetGamesVisible(true);
@@ -55,7 +55,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 		await Shell.Current.GoToAsync(route);
 	}
 
-	[ICommand]
+	[RelayCommand]
 	async Task SimulateBatch()
 	{
 		await Shell.Current.GoToAsync("..").ConfigureAwait(false);
@@ -71,7 +71,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 		}
 	}
 
-	[ICommand]
+	[RelayCommand]
 	async void SelectTeam(TeamViewModel old)
 	{
 		SelectedTeam = old;

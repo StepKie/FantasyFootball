@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using CsvHelper;
-using Microsoft.Maui;
 
 namespace FantasyFootball.Services;
 
