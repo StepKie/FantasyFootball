@@ -3,7 +3,7 @@
 public partial class AppShell : Shell
 {
 
-	private bool _isGamesTabVisible = false;
+	bool _isGamesTabVisible;
 
 	public bool GamesVisible
 	{
@@ -22,6 +22,9 @@ public partial class AppShell : Shell
 
 	public static void SetGamesVisible(bool visible)
 	{
-		(Shell.Current as AppShell).GamesVisible = visible;
+		if (Shell.Current is AppShell shell)
+		{
+			shell.GamesVisible = visible;
+		}
 	}
 }

@@ -34,8 +34,6 @@
   <Color x:Key="Blue200Accent">#72ACF1</Color>
   <Color x:Key="Blue300Accent">#A7CBF6</Color>
 
-  <Color x:Key="FisColor" />
-
   <FontImageSource
     x:Key="SettingsIcon"
     FontFamily="MaterialIcons"
@@ -296,20 +294,6 @@
     <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
     <Setter Property="FontFamily" Value="OpenSansRegular" />
     <Setter Property="FontSize" Value="14" />
-  </Style>
-
-  <Style TargetType="CollectionView">
-    <Setter Property="VisualStateManager.VisualStateGroups">
-      <VisualStateGroupList>
-        <VisualStateGroup x:Name="CommonStates">
-          <VisualState x:Name="Selected">
-            <VisualState.Setters>
-              <Setter Property="BackgroundColor" Value="Green" />
-            </VisualState.Setters>
-          </VisualState>
-        </VisualStateGroup>
-      </VisualStateGroupList>
-    </Setter>
   </Style>
 
   <Style TargetType="ListView">

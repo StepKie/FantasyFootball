@@ -4,7 +4,8 @@
 [QueryProperty(nameof(NewTeamIdSelected), nameof(NewTeamIdSelected))]
 public partial class CompetitionSetupViewModel : GeneralViewModel
 {
-	IDataService _dataService;
+	readonly IDataService _dataService;
+
 	[ObservableProperty]
 	int _newTeamIdSelected;
 

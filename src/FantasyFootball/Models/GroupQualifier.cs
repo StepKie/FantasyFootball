@@ -4,7 +4,7 @@
 public class GroupQualifier : Qualifier
 {
 	// used to cache the result, i.e. once the team is determined, store it here and return it in Get()
-	public Team _qualified;
+	Team _qualified;
 
 	public int GroupId { get; init; }
 	public int FinalPlacement { get; init; }

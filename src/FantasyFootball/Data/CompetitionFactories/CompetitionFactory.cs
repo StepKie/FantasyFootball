@@ -19,7 +19,7 @@ public abstract class CompetitionFactory
 		{
 			CompetitionType.EM => new EmCompetitionFactory(CompetitionType.EM.StartDate(year), groups),
 			CompetitionType.WM => new WmCompetitionFactory(CompetitionType.WM.StartDate(year), groups),
-			_ => throw new ArgumentException($"No CompetitionFactory found for {type}"),
+			_ => throw new ArgumentException($"No CompetitionFactory yet implemented for {type}"),
 		};
 
 		return factory;

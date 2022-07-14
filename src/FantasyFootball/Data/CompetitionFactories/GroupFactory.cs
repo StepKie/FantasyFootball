@@ -2,7 +2,7 @@
 
 public class GroupFactory
 {
-	IDataService _dataService;
+	readonly IDataService _dataService;
 
 	public CompetitionType CompetitionType { get; init; }
 	public int NoOfGroups { get; init; }
