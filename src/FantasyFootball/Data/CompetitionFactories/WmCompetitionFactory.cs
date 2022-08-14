@@ -21,9 +21,9 @@ public class WmCompetitionFactory : CompetitionFactory
 						Name = Res.Round + " 1",
 						RegularGames = new()
 						{
-							new() { HomeTeam = Groups[0].Teams[2], AwayTeam = Groups[0].Teams[3], PlayedOn = new(2022, 11, 21, 11, 0, 0), },
+							new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[1], PlayedOn = new(2022, 11, 20, 17, 0, 0), },
+							new() { HomeTeam = Groups[0].Teams[2], AwayTeam = Groups[0].Teams[3], PlayedOn = new(2022, 11, 21, 17, 0, 0), },
 							new() { HomeTeam = Groups[1].Teams[0], AwayTeam = Groups[1].Teams[1], PlayedOn = new(2022, 11, 21, 14, 0, 0), },
-							new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[1], PlayedOn = new(2022, 11, 21, 17, 0, 0), },
 							new() { HomeTeam = Groups[1].Teams[2], AwayTeam = Groups[1].Teams[3], PlayedOn = new(2022, 11, 21, 20, 0, 0), },
 							new() { HomeTeam = Groups[2].Teams[0], AwayTeam = Groups[2].Teams[1], PlayedOn = new(2022, 11, 22, 11, 0, 0), },
 							new() { HomeTeam = Groups[3].Teams[2], AwayTeam = Groups[3].Teams[3], PlayedOn = new(2022, 11, 22, 14, 0, 0), },
@@ -148,7 +148,4 @@ public class WmCompetitionFactory : CompetitionFactory
 			}
 		};
 	}
-
-	public Team Team(string shortName) => null;
-	// public Team Team(string shortName) => AllTeams.FirstOrDefault(t => t.ShortName == shortName) ?? throw new ArgumentException($"Team {shortName} not found in db");
 }

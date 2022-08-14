@@ -61,7 +61,7 @@ public class GroupFactory
 		{
 			(2020, CompetitionType.EM) => HistoricalData.EM_2020_TEAMS,
 			(2016, CompetitionType.EM) => HistoricalData.EM_2016_TEAMS,
-			(2021, CompetitionType.WM) => HistoricalData.WM_2021_TEAMS,
+			(2022, CompetitionType.WM) => HistoricalData.WM_2022_TEAMS,
 			(2018, CompetitionType.WM) => HistoricalData.WM_2018_TEAMS,
 			_ => throw new ArgumentException($"No historical data for {CompetitionType}"),
 		};

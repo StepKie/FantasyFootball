@@ -30,7 +30,7 @@ public abstract class CompetitionFactory
 		CompetitionFactory factory = type switch
 		{
 			CompetitionType.EM => EmCompetitionFactory.Default(dataService, HistoricalData.EM_2020_START.Year),
-			CompetitionType.WM => WmCompetitionFactory.Default(dataService, HistoricalData.WM_2021_START.Year),
+			CompetitionType.WM => WmCompetitionFactory.Default(dataService, HistoricalData.WM_2022_START.Year),
 			_ => throw new ArgumentException($"No CompetitionFactory found for {type}"),
 		};
 

@@ -4,10 +4,10 @@ public static class HistoricalData
 {
 	public static readonly DateTime EM_2020_START = new(2020, 6, 11, 21, 0, 0);
 	public static readonly DateTime EM_2016_START = new(2020, 6, 10, 21, 0, 0);
-	public static readonly DateTime WM_2021_START = new(2021, 6, 11, 21, 0, 0);
+	public static readonly DateTime WM_2022_START = new(2021, 6, 11, 20, 0, 0);
 	public static readonly DateTime WM_2018_START = new(2018, 6, 14, 17, 0, 0);
 
-	public static readonly int[] HISTORIC_WM_YEARS = new[] { 2018, 2021 };
+	public static readonly int[] HISTORIC_WM_YEARS = new[] { 2018, 2022 };
 	public static readonly int[] HISTORIC_EM_YEARS = new[] { 2016, 2020 };
 
 	public static Dictionary<string, string[]> EM_2020_TEAMS => new()
@@ -30,7 +30,7 @@ public static class HistoricalData
 		["F"] = new[] { "POR", "ISL", "AUT", "HUN" },
 	};
 
-	public static Dictionary<string, string[]> WM_2021_TEAMS => new()
+	public static Dictionary<string, string[]> WM_2022_TEAMS => new()
 	{
 		["A"] = new[] { "QAT", "ECU", "SEN", "NED" },
 		["B"] = new[] { "ENG", "IRN", "USA", "WAL" },
@@ -71,7 +71,7 @@ public static class HistoricalData
 			(CompetitionType.EM, 2016) => EM_2016_START,
 			(CompetitionType.EM, 2020) => EM_2020_START,
 			(CompetitionType.WM, 2018) => WM_2018_START,
-			(CompetitionType.EM, 2021) => WM_2021_START,
+			(CompetitionType.WM, 2022) => WM_2022_START,
 			_ => new DateTime(year, 1, 1),
 		};
 	}
