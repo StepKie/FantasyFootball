@@ -41,7 +41,6 @@ public class CsvDataService : IDataService
 	{
 		using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(teamsFile);
 		_ = stream ?? throw new FileNotFoundException($"{teamsFile} not found in embedded resource");
-
 		using CsvReader csv = new(new StreamReader(stream), CultureInfo.InvariantCulture);
 		_ = csv.Read();
 		_ = csv.ReadHeader();
