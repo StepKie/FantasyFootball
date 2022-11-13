@@ -30,7 +30,7 @@ public partial class App : Application
 
 	static void LoadLanguage()
 	{
-		LocalizationResourceManager.Current.PropertyChanged += (sender, e) => Res.Culture = LocalizationResourceManager.Current.CurrentCulture;
+		LocalizationResourceManager.Current.PropertyChanged += (_, _) => Res.Culture = LocalizationResourceManager.Current.CurrentCulture;
 		LocalizationResourceManager.Current.Init(Res.ResourceManager);
 		LocalizationResourceManager.Current.CurrentCulture = CultureInfo.GetCultureInfo(Preferences.Get("Language", "de"));
 	}

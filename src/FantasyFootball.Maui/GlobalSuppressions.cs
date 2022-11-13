@@ -6,3 +6,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "ExternalInit", Scope = "namespace", Target = "~N:System.Runtime.CompilerServices")]
+[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "MVVM", Scope = "member", Target = "~M:FantasyFootball.ViewModels.GamesViewModel.SimulateAgain~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "MVVM", Scope = "member", Target = "~M:FantasyFootball.ViewModels.TeamsViewModel.AddNewTeam~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "MVVM", Scope = "member", Target = "~P:FantasyFootball.ViewModels.SettingsViewModel.AppVersion")]

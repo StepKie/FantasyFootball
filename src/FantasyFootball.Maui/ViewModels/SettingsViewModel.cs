@@ -40,7 +40,7 @@ public partial class SettingsViewModel : GeneralViewModel
 	partial void OnSimulationSpeedMsChanged(double value) => _settings.SimulationSpeed = TimeSpan.FromMilliseconds(value);
 
 	[RelayCommand]
-	async void ResetDatabase()
+	async Task ResetDatabase()
 	{
 		// TODO The ActivityIndicator will not show on Android: https://github.com/dotnet/maui/issues/8135
 		IsBusy = true;

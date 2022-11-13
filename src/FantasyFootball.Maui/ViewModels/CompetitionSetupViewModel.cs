@@ -73,7 +73,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	}
 
 	[RelayCommand]
-	async void SelectTeam(TeamViewModel old)
+	async Task SelectTeam(TeamViewModel old)
 	{
 		SelectedTeam = old;
 		await Shell.Current.GoToAsync($"{nameof(TeamsPage)}?{nameof(TeamsViewModel.SelectionMode)}={(int)SelectionType.RETURN_ID}");

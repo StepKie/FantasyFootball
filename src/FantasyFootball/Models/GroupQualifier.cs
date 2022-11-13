@@ -4,7 +4,7 @@
 public class GroupQualifier : Qualifier
 {
 	// used to cache the result, i.e. once the team is determined, store it here and return it in Get()
-	Team _qualified;
+	Team? _qualified;
 
 	public int GroupId { get; init; }
 	public int FinalPlacement { get; init; }
@@ -17,10 +17,12 @@ public class GroupQualifier : Qualifier
 	// TODO Remove static reference to EuroRoundAdvancer
 	public override Team? Get()
 	{
-		return (FinalPlacement, Group?.IsFinished) switch
+		return _qualified ??= GetQualifier();
+
+		Team? GetQualifier() => (FinalPlacement, Group?.IsFinished) switch
 		{
-			(1 or 2, true) => _qualified ??= Group.GetStandings()[FinalPlacement - 1].Team,
-			(3, true) => _qualified ??= EuroRoundAdvancer.GetThirdPlaceQualifier(Group.Stage, ThirdPlaceCombination),
+			(1 or 2, true) => Group.GetStandings()[FinalPlacement - 1].Team,
+			(3, true) => EuroRoundAdvancer.GetThirdPlaceQualifier(Group.Stage, ThirdPlaceCombination),
 			_ => null,
 		};
 	}
