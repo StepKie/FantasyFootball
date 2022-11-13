@@ -2,9 +2,9 @@ namespace FantasyFootball.Services;
 
 public class SettingsService : ISettingsService
 {
-	public const string idConfigKey = "id_token";
-	public const string idSimSpeedMs = "id_simspeed";
-	public const string idLanguage = "id_language";
+	public static readonly string idConfigKey = "id_token";
+	public static readonly string idSimSpeedMs = "id_simspeed";
+	public static readonly string idLanguage = "id_language";
 
 	static readonly string _codeDefaultLanguage = (Resources.AppResources.Culture ?? Thread.CurrentThread.CurrentUICulture).TwoLetterISOLanguageName;
 

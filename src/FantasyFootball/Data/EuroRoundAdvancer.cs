@@ -1,7 +1,7 @@
 ﻿namespace FantasyFootball.Data;
 
 //TODO Refactor for reuse in other tournaments
-public class EuroRoundAdvancer
+public static class EuroRoundAdvancer
 {
 	public static readonly Dictionary<string, int> combinationToId = new()
 	{

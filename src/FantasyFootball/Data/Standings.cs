@@ -1,6 +1,7 @@
 ﻿namespace FantasyFootball.Data;
 
-public class Standings
+/// <summary> Evolved from a full-class to only having this one method. Refactor candidate. </summary>
+public static class Standings
 {
 	public static IList<TeamRecord> CreateFrom(IEnumerable<Game> games)
 	{
