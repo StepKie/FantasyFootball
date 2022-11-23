@@ -16,7 +16,7 @@ public partial class GameViewModel : GeneralViewModel
 	public GameViewModel(Game game)
 	{
 		Game = game;
-		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, UpdateUI);
+		Messaging.MessageBus.Register<GameFinishedMessage>(this, (_, message) => UpdateUI(message.FinishedGame));
 	}
 
 	void UpdateUI(Game justFinished)

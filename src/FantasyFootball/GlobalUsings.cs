@@ -4,6 +4,8 @@ global using System.Globalization;
 
 global using MethodTimer;
 
+global using CommunityToolkit.Mvvm.Messaging;
+
 global using Serilog;
 
 global using SQLite;
@@ -15,3 +17,4 @@ global using FantasyFootball.Data;
 global using FantasyFootball.Models;
 global using FantasyFootball.Repositories;
 global using FantasyFootball.Services;
+global using static FantasyFootball.Messaging;

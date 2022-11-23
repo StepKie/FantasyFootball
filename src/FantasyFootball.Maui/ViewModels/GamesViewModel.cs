@@ -4,7 +4,7 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 {
 	public GamesViewModel()
 	{
-		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, _ => UpdateStageAndRoundFromCompetition());
+		MessageBus.Register<GameFinishedMessage>(this, (_, _) => UpdateStageAndRoundFromCompetition());
 	}
 
 	public override void LoadCompetition()

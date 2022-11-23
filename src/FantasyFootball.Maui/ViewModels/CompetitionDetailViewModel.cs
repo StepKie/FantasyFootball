@@ -33,7 +33,8 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 
 	public CompetitionDetailViewModel()
 	{
-		MessagingCenter.Subscribe<Competition>(this, MessageKeys.CompetitionFinished, _ => OnPropertyChanged(nameof(Competition)));
+		// Will currently update ALL CompetitionViewModels regardless if it is the one that was finished
+		MessageBus.Register<CompetitionFinishedMessage>(this, (_, _) => OnPropertyChanged(nameof(Competition)));
 	}
 
 	partial void OnCompetitionIdChanged(int value) => LoadCompetition();

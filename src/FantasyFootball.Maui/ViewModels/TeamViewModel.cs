@@ -51,7 +51,7 @@ public partial class TeamViewModel : GeneralViewModel
 	void SaveChanges()
 	{
 		Repo.Save(Team);
-		MessagingCenter.Send(Team, MessageKeys.TeamUpdated);
+		MessageBus.Send(new TeamUpdatedMessage(Team));
 	}
 
 	[RelayCommand(CanExecute = nameof(TeamWasEdited))]

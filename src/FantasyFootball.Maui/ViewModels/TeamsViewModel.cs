@@ -27,7 +27,7 @@ public partial class TeamsViewModel : GeneralViewModel
 
 	public TeamsViewModel()
 	{
-		MessagingCenter.Subscribe<Team>(this, MessageKeys.TeamUpdated, _ => LoadTeams());
+		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => LoadTeams());
 		LoadTeams();
 	}
 

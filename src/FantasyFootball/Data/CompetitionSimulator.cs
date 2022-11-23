@@ -66,14 +66,14 @@ public class CompetitionSimulator
 		game.Simulate();
 		Repo.Save(game);
 		Log.Debug(game.ToString());
-		MessagingCenter.Send(game, MessageKeys.GameFinished);
+		MessageBus.Send(new GameFinishedMessage(game));
 
 		await Task.Delay(GameDelay);
 
 		if (Competition.IsFinished)
 		{
 			Repo.Save(Competition);
-			MessagingCenter.Send(this, MessageKeys.CompetitionFinished);
+			MessageBus.Send(new CompetitionFinishedMessage(Competition));
 		}
 	}
 

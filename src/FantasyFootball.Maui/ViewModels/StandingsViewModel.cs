@@ -18,8 +18,8 @@ public partial class StandingsViewModel : GeneralViewModel
 	public StandingsViewModel()
 	{
 		// TODO Revisit, this is really expensive, especially during batch simulation
-		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, g => UpdateStandings(g.Round.Stage.Competition, g));
-		MessagingCenter.Subscribe<CompetitionSimulator>(this, MessageKeys.CompetitionFinished, async _ => await LoadAllCompetitions());
+		MessageBus.Register<GameFinishedMessage>(this, (_, message) => UpdateStandings(message.FinishedGame.Round.Stage.Competition, message.FinishedGame));
+		MessageBus.Register<CompetitionFinishedMessage>(this, async (_, _) => await LoadAllCompetitions());
 		_ = LoadAllCompetitions();
 	}
 

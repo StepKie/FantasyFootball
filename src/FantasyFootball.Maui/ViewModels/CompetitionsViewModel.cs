@@ -28,7 +28,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 
 	public CompetitionsViewModel()
 	{
-		MessagingCenter.Subscribe<CompetitionSimulator>(this, MessageKeys.CompetitionFinished, async _ => await ReloadCompetitions());
+		MessageBus.Register<CompetitionFinishedMessage>(this, async (_, _) => await ReloadCompetitions());
 		_ = ReloadCompetitions();
 	}
 
