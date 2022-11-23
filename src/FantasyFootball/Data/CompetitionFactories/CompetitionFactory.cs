@@ -6,7 +6,7 @@ public abstract class CompetitionFactory
 	protected DateTime StartDate { get; init; }
 	public virtual List<Group> Groups { get; protected set; }
 
-	public CompetitionFactory(CompetitionType type, DateTime startDate, List<Group> groups)
+	protected CompetitionFactory(CompetitionType type, DateTime startDate, List<Group> groups)
 	{
 		CompetitionType = type;
 		StartDate = startDate;

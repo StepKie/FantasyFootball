@@ -32,11 +32,6 @@ public class TeamRecord : NamedUniqueId, IComparable<TeamRecord>
 	[Ignore]
 	public int CompetitionWins { get; set; }
 
-	public int StandingsId { get; set; }
-
-	[ManyToOne]
-	public Standings Standings { get; set; }
-
 	public TeamRecord(Team team, IEnumerable<Game> games)
 	{
 		Team = team;
