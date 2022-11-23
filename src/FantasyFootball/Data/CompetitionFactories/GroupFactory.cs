@@ -71,7 +71,7 @@ public class GroupFactory
 		foreach (var entry in historicalData)
 		{
 			Group group = new() { Name = $"{Res.Group} {entry.Key}" };
-			List<Team> teamsInGroup = entry.Value.Select(shortName => Team(shortName)).ToList();
+			List<Team> teamsInGroup = entry.Value.Select(Team).ToList();
 			group.Teams.AddRange(teamsInGroup);
 			groups.Add(group);
 		}

@@ -44,7 +44,7 @@ public partial class SettingsViewModel : GeneralViewModel
 	{
 		// TODO The ActivityIndicator will not show on Android: https://github.com/dotnet/maui/issues/8135
 		IsBusy = true;
-		await Task.Run(() => _dataService.Reset()).ConfigureAwait(false);
+		await Task.Run(_dataService.Reset).ConfigureAwait(false);
 		IsBusy = false;
 	}
 }

@@ -1,82 +1,82 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-  x:Class="FantasyFootball.Views.GamesPage"
-  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  xmlns:ctrls="clr-namespace:FantasyFootball.Controls"
-  xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-  x:DataType="vm:GamesViewModel">
-  <ContentPage.ToolbarItems>
-    <ToolbarItem Command="{Binding DeleteCompetitionCommand}" IconImageSource="{StaticResource DeleteIcon}" />
-  </ContentPage.ToolbarItems>
-  <ContentPage.Content>
-    <StackLayout>
-      <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding Stages}" SelectedItem="{Binding SelectedStage, Mode=TwoWay}" />
-      <Picker
-        HorizontalOptions="FillAndExpand"
-        ItemDisplayBinding="{Binding Name}"
-        ItemsSource="{Binding Rounds}"
-        SelectedItem="{Binding SelectedRound, Mode=TwoWay}" />
-      <CollectionView
-        x:Name="gamesCollection"
-        VerticalOptions="FillAndExpand"
-        IsGrouped="True"
-        ItemsSource="{Binding GamesByRound}">
-        <CollectionView.ItemsLayout>
-          <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
-        </CollectionView.ItemsLayout>
-        <CollectionView.ItemTemplate>
-          <DataTemplate x:DataType="vm:GameViewModel">
-            <ctrls:GameViewRow BindingContext="{Binding .}" />
-          </DataTemplate>
-        </CollectionView.ItemTemplate>
-        <CollectionView.GroupHeaderTemplate>
-          <DataTemplate>
-            <Label
-              x:DataType="vm:RoundGroup"
-              BackgroundColor="LightGray"
-              FontAttributes="Bold"
-              Text="{Binding Name}" />
-          </DataTemplate>
-        </CollectionView.GroupHeaderTemplate>
-      </CollectionView>
-      <Border
-        Margin="0,10,0,0"
-        Padding="10"
-        HorizontalOptions="Center"
-        Stroke="LightGrey"
-        StrokeShape="RoundRectangle 30,30,30,30"
-        StrokeThickness="2">
-        <StackLayout Orientation="Horizontal">
-          <ImageButton
-            WidthRequest="40"
-            HeightRequest="40"
-            HorizontalOptions="CenterAndExpand"
-            Command="{Binding SimulateGameCommand}"
-            IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-            IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-            Source="{x:StaticResource PlayIcon}" />
-          <ImageButton
-            WidthRequest="40"
-            HeightRequest="40"
-            HorizontalOptions="CenterAndExpand"
-            BackgroundColor="Transparent"
-            Command="{Binding SimulateCurrentStageCommand}"
-            IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-            IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
-            Source="{x:StaticResource SkipNextIcon}" />
-          <ImageButton
-            WidthRequest="40"
-            HeightRequest="40"
-            HorizontalOptions="CenterAndExpand"
-            BackgroundColor="Transparent"
-            Command="{Binding SimulateAgainCommand}"
-            IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
-            IsVisible="{Binding Competition.IsFinished}"
-            Source="{x:StaticResource ReplayIcon}" />
-        </StackLayout>
-      </Border>
-    </StackLayout>
-  </ContentPage.Content>
+	x:Class="FantasyFootball.Views.GamesPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:ctrls="clr-namespace:FantasyFootball.Controls"
+	xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
+	xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+	x:DataType="vm:GamesViewModel">
+	<ContentPage.ToolbarItems>
+		<ToolbarItem Command="{Binding DeleteCompetitionCommand}" IconImageSource="{StaticResource DeleteIcon}" />
+	</ContentPage.ToolbarItems>
+	<ContentPage.Content>
+		<StackLayout>
+			<Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding Stages}" SelectedItem="{Binding SelectedStage, Mode=TwoWay}" />
+			<Picker
+				HorizontalOptions="FillAndExpand"
+				ItemDisplayBinding="{Binding Name}"
+				ItemsSource="{Binding Rounds}"
+				SelectedItem="{Binding SelectedRound, Mode=TwoWay}" />
+			<CollectionView
+				x:Name="gamesCollection"
+				VerticalOptions="FillAndExpand"
+				IsGrouped="True"
+				ItemsSource="{Binding GamesByRound}">
+				<CollectionView.ItemsLayout>
+					<LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+				</CollectionView.ItemsLayout>
+				<CollectionView.ItemTemplate>
+					<DataTemplate x:DataType="vm:GameViewModel">
+						<ctrls:GameViewRow BindingContext="{Binding .}" />
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+				<CollectionView.GroupHeaderTemplate>
+					<DataTemplate>
+						<Label
+							x:DataType="vm:RoundGroup"
+							BackgroundColor="LightGray"
+							FontAttributes="Bold"
+							Text="{Binding Name}" />
+					</DataTemplate>
+				</CollectionView.GroupHeaderTemplate>
+			</CollectionView>
+			<Border
+				Margin="0,10,0,0"
+				Padding="10"
+				HorizontalOptions="Center"
+				Stroke="LightGray"
+				StrokeShape="RoundRectangle 30,30,30,30"
+				StrokeThickness="2">
+				<StackLayout Orientation="Horizontal">
+					<ImageButton
+						WidthRequest="40"
+						HeightRequest="40"
+						HorizontalOptions="CenterAndExpand"
+						Command="{Binding SimulateGameCommand}"
+						IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
+						IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
+						Source="{x:StaticResource PlayIcon}" />
+					<ImageButton
+						WidthRequest="40"
+						HeightRequest="40"
+						HorizontalOptions="CenterAndExpand"
+						BackgroundColor="Transparent"
+						Command="{Binding SimulateCurrentStageCommand}"
+						IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
+						IsVisible="{Binding Competition.IsFinished, Converter={xct:InvertedBoolConverter}}"
+						Source="{x:StaticResource SkipNextIcon}" />
+					<ImageButton
+						WidthRequest="40"
+						HeightRequest="40"
+						HorizontalOptions="CenterAndExpand"
+						BackgroundColor="Transparent"
+						Command="{Binding SimulateAgainCommand}"
+						IsEnabled="{Binding IsBusy, Converter={xct:InvertedBoolConverter}}"
+						IsVisible="{Binding Competition.IsFinished}"
+						Source="{x:StaticResource ReplayIcon}" />
+				</StackLayout>
+			</Border>
+		</StackLayout>
+	</ContentPage.Content>
 </ContentPage>

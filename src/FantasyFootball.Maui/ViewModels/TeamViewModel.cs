@@ -58,7 +58,7 @@ public partial class TeamViewModel : GeneralViewModel
 	async Task SaveAndExit()
 	{
 		SaveChanges();
-		await Shell.Current.Navigation.PopAsync();
+		_ = await Shell.Current.Navigation.PopAsync();
 	}
 
 	[RelayCommand]

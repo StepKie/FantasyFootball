@@ -7,7 +7,7 @@ public partial class GamesPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = gamesViewModel;
-		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, game => ScrollToGame(game));
+		MessagingCenter.Subscribe<Game>(this, MessageKeys.GameFinished, ScrollToGame);
 	}
 
 	void ScrollToGame(Game game)
