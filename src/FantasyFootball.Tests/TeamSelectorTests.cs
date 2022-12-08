@@ -12,7 +12,6 @@ public class GroupFactoryTests : BaseTest
 		var fromConfederation = Confederation.UEFA;
 		var groups = GroupFactory.For(DataService, CompetitionType.EM).DrawRandom();
 		var drawn = groups.SelectMany(g => g.Teams).ToList();
-		Assert.Equal(24, drawn.Count);
-		Assert.All(drawn, t => Assert.True(t.Country.Confederation.Equals(Confederation.UEFA)));
+		drawn.Should().HaveCount(24).And.OnlyContain(t => t.Country.Confederation.Equals(Confederation.UEFA));
 	}
 }

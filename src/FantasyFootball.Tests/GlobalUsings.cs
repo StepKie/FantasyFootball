@@ -3,6 +3,7 @@ global using System.Linq;
 global using System.Threading.Tasks;
 
 global using MethodTimer;
+global using FluentAssertions;
 
 global using FantasyFootball.Data;
 global using FantasyFootball.Data.CompetitionFactories;

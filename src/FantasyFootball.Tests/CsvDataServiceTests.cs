@@ -11,6 +11,6 @@ public class CsvDataServiceTests : BaseTest
 	{
 		Assert.True(DataService is CsvDataService);
 		var teams = DataService.CreateTeams();
-		Assert.NotEmpty(teams);
+		teams.Should().NotBeNullOrEmpty();
 	}
 }
