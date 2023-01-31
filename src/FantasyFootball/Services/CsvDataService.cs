@@ -55,9 +55,9 @@ public class CsvDataService : IDataService
 		{
 			var record = new Country
 			{
-				Name = csv.GetField(countryNameHeaderField),
-				Code2 = csv.GetField("country_code_2"),
-				Code3 = csv.GetField("country_code_3"),
+				Name = csv.GetField(countryNameHeaderField)!,
+				Code2 = csv.GetField("country_code_2")!,
+				Code3 = csv.GetField("country_code_3")!,
 				Elo = Convert.ToInt32(csv.GetField<double>("elo_new")),
 				Confederation = confederations.FirstOrDefault(c => c.Name == csv.GetField("confederation")) ?? Confederation.UNKNOWN,
 			};
