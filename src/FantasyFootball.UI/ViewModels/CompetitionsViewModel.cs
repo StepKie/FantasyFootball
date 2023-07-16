@@ -59,7 +59,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	public async Task ReloadCompetitions()
 	{
 		IsBusy = true;
-		var results = await Repo.GetAllAsync<Competition>().ConfigureAwait(false);
+		var results = await Repo.GetAllAsync<Competition>();
 		StoredCompetitionsForSelectedType = new(results.Where(c => c.Type == SelectedCompetitionType));
 		IsBusy = false;
 		OnPropertyChanged(nameof(StoredCompetitionsForSelectedType));

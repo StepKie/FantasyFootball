@@ -40,6 +40,7 @@ public static class EuroRoundAdvancer
 
 		var thirdPlaceFinishers = groups.Select(g => g.GetStandings()[2]).OrderByDescending(thirdPlaceRecord => thirdPlaceRecord);
 		var bestFourThirdPlace = thirdPlaceFinishers.Take(4).Select(r => r.Team);
+
 		int[] qualifierGroupIndices = bestFourThirdPlace
 			.Select(team => groups.First(g => g.Teams.Contains(team)))
 			.Select(group => groups.IndexOf(group) + 1)
