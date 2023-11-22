@@ -1,11 +1,6 @@
 ﻿namespace FantasyFootball.ViewModels;
 
-public class RoundGroup : List<GameViewModel>
+public class RoundGroup(string name, IEnumerable<GameViewModel> games) : List<GameViewModel>(games)
 {
-	public string Name { get; private set; }
-
-	public RoundGroup(string name, IEnumerable<GameViewModel> games) : base(games)
-	{
-		Name = name;
-	}
+	public string Name { get; private set; } = name;
 }

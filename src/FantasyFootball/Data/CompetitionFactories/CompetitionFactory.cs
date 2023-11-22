@@ -19,6 +19,8 @@ public abstract class CompetitionFactory
 		{
 			CompetitionType.EM => new EmCompetitionFactory(CompetitionType.EM.StartDate(year), groups),
 			CompetitionType.WM => new WmCompetitionFactory(CompetitionType.WM.StartDate(year), groups),
+			CompetitionType.CHAMPIONS_LEAGUE => throw new NotImplementedException(),
+			CompetitionType.DOMESTIC_LEAGUE => throw new NotImplementedException(),
 			_ => throw new ArgumentException($"No CompetitionFactory yet implemented for {type}"),
 		};
 
@@ -31,6 +33,8 @@ public abstract class CompetitionFactory
 		{
 			CompetitionType.EM => EmCompetitionFactory.Default(dataService, HistoricalData.EM_2020_START.Year),
 			CompetitionType.WM => WmCompetitionFactory.Default(dataService, HistoricalData.WM_2022_START.Year),
+			CompetitionType.CHAMPIONS_LEAGUE => throw new NotImplementedException(),
+			CompetitionType.DOMESTIC_LEAGUE => throw new NotImplementedException(),
 			_ => throw new ArgumentException($"No CompetitionFactory found for {type}"),
 		};
 
@@ -46,7 +50,7 @@ public abstract class CompetitionFactory
 	/// <returns></returns>
 	public virtual Competition Create()
 	{
-		if (Groups is null || !Groups.Any()) { throw new InvalidOperationException("Groups must be not empty or initialized before calling Create()"); }
+		if (Groups is null || Groups.Count == 0) { throw new InvalidOperationException("Groups must be not empty or initialized before calling Create()"); }
 
 		Competition competition = new()
 		{

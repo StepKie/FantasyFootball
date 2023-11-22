@@ -1,11 +1,6 @@
 ﻿namespace FantasyFootball.ViewModels;
 
-public class RecordsGroup : List<TeamRecordViewModel>
+public class RecordsGroup(string name, IEnumerable<TeamRecordViewModel> records) : List<TeamRecordViewModel>(records)
 {
-	public string Name { get; private set; }
-
-	public RecordsGroup(string name, IEnumerable<TeamRecordViewModel> records) : base(records)
-	{
-		Name = name;
-	}
+	public string Name { get; private set; } = name;
 }

@@ -3,7 +3,7 @@
 [Table(nameof(Confederation))]
 public class Confederation : NamedUniqueId
 {
-	public static List<Confederation> ALL => new() { UEFA, CAF, CONMEBOL, CONCACAF, OFC, AFC };
+	public static List<Confederation> ALL => [UEFA, CAF, CONMEBOL, CONCACAF, OFC, AFC];
 
 	public static readonly Confederation UEFA = new(nameof(UEFA), "Europe", 14);
 	public static readonly Confederation CAF = new(nameof(CAF), "Africa", 5);
@@ -27,7 +27,7 @@ public class Confederation : NamedUniqueId
 	public string Continent { get; init; }
 
 	[OneToMany(CascadeOperations = CascadeOperation.CascadeRead)]
-	public virtual List<Country> Countries { get; init; } = new();
+	public virtual List<Country> Countries { get; init; } = [];
 
 	public string Logo => IconStrings.GetConfederationLogo(this);
 	public int NoOfWmParticipants { get; init; }

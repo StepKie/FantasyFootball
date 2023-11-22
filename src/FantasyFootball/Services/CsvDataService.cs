@@ -24,7 +24,7 @@ public class CsvDataService : IDataService
 
 	public void Initialize()
 	{
-		if (!AllTeams.Any())
+		if (AllTeams.Count == 0)
 		{
 			Reset();
 		}
@@ -38,7 +38,7 @@ public class CsvDataService : IDataService
 
 	public List<Team> AllTeams => _teamCache ??= ReloadTeams();
 
-	IList<Country> CreateCountries()
+	List<Country> CreateCountries()
 	{
 		using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(teamsFile);
 		_ = stream ?? throw new FileNotFoundException($"{teamsFile} not found in embedded resource");
@@ -49,7 +49,7 @@ public class CsvDataService : IDataService
 		var countryNameHeaderField = $"country_full_{_languageId}";
 
 		var confederations = _repo.GetAll<Confederation>();
-		List<Country> countries = new();
+		List<Country> countries = [];
 
 		while (csv.Read())
 		{

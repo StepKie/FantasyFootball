@@ -7,51 +7,51 @@ public static class HistoricalData
 	public static readonly DateTime WM_2022_START = new(2021, 6, 11, 20, 0, 0);
 	public static readonly DateTime WM_2018_START = new(2018, 6, 14, 17, 0, 0);
 
-	public static readonly int[] HISTORIC_WM_YEARS = new[] { 2018, 2022 };
-	public static readonly int[] HISTORIC_EM_YEARS = new[] { 2016, 2020 };
+	public static readonly int[] HISTORIC_WM_YEARS = [2018, 2022];
+	public static readonly int[] HISTORIC_EM_YEARS = [2016, 2020];
 
 	public static Dictionary<string, string[]> EM_2020_TEAMS => new()
 	{
-		["A"] = new[] { "ITA", "SUI", "TUR", "WAL" },
-		["B"] = new[] { "BEL", "DEN", "FIN", "RUS" },
-		["C"] = new[] { "NED", "MKD", "UKR", "AUT" },
-		["D"] = new[] { "ENG", "CRO", "SCO", "CZE" },
-		["E"] = new[] { "POL", "SWE", "SVK", "ESP" },
-		["F"] = new[] { "GER", "FRA", "POR", "HUN" },
+		["A"] = ["ITA", "SUI", "TUR", "WAL"],
+		["B"] = ["BEL", "DEN", "FIN", "RUS"],
+		["C"] = ["NED", "MKD", "UKR", "AUT"],
+		["D"] = ["ENG", "CRO", "SCO", "CZE"],
+		["E"] = ["POL", "SWE", "SVK", "ESP"],
+		["F"] = ["GER", "FRA", "POR", "HUN"],
 	};
 
 	public static Dictionary<string, string[]> EM_2016_TEAMS => new()
 	{
-		["A"] = new[] { "FRA", "ROU", "ALB", "SUI" },
-		["B"] = new[] { "ENG", "RUS", "WAL", "SVK" },
-		["C"] = new[] { "GER", "UKR", "POL", "NIR" },
-		["D"] = new[] { "ESP", "CZE", "TUR", "CRO" },
-		["E"] = new[] { "BEL", "ITA", "IRL", "SWE" },
-		["F"] = new[] { "POR", "ISL", "AUT", "HUN" },
+		["A"] = ["FRA", "ROU", "ALB", "SUI"],
+		["B"] = ["ENG", "RUS", "WAL", "SVK"],
+		["C"] = ["GER", "UKR", "POL", "NIR"],
+		["D"] = ["ESP", "CZE", "TUR", "CRO"],
+		["E"] = ["BEL", "ITA", "IRL", "SWE"],
+		["F"] = ["POR", "ISL", "AUT", "HUN"],
 	};
 
 	public static Dictionary<string, string[]> WM_2022_TEAMS => new()
 	{
-		["A"] = new[] { "QAT", "ECU", "SEN", "NED" },
-		["B"] = new[] { "ENG", "IRN", "USA", "WAL" },
-		["C"] = new[] { "ARG", "KSA", "MEX", "POL" },
-		["D"] = new[] { "FRA", "AUS", "DEN", "TUN" },
-		["E"] = new[] { "ESP", "CRC", "GER", "JPN" },
-		["F"] = new[] { "BEL", "CAN", "MAR", "CRO" },
-		["G"] = new[] { "BRA", "SRB", "SUI", "CMR" },
-		["H"] = new[] { "POR", "GHA", "URU", "KOR" },
+		["A"] = ["QAT", "ECU", "SEN", "NED"],
+		["B"] = ["ENG", "IRN", "USA", "WAL"],
+		["C"] = ["ARG", "KSA", "MEX", "POL"],
+		["D"] = ["FRA", "AUS", "DEN", "TUN"],
+		["E"] = ["ESP", "CRC", "GER", "JPN"],
+		["F"] = ["BEL", "CAN", "MAR", "CRO"],
+		["G"] = ["BRA", "SRB", "SUI", "CMR"],
+		["H"] = ["POR", "GHA", "URU", "KOR"],
 	};
 
 	public static Dictionary<string, string[]> WM_2018_TEAMS => new()
 	{
-		["A"] = new[] { "RUS", "KSA", "EGY", "URU" },
-		["B"] = new[] { "POR", "ESP", "MAR", "IRN" },
-		["C"] = new[] { "FRA", "AUS", "PER", "DEN" },
-		["D"] = new[] { "ARG", "ISL", "CRO", "NGA" },
-		["E"] = new[] { "BRA", "SUI", "CRC", "SRB" },
-		["F"] = new[] { "GER", "MEX", "SWE", "KOR" },
-		["G"] = new[] { "BEL", "PAN", "TUN", "ENG" },
-		["H"] = new[] { "POL", "SEN", "COL", "JPN" },
+		["A"] = ["RUS", "KSA", "EGY", "URU"],
+		["B"] = ["POR", "ESP", "MAR", "IRN"],
+		["C"] = ["FRA", "AUS", "PER", "DEN"],
+		["D"] = ["ARG", "ISL", "CRO", "NGA"],
+		["E"] = ["BRA", "SUI", "CRC", "SRB"],
+		["F"] = ["GER", "MEX", "SWE", "KOR"],
+		["G"] = ["BEL", "PAN", "TUN", "ENG"],
+		["H"] = ["POL", "SEN", "COL", "JPN"],
 	};
 
 	public static IEnumerable<int> AvailableYears(this CompetitionType type)
@@ -60,6 +60,8 @@ public static class HistoricalData
 		{
 			CompetitionType.EM => HISTORIC_EM_YEARS,
 			CompetitionType.WM => HISTORIC_WM_YEARS,
+			CompetitionType.CHAMPIONS_LEAGUE => throw new NotImplementedException(),
+			CompetitionType.DOMESTIC_LEAGUE => throw new NotImplementedException(),
 			_ => Enumerable.Empty<int>(),
 		};
 	}

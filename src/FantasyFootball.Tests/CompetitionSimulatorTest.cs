@@ -1,14 +1,11 @@
 namespace FantasyFootball.Tests;
 
-public class CompetitionSimulatorTest : BaseTest
+public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(output, level: LogEventLevel.Debug)
 {
-	public CompetitionSimulatorTest(ITestOutputHelper output) : base(output, level: LogEventLevel.Debug) { }
-
-	[Time]
 	[Fact]
 	public async Task TestRunEm2020()
 	{
-		var em2020 = await InitCompetition(CompetitionType.EM);
+		var em2020 = InitCompetition(CompetitionType.EM);
 
 		var simulator = new CompetitionSimulator(em2020, Repo);
 		var groupStage = em2020.Stages[0];
@@ -26,11 +23,10 @@ public class CompetitionSimulatorTest : BaseTest
 		Assert.Equal(winner, finalDb?.Winner);
 	}
 
-	[Time]
 	[Fact]
 	public async Task TestRunWm2022()
 	{
-		var wm2022 = await InitCompetition(CompetitionType.WM);
+		var wm2022 = InitCompetition(CompetitionType.WM);
 
 		var simulator = new CompetitionSimulator(wm2022, Repo);
 		var groups = wm2022.Groups;

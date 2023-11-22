@@ -1,20 +1,12 @@
 ﻿namespace FantasyFootball.Data;
 
-public class CompetitionSimulator
+public class CompetitionSimulator(Competition competition, IRepository repo, int msGameDelay = 100)
 {
-	public TimeSpan GameDelay { get; init; }
+	public TimeSpan GameDelay { get; init; } = TimeSpan.FromMilliseconds(msGameDelay);
 
-	public Competition Competition { get; init; }
+	public Competition Competition { get; init; } = competition;
 
-	public IRepository Repo { get; init; }
-
-	public CompetitionSimulator(Competition competition, IRepository repo, int msGameDelay = 100)
-	{
-		Competition = competition;
-		Repo = repo;
-		// TODO Select based on competition
-		GameDelay = TimeSpan.FromMilliseconds(msGameDelay);
-	}
+	public IRepository Repo { get; init; } = repo;
 
 	public async Task Simulate()
 	{

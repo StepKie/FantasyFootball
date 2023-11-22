@@ -11,7 +11,7 @@ public class Group : NamedUniqueId
 
 	//TODO May be ManyToMany (i.e. a Team can be in a Cup and a National League ...)
 	[ManyToMany(typeof(TeamGroupAssignment), CascadeOperations = CascadeOperation.CascadeRead)]
-	public List<Team> Teams { get; set; } = new();
+	public List<Team> Teams { get; set; } = [];
 
 	public IList<TeamRecord> GetStandings() => Standings.CreateFrom(Games);
 

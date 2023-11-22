@@ -50,7 +50,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	async Task SimulateSingle()
 	{
 		AppShell.SetGamesVisible(true);
-		var competition = await CreateCompetition();
+		var competition = CreateCompetition();
 		ServiceHelper.GetService<StandingsViewModel>()!.UpdateStandings(competition);
 		var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competition.Id}";
 		await Shell.Current.GoToAsync(route);
@@ -63,7 +63,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 		// TODO Show Progress on CompetitionsPage
 		for (int i = 1; i <= DefaultAmountOfBatchSimulations; i++)
 		{
-			var competition = await CreateCompetition();
+			var competition = CreateCompetition();
 			var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 0);
 			IsBusy = true;
 			await simulator.Simulate().ConfigureAwait(false);
@@ -104,7 +104,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 		}
 	}
 
-	async Task<Competition> CreateCompetition()
+	Competition CreateCompetition()
 	{
 		IsBusy = true;
 		var factory = CompetitionFactory.For(SelectedCompetitionType, SelectedYear, Groups);

@@ -21,7 +21,7 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 	Round? _selectedRound = new();
 
 	public IList<Stage> Stages => Competition.Stages;
-	public IList<Round> Rounds => SelectedStage?.Rounds ?? new List<Round>();
+	public IList<Round> Rounds => SelectedStage?.Rounds ?? [];
 
 	public ObservableCollection<RoundGroup> GamesByRound { get; private set; }
 

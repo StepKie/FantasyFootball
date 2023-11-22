@@ -1,26 +1,24 @@
 ﻿namespace FantasyFootball.Data.CompetitionFactories;
 
-public class WmCompetitionFactory : CompetitionFactory
+public class WmCompetitionFactory(DateTime start, List<Group> groups) : CompetitionFactory(CompetitionType.WM, start, groups)
 {
-	public WmCompetitionFactory(DateTime start, List<Group> groups) : base(CompetitionType.WM, start, groups) { }
-
 	public static WmCompetitionFactory Default(IDataService dataService, int year) => new(CompetitionType.WM.StartDate(year), GroupFactory.For(dataService, CompetitionType.WM).CreateFromHistoricalData(year));
 
 	public override List<Stage> CreateStages()
 	{
-		return new()
-		{
+		return
+		[
 			new Stage
 			{
 				Name = Res.GroupStage,
 				Groups = Groups,
-				Rounds = new()
-				{
+				Rounds =
+				[
 					new()
 					{
 						Name = Res.Round + " 1",
-						RegularGames = new()
-						{
+						RegularGames =
+						[
 							new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[1], PlayedOn = new(2022, 11, 20, 17, 0, 0), },
 							new() { HomeTeam = Groups[0].Teams[2], AwayTeam = Groups[0].Teams[3], PlayedOn = new(2022, 11, 21, 17, 0, 0), },
 							new() { HomeTeam = Groups[1].Teams[0], AwayTeam = Groups[1].Teams[1], PlayedOn = new(2022, 11, 21, 14, 0, 0), },
@@ -37,13 +35,13 @@ public class WmCompetitionFactory : CompetitionFactory
 							new() { HomeTeam = Groups[7].Teams[2], AwayTeam = Groups[7].Teams[3], PlayedOn = new(2022, 11, 24, 14, 0, 0), },
 							new() { HomeTeam = Groups[7].Teams[0], AwayTeam = Groups[7].Teams[1], PlayedOn = new(2022, 11, 24, 17, 0, 0), },
 							new() { HomeTeam = Groups[6].Teams[0], AwayTeam = Groups[6].Teams[1], PlayedOn = new(2022, 11, 24, 20, 0, 0), },
-						}
+						]
 					},
 					new()
 					{
 						Name = Res.Round + " 2",
-						RegularGames = new()
-						{
+						RegularGames =
+						[
 							new() { HomeTeam = Groups[1].Teams[3], AwayTeam = Groups[1].Teams[1], PlayedOn = new(2022, 11, 25, 11, 0, 0), },
 							new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[2], PlayedOn = new(2022, 11, 25, 14, 0, 0), },
 							new() { HomeTeam = Groups[0].Teams[3], AwayTeam = Groups[0].Teams[1], PlayedOn = new(2022, 11, 25, 17, 0, 0), },
@@ -60,13 +58,13 @@ public class WmCompetitionFactory : CompetitionFactory
 							new() { HomeTeam = Groups[7].Teams[3], AwayTeam = Groups[7].Teams[1], PlayedOn = new(2022, 11, 28, 14, 0, 0), },
 							new() { HomeTeam = Groups[6].Teams[0], AwayTeam = Groups[6].Teams[2], PlayedOn = new(2022, 11, 28, 17, 0, 0), },
 							new() { HomeTeam = Groups[7].Teams[0], AwayTeam = Groups[7].Teams[2], PlayedOn = new(2022, 11, 28, 20, 0, 0), },
-						}
+						]
 					},
 					new()
 					{
 						Name = Res.Round + " 3",
-						RegularGames = new()
-						{
+						RegularGames =
+						[
 							new() { HomeTeam = Groups[0].Teams[3], AwayTeam = Groups[0].Teams[0], PlayedOn = new(2022, 11, 29, 16, 0, 0), },
 							new() { HomeTeam = Groups[0].Teams[1], AwayTeam = Groups[0].Teams[2], PlayedOn = new(2022, 11, 29, 16, 0, 0), },
 							new() { HomeTeam = Groups[1].Teams[1], AwayTeam = Groups[1].Teams[2], PlayedOn = new(2022, 11, 29, 20, 0, 0), },
@@ -83,20 +81,20 @@ public class WmCompetitionFactory : CompetitionFactory
 							new() { HomeTeam = Groups[7].Teams[3], AwayTeam = Groups[7].Teams[0], PlayedOn = new(2022, 12, 02, 16, 0, 0), },
 							new() { HomeTeam = Groups[6].Teams[1], AwayTeam = Groups[6].Teams[2], PlayedOn = new(2022, 12, 02, 20, 0, 0), },
 							new() { HomeTeam = Groups[6].Teams[3], AwayTeam = Groups[6].Teams[0], PlayedOn = new(2022, 12, 02, 20, 0, 0), },
-						}
+						]
 					}
-				},
+				],
 			},
 			new Stage
 			{
 				Name = Res.KoStage,
-				Rounds = new()
-				{
+				Rounds =
+				[
 					new()
 					{
 						Name = Res.RoundOf16,
-						KoGames = new()
-						{
+						KoGames =
+						[
 							// Order is not chronological since UEFA is weird
 							new(49, Qualifier.FromGroup("A1"), Qualifier.FromGroup("B2"), new(2022, 12, 03, 16, 0, 0)),
 							new(50, Qualifier.FromGroup("C1"), Qualifier.FromGroup("D2"), new(2022, 12, 03, 20, 0, 0)),
@@ -106,46 +104,46 @@ public class WmCompetitionFactory : CompetitionFactory
 							new(54, Qualifier.FromGroup("G1"), Qualifier.FromGroup("H2"), new(2022, 12, 05, 20, 0, 0)),
 							new(55, Qualifier.FromGroup("F1"), Qualifier.FromGroup("E2"), new(2022, 12, 06, 16, 0, 0)),
 							new(56, Qualifier.FromGroup("H1"), Qualifier.FromGroup("G2"), new(2022, 12, 06, 20, 0, 0)),
-						}
+						]
 					},
 					new()
 					{
 						Name = Res.Quarterfinal,
-						KoGames = new()
-						{
+						KoGames =
+						[
 							new(57, Qualifier.FromGame(53), Qualifier.FromGame(54), new(2022, 12, 09, 16, 0, 0)),
 							new(58, Qualifier.FromGame(49), Qualifier.FromGame(50), new(2022, 12, 09, 20, 0, 0)),
 							new(59, Qualifier.FromGame(55), Qualifier.FromGame(56), new(2022, 12, 10, 16, 0, 0)),
 							new(60, Qualifier.FromGame(51), Qualifier.FromGame(52), new(2022, 12, 10, 20, 0, 0)),
-						}
+						]
 					},
 					new()
 					{
 						Name = Res.Semifinal,
-						KoGames = new()
-						{
+						KoGames =
+						[
 							new(61, Qualifier.FromGame(57), Qualifier.FromGame(58), new(2022, 12, 13, 16, 0, 0)),
 							new(62, Qualifier.FromGame(59), Qualifier.FromGame(60), new(2022, 12, 14, 16, 0, 0)),
-						}
+						]
 					},
 					new()
 					{
 						Name = Res.ThirdPlaceMatch,
-						KoGames = new()
-						{
+						KoGames =
+						[
 							new(63, Qualifier.FromGame(61, loserQualifies: true), Qualifier.FromGame(62, loserQualifies: true), new(2022, 12, 17, 16, 0, 0)),
-						},
+						],
 					},
 					new()
 					{
 						Name = Res.Final,
-						KoGames = new()
-						{
+						KoGames =
+						[
 							new(64, Qualifier.FromGame(61), Qualifier.FromGame(62), new(2022, 12, 18, 16, 0, 0)),
-						},
+						],
 					}
-				}
+				]
 			}
-		};
+		];
 	}
 }

@@ -20,7 +20,7 @@ public class BaseTest
 	}
 
 	/// <summary> For tests, create a default competition using the Factory class </summary>
-	public async Task<Competition> InitCompetition(CompetitionType type)
+	public Competition InitCompetition(CompetitionType type)
 	{
 		var factory = CompetitionFactory.Default(type, DataService);
 		var competition = factory.Create();

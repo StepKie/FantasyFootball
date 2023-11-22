@@ -19,9 +19,9 @@ public partial class TeamsViewModel : GeneralViewModel
 	[ObservableProperty]
 	TeamViewModel? _selectedTeam;
 
-	List<TeamViewModel> _allTeams = new();
+	List<TeamViewModel> _allTeams = [];
 
-	public ObservableRangeCollection<TeamViewModel> TeamsInSelectedConfederation { get; set; } = new();
+	public ObservableRangeCollection<TeamViewModel> TeamsInSelectedConfederation { get; set; } = [];
 
 	public IList<string> Confederations { get; } = Confederation.ALL.Select(c => c.Name).Prepend(Res.All).ToList();
 

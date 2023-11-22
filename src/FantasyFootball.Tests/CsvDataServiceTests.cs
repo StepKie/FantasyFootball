@@ -2,10 +2,8 @@
 
 namespace FantasyFootball.Tests;
 
-public class CsvDataServiceTests : BaseTest
+public class CsvDataServiceTests(ITestOutputHelper output) : BaseTest(output, level: LogEventLevel.Debug)
 {
-	public CsvDataServiceTests(ITestOutputHelper output) : base(output, level: LogEventLevel.Debug) { }
-
 	[Fact]
 	public void TestCsvImport()
 	{

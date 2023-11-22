@@ -2,11 +2,11 @@
 
 public partial class StandingsViewModel : GeneralViewModel
 {
-	readonly Dictionary<CompetitionType, List<TeamRecordViewModel>> _standingsCache = new() { [CompetitionType.EM] = new(), [CompetitionType.WM] = new(), };
+	readonly Dictionary<CompetitionType, List<TeamRecordViewModel>> _standingsCache = new() { [CompetitionType.EM] = [], [CompetitionType.WM] = [], };
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(OverallRecords))]
-	List<Competition> _allCompetitions = new();
+	List<Competition> _allCompetitions = [];
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(OverallRecords))]
@@ -25,7 +25,7 @@ public partial class StandingsViewModel : GeneralViewModel
 
 	public IList<CompetitionType> CompetitionTypes { get; } = Enum.GetValues(typeof(CompetitionType)).Cast<CompetitionType>().ToList();
 
-	public List<RecordsGroup> RecordsByGroup { get; set; } = new();
+	public List<RecordsGroup> RecordsByGroup { get; set; } = [];
 
 	public List<TeamRecordViewModel> OverallRecords => _standingsCache[SelectedCompetitionType];
 

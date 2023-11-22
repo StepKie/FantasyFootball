@@ -2,15 +2,14 @@ using System;
 
 namespace FantasyFootball.Tests;
 
-public class CompetitionDbConsistencyTests : BaseTest
+public class CompetitionDbConsistencyTests(ITestOutputHelper output) : BaseTest(output, level: LogEventLevel.Debug)
 {
-	public CompetitionDbConsistencyTests(ITestOutputHelper output) : base(output, level: LogEventLevel.Debug) { }
 
 	/// <summary> TODO Use Theory to remove duplication with other competition types </summary>
 	[Fact]
-	public async Task TestInitializeEm2020()
+	public void TestInitializeEm2020()
 	{
-		var em2020 = await InitCompetition(CompetitionType.EM);
+		var em2020 = InitCompetition(CompetitionType.EM);
 		Assert.Equal(2, em2020.Stages.Count);
 		Assert.Equal(6, em2020.Groups.Count);
 		Assert.Equal(7, em2020.Rounds.Count);
@@ -20,13 +19,12 @@ public class CompetitionDbConsistencyTests : BaseTest
 
 		var groupGames = em2020.Stages.First().Games;
 		Assert.All(em2020.Participants, team => Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))));
-
 	}
 
 	[Fact]
-	public async Task TestInitializeWm2022()
+	public void TestInitializeWm2022()
 	{
-		var wm2022 = await InitCompetition(CompetitionType.WM);
+		var wm2022 = InitCompetition(CompetitionType.WM);
 		Assert.Equal(2, wm2022.Stages.Count);
 		Assert.Equal(8, wm2022.Groups.Count);
 		Assert.Equal(8, wm2022.Rounds.Count);
@@ -36,14 +34,13 @@ public class CompetitionDbConsistencyTests : BaseTest
 
 		var groupGames = wm2022.Stages.First().Games;
 		Assert.All(wm2022.Participants, team => Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))));
-
 	}
 
 	/// <summary> Test expected [ManyToOne] resolution behavior after save/get </summary>
 	[Fact]
-	public async Task TestManyToOneCompetition()
+	public void TestManyToOneCompetition()
 	{
-		var wm2022 = await InitCompetition(CompetitionType.WM);
+		var wm2022 = InitCompetition(CompetitionType.WM);
 
 		var allGames = wm2022.GamesByDate;
 		var groupGames = allGames.Where(g => g is not KoGame);
@@ -93,10 +90,10 @@ public class CompetitionDbConsistencyTests : BaseTest
 		Stage stage = new()
 		{
 			Name = "Stage 1",
-			Rounds = new()
-			{
+			Rounds =
+			[
 				new Round { Name = "Round 1", }
-			}
+			]
 		};
 
 		Repo.Save(stage);
@@ -113,18 +110,18 @@ public class CompetitionDbConsistencyTests : BaseTest
 		Competition competition = new()
 		{
 			Name = "Competition 1",
-			Stages = new()
-			{
+			Stages =
+			[
 				new Stage
 				{
 					Name = "Stage 1",
-					Rounds = new()
-					{
+					Rounds =
+					[
 						new Round()
 						{
 							Name = "Round 1",
-							RegularGames = new()
-							{
+							RegularGames =
+							[
 								new Game
 								{
 									Name = "Game 1",
@@ -136,11 +133,11 @@ public class CompetitionDbConsistencyTests : BaseTest
 									State = GameState.FINISHED,
 									Ending = GameEnd.EXTRA_TIME,
 								}
-							}
+							]
 						}
-					}
+					]
 				}
-			}
+			]
 		};
 
 		Repo.Save(competition);

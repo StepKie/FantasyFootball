@@ -1,8 +1,7 @@
 ﻿namespace FantasyFootball.Tests;
 
-public class GroupFactoryTests : BaseTest
+public class GroupFactoryTests(ITestOutputHelper output) : BaseTest(output, level: LogEventLevel.Debug)
 {
-	public GroupFactoryTests(ITestOutputHelper output) : base(output, level: LogEventLevel.Debug) { }
 
 	// TODO Somehow this will not initialize correctly when run in a suite, only succeeds when run standalone
 	// Possibly, other test classes modify the underlying :inmemory: db concurrently

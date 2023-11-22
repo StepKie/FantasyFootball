@@ -4,13 +4,13 @@
 public class Round : NamedUniqueId
 {
 	[Ignore]
-	public List<Game> AllGames => RegularGames.Concat(KoGames).ToList();
+	public List<Game> AllGames => [.. RegularGames, .. KoGames];
 
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public List<Game> RegularGames { get; init; } = new();
+	public List<Game> RegularGames { get; init; } = [];
 
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public List<KoGame> KoGames { get; init; } = new();
+	public List<KoGame> KoGames { get; init; } = [];
 
 	[ForeignKey(typeof(Stage))]
 	public int StageId { get; set; }

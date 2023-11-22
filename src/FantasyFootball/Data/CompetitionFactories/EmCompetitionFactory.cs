@@ -1,18 +1,9 @@
 ﻿namespace FantasyFootball.Data.CompetitionFactories;
 
-public class EmCompetitionFactory : CompetitionFactory
+public class EmCompetitionFactory(DateTime startDate, List<Group> groups) : CompetitionFactory(CompetitionType.EM, startDate, groups)
 {
-	public EmCompetitionFactory(DateTime startDate, List<Group> groups) : base(CompetitionType.EM, startDate, groups) { }
-
 	public static EmCompetitionFactory Default(IDataService dataService, int year) => new(CompetitionType.EM.StartDate(year), GroupFactory.For(dataService, CompetitionType.EM).CreateFromHistoricalData(year));
-	public override List<Stage> CreateStages()
-	{
-		return new()
-		{
-			CreateGroupStage(),
-			CreateKoStage(),
-		};
-	}
+	public override List<Stage> CreateStages() => [CreateGroupStage(), CreateKoStage()];
 
 	public virtual Stage CreateGroupStage()
 	{
@@ -20,13 +11,13 @@ public class EmCompetitionFactory : CompetitionFactory
 		{
 			Name = Res.GroupStage,
 			Groups = Groups,
-			Rounds = new()
-			{
+			Rounds =
+			[
 				new()
 				{
 					Name = Res.Round + " 1",
-					RegularGames = new()
-					{
+					RegularGames =
+					[
 						new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[2], PlayedOn = new DateTime(2020, 6, 11, 21, 0, 0), },
 						new() { HomeTeam = Groups[0].Teams[1], AwayTeam = Groups[0].Teams[3], PlayedOn = new DateTime(2020, 6, 12, 15, 0, 0), },
 						new() { HomeTeam = Groups[1].Teams[0], AwayTeam = Groups[1].Teams[2], PlayedOn = new DateTime(2020, 6, 12, 18, 0, 0), },
@@ -39,13 +30,13 @@ public class EmCompetitionFactory : CompetitionFactory
 						new() { HomeTeam = Groups[4].Teams[1], AwayTeam = Groups[4].Teams[3], PlayedOn = new DateTime(2020, 6, 14, 21, 0, 0), },
 						new() { HomeTeam = Groups[5].Teams[0], AwayTeam = Groups[5].Teams[2], PlayedOn = new DateTime(2020, 6, 15, 18, 0, 0), },
 						new() { HomeTeam = Groups[5].Teams[1], AwayTeam = Groups[5].Teams[3], PlayedOn = new DateTime(2020, 6, 15, 21, 0, 0), },
-					}
+					]
 				},
 				new()
 				{
 					Name = Res.Round + " 2",
-					RegularGames = new()
-					{
+					RegularGames =
+					[
 						new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[3], PlayedOn = new DateTime(2020, 6, 16, 15, 0, 0), },
 						new() { HomeTeam = Groups[0].Teams[1], AwayTeam = Groups[0].Teams[2], PlayedOn = new DateTime(2020, 6, 16, 18, 0, 0), },
 						new() { HomeTeam = Groups[1].Teams[0], AwayTeam = Groups[1].Teams[3], PlayedOn = new DateTime(2020, 6, 16, 21, 0, 0), },
@@ -58,13 +49,13 @@ public class EmCompetitionFactory : CompetitionFactory
 						new() { HomeTeam = Groups[4].Teams[1], AwayTeam = Groups[4].Teams[2], PlayedOn = new DateTime(2020, 6, 19, 15, 0, 0), },
 						new() { HomeTeam = Groups[5].Teams[0], AwayTeam = Groups[5].Teams[3], PlayedOn = new DateTime(2020, 6, 19, 18, 0, 0), },
 						new() { HomeTeam = Groups[5].Teams[1], AwayTeam = Groups[5].Teams[2], PlayedOn = new DateTime(2020, 6, 19, 21, 0, 0), },
-					}
+					]
 				},
 				new()
 				{
 					Name = Res.Round + " 3",
-					RegularGames = new()
-					{
+					RegularGames =
+					[
 						new() { HomeTeam = Groups[0].Teams[0], AwayTeam = Groups[0].Teams[1], PlayedOn = new DateTime(2020, 6, 20, 18, 0, 0), },
 						new() { HomeTeam = Groups[0].Teams[2], AwayTeam = Groups[0].Teams[3], PlayedOn = new DateTime(2020, 6, 20, 18, 0, 0), },
 						new() { HomeTeam = Groups[1].Teams[0], AwayTeam = Groups[1].Teams[1], PlayedOn = new DateTime(2020, 6, 21, 18, 0, 0), },
@@ -77,9 +68,9 @@ public class EmCompetitionFactory : CompetitionFactory
 						new() { HomeTeam = Groups[4].Teams[2], AwayTeam = Groups[4].Teams[3], PlayedOn = new DateTime(2020, 6, 23, 18, 0, 0), },
 						new() { HomeTeam = Groups[5].Teams[0], AwayTeam = Groups[5].Teams[1], PlayedOn = new DateTime(2020, 6, 23, 21, 0, 0), },
 						new() { HomeTeam = Groups[5].Teams[2], AwayTeam = Groups[5].Teams[3], PlayedOn = new DateTime(2020, 6, 23, 21, 0, 0), },
-					}
+					]
 				}
-			},
+			],
 		};
 	}
 
@@ -88,13 +79,13 @@ public class EmCompetitionFactory : CompetitionFactory
 		return new Stage
 		{
 			Name = Res.KoStage,
-			Rounds = new()
-			{
+			Rounds =
+			[
 				new()
 				{
 					Name = Res.RoundOf16,
-					KoGames = new()
-					{
+					KoGames =
+					[
 						// Order is not chronological since UEFA is weird
 						new(37, Qualifier.FromGroup("A1"), Qualifier.FromGroup("C2"),  new(2020, 6, 26, 21, 0, 0)),
 						new(38, Qualifier.FromGroup("A2"), Qualifier.FromGroup("B2"),  new(2020, 6, 26, 18, 0, 0)),
@@ -104,37 +95,37 @@ public class EmCompetitionFactory : CompetitionFactory
 						new(42, Qualifier.FromGroup("D2"), Qualifier.FromGroup("E2"), new(2020, 6, 28, 18, 0, 0)),
 						new(43, Qualifier.FromGroup("E1"), Qualifier.ThirdPlace("A/B/C/D"), new(2020, 6, 29, 21, 0, 0)),
 						new(44, Qualifier.FromGroup("D1"), Qualifier.FromGroup("F2"), new(2020, 6, 29, 18, 0, 0)),
-					}
+					]
 				},
 				new()
 				{
 					Name = Res.Quarterfinal,
-					KoGames = new()
-					{
+					KoGames =
+					[
 						new(45, Qualifier.FromGame(41), Qualifier.FromGame(42), new(2020, 7, 2, 18, 0, 0)),
 						new(46, Qualifier.FromGame(39), Qualifier.FromGame(37), new(2020, 7, 2, 21, 0, 0)),
 						new(47, Qualifier.FromGame(40), Qualifier.FromGame(38), new(2020, 7, 3, 18, 0, 0)),
 						new(48, Qualifier.FromGame(43), Qualifier.FromGame(44), new(2020, 7, 3, 21, 0, 0)),
-					}
+					]
 				},
 				new()
 				{
 					Name = Res.Semifinal,
-					KoGames = new()
-					{
+					KoGames =
+					[
 						new(49, Qualifier.FromGame(46), Qualifier.FromGame(45), new(2020, 7, 6, 21, 0, 0)),
 						new(50, Qualifier.FromGame(48), Qualifier.FromGame(47), new(2020, 7, 7, 21, 0, 0)),
-					}
+					]
 				},
 				new()
 				{
 					Name = Res.Final,
-					KoGames = new()
-					{
+					KoGames =
+					[
 						new(51, Qualifier.FromGame(49), Qualifier.FromGame(50), new(2020, 7, 11, 21, 0, 0)),
-					},
+					],
 				}
-			}
+			]
 		};
 	}
 }

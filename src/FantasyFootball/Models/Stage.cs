@@ -9,7 +9,7 @@ public class Stage : NamedUniqueId
 	/// For example, K.O. Stage in a World Cup has no Groups anymore ...
 	/// </summary>
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public List<Group> Groups { get; set; } = new();
+	public List<Group> Groups { get; set; } = [];
 
 	/// <summary>
 	/// Example World Cup:
@@ -17,7 +17,7 @@ public class Stage : NamedUniqueId
 	/// K.O. stage, Rounds are Round of 16, Quarterfinal, Semifinal, Final
 	/// </summary>
 	[OneToMany(CascadeOperations = CascadeOperation.All)]
-	public virtual List<Round> Rounds { get; set; } = new();
+	public virtual List<Round> Rounds { get; set; } = [];
 
 	[ForeignKey(typeof(Competition))]
 	public int CompetitionId { get; set; }
