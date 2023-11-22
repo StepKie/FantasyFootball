@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0-android;net7.0-ios;net7.0;</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net8.0-android;net8.0-ios;net8.0;</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-    <!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
-    <OutputType Condition="'$(TargetFramework)' != 'net7.0'">Exe</OutputType>
+    <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
+    <OutputType Condition="'$(TargetFramework)' != 'net8.0'">Exe</OutputType>
     <RootNamespace>FantasyFootball</RootNamespace>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
@@ -60,23 +60,24 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.1" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Fody" Version="6.8.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     <PackageReference Include="MethodTimer.Fody" Version="3.2.2" PrivateAssets="All" />
-    <PackageReference Include="Serilog" Version="3.0.1" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
     <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
     <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.5" />
-    <PackageReference Include="SQLitePCLRaw.core" Version="2.1.5" />
-    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.5" />
-    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.7" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="2.1.7" />
+    <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.7" />
+    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.7" />
     <PackageReference Include="Xamarin.CommunityToolkit.MauiCompat" Version="2.0.2-preview1013" />
   </ItemGroup>
 
