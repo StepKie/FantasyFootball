@@ -2,8 +2,6 @@
 
 global using System.Globalization;
 
-global using MethodTimer;
-
 global using CommunityToolkit.Mvvm.Messaging;
 
 global using Serilog;

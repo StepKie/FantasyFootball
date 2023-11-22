@@ -22,7 +22,6 @@ public class Repository : IRepository
 		_ = _dbConnection.CreateTables(CreateFlags.None, modelTables);
 	}
 
-	[Time]
 	public List<T> GetAll<T>() where T : NamedUniqueId, new() => _dbConnection.GetAllWithChildren<T>(recursive: true);
 
 	public Task<List<T>> GetAllAsync<T>() where T : NamedUniqueId, new() => Task.Run(() => _dbConnection.GetAllWithChildren<T>(recursive: true));

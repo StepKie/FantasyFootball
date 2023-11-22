@@ -43,7 +43,6 @@ public abstract class CompetitionFactory
 
 	public abstract List<Stage> CreateStages();
 
-	[Time]
 	/// <summary>
 	/// Creates an (unsaved) competition
 	/// </summary>
