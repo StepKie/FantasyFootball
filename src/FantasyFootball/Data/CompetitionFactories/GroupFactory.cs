@@ -18,7 +18,7 @@ public class GroupFactory(CompetitionType type, int noOfGroups, int groupSize, I
 
 	public List<Group> DrawRandom()
 	{
-		Confederation? confederation = CompetitionType == CompetitionType.EM ? Confederation.UEFA : null;
+		var confederation = CompetitionType == CompetitionType.EM ? Confederation.UEFA : null;
 		var participants = DrawTeamsWeightedByElo(NoOfGroups * GroupSize, confederation);
 		var groups = "ABCDEFGHIJK".Take(NoOfGroups).Select(letter => new Group { Name = $"{Res.Group} {letter}" }).ToList();
 		var teams = new Queue<Team>(participants);

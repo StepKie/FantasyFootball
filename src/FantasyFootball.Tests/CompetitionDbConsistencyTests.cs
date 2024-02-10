@@ -97,8 +97,8 @@ public class CompetitionDbConsistencyTests(ITestOutputHelper output) : BaseTest(
 		};
 
 		Repo.Save(stage);
-		Stage stageDb = Repo.Get<Stage>(1)!;
-		Round roundDb = Repo.Get<Round>(1)!;
+		var stageDb = Repo.Get<Stage>(1)!;
+		var roundDb = Repo.Get<Round>(1)!;
 		Assert.Equal(stageDb.Id, roundDb.StageId);
 		Assert.Equal(stageDb, roundDb.Stage);
 		Assert.Equal("Stage 1", stageDb.Name);
@@ -141,8 +141,8 @@ public class CompetitionDbConsistencyTests(ITestOutputHelper output) : BaseTest(
 		};
 
 		Repo.Save(competition);
-		Stage stageDb = Repo.Get<Stage>(1)!;
-		Competition competitionDb = Repo.Get<Competition>(1)!;
+		var stageDb = Repo.Get<Stage>(1)!;
+		var competitionDb = Repo.Get<Competition>(1)!;
 		Assert.Equal(competitionDb.Id, stageDb.CompetitionId);
 		Assert.Equal(competitionDb, stageDb.Competition);
 		Assert.Equal("Competition 1", competitionDb.Name);

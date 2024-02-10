@@ -50,9 +50,9 @@ public static class EuroRoundAdvancer
 		];
 
 		Log.Debug($"Best 4 3rd place finishers: {string.Join(",", bestFourThirdPlace)}, qualifier group ids ordered: {string.Join(",", qualifierGroupIndices)}");
-		(int, int, int, int) asTuple = (qualifierGroupIndices[0], qualifierGroupIndices[1], qualifierGroupIndices[2], qualifierGroupIndices[3]);
+		var asTuple = (qualifierGroupIndices[0], qualifierGroupIndices[1], qualifierGroupIndices[2], qualifierGroupIndices[3]);
 		var realizedCombination = thirdPlaceCombinations[asTuple];
-		int groupIndex = realizedCombination[combinationToId[thirdPlaceCombination]] - 1;
+		var groupIndex = realizedCombination[combinationToId[thirdPlaceCombination]] - 1;
 		var team = groups[groupIndex].GetStandings()[2].Team;
 		Log.Debug($"Qualifier for {thirdPlaceCombination} is {team}");
 
