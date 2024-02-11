@@ -15,10 +15,6 @@ public class Team : NamedUniqueId
 	[ManyToOne(CascadeOperations = CascadeOperation.All)]
 	public Country Country { get; init; }
 
-	// TODO Check how this works with ManyToMany, should not work like this ...
-	[ForeignKey(typeof(Group))]
-	public int GroupId { get; set; }
-
 	public override bool Equals(object? obj) => GetType() == obj?.GetType() && ShortName == (obj as Team)?.ShortName;
 	public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), Id, ShortName);
 }

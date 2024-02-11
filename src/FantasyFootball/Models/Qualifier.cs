@@ -1,7 +1,7 @@
 ﻿namespace FantasyFootball.Models;
 
 [Table(nameof(Qualifier))]
-public class Qualifier : NamedUniqueId
+public abstract class Qualifier : NamedUniqueId
 {
 	[OneToOne]
 	public KoGame Game { get; set; }
@@ -10,8 +10,8 @@ public class Qualifier : NamedUniqueId
 	[Ignore]
 	public Competition? Competition => Game?.Round?.Stage?.Competition;
 
-	public virtual Team? Get() => null;
-	public virtual Team GetPlaceholder() => new();
+	public abstract Team? Get();
+	public abstract Team GetPlaceholder();
 
 	public Team QualifiedTeam => Get() ?? GetPlaceholder();
 

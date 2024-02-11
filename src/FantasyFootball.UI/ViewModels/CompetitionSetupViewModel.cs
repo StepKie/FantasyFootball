@@ -33,7 +33,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 		ResetToHistoricTeams();
 	}
 
-	public IList<CompetitionType> CompetitionTypes { get; } = new[] { CompetitionType.WM, CompetitionType.EM };
+	public IList<CompetitionType> CompetitionTypes { get; } = [CompetitionType.WM, CompetitionType.EM];
 
 	public IList<int> Years => SelectedCompetitionType.AvailableYears().ToList();
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);

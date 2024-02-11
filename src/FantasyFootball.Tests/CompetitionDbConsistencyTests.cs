@@ -4,43 +4,28 @@ namespace FantasyFootball.Tests;
 
 public class CompetitionDbConsistencyTests(ITestOutputHelper output) : BaseTest(output, level: LogEventLevel.Debug)
 {
-
-	/// <summary> TODO Use Theory to remove duplication with other competition types </summary>
-	[Fact]
-	public void TestInitializeEm2020()
+	[InlineData(CompetitionType.EM, 2024, 2, 6, 7, 24, 51, 15)]
+	[InlineData(CompetitionType.WM, 2022, 2, 8, 8, 32, 64, 16)]
+	[Theory]
+	public void TestInitializeCompetition(CompetitionType type, int year, int expectedStages, int expectedGroups, int expectedRounds, int expectedParticipants, int expectedGames, int expectedKoGames)
 	{
-		var em2020 = InitCompetition(CompetitionType.EM);
-		Assert.Equal(2, em2020.Stages.Count);
-		Assert.Equal(6, em2020.Groups.Count);
-		Assert.Equal(7, em2020.Rounds.Count);
-		Assert.Equal(24, em2020.Participants.Count);
-		Assert.Equal(51, em2020.GamesByDate.Count);
-		Assert.Equal(15, em2020.GamesByDate.Count(g => g is KoGame));
+		var comp = InitCompetition(type, year);
+		Assert.Equal(expectedStages, comp.Stages.Count);
+		Assert.Equal(expectedGroups, comp.Groups.Count);
+		Assert.Equal(expectedRounds, comp.Rounds.Count);
+		Assert.Equal(expectedParticipants, comp.Participants.Count);
+		Assert.Equal(expectedGames, comp.GamesByDate.Count);
+		Assert.Equal(expectedKoGames, comp.GamesByDate.Count(g => g is KoGame));
 
-		var groupGames = em2020.Stages.First().Games;
-		Assert.All(em2020.Participants, team => Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))));
-	}
-
-	[Fact]
-	public void TestInitializeWm2022()
-	{
-		var wm2022 = InitCompetition(CompetitionType.WM);
-		Assert.Equal(2, wm2022.Stages.Count);
-		Assert.Equal(8, wm2022.Groups.Count);
-		Assert.Equal(8, wm2022.Rounds.Count);
-		Assert.Equal(32, wm2022.Participants.Count);
-		Assert.Equal(64, wm2022.GamesByDate.Count);
-		Assert.Equal(16, wm2022.GamesByDate.Count(g => g is KoGame));
-
-		var groupGames = wm2022.Stages.First().Games;
-		Assert.All(wm2022.Participants, team => Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))));
+		var groupGames = comp.Stages.First().Games;
+		Assert.All(comp.Participants, team => Assert.Equal(3, groupGames.Count(g => g.HomeTeam.Equals(team) || g.AwayTeam.Equals(team))));
 	}
 
 	/// <summary> Test expected [ManyToOne] resolution behavior after save/get </summary>
 	[Fact]
 	public void TestManyToOneCompetition()
 	{
-		var wm2022 = InitCompetition(CompetitionType.WM);
+		var wm2022 = InitCompetition(CompetitionType.WM, 2022);
 
 		var allGames = wm2022.GamesByDate;
 		var groupGames = allGames.Where(g => g is not KoGame);

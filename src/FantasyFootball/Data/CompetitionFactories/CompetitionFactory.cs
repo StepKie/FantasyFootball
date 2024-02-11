@@ -27,12 +27,12 @@ public abstract class CompetitionFactory
 		return factory;
 	}
 
-	public static CompetitionFactory Default(CompetitionType type, IDataService dataService)
+	public static CompetitionFactory Default(CompetitionType type, IDataService dataService, int year)
 	{
 		CompetitionFactory factory = type switch
 		{
-			CompetitionType.EM => EmCompetitionFactory.Default(dataService, HistoricalData.EM_2020_START.Year),
-			CompetitionType.WM => WmCompetitionFactory.Default(dataService, HistoricalData.WM_2022_START.Year),
+			CompetitionType.EM => EmCompetitionFactory.Default(dataService, year),
+			CompetitionType.WM => WmCompetitionFactory.Default(dataService, year),
 			CompetitionType.CHAMPIONS_LEAGUE => throw new NotImplementedException(),
 			CompetitionType.DOMESTIC_LEAGUE => throw new NotImplementedException(),
 			_ => throw new ArgumentException($"No CompetitionFactory found for {type}"),
@@ -61,5 +61,25 @@ public abstract class CompetitionFactory
 		};
 
 		return competition;
+	}
+
+	/// <summary> Matchup string is in the format "B1 - C3", i.e. group identifiers plus place identifiers starting at 1 </summary>
+	protected Game Create(string matchup, int dayOffset, int hourOffset)
+	{
+		var letterPlusPlace = matchup.Split("-", options: StringSplitOptions.TrimEntries);
+		var home = letterPlusPlace[0];
+		var away = letterPlusPlace[1];
+		var homeGroup = "ABCDEFGH".IndexOf(home[0]);
+		var awayGroup = "ABCDEFGH".IndexOf(away[0]);
+
+		var homePlace = int.Parse(home[1..]) - 1;
+		var awayPlace = int.Parse(away[1..]) - 1;
+
+		return new Game
+		{
+			HomeTeam = Groups[homeGroup].Teams[homePlace],
+			AwayTeam = Groups[awayGroup].Teams[awayPlace],
+			PlayedOn = StartDate + TimeSpan.FromDays(dayOffset) + TimeSpan.FromHours(hourOffset),
+		};
 	}
 }

@@ -23,7 +23,7 @@ public partial class SettingsViewModel : GeneralViewModel
 		_selectedLanguage = settingsService.LastUsedLanguage;
 
 		SimulationSpeedMs = _settings.SimulationSpeed.TotalMilliseconds;
-		SupportedLanguages = new List<CultureInfo> { new("en"), new("de"), };
+		SupportedLanguages = [new("en"), new("de"),];
 	}
 
 	public string AppVersion => AppInfo.VersionString;

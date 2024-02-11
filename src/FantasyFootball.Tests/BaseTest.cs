@@ -20,9 +20,9 @@ public class BaseTest
 	}
 
 	/// <summary> For tests, create a default competition using the Factory class </summary>
-	public Competition InitCompetition(CompetitionType type)
+	public Competition InitCompetition(CompetitionType type, int year)
 	{
-		var factory = CompetitionFactory.Default(type, DataService);
+		var factory = CompetitionFactory.Default(type, DataService, year);
 		var competition = factory.Create();
 		Repo.Save(competition);
 

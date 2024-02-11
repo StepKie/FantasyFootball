@@ -2,37 +2,42 @@ namespace FantasyFootball.Tests;
 
 public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(output, level: LogEventLevel.Debug)
 {
-	[Fact]
-	public async Task TestRunEm2020()
+	[InlineData(2024)]
+	[InlineData(2020)]
+	[InlineData(2016)]
+	[Theory]
+	public async Task TestRunEm(int year)
 	{
-		var em2020 = InitCompetition(CompetitionType.EM);
+		var em = InitCompetition(CompetitionType.EM, year);
 
-		var simulator = new CompetitionSimulator(em2020, Repo);
-		var groupStage = em2020.Stages[0];
-		var koStage = em2020.Stages[1];
+		var simulator = new CompetitionSimulator(em, Repo);
+		var groupStage = em.Stages[0];
+		var koStage = em.Stages[1];
 		await simulator.SimulateStage(groupStage);
 		await simulator.SimulateStage(koStage);
-		var final = em2020.LastGame;
+		var final = em.LastGame;
 		var winner = final?.Winner;
 		winner.Should().NotBeNull();
 		final!.Round.Name.Should().BeEquivalentTo("Final");
-		Repo.Save(em2020);
+		Repo.Save(em);
 
-		var fromDb = Repo.Get<Competition>(em2020.Id);
+		var fromDb = Repo.Get<Competition>(em.Id);
 		var finalDb = fromDb?.GamesByDate.Last();
 		Assert.Equal(winner, finalDb?.Winner);
 	}
 
-	[Fact]
-	public async Task TestRunWm2022()
+	[InlineData(2022)]
+	[InlineData(2018)]
+	[Theory]
+	public async Task TestRunWm(int year)
 	{
-		var wm2022 = InitCompetition(CompetitionType.WM);
+		var wm = InitCompetition(CompetitionType.WM, year);
 
-		var simulator = new CompetitionSimulator(wm2022, Repo);
-		var groups = wm2022.Groups;
-		var groupStage = wm2022.Stages[0];
-		var koStage = wm2022.Stages[1];
-		var groupRounds = wm2022.Rounds.GetRange(0, 3);
+		var simulator = new CompetitionSimulator(wm, Repo);
+		var groups = wm.Groups;
+		var groupStage = wm.Stages[0];
+		var koStage = wm.Stages[1];
+		var groupRounds = wm.Rounds[0..3];
 		var roundOf16 = koStage.Rounds.First();
 
 		Assert.All(roundOf16.KoGames, g =>
@@ -62,12 +67,12 @@ public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(outpu
 			await simulator.SimulateRound(koRound);
 		}
 
-		Assert.True(wm2022.IsFinished);
-		var final = wm2022.LastGame;
+		Assert.True(wm.IsFinished);
+		var final = wm.LastGame;
 		var winner = final?.Winner;
 		Assert.Equal("Final", final?.Round.Name);
 		Assert.NotNull(winner);
-		var fromDb = Repo.Get<Competition>(wm2022.Id);
+		var fromDb = Repo.Get<Competition>(wm.Id);
 		var finalDb = fromDb?.GamesByDate.Last();
 		Assert.Equal(winner, finalDb?.Winner);
 	}

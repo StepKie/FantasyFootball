@@ -6,7 +6,7 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	public List<Competition> StoredCompetitionsForSelectedType { get; private set; } = [];
 
 	// TODO Support remaining types
-	public IList<CompetitionType> CompetitionTypes { get; } = new[] { CompetitionType.WM, CompetitionType.EM };
+	public IList<CompetitionType> CompetitionTypes { get; } = [CompetitionType.WM, CompetitionType.EM];
 
 	public IList<int> Years => SelectedCompetitionType.AvailableYears().ToList();
 
