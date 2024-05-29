@@ -247,3 +247,8 @@ dotnet_diagnostic.IDE2001.severity = suggestion
 dotnet_diagnostic.IDE2002.severity = suggestion
 dotnet_diagnostic.IDE2003.severity = suggestion
 dotnet_diagnostic.IDE2004.severity = suggestion
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = none
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_prefer_primary_constructors = true:suggestion
