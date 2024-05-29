@@ -10,8 +10,8 @@ public class Repository : IRepository
 	public Repository(bool inMemory)
 	{
 		var folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-		// :memory: is a hardcoded string that will create a in-memory db
-		var fullPath = inMemory ? ":memory:" : Path.Combine(folder, "fantasy-football.db3");
+		// :memory: is not sufficient, see https://github.com/praeclarum/sqlite-net/issues/1077
+		var fullPath = inMemory ? $"file:memdb_{Guid.NewGuid()}?mode=memory" : Path.Combine(folder, "fantasy-football.db3");
 		Initialize(fullPath);
 	}
 
