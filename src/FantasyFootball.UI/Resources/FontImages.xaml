@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+  xmlns:fonts="clr-namespace:FantasyFootball">
+  <FontImageSource x:Key="SettingsIcon" Glyph="{x:Static fonts:IconFont.Add_circle_outline}" />
+  <FontImageSource x:Key="StatsIcon" Glyph="{x:Static fonts:IconFont.Stacked_bar_chart}" />
+  <FontImageSource x:Key="NewIcon" Glyph="{x:Static fonts:IconFont.Add_circle_outline}" />
+  <FontImageSource x:Key="EditIcon" Glyph="{x:Static fonts:IconFont.Edit}" />
+  <FontImageSource x:Key="SaveIcon" Glyph="{x:Static fonts:IconFont.Save}" />
+  <FontImageSource x:Key="DeleteIcon" Glyph="{x:Static fonts:IconFont.Delete_forever}" />
+  <FontImageSource x:Key="HistoricIcon" Glyph="{x:Static fonts:IconFont.Event_repeat}" />
+  <FontImageSource x:Key="PlayIcon" Glyph="{x:Static fonts:IconFont.Play_circle}" />
+  <FontImageSource x:Key="SimulateFiveIcon" Glyph="{x:Static fonts:IconFont.Forward_5}" />
+  <FontImageSource x:Key="ReplayIcon" Glyph="{x:Static fonts:IconFont.Replay}" />
+  <FontImageSource x:Key="PauseIcon" Glyph="{x:Static fonts:IconFont.Pause_circle}" />
+  <FontImageSource x:Key="ShuffleIcon" Glyph="{x:Static fonts:IconFont.Shuffle}" />
+  <FontImageSource x:Key="FastForwardIcon" Glyph="{x:Static fonts:IconFont.Fast_forward}" />
+  <FontImageSource x:Key="SkipNextIcon" Glyph="{x:Static fonts:IconFont.Skip_next}" />
+  <FontImageSource x:Key="SoccerIcon" Glyph="{x:Static fonts:IconFont.Sports_soccer}" />
+</ResourceDictionary>
