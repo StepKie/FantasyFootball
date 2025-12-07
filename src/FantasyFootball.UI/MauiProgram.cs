@@ -1,4 +1,6 @@
-﻿namespace FantasyFootball;
+﻿using CommunityToolkit.Maui;
+
+namespace FantasyFootball;
 
 public static class MauiProgram
 {
@@ -7,6 +9,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+			.UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts => fonts
 				.AddFont("OpenSans-Regular.ttf", "OpenSansRegular")
 				.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold")

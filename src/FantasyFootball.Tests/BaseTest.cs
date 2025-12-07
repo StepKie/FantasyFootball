@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
+using Serilog.Sinks.XUnit3;
 
 namespace FantasyFootball.Tests;
 
@@ -14,7 +15,7 @@ public class BaseTest
 	{
 		Output = output;
 		// Connect global logger
-		Log.Logger = ISettingsService.StandardLoggerConfig.WriteTo.TestOutput(Output, level).CreateLogger();
+		Log.Logger = ISettingsService.StandardLoggerConfig.WriteTo.XUnit3TestOutput().CreateLogger();
 		Repo = new Repository(inMemory: true);
 		DataService = new CsvDataService(Repo, new CultureInfo("de"));
 	}

@@ -3,8 +3,8 @@
   x:Class="FantasyFootball.Controls.GroupView"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
   HeightRequest="150">
   <ContentView.Content>
     <Grid
@@ -20,7 +20,8 @@
         HeightRequest="80"
         Source="{Binding Record.Team.Logo}" />
 
-      <Label Grid.Column="2" xct:ShadowEffect.Color="Gray" Text="{Binding Record.Team.Name}" />
+      <!--  TODO Was before, check if still looks decent with simple BackgroundColor: xct:ShadowEffect.Color="Gray"  -->
+      <Label Grid.Column="2" BackgroundColor="Gray" Text="{Binding Record.Team.Name}" />
       <Label Grid.Column="3" Text="{Binding Record.MatchesPlayed}" />
       <Label Grid.Column="4">
         <Label.Text>

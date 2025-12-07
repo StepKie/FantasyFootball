@@ -4,7 +4,12 @@
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
-  xmlns:fonts="clr-namespace:FantasyFootball">
+  xmlns:fonts="clr-namespace:FantasyFootball"
+  xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+
+  <toolkit:EnumToIntConverter x:Key="EnumToIntConverter" />
+  <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+  <toolkit:IntToBoolConverter x:Key="IntToBoolConverter" />
 
   <Style TargetType="FontImageSource">
     <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />

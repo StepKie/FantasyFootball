@@ -1,6 +1,4 @@
-﻿using Xamarin.CommunityToolkit.ObjectModel;
-
-namespace FantasyFootball.ViewModels;
+﻿namespace FantasyFootball.ViewModels;
 
 [QueryProperty(nameof(SelectionMode), nameof(SelectionMode))]
 [QueryProperty(nameof(SelectedConfederation), nameof(SelectedConfederation))]
@@ -21,7 +19,8 @@ public partial class TeamsViewModel : GeneralViewModel
 
 	List<TeamViewModel> _allTeams = [];
 
-	public ObservableRangeCollection<TeamViewModel> TeamsInSelectedConfederation { get; set; } = [];
+	[ObservableProperty]
+	public partial ObservableCollection<TeamViewModel> TeamsInSelectedConfederation { get; set; } = [];
 
 	public IList<string> Confederations { get; } = Confederation.ALL.Select(c => c.Name).Prepend(Res.All).ToList();
 
@@ -67,7 +66,7 @@ public partial class TeamsViewModel : GeneralViewModel
 
 	void UpdateSelectedTeams()
 	{
-		TeamsInSelectedConfederation.ReplaceRange(_allTeams.Where(tvm => SelectedConfederation == Res.All || tvm.Team.Country.Confederation.Name == SelectedConfederation));
+		TeamsInSelectedConfederation = new(_allTeams.Where(tvm => SelectedConfederation == Res.All || tvm.Team.Country.Confederation.Name == SelectedConfederation));
 	}
 
 	[RelayCommand]

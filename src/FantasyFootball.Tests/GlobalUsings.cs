@@ -2,7 +2,7 @@
 global using System.Linq;
 global using System.Threading.Tasks;
 
-global using FluentAssertions;
+global using AwesomeAssertions;
 
 global using FantasyFootball.Data;
 global using FantasyFootball.Data.CompetitionFactories;
@@ -12,4 +12,3 @@ global using Serilog;
 global using Serilog.Events;
 
 global using Xunit;
-global using Xunit.Abstractions;

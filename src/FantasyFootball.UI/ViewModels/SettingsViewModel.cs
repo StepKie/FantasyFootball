@@ -1,6 +1,4 @@
-﻿using Xamarin.CommunityToolkit.Helpers;
-
-namespace FantasyFootball.ViewModels;
+﻿namespace FantasyFootball.ViewModels;
 
 public partial class SettingsViewModel : GeneralViewModel
 {
@@ -31,7 +29,8 @@ public partial class SettingsViewModel : GeneralViewModel
 	partial void OnSelectedLanguageChanged(CultureInfo value)
 	{
 		_settings.AddOrUpdateValue("Language", value.Name);
-		LocalizationResourceManager.Current.CurrentCulture = value;
+		// TODO Changed in .NET MAUI 10
+		// LocalizationResourceManager.Current.CurrentCulture = value;
 		CultureInfo.CurrentUICulture = value;
 		CultureInfo.DefaultThreadCurrentCulture = value;
 		CultureInfo.DefaultThreadCurrentUICulture = value;

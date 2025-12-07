@@ -1,6 +1,4 @@
-﻿using Xamarin.CommunityToolkit.Helpers;
-
-namespace FantasyFootball;
+﻿namespace FantasyFootball;
 
 public partial class App : Application
 {
@@ -30,8 +28,9 @@ public partial class App : Application
 
 	static void LoadLanguage()
 	{
-		LocalizationResourceManager.Current.PropertyChanged += (_, _) => Res.Culture = LocalizationResourceManager.Current.CurrentCulture;
-		LocalizationResourceManager.Current.Init(Res.ResourceManager);
-		LocalizationResourceManager.Current.CurrentCulture = CultureInfo.GetCultureInfo(Preferences.Get("Language", "de"));
+		// TODO FIXME API gone with .NET MAUI 10
+		//LocalizationResourceManager.Current.PropertyChanged += (_, _) => Res.Culture = LocalizationResourceManager.Current.CurrentCulture;
+		//LocalizationResourceManager.Current.Init(Res.ResourceManager);
+		//LocalizationResourceManager.Current.CurrentCulture = CultureInfo.GetCultureInfo(Preferences.Get("Language", "de"));
 	}
 }
