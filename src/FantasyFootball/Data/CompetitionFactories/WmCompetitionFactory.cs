@@ -2,6 +2,8 @@
 
 public class WmCompetitionFactory(DateTime start, List<Group> groups) : CompetitionFactory(CompetitionType.WM, start, groups)
 {
+	public override ITournamentFormat Format => WorldCupFormat.Instance;
+
 	public static WmCompetitionFactory Default(IDataService dataService, int year) => new(CompetitionType.WM.StartDate(year), GroupFactory.For(dataService, CompetitionType.WM).CreateFromHistoricalData(year));
 
 	public override List<Stage> CreateStages()

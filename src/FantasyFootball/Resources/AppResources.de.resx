@@ -237,6 +237,9 @@
   <data name="RoundOf16" xml:space="preserve">
     <value>Achtelfinale</value>
   </data>
+  <data name="RoundOf32" xml:space="preserve">
+    <value>Sechzehntelfinale</value>
+  </data>
   <data name="Semifinal" xml:space="preserve">
     <value>Halbfinale</value>
   </data>

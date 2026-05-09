@@ -6,10 +6,11 @@ public static class HistoricalData
 	public static readonly DateTime EM_2024_START = new(2024, 6, 14);
 	public static readonly DateTime EM_2020_START = new(2020, 6, 11);
 	public static readonly DateTime EM_2016_START = new(2016, 6, 10);
+	public static readonly DateTime WM_2026_START = new(2026, 6, 11);
 	public static readonly DateTime WM_2022_START = new(2021, 6, 11);
 	public static readonly DateTime WM_2018_START = new(2018, 6, 14);
 
-	public static readonly int[] HISTORIC_WM_YEARS = [2018, 2022];
+	public static readonly int[] HISTORIC_WM_YEARS = [2018, 2022, 2026];
 	public static readonly int[] HISTORIC_EM_YEARS = [2016, 2020, 2024];
 
 	public static Dictionary<string, string[]> EM_2024_TEAMS => new()
@@ -40,6 +41,22 @@ public static class HistoricalData
 		["D"] = ["ESP", "CZE", "TUR", "CRO"],
 		["E"] = ["BEL", "ITA", "IRL", "SWE"],
 		["F"] = ["POR", "ISL", "AUT", "HUN"],
+	};
+
+	public static Dictionary<string, string[]> WM_2026_TEAMS => new()
+	{
+		["A"] = ["MEX", "RSA", "KOR", "CZE"],
+		["B"] = ["CAN", "BIH", "QAT", "SUI"],
+		["C"] = ["BRA", "MAR", "HAI", "SCO"],
+		["D"] = ["USA", "PAR", "AUS", "TUR"],
+		["E"] = ["GER", "CUW", "CIV", "ECU"],
+		["F"] = ["NED", "JPN", "SWE", "TUN"],
+		["G"] = ["BEL", "EGY", "IRN", "NZL"],
+		["H"] = ["ESP", "CPV", "KSA", "URU"],
+		["I"] = ["FRA", "SEN", "IRQ", "NOR"],
+		["J"] = ["ARG", "ALG", "AUT", "JOR"],
+		["K"] = ["POR", "COD", "UZB", "COL"],
+		["L"] = ["ENG", "CRO", "GHA", "PAN"],
 	};
 
 	public static Dictionary<string, string[]> WM_2022_TEAMS => new()
@@ -87,6 +104,7 @@ public static class HistoricalData
 			(CompetitionType.EM, 2024) => EM_2016_START,
 			(CompetitionType.WM, 2018) => WM_2018_START,
 			(CompetitionType.WM, 2022) => WM_2022_START,
+			(CompetitionType.WM, 2026) => WM_2026_START,
 			_ => new DateTime(year, 1, 1),
 		};
 	}

@@ -6,6 +6,7 @@ public class CompetitionDbConsistencyTests(ITestOutputHelper output) : BaseTest(
 {
 	[InlineData(CompetitionType.EM, 2024, 2, 6, 7, 24, 51, 15)]
 	[InlineData(CompetitionType.WM, 2022, 2, 8, 8, 32, 64, 16)]
+	[InlineData(CompetitionType.WM, 2026, 2, 12, 9, 48, 104, 32)]
 	[Theory]
 	public void TestInitializeCompetition(CompetitionType type, int year, int expectedStages, int expectedGroups, int expectedRounds, int expectedParticipants, int expectedGames, int expectedKoGames)
 	{

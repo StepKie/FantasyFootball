@@ -2,6 +2,8 @@
 
 public class EmCompetitionFactory(DateTime startDate, List<Group> groups) : CompetitionFactory(CompetitionType.EM, startDate, groups)
 {
+	public override ITournamentFormat Format => EuroFormat.Instance;
+
 	public static EmCompetitionFactory Default(IDataService dataService, int year) => new(CompetitionType.EM.StartDate(year), GroupFactory.For(dataService, CompetitionType.EM).CreateFromHistoricalData(year));
 	public override List<Stage> CreateStages() => [CreateGroupStage(), CreateKoStage()];
 

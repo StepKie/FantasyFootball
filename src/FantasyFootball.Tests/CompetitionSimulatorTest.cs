@@ -78,6 +78,27 @@ public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(outpu
 	}
 
 	[Fact]
+	public async Task TestRunWm2026()
+	{
+		var wm = InitCompetition(CompetitionType.WM, 2026);
+		var simulator = new CompetitionSimulator(wm, Repo);
+
+		Assert.Equal(12, wm.Groups.Count);
+		Assert.Equal(48, wm.Participants.Count);
+		Assert.Equal(104, wm.GamesByDate.Count);
+
+		foreach (var stage in wm.Stages)
+		{
+			await simulator.SimulateStage(stage);
+		}
+
+		Assert.True(wm.IsFinished);
+		var final = wm.LastGame;
+		Assert.Equal("Final", final?.Round.Name);
+		Assert.NotNull(final?.Winner);
+	}
+
+	[Fact]
 	public void TestStandings()
 	{
 		// TODO Test different rules:

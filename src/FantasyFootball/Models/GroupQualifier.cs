@@ -22,7 +22,7 @@ public class GroupQualifier : Qualifier
 		Team? GetQualifier() => (FinalPlacement, Group?.IsFinished) switch
 		{
 			(1 or 2, true) => Group.GetStandings()[FinalPlacement - 1].Team,
-			(3, true) => EuroRoundAdvancer.GetThirdPlaceQualifier(Group.Stage, ThirdPlaceCombination),
+			(3, true) => TournamentFormatRegistry.ForGroupCount(Group!.Stage.Groups.Count).ResolveThirdPlaceQualifier(Group.Stage, ThirdPlaceCombination),
 			_ => null,
 		};
 	}

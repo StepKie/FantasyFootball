@@ -237,6 +237,9 @@
   <data name="RoundOf16" xml:space="preserve">
     <value>Round of 16</value>
   </data>
+  <data name="RoundOf32" xml:space="preserve">
+    <value>Round of 32</value>
+  </data>
   <data name="Semifinal" xml:space="preserve">
     <value>Semifinal</value>
   </data>

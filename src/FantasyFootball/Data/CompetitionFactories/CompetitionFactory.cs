@@ -6,6 +6,12 @@ public abstract class CompetitionFactory
 	protected DateTime StartDate { get; init; }
 	public virtual List<Group> Groups { get; protected set; }
 
+	/// <summary>
+	/// The structural format of this tournament — group layout and third-place advancement rules.
+	/// Multiple editions can share a format (e.g., Euro 2024 and Euro 2028 both use <see cref="EuroFormat"/>).
+	/// </summary>
+	public abstract ITournamentFormat Format { get; }
+
 	protected CompetitionFactory(CompetitionType type, DateTime startDate, List<Group> groups)
 	{
 		CompetitionType = type;
@@ -15,12 +21,13 @@ public abstract class CompetitionFactory
 
 	public static CompetitionFactory For(CompetitionType type, int year, List<Group> groups)
 	{
-		CompetitionFactory factory = type switch
+		CompetitionFactory factory = (type, year) switch
 		{
-			CompetitionType.EM => new EmCompetitionFactory(CompetitionType.EM.StartDate(year), groups),
-			CompetitionType.WM => new WmCompetitionFactory(CompetitionType.WM.StartDate(year), groups),
-			CompetitionType.CHAMPIONS_LEAGUE => throw new NotImplementedException(),
-			CompetitionType.DOMESTIC_LEAGUE => throw new NotImplementedException(),
+			(CompetitionType.EM, _) => new EmCompetitionFactory(CompetitionType.EM.StartDate(year), groups),
+			(CompetitionType.WM, 2026) => new Wm2026CompetitionFactory(HistoricalData.WM_2026_START, groups),
+			(CompetitionType.WM, _) => new WmCompetitionFactory(CompetitionType.WM.StartDate(year), groups),
+			(CompetitionType.CHAMPIONS_LEAGUE, _) => throw new NotImplementedException(),
+			(CompetitionType.DOMESTIC_LEAGUE, _) => throw new NotImplementedException(),
 			_ => throw new ArgumentException($"No CompetitionFactory yet implemented for {type}"),
 		};
 
@@ -29,12 +36,13 @@ public abstract class CompetitionFactory
 
 	public static CompetitionFactory Default(CompetitionType type, IDataService dataService, int year)
 	{
-		CompetitionFactory factory = type switch
+		CompetitionFactory factory = (type, year) switch
 		{
-			CompetitionType.EM => EmCompetitionFactory.Default(dataService, year),
-			CompetitionType.WM => WmCompetitionFactory.Default(dataService, year),
-			CompetitionType.CHAMPIONS_LEAGUE => throw new NotImplementedException(),
-			CompetitionType.DOMESTIC_LEAGUE => throw new NotImplementedException(),
+			(CompetitionType.EM, _) => EmCompetitionFactory.Default(dataService, year),
+			(CompetitionType.WM, 2026) => Wm2026CompetitionFactory.Default(dataService),
+			(CompetitionType.WM, _) => WmCompetitionFactory.Default(dataService, year),
+			(CompetitionType.CHAMPIONS_LEAGUE, _) => throw new NotImplementedException(),
+			(CompetitionType.DOMESTIC_LEAGUE, _) => throw new NotImplementedException(),
 			_ => throw new ArgumentException($"No CompetitionFactory found for {type}"),
 		};
 

@@ -419,7 +419,16 @@ namespace FantasyFootball.Resources {
                 return ResourceManager.GetString("RoundOf16", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Round of 32.
+        /// </summary>
+        public static string RoundOf32 {
+            get {
+                return ResourceManager.GetString("RoundOf32", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Semifinal.
         /// </summary>

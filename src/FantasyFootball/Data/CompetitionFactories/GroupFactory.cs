@@ -7,20 +7,25 @@ public class GroupFactory(CompetitionType type, int noOfGroups, int groupSize, I
 	public int NoOfGroups { get; init; } = noOfGroups;
 	public int GroupSize { get; init; } = groupSize;
 
-	public static GroupFactory For(IDataService dataService, CompetitionType type) => type switch
+	public static GroupFactory For(IDataService dataService, CompetitionType type, int? year = null)
 	{
-		CompetitionType.EM => new(CompetitionType.EM, noOfGroups: 6, groupSize: 4, dataService),
-		CompetitionType.WM => new(CompetitionType.WM, noOfGroups: 8, groupSize: 4, dataService),
-		CompetitionType.CHAMPIONS_LEAGUE => throw new NotImplementedException(),
-		CompetitionType.DOMESTIC_LEAGUE => throw new NotImplementedException(),
-		_ => throw new InvalidOperationException(),
-	};
+		ITournamentFormat format = (type, year) switch
+		{
+			(CompetitionType.EM, _) => EuroFormat.Instance,
+			(CompetitionType.WM, 2026) => ExpandedWorldCupFormat.Instance,
+			(CompetitionType.WM, _) => WorldCupFormat.Instance,
+			(CompetitionType.CHAMPIONS_LEAGUE, _) => throw new NotImplementedException(),
+			(CompetitionType.DOMESTIC_LEAGUE, _) => throw new NotImplementedException(),
+			_ => throw new InvalidOperationException(),
+		};
+		return new(type, format.GroupCount, format.GroupSize, dataService);
+	}
 
 	public List<Group> DrawRandom()
 	{
 		var confederation = CompetitionType == CompetitionType.EM ? Confederation.UEFA : null;
 		var participants = DrawTeamsWeightedByElo(NoOfGroups * GroupSize, confederation);
-		var groups = "ABCDEFGHIJK".Take(NoOfGroups).Select(letter => new Group { Name = $"{Res.Group} {letter}" }).ToList();
+		var groups = "ABCDEFGHIJKL".Take(NoOfGroups).Select(letter => new Group { Name = $"{Res.Group} {letter}" }).ToList();
 		var teams = new Queue<Team>(participants);
 		while (teams.Count != 0)
 		{
@@ -55,6 +60,7 @@ public class GroupFactory(CompetitionType type, int noOfGroups, int groupSize, I
 			(2024, CompetitionType.EM) => HistoricalData.EM_2024_TEAMS,
 			(2020, CompetitionType.EM) => HistoricalData.EM_2020_TEAMS,
 			(2016, CompetitionType.EM) => HistoricalData.EM_2016_TEAMS,
+			(2026, CompetitionType.WM) => HistoricalData.WM_2026_TEAMS,
 			(2022, CompetitionType.WM) => HistoricalData.WM_2022_TEAMS,
 			(2018, CompetitionType.WM) => HistoricalData.WM_2018_TEAMS,
 			_ => throw new ArgumentException($"No historical data for {CompetitionType}"),
