@@ -65,3 +65,6 @@ Resource.designer.cs
 *.dgml
 
 mono_crash*
+
+# Claude Code per-user settings
+.claude/settings.local.json

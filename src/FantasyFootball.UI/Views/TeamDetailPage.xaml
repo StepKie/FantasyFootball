@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
   x:Class="FantasyFootball.Views.TeamDetailPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  xmlns:translate="clr-namespace:FantasyFootball.Markup" xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
   x:DataType="vm:TeamViewModel">
   <ContentPage.ToolbarItems>
     <ToolbarItem Command="{Binding SaveAndExitCommand}" IconImageSource="{x:StaticResource SaveIcon}" />
@@ -23,22 +23,22 @@
     <Image Source="{Binding Team.Logo, FallbackValue='question_mark'}" />
     <!--  TODO Make these nicer looking using a custom entry integrating the label  -->
     <Grid RowDefinitions="40,40,40" ColumnDefinitions="100,100">
-      <Label Grid.Row="0" Grid.Column="0" Text="{xct:Translate WorldRank}" />
+      <Label Grid.Row="0" Grid.Column="0" Text="{translate:Translate WorldRank}" />
       <Label Grid.Row="0" Grid.Column="1" Text="{Binding Rank}" />
       <Label Grid.Row="1" Grid.Column="0" Text="Name" />
       <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Team.Name}">
         <Entry.Behaviors>
-          <xct:EventToCommandBehavior Command="{Binding TrackEditingCommand}" EventName="Focused" />
+          <toolkit:EventToCommandBehavior Command="{Binding TrackEditingCommand}" EventName="Focused" />
         </Entry.Behaviors>
       </Entry>
-      <Label Grid.Row="2" Grid.Column="0" Text="{xct:Translate Elo}" />
+      <Label Grid.Row="2" Grid.Column="0" Text="{translate:Translate Elo}" />
       <Entry
         Grid.Row="2"
         Grid.Column="1"
         Keyboard="Numeric"
         Text="{Binding EloString}">
         <Entry.Behaviors>
-          <xct:EventToCommandBehavior Command="{Binding TrackEditingCommand}" EventName="Focused" />
+          <toolkit:EventToCommandBehavior Command="{Binding TrackEditingCommand}" EventName="Focused" />
         </Entry.Behaviors>
       </Entry>
     </Grid>

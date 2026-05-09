@@ -7,23 +7,42 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	readonly IDataService _dataService;
 
 	[ObservableProperty]
-	int _newTeamIdSelected;
+	public partial int NewTeamIdSelected { get; set; }
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(CompetitionLogo))]
 	[NotifyPropertyChangedFor(nameof(Years))]
 	[NotifyPropertyChangedFor(nameof(SelectedYear))]
-	CompetitionType _selectedCompetitionType;
+	public partial CompetitionType SelectedCompetitionType { get; set; }
 
 	[ObservableProperty]
-	int _selectedYear;
+	public partial int SelectedYear { get; set; }
 
 	[ObservableProperty]
-	int _defaultAmountOfBatchSimulations = 5;
+	public partial int DefaultAmountOfBatchSimulations { get; set; } = 5;
 
 	[ObservableProperty]
-	[NotifyPropertyChangedFor(nameof(TeamsByGroup))]
-	List<Group> _groups;
+	public partial List<Group> Groups { get; set; }
+
+	/// <summary>
+	/// Stable collection backing the Setup page's grouped CollectionView.
+	/// Windows MAUI's CollectionView with IsGrouped=True crashes (stowed exception in
+	/// Microsoft.UI.Xaml.dll) when ItemsSource is replaced with a fresh List reference.
+	/// We keep one ObservableCollection and rebuild its contents whenever Groups changes.
+	/// </summary>
+	public ObservableCollection<TeamsGroup> TeamsByGroup { get; } = [];
+
+	void RebuildTeamsByGroup()
+	{
+		TeamsByGroup.Clear();
+		if (Groups is null) return;
+		foreach (var g in Groups)
+		{
+			TeamsByGroup.Add(new TeamsGroup(g));
+		}
+	}
+
+	partial void OnGroupsChanged(List<Group> value) => RebuildTeamsByGroup();
 
 	public CompetitionSetupViewModel(IDataService dataService)
 	{
@@ -38,13 +57,12 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	public IList<int> Years => SelectedCompetitionType.AvailableYears().ToList();
 	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
 	public TeamViewModel? SelectedTeam { get; set; }
-	public List<TeamsGroup> TeamsByGroup => new(Groups.Select(group => new TeamsGroup(group)));
 
 	[RelayCommand]
-	void ResetToHistoricTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).CreateFromHistoricalData(SelectedYear);
+	void ResetToHistoricTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType, SelectedYear).CreateFromHistoricalData(SelectedYear);
 
 	[RelayCommand]
-	void FillRandomTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType).DrawRandom();
+	void FillRandomTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType, SelectedYear).DrawRandom();
 
 	[RelayCommand]
 	async Task SimulateSingle()
@@ -98,8 +116,7 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 			Group containingGroup = Groups.First(g => g.Teams.Contains(SelectedTeam.Team));
 			containingGroup.Teams.Replace(t => t.Equals(SelectedTeam.Team), Repo.Get<Team>(value)!);
 			OnPropertyChanged(nameof(Groups));
-			// AlsoNotifyChangeFor only notifies via setter, so we need to notify manually
-			OnPropertyChanged(nameof(TeamsByGroup));
+			RebuildTeamsByGroup();
 			SelectedTeam = null;
 		}
 	}

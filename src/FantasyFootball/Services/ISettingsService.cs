@@ -7,7 +7,11 @@
 public interface ISettingsService
 {
 	/// <summary> Provides a standard LoggerConfiguration that can be enriched with additional sinks before calling CreateLogger() </summary>
-	public static LoggerConfiguration StandardLoggerConfig => new LoggerConfiguration().MinimumLevel.Debug().Enrich.FromLogContext().WriteTo.Debug();
+	public static LoggerConfiguration StandardLoggerConfig => new LoggerConfiguration()
+		.MinimumLevel.Debug()
+		.Enrich.FromLogContext()
+		.WriteTo.Debug()
+		.WriteTo.File(Path.Combine(Path.GetTempPath(), "FantasyFootball.app.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3);
 
 	string LastUsedCompetition { get; set; }
 	TimeSpan SimulationSpeed { get; set; }

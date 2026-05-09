@@ -4,11 +4,14 @@ public partial class SettingsViewModel : GeneralViewModel
 {
 	public IList<CultureInfo> SupportedLanguages { get; init; }
 
-	[ObservableProperty] CultureInfo _selectedLanguage;
-	[ObservableProperty] double _simulationSpeedMs;
+	[ObservableProperty]
+	public partial CultureInfo SelectedLanguage { get; set; }
 
-	[ObservableProperty] bool _isBusyA;
+	[ObservableProperty]
+	public partial double SimulationSpeedMs { get; set; }
 
+	[ObservableProperty]
+	public partial bool IsBusyA { get; set; }
 	public bool IsBusyB { get; set; }
 
 	readonly ISettingsService _settings;
@@ -18,7 +21,7 @@ public partial class SettingsViewModel : GeneralViewModel
 	{
 		_settings = settingsService;
 		_dataService = dataService;
-		_selectedLanguage = settingsService.LastUsedLanguage;
+		SelectedLanguage = settingsService.LastUsedLanguage;
 
 		SimulationSpeedMs = _settings.SimulationSpeed.TotalMilliseconds;
 		SupportedLanguages = [new("en"), new("de"),];

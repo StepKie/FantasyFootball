@@ -3,8 +3,7 @@
 public partial class GameViewModel : GeneralViewModel
 {
 	[ObservableProperty]
-	Color _bgColor;
-
+	public partial Color BgColor { get; set; }
 	public Game Game { get; init; }
 
 	public string HomeName => Game.HomeTeam.Name;

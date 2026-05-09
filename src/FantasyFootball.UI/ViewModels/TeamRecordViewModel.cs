@@ -2,8 +2,8 @@
 
 public partial class TeamRecordViewModel : GeneralViewModel
 {
-	[ObservableProperty] bool _isVisible;
-
+	[ObservableProperty]
+	public partial bool IsVisible { get; set; }
 	public TeamRecord Record { get; init; }
 
 	public Color BgColor { get; init; }

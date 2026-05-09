@@ -15,16 +15,16 @@ public partial class CompetitionsViewModel : GeneralViewModel
 	[NotifyPropertyChangedFor(nameof(CompetitionLogo))]
 	[NotifyPropertyChangedFor(nameof(Years))]
 	[NotifyPropertyChangedFor(nameof(SelectedYear))]
-	CompetitionType _selectedCompetitionType = CompetitionType.EM;
+	public partial CompetitionType SelectedCompetitionType { get; set; } = CompetitionType.EM;
 
 	[ObservableProperty]
-	int _selectedYear;
+	public partial int SelectedYear { get; set; }
 
 	[ObservableProperty]
-	Competition? _selectedCompetition;
+	public partial Competition? SelectedCompetition { get; set; }
 
 	[ObservableProperty]
-	int _defaultAmountOfBatchSimulations = 5;
+	public partial int DefaultAmountOfBatchSimulations { get; set; } = 5;
 
 	public CompetitionsViewModel()
 	{

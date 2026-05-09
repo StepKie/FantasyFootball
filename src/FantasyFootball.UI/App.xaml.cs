@@ -13,9 +13,6 @@ public partial class App : Application
 
 		ServiceHelper.GetService<IDataService>()!.Initialize();
 
-		// TODO: Do we need explicit initialization of DataService on app start?
-		MainPage = new AppShell();
-
 		Routing.RegisterRoute(nameof(CompetitionsPage), typeof(CompetitionsPage));
 		Routing.RegisterRoute(nameof(CompetitionSetupPage), typeof(CompetitionSetupPage));
 		Routing.RegisterRoute(nameof(GamesPage), typeof(GamesPage));
@@ -25,6 +22,8 @@ public partial class App : Application
 		Routing.RegisterRoute(nameof(TeamsPage), typeof(TeamsPage));
 		Routing.RegisterRoute(nameof(TeamDetailPage), typeof(TeamDetailPage));
 	}
+
+	protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell());
 
 	static void LoadLanguage()
 	{

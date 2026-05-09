@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0;</TargetFrameworks>
+    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0;net10.0-windows10.0.19041.0</TargetFrameworks>
     <OutputType Condition="'$(TargetFramework)' != 'net10.0'">Exe</OutputType>
     <LangVersion>preview</LangVersion>
     <RootNamespace>FantasyFootball</RootNamespace>
@@ -24,6 +24,8 @@
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">30.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <Nullable>enable</Nullable>
     <PackageId>de.hottemax.fantasyfootball</PackageId>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>

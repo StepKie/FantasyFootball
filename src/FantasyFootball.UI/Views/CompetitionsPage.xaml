@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
   x:Class="FantasyFootball.Views.CompetitionsPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:model="clr-namespace:FantasyFootball.Models;assembly=FantasyFootball"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  xmlns:translate="clr-namespace:FantasyFootball.Markup" xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
   x:Name="BrowseItemsPage"
-  Title="{xct:Translate Competitions}"
+  Title="{translate:Translate Competitions}"
   x:DataType="vm:CompetitionsViewModel">
   <StackLayout>
     <Grid RowDefinitions="40" ColumnDefinitions="50,*">
@@ -30,7 +30,7 @@
         WidthRequest="100"
         Command="{Binding SetupNewCompetitionCommand}"
         ImageSource="{x:StaticResource PlayIcon}"
-        Text="{xct:Translate Go}" />
+        Text="{translate:Translate Go}" />
     </StackLayout>
     <!--  History of past competitions  -->
     <RefreshView Command="{Binding ReloadCompetitionsCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">

@@ -7,20 +7,20 @@ public partial class TeamViewModel : GeneralViewModel
 	List<Team> _teamCache;
 
 	[ObservableProperty]
-	string _eloString;
+	public partial string EloString { get; set; }
 
 	[ObservableProperty]
-	int _rank;
+	public partial int Rank { get; set; }
 
 	[ObservableProperty]
-	int _teamId;
+	public partial int TeamId { get; set; }
 
 	[ObservableProperty]
-	Team _team;
+	public partial Team Team { get; set; }
 
 	[ObservableProperty]
 	[NotifyCanExecuteChangedFor(nameof(SaveAndExitCommand))]
-	bool _teamWasEdited;
+	public partial bool TeamWasEdited { get; set; }
 
 	public static TeamViewModel Create(int rank, int teamId) => new() { Rank = rank, TeamId = teamId };
 

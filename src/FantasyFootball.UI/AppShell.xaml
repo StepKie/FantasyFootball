@@ -4,33 +4,33 @@
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:views="clr-namespace:FantasyFootball.Views"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit">
+  xmlns:translate="clr-namespace:FantasyFootball.Markup">
 
   <TabBar>
 
-    <Tab Title="{xct:Translate Simulate}" Icon="{x:StaticResource SoccerIcon}" Route="PlayTab">
+    <Tab Title="{translate:Translate Simulate}" Icon="{x:StaticResource SoccerIcon}" Route="PlayTab">
       <ShellContent
-        Title="{xct:Translate Competitions}"
+        Title="{translate:Translate Competitions}"
         ContentTemplate="{DataTemplate views:CompetitionsPage}"
         Icon="cup"
         Route="CompetitionsPage" />
       <ShellContent
-        Title="{xct:Translate Games}"
+        Title="{translate:Translate Games}"
         ContentTemplate="{DataTemplate views:GamesPage}"
         IsVisible="{Binding GamesVisible}"
         Route="GamesPage" />
       <ShellContent
-        Title="{xct:Translate Standings}"
+        Title="{translate:Translate Standings}"
         ContentTemplate="{DataTemplate views:StandingsPage}"
         IsVisible="{Binding GamesVisible}"
         Route="StandingsPage" />
     </Tab>
-    <Tab Title="{xct:Translate Stats}" Icon="{x:StaticResource StatsIcon}" Route="StatsTab">
-      <ShellContent Title="{xct:Translate Teams}" ContentTemplate="{DataTemplate views:TeamsPage}" Route="TeamsPage" />
-      <ShellContent Title="{xct:Translate Stats}" ContentTemplate="{DataTemplate views:CompetitionStatisticsPage}" Route="CompetitionStatisticsPage" />
+    <Tab Title="{translate:Translate Stats}" Icon="{x:StaticResource StatsIcon}" Route="StatsTab">
+      <ShellContent Title="{translate:Translate Teams}" ContentTemplate="{DataTemplate views:TeamsPage}" Route="TeamsPage" />
+      <ShellContent Title="{translate:Translate Stats}" ContentTemplate="{DataTemplate views:CompetitionStatisticsPage}" Route="CompetitionStatisticsPage" />
     </Tab>
 
-    <ShellContent Title="{xct:Translate Settings}" ContentTemplate="{DataTemplate views:SettingsPage}" Icon="{x:StaticResource SettingsIcon}" />
-    <!--<ShellContent Title="{xct:Translate Database}" ContentTemplate="{DataTemplate views:DatabasePage}" Icon="{x:StaticResource DatabaseIcon}" />-->
+    <ShellContent Title="{translate:Translate Settings}" ContentTemplate="{DataTemplate views:SettingsPage}" Icon="{x:StaticResource SettingsIcon}" />
+    <!--<ShellContent Title="{translate:Translate Database}" ContentTemplate="{DataTemplate views:DatabasePage}" Icon="{x:StaticResource DatabaseIcon}" />-->
   </TabBar>
 </Shell>

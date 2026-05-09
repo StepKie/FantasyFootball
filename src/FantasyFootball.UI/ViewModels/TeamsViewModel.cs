@@ -5,17 +5,17 @@
 public partial class TeamsViewModel : GeneralViewModel
 {
 	[ObservableProperty]
-	string _selectedConfederation = Res.All;
+	public partial string SelectedConfederation { get; set; } = Res.All;
 
 	[ObservableProperty]
-	int _selectionMode;
+	public partial int SelectionMode { get; set; }
 
 	/// <summary> Currently unused </summary>
 	[ObservableProperty]
-	TeamType _selectedType;
+	public partial TeamType SelectedType { get; set; }
 
 	[ObservableProperty]
-	TeamViewModel? _selectedTeam;
+	public partial TeamViewModel? SelectedTeam { get; set; }
 
 	List<TeamViewModel> _allTeams = [];
 
@@ -70,6 +70,7 @@ public partial class TeamsViewModel : GeneralViewModel
 	}
 
 	[RelayCommand]
+	[Obsolete]
 	Task AddNewTeam() => Shell.Current.DisplayAlert(Res.UnderConstruction, Res.UnderConstructionDetailMsg, "OK"); // Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
 
 	[RelayCommand]

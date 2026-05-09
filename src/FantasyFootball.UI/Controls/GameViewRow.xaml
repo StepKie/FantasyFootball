@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ContentView
   x:Class="FantasyFootball.Controls.GameViewRow"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:models="clr-namespace:FantasyFootball.Models;assembly=FantasyFootball"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  xmlns:translate="clr-namespace:FantasyFootball.Markup" xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
   x:DataType="vm:GameViewModel">
   <Grid
     Grid.Row="0"

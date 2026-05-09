@@ -11,10 +11,10 @@ public abstract partial class GeneralViewModel : ObservableObject
 	public IDataService DataService { get; } = ServiceHelper.GetService<IDataService>()!;
 
 	[ObservableProperty]
-	bool _isBusy;
+	public partial bool IsBusy { get; set; }
 
 	[ObservableProperty]
-	string _title;
+	public partial string Title { get; set; }
 
 	public virtual async Task InitializeAsync<T>()
 	{

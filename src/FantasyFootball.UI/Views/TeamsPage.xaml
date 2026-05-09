@@ -1,14 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
   x:Class="FantasyFootball.Views.TeamsPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:model="clr-namespace:FantasyFootball.Data;assembly=FantasyFootball"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  xmlns:translate="clr-namespace:FantasyFootball.Markup" xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
   x:DataType="vm:TeamsViewModel">
   <ContentPage.Behaviors>
-    <!--  xct:EventToCommandBehavior Command="{Binding LoadTeamsCommand}" EventName="Appearing" /  -->
+    <!--  toolkit:EventToCommandBehavior Command="{Binding LoadTeamsCommand}" EventName="Appearing" /  -->
   </ContentPage.Behaviors>
   <ContentPage.ToolbarItems>
     <ToolbarItem Command="{Binding AddNewTeamCommand}" IconImageSource="{x:StaticResource NewIcon}" />
@@ -28,7 +28,7 @@
         SelectionMode="Single">
         <CollectionView.Header>
           <Grid Grid.Row="0" RowDefinitions="30" ColumnDefinitions="30,60,180,60">
-            <Label Grid.Column="2" FontAttributes="Bold" Text="{xct:Translate Team}" />
+            <Label Grid.Column="2" FontAttributes="Bold" Text="{translate:Translate Team}" />
             <Label Grid.Column="3" Text="Rating" />
           </Grid>
         </CollectionView.Header>

@@ -1,21 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
   x:Class="FantasyFootball.Views.SettingsPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  xmlns:translate="clr-namespace:FantasyFootball.Markup" xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
   x:DataType="vm:SettingsViewModel">
   <StackLayout>
     <ActivityIndicator IsEnabled="{Binding IsBusy}" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-    <Button Margin="10" Command="{Binding ResetDatabaseCommand}" Text="{xct:Translate ResetDatabase}" />
+    <Button Margin="10" Command="{Binding ResetDatabaseCommand}" Text="{translate:Translate ResetDatabase}" />
     <TableView Intent="Settings">
       <TableRoot>
-        <TableSection Title="{xct:Translate Settings}">
+        <TableSection Title="{translate:Translate Settings}">
           <ViewCell>
             <ViewCell.View>
               <StackLayout Padding="13,0" Orientation="Horizontal">
-                <Label VerticalOptions="Center" Text="{xct:Translate Language}" />
+                <Label VerticalOptions="Center" Text="{translate:Translate Language}" />
                 <Picker
                   HorizontalOptions="EndAndExpand"
                   ItemDisplayBinding="{Binding DisplayName}"
@@ -27,7 +27,7 @@
           <ViewCell>
             <ViewCell.View>
               <StackLayout Orientation="Horizontal">
-                <Label VerticalOptions="Center" Text="{xct:Translate SimSpeed}" />
+                <Label VerticalOptions="Center" Text="{translate:Translate SimSpeed}" />
                 <Slider
                   WidthRequest="200"
                   HorizontalOptions="EndAndExpand"

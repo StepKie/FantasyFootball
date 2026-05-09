@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
   x:Class="FantasyFootball.Views.StandingsPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:ctrls="clr-namespace:FantasyFootball.Controls"
   xmlns:vm="clr-namespace:FantasyFootball.ViewModels"
-  xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+  xmlns:translate="clr-namespace:FantasyFootball.Markup" xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
   x:DataType="vm:StandingsViewModel">
   <ContentPage.Content>
     <StackLayout>
@@ -16,10 +16,10 @@
           FontAttributes="Bold"
           Text="{Binding Title}"
           TextTransform="Uppercase" />
-        <Label Grid.Column="3" Text="{xct:Translate GamesShort}" />
-        <Label Grid.Column="4" Text="{xct:Translate Goals}" />
-        <Label Grid.Column="5" Text="{xct:Translate GoalDifference}" />
-        <Label Grid.Column="6" Text="{xct:Translate PointsShort}" />
+        <Label Grid.Column="3" Text="{translate:Translate GamesShort}" />
+        <Label Grid.Column="4" Text="{translate:Translate Goals}" />
+        <Label Grid.Column="5" Text="{translate:Translate GoalDifference}" />
+        <Label Grid.Column="6" Text="{translate:Translate PointsShort}" />
       </Grid>
       <CollectionView
         VerticalOptions="FillAndExpand"

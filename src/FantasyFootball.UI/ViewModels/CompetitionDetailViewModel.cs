@@ -5,20 +5,20 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 {
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(Competition))]
-	int _competitionId;
+	public partial int CompetitionId { get; set; }
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(Stages))]
 	[NotifyPropertyChangedFor(nameof(Winner))]
-	Competition _competition = new();
+	public partial Competition Competition { get; set; } = new();
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(Rounds))]
-	Stage? _selectedStage = new();
+	public partial Stage? SelectedStage { get; set; } = new();
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(GamesByRound))]
-	Round? _selectedRound = new();
+	public partial Round? SelectedRound { get; set; } = new();
 
 	public IList<Stage> Stages => Competition.Stages;
 	public IList<Round> Rounds => SelectedStage?.Rounds ?? [];

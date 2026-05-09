@@ -6,14 +6,15 @@ public partial class StandingsViewModel : GeneralViewModel
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(OverallRecords))]
-	List<Competition> _allCompetitions = [];
+	public partial List<Competition> AllCompetitions { get; set; } = [];
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(OverallRecords))]
 	[NotifyPropertyChangedFor(nameof(CompetitionLogo))]
-	CompetitionType _selectedCompetitionType = CompetitionType.EM;
+	public partial CompetitionType SelectedCompetitionType { get; set; } = CompetitionType.EM;
 
-	[ObservableProperty] Competition _selectedCompetition;
+	[ObservableProperty]
+	public partial Competition SelectedCompetition { get; set; }
 
 	public StandingsViewModel()
 	{
