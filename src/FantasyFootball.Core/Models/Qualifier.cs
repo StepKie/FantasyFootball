@@ -1,6 +1,11 @@
-﻿namespace FantasyFootball.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace FantasyFootball.Models;
 
 [Table(nameof(Qualifier))]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$kind")]
+[JsonDerivedType(typeof(GroupQualifier), "group")]
+[JsonDerivedType(typeof(GameQualifier), "game")]
 public abstract class Qualifier : NamedUniqueId
 {
 	[OneToOne]
