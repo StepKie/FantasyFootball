@@ -54,11 +54,22 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Enabled for debug visibility while auto-review reliability is being verified.
+          # Safe for our review prompts: no secrets in the input. Disable once auto-review is reliably commenting.
+          show_full_output: true
+          # Inject the PR number explicitly. Without this the agent intermittently can't infer
+          # which PR to review and falls back to AskUserQuestion, which terminates silently in CI.
           prompt: |
-            Please review this pull request for:
+            Review pull request #${{ github.event.pull_request.number }} on ${{ github.repository }}.
+
+            Fetch the diff with: gh pr diff ${{ github.event.pull_request.number }}
+            Fetch metadata with: gh pr view ${{ github.event.pull_request.number }}
+
+            Review for:
             - Code quality and .NET/MAUI best practices
             - Potential bugs or issues
             - MVVM pattern adherence
+            - Security implications
             - Test coverage
 
             Use inline comments for specific issues and a summary comment for overall feedback.
