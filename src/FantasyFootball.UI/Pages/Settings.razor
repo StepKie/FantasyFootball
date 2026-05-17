@@ -1,5 +1,4 @@
 @page "/settings"
-@using System.Globalization
 @using FantasyFootball.UI.ViewModels
 @inject SettingsViewModel ViewModel
 @implements IDisposable
@@ -37,7 +36,7 @@
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
       <MudButton Variant="Variant.Outlined"
                  Color="Color.Error"
-                 OnClick="ViewModel.ResetDatabaseCommand.ExecuteAsync"
+                 OnClick="@(() => ViewModel.ResetDatabaseCommand.ExecuteAsync(null))"
                  Disabled="ViewModel.IsBusy">
         Reset database
       </MudButton>

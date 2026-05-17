@@ -39,7 +39,9 @@ public partial class SettingsViewModel : ObservableObject
   [ObservableProperty]
   public partial bool IsBusy { get; set; }
 
-  public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "dev";
+  // GetEntryAssembly returns the host (FantasyFootball.Web or FantasyFootball.Maui),
+  // not this Razor library — so the displayed version reflects the running app.
+  public string AppVersion => Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "dev";
 
   partial void OnSelectedLanguageChanged(CultureInfo value)
   {
