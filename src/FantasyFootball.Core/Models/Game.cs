@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.Distributions;
+﻿using System.Text.Json.Serialization;
+using MathNet.Numerics.Distributions;
 
 namespace FantasyFootball.Models;
 
@@ -6,6 +7,9 @@ namespace FantasyFootball.Models;
 /// TODO There is no good way to create a Game from a string, or create a Game with a result already set, or clear an existing result
 /// </summary>
 [Table(nameof(Game))]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$kind")]
+[JsonDerivedType(typeof(Game), "game")]
+[JsonDerivedType(typeof(KoGame), "ko")]
 public class Game : NamedUniqueId
 {
 	[Ignore]
