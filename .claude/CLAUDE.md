@@ -4,8 +4,8 @@ Mobile app to simulate football (soccer) competitions like World and European Ch
 
 ## Project Structure
 
-- `src/FantasyFootball/` - Core library (models, services, repositories, data)
-- `src/FantasyFootball.UI/` - .NET MAUI UI application (Android/iOS/desktop)
+- `src/FantasyFootball.Core/` - Core library (models, services, repositories, data)
+- `src/FantasyFootball.Maui/` - .NET MAUI UI application (Android/iOS/desktop)
 - `src/FantasyFootball.Tests/` - xUnit v3 test project
 
 ## Tech Stack
@@ -26,7 +26,7 @@ Mobile app to simulate football (soccer) competitions like World and European Ch
 dotnet build FantasyFootball.sln
 
 # Build Android
-dotnet build src/FantasyFootball.UI/FantasyFootball.UI.csproj -f:net10.0-android
+dotnet build src/FantasyFootball.Maui/FantasyFootball.Maui.csproj -f:net10.0-android
 
 # Run tests
 dotnet test src/FantasyFootball.Tests/FantasyFootball.Tests.csproj

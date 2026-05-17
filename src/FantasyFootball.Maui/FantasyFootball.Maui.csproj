@@ -79,7 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FantasyFootball\FantasyFootball.csproj" />
+    <ProjectReference Include="..\FantasyFootball.Core\FantasyFootball.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
