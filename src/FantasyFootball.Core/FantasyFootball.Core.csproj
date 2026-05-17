@@ -6,6 +6,15 @@
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <NeutralLanguage>en</NeutralLanguage>
+    <!-- RootNamespace and AssemblyName are pinned to "FantasyFootball" deliberately, not the
+         project filename (FantasyFootball.Core). Two things depend on this:
+         (1) Source files declare `namespace FantasyFootball.X;`, not `.Core.X`.
+         (2) The embedded-resource manifest name `FantasyFootball.Resources.Data.fifa_elo_new.csv`
+             — referenced literally by CsvDataService.cs — is derived from RootNamespace at
+             build time. Renaming the namespace here without updating that lookup breaks
+             team-data loading at runtime with a silent FileNotFoundException. -->
+    <RootNamespace>FantasyFootball</RootNamespace>
+    <AssemblyName>FantasyFootball</AssemblyName>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
