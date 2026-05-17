@@ -36,7 +36,7 @@
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
       <MudButton Variant="Variant.Outlined"
                  Color="Color.Error"
-                 OnClick="@(() => ViewModel.ResetDatabaseCommand.ExecuteAsync(null))"
+                 OnClick="ViewModel.ResetDatabaseCommand.ExecuteAsync"
                  Disabled="ViewModel.IsBusy">
         Reset database
       </MudButton>
