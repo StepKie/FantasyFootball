@@ -1,4 +1,7 @@
 @page "/"
+@using FantasyFootball.Models
+@using FantasyFootball.Repositories
+@inject IRepository Repo
 
 <PageTitle>Fantasy Football</PageTitle>
 
@@ -6,3 +9,50 @@
 <MudText Typo="Typo.body1">
   Simulate football competitions in your browser. Pages and features will be wired up in later phases of #10.
 </MudText>
+
+@* Temporary storage smoke-test panel. Removed once real pages exercise the repo (Phase 3). *@
+<MudPaper Class="pa-4 mt-6" Elevation="1">
+  <MudText Typo="Typo.h6" GutterBottom="true">Storage diagnostic</MudText>
+  <MudText Typo="Typo.body2" Class="mb-3">
+    Stored confederations: <strong>@_stored.Count</strong>. Add one, hard-refresh the page (F5),
+    and verify the count persists. DevTools → Application → Local Storage → <code>fantasy-football:Confederation</code>
+    should hold the JSON.
+  </MudText>
+  <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center" Class="mb-3">
+    <MudTextField @bind-Value="_newName" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Add" Disabled="@string.IsNullOrWhiteSpace(_newName)">Add</MudButton>
+    <MudSpacer />
+    <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="Reset" Disabled="@(_stored.Count == 0)">Reset all</MudButton>
+  </MudStack>
+  @if (_stored.Count > 0)
+  {
+    <MudList T="Confederation" Dense="true">
+      @foreach (var c in _stored)
+      {
+        <MudListItem T="Confederation" Value="@c">@c.Id — @c.Name (@c.Continent)</MudListItem>
+      }
+    </MudList>
+  }
+</MudPaper>
+
+@code {
+  string _newName = "";
+  List<Confederation> _stored = [];
+
+  protected override void OnInitialized() => Refresh();
+
+  void Add()
+  {
+    Repo.Save(new Confederation { Name = _newName, Continent = "—", NoOfWmParticipants = 0 });
+    _newName = "";
+    Refresh();
+  }
+
+  void Reset()
+  {
+    Repo.Reset();
+    Refresh();
+  }
+
+  void Refresh() => _stored = Repo.GetAll<Confederation>();
+}
