@@ -4,8 +4,10 @@ Mobile app to simulate football (soccer) competitions like World and European Ch
 
 ## Project Structure
 
-- `src/FantasyFootball.Core/` - Core library (models, services, repositories, data)
-- `src/FantasyFootball.Maui/` - .NET MAUI UI application (Android/iOS/desktop)
+- `src/FantasyFootball.Core/` - Core domain library (models, services, repositories, simulation logic). Platform-agnostic; no MAUI or UI dependencies.
+- `src/FantasyFootball.UI/` - Razor component library (`Microsoft.NET.Sdk.Razor`). Pages, layout, MudBlazor styling. Shared between the MAUI BlazorWebView host (Phase 5) and the Blazor WASM web host.
+- `src/FantasyFootball.Maui/` - .NET MAUI XAML host (Android/iOS/desktop). Will be retired once the BlazorWebView host stabilizes (Phase 5 of #10).
+- `src/FantasyFootball.Web/` - Blazor WebAssembly host. Deployed to `stepkie.github.io/FantasyFootball/` (Phase 4 of #10).
 - `src/FantasyFootball.Tests/` - xUnit v3 test project
 
 ## Tech Stack
@@ -27,6 +29,9 @@ dotnet build FantasyFootball.sln
 
 # Build Android
 dotnet build src/FantasyFootball.Maui/FantasyFootball.Maui.csproj -f:net10.0-android
+
+# Run web app
+dotnet run --project src/FantasyFootball.Web
 
 # Run tests
 dotnet test src/FantasyFootball.Tests/FantasyFootball.Tests.csproj
