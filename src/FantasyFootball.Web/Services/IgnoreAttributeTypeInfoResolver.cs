@@ -22,8 +22,6 @@ public sealed class IgnoreAttributeTypeInfoResolver : DefaultJsonTypeInfoResolve
             if (property.AttributeProvider?.GetCustomAttributes(typeof(IgnoreAttribute), inherit: true).Length > 0)
             {
                 property.ShouldSerialize = static (_, _) => false;
-                property.Get = null;
-                property.Set = null;
             }
         }
         return info;

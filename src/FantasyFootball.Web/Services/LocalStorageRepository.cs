@@ -31,18 +31,19 @@ public sealed class LocalStorageRepository : IRepository
     typeof(Country),
   ];
 
+  // STJ freezes JsonSerializerOptions on first use; one shared instance is the documented best practice.
+  static readonly JsonSerializerOptions JsonOptions = new()
+  {
+    TypeInfoResolver = new IgnoreAttributeTypeInfoResolver(),
+    ReferenceHandler = ReferenceHandler.Preserve,
+  };
+
   readonly ISyncLocalStorageService _localStorage;
-  readonly JsonSerializerOptions _jsonOptions;
   readonly Dictionary<Type, Dictionary<int, NamedUniqueId>> _buckets = [];
 
   public LocalStorageRepository(ISyncLocalStorageService localStorage)
   {
     _localStorage = localStorage;
-    _jsonOptions = new JsonSerializerOptions
-    {
-      TypeInfoResolver = new IgnoreAttributeTypeInfoResolver(),
-      ReferenceHandler = ReferenceHandler.Preserve,
-    };
   }
 
   public List<T> GetAll<T>() where T : NamedUniqueId, new()
@@ -117,7 +118,7 @@ public sealed class LocalStorageRepository : IRepository
     var raw = _localStorage.GetItemAsString(KeyFor<T>());
     var items = string.IsNullOrEmpty(raw)
       ? []
-      : JsonSerializer.Deserialize<List<T>>(raw, _jsonOptions) ?? [];
+      : JsonSerializer.Deserialize<List<T>>(raw, JsonOptions) ?? [];
     var bucket = items.ToDictionary(x => x.Id, x => (NamedUniqueId)x);
     _buckets[typeof(T)] = bucket;
     return bucket;
@@ -126,7 +127,7 @@ public sealed class LocalStorageRepository : IRepository
   void PersistBucket<T>(Dictionary<int, NamedUniqueId> bucket) where T : NamedUniqueId, new()
   {
     var items = bucket.Values.Cast<T>().ToList();
-    var raw = JsonSerializer.Serialize(items, _jsonOptions);
+    var raw = JsonSerializer.Serialize(items, JsonOptions);
     _localStorage.SetItemAsString(KeyFor<T>(), raw);
   }
 
