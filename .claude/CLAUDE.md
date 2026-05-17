@@ -44,4 +44,16 @@ dotnet workload install maui
 - MVVM pattern: ViewModels in UI project, Models/Services in core library
 - XAML formatting governed by Settings.XamlStyler
 - Follow .editorconfig rules
-- Default branch is `master`
+
+## Branching & Releases
+
+- **`develop`** is the default branch. Feature branches branch off `develop`
+  and PR back to `develop`.
+- **`main`** is the release branch. When `develop` is release-ready, open a PR
+  from `develop` → `main`, bump version, tag the merge commit (e.g. `0.3.0`).
+- **`gh-pages`** is force-pushed by `.github/workflows/github-pages.yml` on each
+  push to `main` once Phase 4 of the Blazor port (#10) flips the trigger from
+  `workflow_dispatch` to `push: branches: [main]`.
+- CI build/test (`.github/workflows/dotnet.yml`) runs only on push/PR to `main`.
+  PRs to `develop` get the Claude auto-review but not the .NET build — verify
+  locally before opening develop-targeted PRs.
