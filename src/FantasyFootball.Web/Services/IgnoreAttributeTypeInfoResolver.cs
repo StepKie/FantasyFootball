@@ -1,54 +1,65 @@
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
+using FantasyFootball.Models;
 using SQLite;
-using SQLiteNetExtensions.Attributes;
 
 namespace FantasyFootball.Web.Services;
 
 /// <summary>
 /// JSON type-info resolver that strips properties we don't want persisted to LocalStorage.
 ///
-/// SQLite-Net-Extensions' relationship attributes (<c>[ManyToOne]</c>, <c>[OneToOne]</c>,
-/// <c>[OneToMany]</c>, <c>[ManyToMany]</c>) all derive from <c>RelationshipAttribute</c>
-/// which derives from sqlite-net's <see cref="IgnoreAttribute"/> — so a naive
-/// "filter by IgnoreAttribute inheritance" sweep also wipes navigation properties out
-/// of the JSON. For our model that means <c>Team.Country</c> and <c>Country.Confederation</c>
-/// get dropped, leaving deserialized Teams with <c>Country = null</c> (and no flags to
-/// render off Code2).
+/// Two filter rules:
 ///
-/// What we actually want filtered:
-///   - Exact-type <see cref="IgnoreAttribute"/>: computed / derived properties like
-///     <c>Game.Winner</c>, <c>Competition.GamesByDate</c>, <c>Team.IsNationalTeam</c>.
-///   - <see cref="OneToManyAttribute"/> / <see cref="ManyToManyAttribute"/>: back-pointer
-///     collections (<c>Confederation.Countries</c>, <c>Country.Clubs</c>) that would
-///     explode the persisted graph if walked.
+/// 1. **Exact-type <see cref="IgnoreAttribute"/>**: computed / derived properties
+///    (<c>Competition.CurrentStatus</c>, <c>Game.Winner</c>, <c>Team.IsNationalTeam</c>, …).
+///    These are getter-only convenience helpers — serializing them would call the getter
+///    and either NRE on partially-built graphs or duplicate state already represented
+///    elsewhere.
 ///
-/// What stays:
-///   - <see cref="ManyToOneAttribute"/> / <see cref="OneToOneAttribute"/>: single forward
-///     navigation refs. STJ's <c>ReferenceHandler.Preserve</c> resolves the small cycles
-///     these create (Team → Country → Team via NationalTeam) via $id / $ref.
-///   - <see cref="ForeignKeyAttribute"/>: it's just an <c>int</c>, no inheritance from Ignore.
+/// 2. **Explicit back-pointer collections** (<see cref="BackPointerCollections"/>): the
+///    inverse side of a <c>[ManyToOne]</c> relationship — e.g. <c>Confederation.Countries</c>
+///    (inverse of <c>Country.Confederation</c>) and <c>Country.Clubs</c> (inverse of
+///    <c>Team.Country</c>). Serializing these would walk every country / club into every
+///    confederation, exploding the persisted graph.
+///
+/// Everything else stays — including forward-owning collections (<c>Competition.Stages</c>,
+/// <c>Stage.Rounds</c>, <c>Round.RegularGames</c>, <c>Group.Teams</c>, …) so the Competition
+/// graph round-trips intact. STJ's <see cref="System.Text.Json.Serialization.ReferenceHandler.Preserve"/>
+/// resolves cycles created by the back-references (<c>Stage.Competition</c>, <c>Game.Round</c>)
+/// via <c>$id</c> / <c>$ref</c>.
 /// </summary>
 public sealed class IgnoreAttributeTypeInfoResolver : DefaultJsonTypeInfoResolver
 {
-    public override JsonTypeInfo GetTypeInfo(Type type, JsonSerializerOptions options)
-    {
-        var info = base.GetTypeInfo(type, options);
-        foreach (var property in info.Properties)
-        {
-            var attrs = property.AttributeProvider?.GetCustomAttributes(typeof(IgnoreAttribute), inherit: true);
-            if (attrs is null || attrs.Length == 0) { continue; }
+	static readonly HashSet<(Type DeclaringType, string PropertyName)> BackPointerCollections =
+	[
+		(typeof(Confederation), nameof(Confederation.Countries)),
+		(typeof(Country), nameof(Country.Clubs)),
+	];
 
-            var shouldFilter = attrs.Any(a =>
-                a.GetType() == typeof(IgnoreAttribute) ||
-                a is OneToManyAttribute ||
-                a is ManyToManyAttribute);
+	public override JsonTypeInfo GetTypeInfo(Type type, JsonSerializerOptions options)
+	{
+		var info = base.GetTypeInfo(type, options);
 
-            if (shouldFilter)
-            {
-                property.ShouldSerialize = static (_, _) => false;
-            }
-        }
-        return info;
-    }
+		var toRemove = new List<JsonPropertyInfo>();
+		foreach (var property in info.Properties)
+		{
+			var propInfo = type.GetProperty(
+				property.Name,
+				BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+			if (propInfo is null) { continue; }
+
+			var hasExactIgnore = propInfo
+				.GetCustomAttributes(typeof(IgnoreAttribute), inherit: true)
+				.Any(a => a.GetType() == typeof(IgnoreAttribute));
+
+			var isBackPointer = BackPointerCollections.Contains((type, property.Name));
+
+			if (hasExactIgnore || isBackPointer) { toRemove.Add(property); }
+		}
+
+		foreach (var p in toRemove) { info.Properties.Remove(p); }
+
+		return info;
+	}
 }
