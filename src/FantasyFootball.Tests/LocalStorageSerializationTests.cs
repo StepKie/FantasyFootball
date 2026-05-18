@@ -23,33 +23,99 @@ public class LocalStorageSerializationTests(ITestOutputHelper output) : BaseTest
 	};
 
 	[Fact]
-	public async Task CreatedCompetition_RoundTrips()
+	public void CreatedCompetition_FromFactory_RoundTrips()
 	{
-		var wm = InitCompetition(CompetitionType.WM, 2026);
+		// Use the factory output directly, NOT InitCompetition (which goes through
+		// SQLite and re-wires the graph via FK joins, hiding the Web bug).
+		var competition = CompetitionFactory.Default(CompetitionType.WM, DataService, 2026).Create();
 		var options = BuildOptions();
 
-		var json = JsonSerializer.Serialize(new List<Competition> { wm }, options);
+		var json = JsonSerializer.Serialize(new List<Competition> { competition }, options);
 		Output.WriteLine($"Length={json.Length}");
-		File.WriteAllText(Path.Combine(Path.GetTempPath(), "ff-created.json"), json);
 
 		var act = () => JsonSerializer.Deserialize<List<Competition>>(json, options);
 		act.Should().NotThrow();
 	}
 
 	[Fact]
-	public async Task PartiallySimulated_RoundTrips()
+	public async Task PartiallySimulated_FromFactory_RoundTrips()
 	{
-		var wm = InitCompetition(CompetitionType.WM, 2026);
-		var simulator = new CompetitionSimulator(wm, Repo) { Quiet = true };
-		// Simulate exactly 3 games to mirror "create + a couple of games" reproduction.
-		for (var i = 0; i < 3; i++) { await simulator.SimulateGame(wm.CurrentGame!); }
+		var competition = CompetitionFactory.Default(CompetitionType.WM, DataService, 2026).Create();
+		var simulator = new CompetitionSimulator(competition, Repo) { Quiet = true };
+		for (var i = 0; i < 3; i++) { await simulator.SimulateGame(competition.CurrentGame!); }
 		var options = BuildOptions();
 
-		var json = JsonSerializer.Serialize(new List<Competition> { wm }, options);
+		var json = JsonSerializer.Serialize(new List<Competition> { competition }, options);
 		Output.WriteLine($"Length={json.Length}");
-		File.WriteAllText(Path.Combine(Path.GetTempPath(), "ff-3sims.json"), json);
 
 		var act = () => JsonSerializer.Deserialize<List<Competition>>(json, options);
+		act.Should().NotThrow();
+	}
+
+	[Fact]
+	public void Factory_GroupStage_Is_Same_Instance_As_Group_BackReference()
+	{
+		// Sanity: WireBackReferences should make Group.Stage refer to the SAME object
+		// as competition.Stages[0]. If not, the JSON serializer writes both Stage
+		// instances and reference-handler IDs go off-rails.
+		var competition = CompetitionFactory.Default(CompetitionType.WM, DataService, 2026).Create();
+		var groupStage = competition.Stages[0];
+		foreach (var group in groupStage.Groups)
+		{
+			object.ReferenceEquals(group.Stage, groupStage)
+				.Should().BeTrue($"Group {group.Name}.Stage must be the same instance as competition.Stages[0]");
+		}
+	}
+
+	[Fact]
+	public void WebFlow_GroupsFromHistoricalData_PassedToFactory_RoundTrips()
+	{
+		// Mirrors the actual web flow: groups come from GroupFactory.CreateFromHistoricalData
+		// FIRST, then are passed into CompetitionFactory.For. This is what
+		// CompetitionSetupViewModel does (ResetToHistoricTeams → Create), and it
+		// differs from CompetitionFactory.Default which calls CreateFromHistoricalData
+		// internally — same calls but separated.
+		var groups = GroupFactory.For(DataService, CompetitionType.WM, 2026).CreateFromHistoricalData(2026);
+		var competition = CompetitionFactory.For(CompetitionType.WM, 2026, groups).Create();
+
+		var groupStage = competition.Stages[0];
+		foreach (var group in groupStage.Groups)
+		{
+			object.ReferenceEquals(group.Stage, groupStage)
+				.Should().BeTrue($"Group {group.Name}.Stage must be the same instance as competition.Stages[0]");
+		}
+
+		var options = BuildOptions();
+		var json = JsonSerializer.Serialize(new List<Competition> { competition }, options);
+		Output.WriteLine($"Length={json.Length}");
+		var act = () => JsonSerializer.Deserialize<List<Competition>>(json, options);
+		act.Should().NotThrow();
+	}
+
+	[Fact]
+	public void AfterDeserialize_GroupStage_Is_Still_Same_Instance_As_Group_BackReference()
+	{
+		// THE actual web bug: Setup saves a fresh competition (good JSON). Detail
+		// LOADS it back from LocalStorage — that's a Deserialize. After deserialize,
+		// Group.Stage must STILL be the same instance as competition.Stages[0].
+		// If not, the next Save serializes a graph with duplicated Stage instances
+		// and produces invalid Preserve JSON with forward $refs.
+		var competition = CompetitionFactory.Default(CompetitionType.WM, DataService, 2026).Create();
+		var options = BuildOptions();
+
+		var json1 = JsonSerializer.Serialize(new List<Competition> { competition }, options);
+		var roundTripped = JsonSerializer.Deserialize<List<Competition>>(json1, options)!.Single();
+
+		var groupStage = roundTripped.Stages[0];
+		foreach (var group in groupStage.Groups)
+		{
+			object.ReferenceEquals(group.Stage, groupStage)
+				.Should().BeTrue($"After deserialize, Group {group.Name}.Stage must STILL be the same instance as competition.Stages[0]");
+		}
+
+		// And re-serializing must produce JSON that deserializes again without error.
+		var json2 = JsonSerializer.Serialize(new List<Competition> { roundTripped }, options);
+		var act = () => JsonSerializer.Deserialize<List<Competition>>(json2, options);
 		act.Should().NotThrow();
 	}
 
