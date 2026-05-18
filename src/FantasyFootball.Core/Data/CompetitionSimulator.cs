@@ -70,7 +70,14 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 
 		game.Simulate();
 		Log.Debug(game.ToString());
-		if (!Quiet)
+		if (Quiet)
+		{
+			// Yield without delay so the browser can render the busy spinner and stay
+			// responsive even on a 48-team tournament. Skipping this turns the entire
+			// sim into one synchronous chunk and the page appears frozen.
+			await Task.Yield();
+		}
+		else
 		{
 			MessageBus.Send(new GameFinishedMessage(game));
 			await Task.Delay(GameDelay);
