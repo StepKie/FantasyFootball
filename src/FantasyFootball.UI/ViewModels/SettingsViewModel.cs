@@ -60,7 +60,7 @@ public partial class SettingsViewModel : ObservableObject
     IsBusy = true;
     try
     {
-      await Task.Run(_dataService.Reset);
+      await Task.Run(_dataService.Reset).ConfigureAwait(false);
     }
     finally
     {
