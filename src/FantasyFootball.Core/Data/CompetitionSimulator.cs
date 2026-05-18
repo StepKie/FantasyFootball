@@ -56,15 +56,18 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		}
 
 		game.Simulate();
-		Repo.Save(game);
 		Log.Debug(game.ToString());
 		MessageBus.Send(new GameFinishedMessage(game));
 
 		await Task.Delay(GameDelay);
 
+		// Persistence is the caller's responsibility — saving per game escalates to a full
+		// Competition-graph write on LocalStorage (Game isn't an aggregate root, so it bubbles
+		// up to Save<Competition>), which was the main bottleneck during group-stage sim.
+		// Callers save once per sim action (Game / Round / Stage / Tournament).
+
 		if (Competition.IsFinished)
 		{
-			Repo.Save(Competition);
 			MessageBus.Send(new CompetitionFinishedMessage(Competition));
 		}
 	}

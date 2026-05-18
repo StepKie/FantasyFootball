@@ -10,6 +10,16 @@ public interface IRepository : IDisposable
 
 	void Save<T>(T item) where T : NamedUniqueId, new();
 
+	/// <summary>
+	/// Bulk-save many items at once. Default impl loops <see cref="Save{T}"/>; implementations
+	/// that benefit from batching (e.g. LocalStorage, where each <c>Save</c> reserializes the
+	/// whole bucket) override this to persist once.
+	/// </summary>
+	void SaveAll<T>(IEnumerable<T> items) where T : NamedUniqueId, new()
+	{
+		foreach (var item in items) { Save(item); }
+	}
+
 	void Delete<T>(T item) where T : NamedUniqueId, new();
 
 	void Reset();

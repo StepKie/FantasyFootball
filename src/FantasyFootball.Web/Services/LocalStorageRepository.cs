@@ -89,6 +89,19 @@ public sealed class LocalStorageRepository : IRepository
     PersistBucket<T>(bucket);
   }
 
+  public void SaveAll<T>(IEnumerable<T> items) where T : NamedUniqueId, new()
+  {
+    ThrowIfNotAggregateRoot(typeof(T));
+    var bucket = LoadBucket<T>();
+    var nextId = bucket.Keys.DefaultIfEmpty(0).Max() + 1;
+    foreach (var item in items)
+    {
+      if (item.Id == 0) { item.Id = nextId++; }
+      bucket[item.Id] = item;
+    }
+    PersistBucket<T>(bucket);
+  }
+
   public void Delete<T>(T item) where T : NamedUniqueId, new()
   {
     ThrowIfNotAggregateRoot(typeof(T));

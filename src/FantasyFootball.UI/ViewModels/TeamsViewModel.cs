@@ -29,6 +29,7 @@ public partial class TeamsViewModel : ObservableObject
 		_dataService = dataService;
 
 		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => LoadTeams());
+		MessageBus.Register<DataResetMessage>(this, (_, _) => LoadTeams());
 
 		Confederations = Confederation.ALL.Select(c => c.Name).Prepend(AllLabel).ToList();
 		SelectedConfederation = AllLabel;

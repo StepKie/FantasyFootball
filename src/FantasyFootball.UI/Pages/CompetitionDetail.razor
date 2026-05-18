@@ -1,0 +1,156 @@
+@page "/competitions/{Id:int}"
+@using FantasyFootball.Models
+@using FantasyFootball.UI.Components
+@using FantasyFootball.UI.ViewModels
+@inject CompetitionDetailViewModel ViewModel
+@inject NavigationManager Nav
+@implements IDisposable
+
+<PageTitle>@(ViewModel.Competition?.ShortName ?? "Competition") — Fantasy Football</PageTitle>
+
+<MudButton Href="/competitions"
+           StartIcon="@Icons.Material.Filled.ArrowBack"
+           Variant="Variant.Text"
+           Class="mb-3">
+  Back to competitions
+</MudButton>
+
+@if (ViewModel.Competition is null)
+{
+  <MudAlert Severity="Severity.Warning">
+    Competition not found. <MudLink Href="/competitions">Return to the competitions list.</MudLink>
+  </MudAlert>
+}
+else
+{
+  <MudStack Spacing="3">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
+      <MudText Typo="Typo.h4" HtmlTag="h1">
+        @ViewModel.Competition.ShortName <span style="opacity: 0.6;">#@ViewModel.Competition.Id</span>
+      </MudText>
+      @if (ViewModel.IsFinished && ViewModel.Winner is not null)
+      {
+        <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.EmojiEvents" Size="Size.Small">
+          Winner: @ViewModel.Winner.Name
+        </MudChip>
+      }
+      <MudSpacer />
+      <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                     Color="Color.Error"
+                     OnClick="DeleteAndExit" />
+    </MudStack>
+
+    @if (!ViewModel.IsFinished)
+    {
+      <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap" AlignItems="AlignItems.Center">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.PlayArrow"
+                   OnClick="@(async () => await ViewModel.SimulateGame())"
+                   Disabled="ViewModel.IsBusy">
+          Game
+        </MudButton>
+        <MudButton Variant="Variant.Outlined"
+                   StartIcon="@Icons.Material.Filled.SkipNext"
+                   OnClick="@(async () => await ViewModel.SimulateRound())"
+                   Disabled="ViewModel.IsBusy">
+          Round
+        </MudButton>
+        <MudButton Variant="Variant.Outlined"
+                   StartIcon="@Icons.Material.Filled.FastForward"
+                   OnClick="@(async () => await ViewModel.SimulateStage())"
+                   Disabled="ViewModel.IsBusy">
+          Stage
+        </MudButton>
+        <MudButton Variant="Variant.Outlined"
+                   StartIcon="@Icons.Material.Filled.DoubleArrow"
+                   OnClick="@(async () => await ViewModel.SimulateAll())"
+                   Disabled="ViewModel.IsBusy">
+          Tournament
+        </MudButton>
+        @if (ViewModel.IsBusy)
+        {
+          <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+        }
+      </MudStack>
+    }
+
+    <MudGrid Spacing="2">
+      <MudItem xs="12" sm="6">
+        <MudSelect T="Stage"
+                   Label="Stage"
+                   Value="ViewModel.SelectedStage"
+                   ValueChanged="@(v => ViewModel.SelectedStage = v)"
+                   ToStringFunc="@(s => s?.Name ?? "")"
+                   FullWidth="true">
+          @foreach (var s in ViewModel.Stages)
+          {
+            <MudSelectItem Value="@s">@s.Name</MudSelectItem>
+          }
+        </MudSelect>
+      </MudItem>
+      <MudItem xs="12" sm="6">
+        <MudSelect T="Round"
+                   Label="Round"
+                   Value="ViewModel.SelectedRound"
+                   ValueChanged="@(v => ViewModel.SelectedRound = v)"
+                   ToStringFunc="@(r => r?.Name ?? "")"
+                   FullWidth="true">
+          @foreach (var r in ViewModel.Rounds)
+          {
+            <MudSelectItem Value="@r">@r.Name</MudSelectItem>
+          }
+        </MudSelect>
+      </MudItem>
+    </MudGrid>
+
+    <MudGrid Spacing="3">
+      <MudItem xs="12" md="7">
+        <MudPaper Class="pa-3" Elevation="1">
+          <MudText Typo="Typo.h6" GutterBottom="true">Games</MudText>
+          @if (ViewModel.SelectedRound is not null)
+          {
+            foreach (var game in ViewModel.SelectedRound.AllGames.OrderBy(g => g.PlayedOn))
+            {
+              <GameViewRow Game="game" />
+            }
+          }
+        </MudPaper>
+      </MudItem>
+      <MudItem xs="12" md="5">
+        <MudPaper Class="pa-3" Elevation="1">
+          <MudText Typo="Typo.h6" GutterBottom="true">Standings</MudText>
+          @foreach (var group in ViewModel.Groups)
+          {
+            <GroupView Group="group" />
+          }
+        </MudPaper>
+      </MudItem>
+    </MudGrid>
+  </MudStack>
+}
+
+@code {
+  [Parameter] public int Id { get; set; }
+
+  int? _lastLoadedId;
+
+  protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
+
+  protected override void OnParametersSet()
+  {
+    if (_lastLoadedId == Id) { return; }
+    _lastLoadedId = Id;
+    ViewModel.Load(Id);
+  }
+
+  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+  void DeleteAndExit()
+  {
+    // TODO: confirmation dialog before destroy.
+    ViewModel.Delete();
+    Nav.NavigateTo("/competitions");
+  }
+
+  public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
+}

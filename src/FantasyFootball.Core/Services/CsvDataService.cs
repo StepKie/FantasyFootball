@@ -76,16 +76,13 @@ public class CsvDataService : IDataService
 	{
 		_teamCache = null;
 		_repo.Reset();
-		Confederation.ALL.ForEach(c => _repo.Save(c));
-		var teams = CreateTeams();
-
-		foreach (var team in teams)
-		{
-			_repo.Save(team);
-		}
+		_repo.SaveAll(Confederation.ALL);
+		_repo.SaveAll(CreateTeams());
 
 		SelectedCompetitionType = CompetitionType.WM;
 		SelectedCompetitionYear = SelectedCompetitionType.AvailableYears().Last();
+
+		MessageBus.Send(new DataResetMessage());
 	}
 
 	List<Team> ReloadTeams()

@@ -1,0 +1,95 @@
+@page "/competitions"
+@using FantasyFootball.Data
+@using FantasyFootball.Models
+@using FantasyFootball.UI.ViewModels
+@inject CompetitionsViewModel ViewModel
+@inject NavigationManager Nav
+@implements IDisposable
+
+<PageTitle>Competitions — Fantasy Football</PageTitle>
+
+<MudStack Spacing="3">
+  <MudText Typo="Typo.h3" HtmlTag="h1">Competitions</MudText>
+
+  <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+    <MudSelect T="CompetitionType"
+               Label="Competition"
+               Value="ViewModel.SelectedCompetitionType"
+               ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)"
+               FullWidth="true">
+      @foreach (var t in ViewModel.CompetitionTypes)
+      {
+        <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
+      }
+    </MudSelect>
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               StartIcon="@Icons.Material.Filled.PlayArrow"
+               OnClick="StartNew">
+      Start new
+    </MudButton>
+  </MudStack>
+
+  <MudTable Items="ViewModel.StoredCompetitionsForSelectedType"
+            T="Competition"
+            Loading="ViewModel.IsBusy"
+            Hover="true"
+            Dense="true"
+            Breakpoint="Breakpoint.None"
+            OnRowClick="OnRowClick">
+    <NoRecordsContent>
+      <MudText Typo="Typo.body2" Color="Color.Secondary">
+        No @DisplayName(ViewModel.SelectedCompetitionType) competitions yet. Press <strong>Start new</strong> to simulate one.
+      </MudText>
+    </NoRecordsContent>
+    <HeaderContent>
+      <MudTh Style="width: 4rem;">#</MudTh>
+      <MudTh>Name</MudTh>
+      <MudTh Style="width: 10rem;">Started</MudTh>
+      <MudTh Style="width: 2.5rem;"></MudTh>
+      <MudTh>Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+      <MudTd>@context.Id</MudTd>
+      <MudTd>@context.ShortName</MudTd>
+      <MudTd>@context.SimulationStart.ToString("g")</MudTd>
+      <MudTd>
+        @if (context.Winner?.Country?.Code2 is { Length: > 0 } code)
+        {
+          <img src="@FlagHelper.Url(code)"
+               alt="@context.Winner.Country.Name"
+               style="width: 1.75rem; height: auto; vertical-align: middle;" />
+        }
+      </MudTd>
+      <MudTd>@context.CurrentStatus</MudTd>
+    </RowTemplate>
+  </MudTable>
+</MudStack>
+
+@code {
+  protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
+
+  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+  // Hardcoded English. ExtensionMethods.Name() goes through Res.WorldCup / Res.European_Championship,
+  // which picks the de-DE satellite assembly on browsers where Blazor's culture resolution lands on de.
+  // Wire localization properly via the deferred i18n follow-up (Settings PR #17 TODO).
+  static string DisplayName(CompetitionType t) => t switch
+  {
+    CompetitionType.WM => "World Cup",
+    CompetitionType.EM => "European Championship",
+    CompetitionType.CHAMPIONS_LEAGUE => "Champions League",
+    CompetitionType.DOMESTIC_LEAGUE => "Domestic League",
+    _ => t.ToString(),
+  };
+
+  void OnRowClick(TableRowClickEventArgs<Competition> args)
+  {
+    if (args.Item is null) { return; }
+    Nav.NavigateTo($"/competitions/{args.Item.Id}");
+  }
+
+  void StartNew() => Nav.NavigateTo("/competitions/setup");
+
+  public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
+}

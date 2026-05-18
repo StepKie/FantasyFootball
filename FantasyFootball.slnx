@@ -1,0 +1,20 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Settings.XamlStyler" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/FantasyFootball.Core/FantasyFootball.Core.csproj" />
+    <Project Path="src/FantasyFootball.Maui/FantasyFootball.Maui.csproj">
+      <Deploy Solution="*|Any CPU" />
+    </Project>
+    <Project Path="src/FantasyFootball.Tests/FantasyFootball.Tests.csproj" />
+    <Project Path="src/FantasyFootball.UI/FantasyFootball.UI.csproj" />
+    <Project Path="src/FantasyFootball.Web/FantasyFootball.Web.csproj" />
+  </Folder>
+</Solution>

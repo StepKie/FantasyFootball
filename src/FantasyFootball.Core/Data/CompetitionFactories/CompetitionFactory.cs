@@ -68,7 +68,42 @@ public abstract class CompetitionFactory
 			Stages = CreateStages(),
 		};
 
+		WireBackReferences(competition);
 		return competition;
+	}
+
+	/// <summary>
+	/// Sets the back-references the factories' object initializers don't populate
+	/// (<c>Stage.Competition</c>, <c>Group.Stage</c>, <c>Round.Stage</c>, <c>Game.Round</c>).
+	/// MAUI/SQLite gets these hydrated from foreign keys on read via sqlite-net-extensions;
+	/// the Web path keeps the in-memory graph after Create and would NRE on
+	/// <c>Group.Games</c> / <c>Game.Round.Stage</c> without explicit wiring.
+	/// </summary>
+	static void WireBackReferences(Competition competition)
+	{
+		foreach (var stage in competition.Stages)
+		{
+			stage.Competition = competition;
+			foreach (var group in stage.Groups) { group.Stage = stage; }
+			foreach (var round in stage.Rounds)
+			{
+				round.Stage = stage;
+				foreach (var game in round.AllGames)
+				{
+					game.Round = round;
+					// KoGame qualifiers reach Competition via qualifier.Game → Round → Stage → Competition.
+					// Without this, GroupQualifier.Group resolves null and KoGame.HomeTeam stays a placeholder
+					// (so the game never becomes IsReadyToStart and the sim button silently no-ops).
+					if (game is KoGame ko)
+					{
+						if (ko.HomeGroupQualifier is not null) { ko.HomeGroupQualifier.Game = ko; }
+						if (ko.AwayGroupQualifier is not null) { ko.AwayGroupQualifier.Game = ko; }
+						if (ko.HomeGameQualifier is not null) { ko.HomeGameQualifier.Game = ko; }
+						if (ko.AwayGameQualifier is not null) { ko.AwayGameQualifier.Game = ko; }
+					}
+				}
+			}
+		}
 	}
 
 	/// <summary> Matchup string is in the format "B1 - C3", i.e. group identifiers plus place identifiers starting at 1 </summary>
