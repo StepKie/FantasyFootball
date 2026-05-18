@@ -21,44 +21,44 @@ namespace FantasyFootball.UI.ViewModels;
 /// </summary>
 public partial class TeamDetailViewModel : ObservableObject
 {
-  readonly IRepository _repo;
-  readonly IDataService _dataService;
+	readonly IRepository _repo;
+	readonly IDataService _dataService;
 
-  public TeamDetailViewModel(IRepository repo, IDataService dataService)
-  {
-    _repo = repo;
-    _dataService = dataService;
+	public TeamDetailViewModel(IRepository repo, IDataService dataService)
+	{
+		_repo = repo;
+		_dataService = dataService;
 
-    MessageBus.Register<TeamUpdatedMessage>(this, (_, msg) =>
-    {
-      if (Team?.Id == msg.UpdatedTeam.Id) { Load(msg.UpdatedTeam.Id); }
-    });
-  }
+		MessageBus.Register<TeamUpdatedMessage>(this, (_, msg) =>
+		{
+			if (Team?.Id == msg.UpdatedTeam.Id) { Load(msg.UpdatedTeam.Id); }
+		});
+	}
 
-  [ObservableProperty]
-  public partial Team? Team { get; set; }
+	[ObservableProperty]
+	public partial Team? Team { get; set; }
 
-  [ObservableProperty]
-  public partial int Rank { get; set; }
+	[ObservableProperty]
+	public partial int Rank { get; set; }
 
-  public void Load(int teamId)
-  {
-    var previous = Team;
-    Team = _repo.Get<Team>(teamId);
-    Rank = Team is null ? 0 : _dataService.AllTeams.RankByElo(teamId);
+	public void Load(int teamId)
+	{
+		var previous = Team;
+		Team = _repo.Get<Team>(teamId);
+		Rank = Team is null ? 0 : _dataService.AllTeams.RankByElo(teamId);
 
-    // Force notify only on same-ref reload (in-place Elo mutation) — [ObservableProperty]'s setter already fires when the ref changes.
-    if (ReferenceEquals(previous, Team)) { OnPropertyChanged(nameof(Team)); }
-  }
+		// Force notify only on same-ref reload (in-place Elo mutation) — [ObservableProperty]'s setter already fires when the ref changes.
+		if (ReferenceEquals(previous, Team)) { OnPropertyChanged(nameof(Team)); }
+	}
 
-  // Persists a new Elo for the currently-loaded team. Owns the mutation so the
-  // edit dialog doesn't have to touch a [Parameter] object it doesn't own.
-  public void UpdateElo(int newElo)
-  {
-    if (Team is null || newElo == Team.Elo) { return; }
+	// Persists a new Elo for the currently-loaded team. Owns the mutation so the
+	// edit dialog doesn't have to touch a [Parameter] object it doesn't own.
+	public void UpdateElo(int newElo)
+	{
+		if (Team is null || newElo == Team.Elo) { return; }
 
-    Team.Elo = newElo;
-    _repo.Save(Team);
-    MessageBus.Send(new TeamUpdatedMessage(Team));
-  }
+		Team.Elo = newElo;
+		_repo.Save(Team);
+		MessageBus.Send(new TeamUpdatedMessage(Team));
+	}
 }

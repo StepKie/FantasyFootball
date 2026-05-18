@@ -8,55 +8,55 @@
 <MudText Typo="Typo.h3" HtmlTag="h1" GutterBottom="true">Settings</MudText>
 
 <MudPaper Class="pa-4" Elevation="1">
-  <MudStack Spacing="4">
-    <MudSelect T="CultureInfo"
-               Label="Language"
-               Value="ViewModel.SelectedLanguage"
-               ValueChanged="@(c => ViewModel.SelectedLanguage = c)"
-               ToStringFunc="@(c => c?.DisplayName ?? "")">
-      @foreach (var c in ViewModel.SupportedLanguages)
-      {
-        <MudSelectItem Value="@c">@c.DisplayName</MudSelectItem>
-      }
-    </MudSelect>
+    <MudStack Spacing="4">
+        <MudSelect T="CultureInfo"
+                             Label="Language"
+                             Value="ViewModel.SelectedLanguage"
+                             ValueChanged="@(c => ViewModel.SelectedLanguage = c)"
+                             ToStringFunc="@(c => c?.DisplayName ?? "")">
+            @foreach (var c in ViewModel.SupportedLanguages)
+            {
+                <MudSelectItem Value="@c">@c.DisplayName</MudSelectItem>
+            }
+        </MudSelect>
 
-    <div>
-      <MudText Typo="Typo.body2" Class="mb-2">
-        Simulation speed: <strong>@ViewModel.SimulationSpeedMs.ToString("F0") ms</strong> per game
-      </MudText>
-      <MudSlider T="double"
-                 Min="0" Max="500" Step="10"
-                 Value="ViewModel.SimulationSpeedMs"
-                 ValueChanged="@(v => ViewModel.SimulationSpeedMs = v)"
-                 Color="Color.Primary" />
-    </div>
+        <div>
+            <MudText Typo="Typo.body2" Class="mb-2">
+                Simulation speed: <strong>@ViewModel.SimulationSpeedMs.ToString("F0") ms</strong> per game
+            </MudText>
+            <MudSlider T="double"
+                                 Min="0" Max="500" Step="10"
+                                 Value="ViewModel.SimulationSpeedMs"
+                                 ValueChanged="@(v => ViewModel.SimulationSpeedMs = v)"
+                                 Color="Color.Primary" />
+        </div>
 
-    <MudDivider />
+        <MudDivider />
 
-    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
-      <MudButton Variant="Variant.Outlined"
-                 Color="Color.Error"
-                 OnClick="ViewModel.ResetDatabaseCommand.ExecuteAsync"
-                 Disabled="ViewModel.IsBusy">
-        Reset database
-      </MudButton>
-      @if (ViewModel.IsBusy)
-      {
-        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-        <MudText Typo="Typo.body2">Resetting…</MudText>
-      }
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+            <MudButton Variant="Variant.Outlined"
+                                 Color="Color.Error"
+                                 OnClick="ViewModel.ResetDatabaseCommand.ExecuteAsync"
+                                 Disabled="ViewModel.IsBusy">
+                Reset database
+            </MudButton>
+            @if (ViewModel.IsBusy)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                <MudText Typo="Typo.body2">Resetting…</MudText>
+            }
+        </MudStack>
+
+        <MudDivider />
+
+        <MudText Typo="Typo.caption">App version: @ViewModel.AppVersion</MudText>
     </MudStack>
-
-    <MudDivider />
-
-    <MudText Typo="Typo.caption">App version: @ViewModel.AppVersion</MudText>
-  </MudStack>
 </MudPaper>
 
 @code {
-  protected override void OnInitialized() => ViewModel.PropertyChanged += OnViewModelChanged;
+    protected override void OnInitialized() => ViewModel.PropertyChanged += OnViewModelChanged;
 
-  void OnViewModelChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+    void OnViewModelChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
 
-  public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
+    public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
 }
