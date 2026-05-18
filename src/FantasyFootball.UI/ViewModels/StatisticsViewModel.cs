@@ -25,6 +25,7 @@ public partial class StatisticsViewModel : ObservableObject
 		_dataService = dataService;
 
 		MessageBus.Register<CompetitionFinishedMessage>(this, (_, _) => Reload());
+		MessageBus.Register<DataResetMessage>(this, (_, _) => Reload());
 
 		SelectedCompetitionType = _dataService.SelectedCompetitionType;
 		Reload();
