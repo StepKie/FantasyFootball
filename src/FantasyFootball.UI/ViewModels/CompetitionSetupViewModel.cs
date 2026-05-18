@@ -72,6 +72,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 			var factory = CompetitionFactory.For(SelectedCompetitionType, SelectedYear, Groups);
 			var competition = factory.Create();
 			_repo.Save(competition);
+
 			return competition;
 		}
 		finally

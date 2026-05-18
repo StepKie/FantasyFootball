@@ -72,13 +72,18 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (_simulator is null || Competition?.CurrentGame is null) { return; }
 		await _simulator.SimulateGame(Competition.CurrentGame);
+		_repo.Save(Competition);
 	}
 
 	public async Task SimulateRound()
 	{
 		if (_simulator is null || Competition?.CurrentStage?.CurrentRound is null) { return; }
 		IsBusy = true;
-		try { await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound); }
+		try
+		{
+			await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
+			_repo.Save(Competition);
+		}
 		finally { IsBusy = false; }
 	}
 
@@ -86,7 +91,11 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (_simulator is null || Competition?.CurrentStage is null) { return; }
 		IsBusy = true;
-		try { await _simulator.SimulateStage(Competition.CurrentStage); }
+		try
+		{
+			await _simulator.SimulateStage(Competition.CurrentStage);
+			_repo.Save(Competition);
+		}
 		finally { IsBusy = false; }
 	}
 
@@ -94,7 +103,11 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (_simulator is null || Competition is null || Competition.IsFinished) { return; }
 		IsBusy = true;
-		try { await _simulator.Simulate(); }
+		try
+		{
+			await _simulator.Simulate();
+			_repo.Save(Competition);
+		}
 		finally { IsBusy = false; }
 	}
 
