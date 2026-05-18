@@ -27,7 +27,7 @@ else
       <MudItem xs="12" sm="3" md="2">
         @if (!string.IsNullOrEmpty(ViewModel.Team.Country?.Code2))
         {
-          <img src="@FlagUrl(ViewModel.Team.Country.Code2)"
+          <img src="@FlagHelper.Url(ViewModel.Team.Country.Code2)"
                alt="@ViewModel.Team.Country.Name"
                style="width: 100%; max-width: 7rem; height: auto;" />
         }
@@ -64,14 +64,21 @@ else
 @code {
   [Parameter] public int Id { get; set; }
 
+  int? _lastLoadedId;
+
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
 
-  protected override void OnParametersSet() => ViewModel.Load(Id);
+  // OnParametersSet fires whenever Blazor re-sets parameters on the component,
+  // not only on navigation. Guard against re-Loading the same team — saves a
+  // redundant repo read and the OnPropertyChanged(nameof(Team)) broadcast.
+  protected override void OnParametersSet()
+  {
+    if (_lastLoadedId == Id) { return; }
+    _lastLoadedId = Id;
+    ViewModel.Load(Id);
+  }
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
-
-  // Same flag source as Teams.razor — SVG via flagcdn.com keyed off Country.Code2.
-  static string FlagUrl(string code2) => $"https://flagcdn.com/{code2.ToLower()}.svg";
 
   async Task OpenEdit()
   {

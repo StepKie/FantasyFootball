@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using CsvHelper;
 
 namespace FantasyFootball.Services;
@@ -18,8 +17,13 @@ public class CsvDataService : IDataService
 		_repo = repo;
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
 		Initialize();
-		// This class invalidates the cache of AllTeams and forces reload whenever a Team is updated, relieving clients of this necessity
-		MessageBus.Register<ValueChangedMessage<Team>>(this, (_, _) => _teamCache = null);
+		// Invalidate the AllTeams cache whenever a Team is updated so clients
+		// don't have to. Previously listened for ValueChangedMessage<Team> which
+		// nothing in the codebase sends — the cache invalidation was dead. In
+		// practice it worked because LocalStorageRepository stores objects by
+		// reference (in-place mutation propagates), but if the SQLite Repository
+		// ever returned value copies the rank/Elo display would silently stale.
+		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => _teamCache = null);
 	}
 
 	public void Initialize()

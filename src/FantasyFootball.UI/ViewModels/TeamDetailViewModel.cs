@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
+using FantasyFootball.UI.Helpers;
 using static FantasyFootball.Messaging;
 
 namespace FantasyFootball.UI.ViewModels;
@@ -44,7 +45,7 @@ public partial class TeamDetailViewModel : ObservableObject
   public void Load(int teamId)
   {
     Team = _repo.Get<Team>(teamId);
-    Rank = Team is null ? 0 : _dataService.AllTeams.Count(t => t.Elo > Team.Elo) + 1;
+    Rank = Team is null ? 0 : _dataService.AllTeams.RankByElo(teamId);
 
     // The repo's in-memory bucket returns the same Team instance across reloads —
     // when triggered by TeamUpdatedMessage after an edit, the reference doesn't

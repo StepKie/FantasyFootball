@@ -55,7 +55,10 @@
 
   void Save()
   {
-    if (!IsDirty) { MudDialog.Cancel(); return; }
+    // No-op when nothing changed: close as Ok (the user confirmed the current
+    // value), not Cancel — same outward effect but the result semantics match
+    // user intent if a caller ever inspects the DialogResult.
+    if (!IsDirty) { MudDialog.Close(DialogResult.Ok(Team)); return; }
 
     Team.Elo = _elo;
     Repo.Save(Team);
