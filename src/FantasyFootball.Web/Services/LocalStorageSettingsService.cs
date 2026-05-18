@@ -36,7 +36,7 @@ public sealed class LocalStorageSettingsService : ISettingsService
 
   public CultureInfo LastUsedLanguage
   {
-    get => CultureInfo.GetCultureInfo(GetValueOrDefault(LanguageKey, CultureInfo.CurrentUICulture.TwoLetterISOLanguageName));
+    get => CultureInfo.GetCultureInfo(GetValueOrDefault(LanguageKey, "en"));
     set => AddOrUpdateValue(LanguageKey, value?.TwoLetterISOLanguageName ?? "en");
   }
 
