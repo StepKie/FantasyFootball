@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using CsvHelper;
 
 namespace FantasyFootball.Services;
@@ -18,8 +17,7 @@ public class CsvDataService : IDataService
 		_repo = repo;
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
 		Initialize();
-		// This class invalidates the cache of AllTeams and forces reload whenever a Team is updated, relieving clients of this necessity
-		MessageBus.Register<ValueChangedMessage<Team>>(this, (_, _) => _teamCache = null);
+		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => _teamCache = null);
 	}
 
 	public void Initialize()
