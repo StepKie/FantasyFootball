@@ -23,9 +23,14 @@ public partial class SettingsViewModel : ObservableObject
     _settings = settings;
     _dataService = dataService;
 
-    SelectedLanguage = settings.LastUsedLanguage;
-    SimulationSpeedMs = settings.SimulationSpeed.TotalMilliseconds;
     SupportedLanguages = [new("en"), new("de")];
+    // Clamp to a supported language: the stored value may be the browser locale on first run
+    // (e.g. "fr"), which is valid but not in our two-language dropdown. Without this fallback
+    // MudSelect renders blank because the selected CultureInfo isn't among the options.
+    var stored = settings.LastUsedLanguage;
+    SelectedLanguage = SupportedLanguages.FirstOrDefault(c => c.TwoLetterISOLanguageName == stored.TwoLetterISOLanguageName)
+      ?? SupportedLanguages[0];
+    SimulationSpeedMs = settings.SimulationSpeed.TotalMilliseconds;
   }
 
   public IList<CultureInfo> SupportedLanguages { get; }
