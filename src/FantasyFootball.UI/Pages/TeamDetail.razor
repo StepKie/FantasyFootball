@@ -1,0 +1,89 @@
+@page "/teams/{Id:int}"
+@using FantasyFootball.UI.Components
+@using FantasyFootball.UI.ViewModels
+@inject TeamDetailViewModel ViewModel
+@inject IDialogService DialogService
+@implements IDisposable
+
+<PageTitle>@(ViewModel.Team?.Name ?? "Team") — Fantasy Football</PageTitle>
+
+<MudButton Href="/teams"
+           StartIcon="@Icons.Material.Filled.ArrowBack"
+           Variant="Variant.Text"
+           Class="mb-3">
+  Back to teams
+</MudButton>
+
+@if (ViewModel.Team is null)
+{
+  <MudAlert Severity="Severity.Warning">
+    Team not found. <MudLink Href="/teams">Return to the teams list.</MudLink>
+  </MudAlert>
+}
+else
+{
+  <MudPaper Class="pa-4" Elevation="1">
+    <MudGrid AlignItems="AlignItems.Center" Spacing="4">
+      <MudItem xs="12" sm="3" md="2">
+        @if (!string.IsNullOrEmpty(ViewModel.Team.Country?.Code2))
+        {
+          <img src="@FlagUrl(ViewModel.Team.Country.Code2)"
+               alt="@ViewModel.Team.Country.Name"
+               style="width: 100%; max-width: 7rem; height: auto;" />
+        }
+      </MudItem>
+      <MudItem xs="12" sm="6" md="8">
+        <MudText Typo="Typo.h3" HtmlTag="h1" GutterBottom="false">
+          @ViewModel.Team.Name
+        </MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary">
+          @ViewModel.Team.Country?.Confederation?.Name —
+          @ViewModel.Team.Country?.Confederation?.Continent
+        </MudText>
+        <MudText Typo="Typo.body1" Class="mt-2">
+          Rank <strong>#@ViewModel.Rank</strong> · Elo <strong>@ViewModel.Team.Elo</strong>
+        </MudText>
+      </MudItem>
+      <MudItem xs="12" sm="3" md="2" Class="d-flex justify-end">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Edit"
+                   OnClick="OpenEdit">
+          Edit
+        </MudButton>
+      </MudItem>
+    </MudGrid>
+  </MudPaper>
+
+  @* Latest results, competition history, and best scorers are deliberately omitted
+     for now — they need competition data (lands with Competitions / Games ports)
+     and a player + match-event model (roadmap #20). Each section drops in here as
+     the relevant data becomes available, no page-level rework needed. *@
+}
+
+@code {
+  [Parameter] public int Id { get; set; }
+
+  protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
+
+  protected override void OnParametersSet() => ViewModel.Load(Id);
+
+  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+  // Same flag source as Teams.razor — SVG via flagcdn.com keyed off Country.Code2.
+  static string FlagUrl(string code2) => $"https://flagcdn.com/{code2.ToLower()}.svg";
+
+  async Task OpenEdit()
+  {
+    if (ViewModel.Team is null) { return; }
+
+    var parameters = new DialogParameters<EditTeamDialog>
+    {
+      { x => x.Team, ViewModel.Team }
+    };
+    await DialogService.ShowAsync<EditTeamDialog>("Edit team", parameters);
+    // Dialog persists + broadcasts TeamUpdatedMessage; VM subscribes and reloads.
+  }
+
+  public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
+}

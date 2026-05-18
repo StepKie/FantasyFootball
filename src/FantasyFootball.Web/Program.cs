@@ -20,6 +20,7 @@ builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
 builder.Services.AddScoped<IDataService, CsvDataService>();
 builder.Services.AddScoped<SettingsViewModel>();
 builder.Services.AddScoped<TeamsViewModel>();
+builder.Services.AddScoped<TeamDetailViewModel>();
 
 var app = builder.Build();
 
