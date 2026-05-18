@@ -90,7 +90,7 @@
                Size="Size.Large"
                StartIcon="@Icons.Material.Filled.PlayArrow"
                OnClick="StartSim"
-               Disabled="ViewModel.IsBusy">
+               Disabled="@(ViewModel.IsBusy || ViewModel.Groups.Count == 0)">
       Simulate
     </MudButton>
   </MudStack>

@@ -25,6 +25,10 @@ public partial class CompetitionSetupViewModel : ObservableObject
 {
 	readonly IRepository _repo;
 	readonly IDataService _dataService;
+	// Suppresses the OnSelectedYearChanged → ResetToHistoricTeams cascade during ctor,
+	// so we don't pay for CSV parsing twice on page load (once via the type-change
+	// cascade, once via the explicit SelectedYear assignment below).
+	readonly bool _initialized;
 
 	public CompetitionSetupViewModel(IRepository repo, IDataService dataService)
 	{
@@ -38,6 +42,9 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		SelectedYear = validYears.Contains(_dataService.SelectedCompetitionYear)
 			? _dataService.SelectedCompetitionYear
 			: validYears.Last();
+
+		_initialized = true;
+		ResetToHistoricTeams();
 	}
 
 	public IList<CompetitionType> CompetitionTypes { get; } = [CompetitionType.WM, CompetitionType.EM];
@@ -90,6 +97,6 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	partial void OnSelectedYearChanged(int value)
 	{
 		_dataService.SelectedCompetitionYear = value;
-		ResetToHistoricTeams();
+		if (_initialized) { ResetToHistoricTeams(); }
 	}
 }

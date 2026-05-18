@@ -44,16 +44,16 @@ public sealed class IgnoreAttributeTypeInfoResolver : DefaultJsonTypeInfoResolve
 		var toRemove = new List<JsonPropertyInfo>();
 		foreach (var property in info.Properties)
 		{
-			var propInfo = type.GetProperty(
-				property.Name,
-				BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-			if (propInfo is null) { continue; }
+			// AttributeProvider is the underlying PropertyInfo for reflection-emitted contracts.
+			// Using it directly avoids a second type.GetProperty lookup (and its AmbiguousMatch /
+			// IgnoreCase pitfalls) and gives us the CLR name regardless of any JsonNamingPolicy.
+			if (property.AttributeProvider is not PropertyInfo propInfo) { continue; }
 
 			var hasExactIgnore = propInfo
-				.GetCustomAttributes(typeof(IgnoreAttribute), inherit: true)
+				.GetCustomAttributes(typeof(IgnoreAttribute), inherit: false)
 				.Any(a => a.GetType() == typeof(IgnoreAttribute));
 
-			var isBackPointer = BackPointerCollections.Contains((type, property.Name));
+			var isBackPointer = BackPointerCollections.Contains((type, propInfo.Name));
 
 			if (hasExactIgnore || isBackPointer) { toRemove.Add(property); }
 		}

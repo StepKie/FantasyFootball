@@ -30,6 +30,7 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 		}
 
 		await Simulator.SimulateGame(game);
+		Repo.Save(Competition);
 	}
 
 	[RelayCommand]
@@ -44,8 +45,12 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 	{
 		_ = Competition.CurrentStage ?? throw new InvalidOperationException($"Can't call {nameof(SimulateCurrentStage)}, {nameof(Competition.CurrentStage)} is null");
 		IsBusy = true;
-		await Simulator.SimulateStage(Competition.CurrentStage);
-		IsBusy = false;
+		try
+		{
+			await Simulator.SimulateStage(Competition.CurrentStage);
+			Repo.Save(Competition);
+		}
+		finally { IsBusy = false; }
 	}
 
 	[RelayCommand]
@@ -53,7 +58,11 @@ public partial class GamesViewModel : CompetitionDetailViewModel
 	{
 		_ = Competition.CurrentStage?.CurrentRound ?? throw new InvalidOperationException($"Can't call {nameof(SimulateCurrentRound)}, {nameof(Competition.CurrentStage.CurrentRound)} is null");
 		IsBusy = true;
-		await Simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
-		IsBusy = false;
+		try
+		{
+			await Simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
+			Repo.Save(Competition);
+		}
+		finally { IsBusy = false; }
 	}
 }

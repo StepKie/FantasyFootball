@@ -85,12 +85,10 @@
 
   void OnRowClick(TableRowClickEventArgs<Competition> args)
   {
-    // /competitions/{id} lands with the Standings+Games merged page port (#7). 404 expected for now.
     if (args.Item is null) { return; }
     Nav.NavigateTo($"/competitions/{args.Item.Id}");
   }
 
-  // /competitions/setup lands with the CompetitionSetup port (#7, depends on #19). 404 expected for now.
   void StartNew() => Nav.NavigateTo("/competitions/setup");
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
