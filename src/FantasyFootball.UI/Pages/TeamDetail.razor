@@ -68,9 +68,7 @@ else
 
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
 
-  // OnParametersSet fires whenever Blazor re-sets parameters on the component,
-  // not only on navigation. Guard against re-Loading the same team — saves a
-  // redundant repo read and the OnPropertyChanged(nameof(Team)) broadcast.
+  // Skip re-Load when Id unchanged — OnParametersSet fires on any parameter re-set, not just navigation.
   protected override void OnParametersSet()
   {
     if (_lastLoadedId == Id) { return; }

@@ -47,11 +47,7 @@ public partial class TeamDetailViewModel : ObservableObject
     Team = _repo.Get<Team>(teamId);
     Rank = Team is null ? 0 : _dataService.AllTeams.RankByElo(teamId);
 
-    // The repo's in-memory bucket returns the same Team instance across reloads —
-    // when triggered by TeamUpdatedMessage after an edit, the reference doesn't
-    // change, only the Elo field is mutated in place. [ObservableProperty] skips
-    // raising PropertyChanged on ref-equal assignments, so without this nudge
-    // Blazor never re-renders the bindings that read Team.Elo.
+    // Force notify — repo returns same Team ref, in-place Elo mutation doesn't trip [ObservableProperty].
     OnPropertyChanged(nameof(Team));
   }
 }
