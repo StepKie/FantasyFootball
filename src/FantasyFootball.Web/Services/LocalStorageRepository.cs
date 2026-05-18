@@ -129,9 +129,24 @@ public sealed class LocalStorageRepository : IRepository
     if (_buckets.TryGetValue(typeof(T), out var cached)) return cached;
 
     var raw = _localStorage.GetItemAsString(KeyFor<T>());
-    var items = string.IsNullOrEmpty(raw)
-      ? []
-      : JsonSerializer.Deserialize<List<T>>(raw, JsonOptions) ?? [];
+    List<T> items;
+    try
+    {
+      items = string.IsNullOrEmpty(raw)
+        ? []
+        : JsonSerializer.Deserialize<List<T>>(raw, JsonOptions) ?? [];
+    }
+    catch (JsonException ex)
+    {
+      // Quarantine the corrupt blob so the page renders rather than crashing,
+      // and stash the raw JSON in a sibling LocalStorage key for diagnosis.
+      // Reset Database (Settings) clears both.
+      var bad = KeyFor<T>() + ":corrupt-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+      _localStorage.SetItemAsString(bad, raw);
+      _localStorage.RemoveItem(KeyFor<T>());
+      Console.Error.WriteLine($"[LocalStorageRepository] Failed to deserialize {typeof(T).Name} bucket; corrupt blob moved to '{bad}'. Length={raw?.Length ?? 0}. Error: {ex.Message}");
+      items = [];
+    }
     var bucket = items.ToDictionary(x => x.Id, x => (NamedUniqueId)x);
     _buckets[typeof(T)] = bucket;
     return bucket;

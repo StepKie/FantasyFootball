@@ -7,6 +7,7 @@ public static class Messaging
 
 	// Do not really care to subclass ValueChangedMessage and having to override each constructor ...
 	public record CompetitionFinishedMessage(Competition FinishedCompetition);
+	public record CompetitionCreatedMessage(Competition CreatedCompetition);
 	public record CompetitionDeletedMessage(int CompetitionId);
 	public record GameFinishedMessage(Game FinishedGame);
 	public record TeamUpdatedMessage(Team UpdatedTeam);

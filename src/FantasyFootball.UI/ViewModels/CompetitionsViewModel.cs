@@ -29,9 +29,9 @@ public partial class CompetitionsViewModel : ObservableObject
 		_repo = repo;
 		_dataService = dataService;
 
-		// Reload list when a simulation finishes (broadcast from CompetitionSimulator),
-		// a competition is deleted from CompetitionDetail, or the data store is reset
-		// — so navigating back to /competitions shows fresh data.
+		// Reload list when a competition is created, simulated, deleted, or the data
+		// store is reset — so navigating back to /competitions always shows fresh data.
+		MessageBus.Register<CompetitionCreatedMessage>(this, (_, _) => ReloadCompetitions());
 		MessageBus.Register<CompetitionFinishedMessage>(this, (_, _) => ReloadCompetitions());
 		MessageBus.Register<CompetitionDeletedMessage>(this, (_, _) => ReloadCompetitions());
 		MessageBus.Register<DataResetMessage>(this, (_, _) => ReloadCompetitions());

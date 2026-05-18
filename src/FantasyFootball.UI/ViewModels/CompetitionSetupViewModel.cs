@@ -1,9 +1,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Data;
 using FantasyFootball.Data.CompetitionFactories;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
+using static FantasyFootball.Messaging;
 
 namespace FantasyFootball.UI.ViewModels;
 
@@ -79,6 +81,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 			var factory = CompetitionFactory.For(SelectedCompetitionType, SelectedYear, Groups);
 			var competition = factory.Create();
 			_repo.Save(competition);
+			MessageBus.Send(new CompetitionCreatedMessage(competition));
 
 			return competition;
 		}
