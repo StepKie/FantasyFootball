@@ -51,6 +51,15 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
 
+	/// <summary>
+	/// Per-session speed override for sim actions. Defaults to the Settings value
+	/// on Load; the page's speed control mutates it for the current visit only.
+	/// `Instant` short-circuits the inter-game delay and suppresses per-game
+	/// re-render messages — a 72-game group stage renders once, not 72 times.
+	/// </summary>
+	[ObservableProperty]
+	public partial SimulationSpeed Speed { get; set; } = SimulationSpeed.Normal;
+
 	public IList<Stage> Stages => Competition?.Stages ?? [];
 	public IList<Round> Rounds => SelectedStage?.Rounds ?? [];
 	public IList<Group> Groups => Competition?.Groups ?? [];
@@ -65,7 +74,19 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
 		SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
 
+		// Initial speed = Settings default mapped onto the nearest preset.
+		Speed = SimulationSpeedExtensions.FromTimeSpan(_settings.SimulationSpeed);
 		_simulator = new CompetitionSimulator(Competition, _repo, (int)_settings.SimulationSpeed.TotalMilliseconds);
+		ApplySpeedToSimulator();
+	}
+
+	partial void OnSpeedChanged(SimulationSpeed value) => ApplySpeedToSimulator();
+
+	void ApplySpeedToSimulator()
+	{
+		if (_simulator is null) { return; }
+		_simulator.GameDelay = Speed.ToDelay();
+		_simulator.Quiet = Speed == SimulationSpeed.Instant;
 	}
 
 	public async Task SimulateGame()
@@ -119,8 +140,10 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public void Delete()
 	{
 		if (Competition is null) { return; }
+		var deletedId = Competition.Id;
 		_repo.Delete(Competition);
 		Competition = null;
+		MessageBus.Send(new CompetitionDeletedMessage(deletedId));
 	}
 
 	void OnGameFinished(Game finished)

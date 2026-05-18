@@ -15,7 +15,7 @@
                Label="Competition"
                Value="ViewModel.SelectedCompetitionType"
                ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)"
-               FullWidth="true">
+               Style="max-width: 20rem;">
       @foreach (var t in ViewModel.CompetitionTypes)
       {
         <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
@@ -23,9 +23,9 @@
     </MudSelect>
     <MudButton Variant="Variant.Filled"
                Color="Color.Primary"
-               StartIcon="@Icons.Material.Filled.PlayArrow"
+               StartIcon="@Icons.Material.Filled.Add"
                OnClick="StartNew">
-      Start new
+      New
     </MudButton>
   </MudStack>
 

@@ -2,7 +2,20 @@
 
 public class CompetitionSimulator(Competition competition, IRepository repo, int msGameDelay = 100)
 {
-	public TimeSpan GameDelay { get; init; } = TimeSpan.FromMilliseconds(msGameDelay);
+	/// <summary>
+	/// Delay between consecutive game simulations. Mutable so the UI's per-session
+	/// speed control (Slow / Normal / Fast / Instant) can override the Settings
+	/// default without rebuilding the simulator.
+	/// </summary>
+	public TimeSpan GameDelay { get; set; } = TimeSpan.FromMilliseconds(msGameDelay);
+
+	/// <summary>
+	/// When true, suppresses per-game <see cref="GameFinishedMessage"/> broadcasts
+	/// and skips the inter-game <see cref="Task.Delay(TimeSpan)"/>. Used by the
+	/// "Instant" speed mode so a 72-game group stage doesn't pay 72 re-renders
+	/// (the caller renders once after the whole batch).
+	/// </summary>
+	public bool Quiet { get; set; }
 
 	public Competition Competition { get; init; } = competition;
 
@@ -57,9 +70,11 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 
 		game.Simulate();
 		Log.Debug(game.ToString());
-		MessageBus.Send(new GameFinishedMessage(game));
-
-		await Task.Delay(GameDelay);
+		if (!Quiet)
+		{
+			MessageBus.Send(new GameFinishedMessage(game));
+			await Task.Delay(GameDelay);
+		}
 
 		// Persistence is the caller's responsibility — saving per game escalates to a full
 		// Competition-graph write on LocalStorage (Game isn't an aggregate root, so it bubbles

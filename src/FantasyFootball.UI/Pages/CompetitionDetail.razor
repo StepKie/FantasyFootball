@@ -1,5 +1,6 @@
 @page "/competitions/{Id:int}"
 @using FantasyFootball.Models
+@using FantasyFootball.Services
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
 @inject CompetitionDetailViewModel ViewModel
@@ -71,6 +72,21 @@ else
         {
           <MudProgressCircular Size="Size.Small" Indeterminate="true" />
         }
+        <MudSpacer />
+        <MudToggleGroup T="SimulationSpeed"
+                        Value="ViewModel.Speed"
+                        ValueChanged="@((SimulationSpeed v) => ViewModel.Speed = v)"
+                        Dense="true"
+                        Size="Size.Small"
+                        Color="Color.Primary"
+                        CheckMark="false"
+                        SelectionMode="SelectionMode.SingleSelection"
+                        title="Simulation speed (overrides Settings for this session)">
+          <MudToggleItem Value="SimulationSpeed.Slow" Text="🐢" />
+          <MudToggleItem Value="SimulationSpeed.Normal" Text="▶" />
+          <MudToggleItem Value="SimulationSpeed.Fast" Text="🐇" />
+          <MudToggleItem Value="SimulationSpeed.Instant" Text="⚡" />
+        </MudToggleGroup>
       </MudStack>
     }
 

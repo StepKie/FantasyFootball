@@ -12,7 +12,7 @@
              Label="Competition"
              Value="ViewModel.SelectedCompetitionType"
              ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)"
-             FullWidth="true">
+             Style="max-width: 20rem;">
     @foreach (var t in ViewModel.CompetitionTypes)
     {
       <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>

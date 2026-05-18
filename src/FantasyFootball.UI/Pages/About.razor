@@ -1,0 +1,46 @@
+@page "/about"
+
+<PageTitle>About — Fantasy Football</PageTitle>
+
+<MudStack Spacing="4" Style="max-width: 48rem;">
+  <div>
+    <MudText Typo="Typo.h5" HtmlTag="h1">Fantasy Football</MudText>
+    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-1">
+      Simulate football competitions — World Cups and Euros — directly in your browser.
+      Saved competitions live in this browser's local storage; nothing is sent to a server.
+    </MudText>
+  </div>
+
+  <div>
+    <MudText Typo="Typo.subtitle1" Class="mb-2"><strong>Keyboard shortcuts</strong></MudText>
+    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
+      Available on the competition detail page (filled in once the keyboard navigation feature lands).
+    </MudText>
+    <MudSimpleTable Dense="true" Hover="false" Bordered="false" Striped="true" Style="max-width: 32rem;">
+      <thead>
+        <tr>
+          <th style="width: 9rem;">Key</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><kbd>Space</kbd></td><td>Simulate next game</td></tr>
+        <tr><td><kbd>R</kbd> / <kbd>Shift+Space</kbd></td><td>Simulate round</td></tr>
+        <tr><td><kbd>S</kbd></td><td>Simulate stage</td></tr>
+        <tr><td><kbd>T</kbd></td><td>Simulate tournament</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>→</kbd></td><td>Prev / next round</td></tr>
+        <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Prev / next stage</td></tr>
+        <tr><td><kbd>Ctrl+Z</kbd> / <kbd>U</kbd></td><td>Undo last sim</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Back to competitions</td></tr>
+        <tr><td><kbd>?</kbd></td><td>Show this help</td></tr>
+      </tbody>
+    </MudSimpleTable>
+  </div>
+
+  <div>
+    <MudText Typo="Typo.subtitle1" Class="mb-1"><strong>Source &amp; issues</strong></MudText>
+    <MudText Typo="Typo.body2" Color="Color.Secondary">
+      <MudLink Href="https://github.com/StepKie/FantasyFootball" Target="_blank">github.com/StepKie/FantasyFootball</MudLink>
+    </MudText>
+  </div>
+</MudStack>
