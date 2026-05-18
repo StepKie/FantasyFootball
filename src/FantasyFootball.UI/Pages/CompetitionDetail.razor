@@ -25,7 +25,7 @@ else
 {
   <MudStack Spacing="3">
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
-      <MudText Typo="Typo.h4" HtmlTag="h1">
+      <MudText Typo="Typo.h5" HtmlTag="h1">
         @ViewModel.Competition.ShortName <span style="opacity: 0.6;">#@ViewModel.Competition.Id</span>
       </MudText>
       @if (ViewModel.IsFinished && ViewModel.Winner is not null)
