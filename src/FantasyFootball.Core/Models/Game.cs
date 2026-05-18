@@ -59,7 +59,7 @@ public class Game : NamedUniqueId
 	public int RoundId { get; set; }
 
 	[ManyToOne]
-	public virtual Round Round { get; init; } = new Round { Name = "Not initialized" };
+	public virtual Round Round { get; set; } = new Round { Name = "Not initialized" };
 
 	[Ignore]
 	public Team? Winner => (HomeScore > AwayScore) ? HomeTeam : (AwayScore > HomeScore) ? AwayTeam : null;
