@@ -7,65 +7,65 @@
 <PageTitle>Teams — Fantasy Football</PageTitle>
 
 <MudStack Spacing="3">
-    <MudText Typo="Typo.h3" HtmlTag="h1">Teams</MudText>
+  <MudText Typo="Typo.h3" HtmlTag="h1">Teams</MudText>
 
-    <MudSelect T="string"
-                         Label="Confederation"
-                         Value="ViewModel.SelectedConfederation"
-                         ValueChanged="@(v => ViewModel.SelectedConfederation = v)"
-                         FullWidth="true">
-        @foreach (var c in ViewModel.Confederations)
+  <MudSelect T="string"
+             Label="Confederation"
+             Value="ViewModel.SelectedConfederation"
+             ValueChanged="@(v => ViewModel.SelectedConfederation = v)"
+             FullWidth="true">
+    @foreach (var c in ViewModel.Confederations)
+    {
+      <MudSelectItem Value="@c">@c</MudSelectItem>
+    }
+  </MudSelect>
+
+  <MudTable Items="ViewModel.TeamsInSelectedConfederation"
+            T="TeamListItem"
+            Loading="ViewModel.IsBusy"
+            Hover="true"
+            Dense="true"
+            Breakpoint="Breakpoint.None"
+            OnRowClick="OnRowClick">
+    @* Virtualize="true" was tried but collapses the empty-header flag column under
+       MudTable's virtualized layout. Pre-warming IDataService already takes most
+       of the perceived wait off this page; 200 rows render fine in one go. Revisit
+       via MudDataGrid if a much larger list lands later. *@
+    <HeaderContent>
+      <MudTh Style="width: 3rem;">#</MudTh>
+      <MudTh Style="width: 2.5rem;"></MudTh>
+      <MudTh>Team</MudTh>
+      <MudTh Style="width: 4rem; text-align: right;">Elo</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+      <MudTd>@context.Rank</MudTd>
+      <MudTd>
+        @if (!string.IsNullOrEmpty(context.Team.Country?.Code2))
         {
-            <MudSelectItem Value="@c">@c</MudSelectItem>
+          <img src="@FlagHelper.Url(context.Team.Country.Code2)"
+               alt="@context.Team.Country.Name"
+               style="width: 1.75rem; height: auto; vertical-align: middle;" />
         }
-    </MudSelect>
+      </MudTd>
+      <MudTd>@context.Team.Name</MudTd>
+      <MudTd Style="text-align: right;">@context.Team.Elo</MudTd>
+    </RowTemplate>
+  </MudTable>
 
-    <MudTable Items="ViewModel.TeamsInSelectedConfederation"
-                        T="TeamListItem"
-                        Loading="ViewModel.IsBusy"
-                        Hover="true"
-                        Dense="true"
-                        Breakpoint="Breakpoint.None"
-                        OnRowClick="OnRowClick">
-        @* Virtualize="true" was tried but collapses the empty-header flag column under
-             MudTable's virtualized layout. Pre-warming IDataService already takes most
-             of the perceived wait off this page; 200 rows render fine in one go. Revisit
-             via MudDataGrid if a much larger list lands later. *@
-        <HeaderContent>
-            <MudTh Style="width: 3rem;">#</MudTh>
-            <MudTh Style="width: 2.5rem;"></MudTh>
-            <MudTh>Team</MudTh>
-            <MudTh Style="width: 4rem; text-align: right;">Elo</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd>@context.Rank</MudTd>
-            <MudTd>
-                @if (!string.IsNullOrEmpty(context.Team.Country?.Code2))
-                {
-                    <img src="@FlagHelper.Url(context.Team.Country.Code2)"
-                             alt="@context.Team.Country.Name"
-                             style="width: 1.75rem; height: auto; vertical-align: middle;" />
-                }
-            </MudTd>
-            <MudTd>@context.Team.Name</MudTd>
-            <MudTd Style="text-align: right;">@context.Team.Elo</MudTd>
-        </RowTemplate>
-    </MudTable>
-
-    @* +new-team: deliberately omitted — MAUI version is [Obsolete] and shows
-         "under construction". Lands as a MudDialog when the feature is built. *@
+  @* +new-team: deliberately omitted — MAUI version is [Obsolete] and shows
+     "under construction". Lands as a MudDialog when the feature is built. *@
 </MudStack>
 
 @code {
-    protected override void OnInitialized() => ViewModel.PropertyChanged += OnViewModelChanged;
+  protected override void OnInitialized() => ViewModel.PropertyChanged += OnViewModelChanged;
 
-    void OnViewModelChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+  void OnViewModelChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
 
-    void OnRowClick(TableRowClickEventArgs<TeamListItem> args)
-    {
-        // /teams/{id} lands with the TeamDetail page port (#7). 404 expected for now.
-        Nav.NavigateTo($"/teams/{args.Item!.Team.Id}");
-    }
+  void OnRowClick(TableRowClickEventArgs<TeamListItem> args)
+  {
+    // /teams/{id} lands with the TeamDetail page port (#7). 404 expected for now.
+    Nav.NavigateTo($"/teams/{args.Item!.Team.Id}");
+  }
 
-    public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
+  public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
 }

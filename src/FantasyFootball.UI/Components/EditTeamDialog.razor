@@ -1,57 +1,57 @@
 @using FantasyFootball.Models
 
 <MudDialog>
-    <DialogContent>
-        <MudStack Spacing="3">
-            <MudText Typo="Typo.body2" Color="Color.Secondary">@Team.Name</MudText>
-            <MudNumericField @bind-Value="_elo"
-                                             Label="Elo"
-                                             Variant="Variant.Outlined"
-                                             Min="0" Max="3000" Step="1"
-                                             Immediate="true"
-                                             OnKeyUp="OnKeyUp"
-                                             HelperText="@($"World ranking strength. Original: {Team.Elo}.")" />
-        </MudStack>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary"
-                             Variant="Variant.Filled"
-                             OnClick="Save"
-                             Disabled="@(!IsDirty)">
-            Save
-        </MudButton>
-    </DialogActions>
+  <DialogContent>
+    <MudStack Spacing="3">
+      <MudText Typo="Typo.body2" Color="Color.Secondary">@Team.Name</MudText>
+      <MudNumericField @bind-Value="_elo"
+                       Label="Elo"
+                       Variant="Variant.Outlined"
+                       Min="0" Max="3000" Step="1"
+                       Immediate="true"
+                       OnKeyUp="OnKeyUp"
+                       HelperText="@($"World ranking strength. Original: {Team.Elo}.")" />
+    </MudStack>
+  </DialogContent>
+  <DialogActions>
+    <MudButton OnClick="Cancel">Cancel</MudButton>
+    <MudButton Color="Color.Primary"
+               Variant="Variant.Filled"
+               OnClick="Save"
+               Disabled="@(!IsDirty)">
+      Save
+    </MudButton>
+  </DialogActions>
 </MudDialog>
 
 @code {
-    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
-    [Parameter] public Team Team { get; set; } = null!;
+  [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
+  [Parameter] public Team Team { get; set; } = null!;
 
-    int _elo;
+  int _elo;
 
-    protected override void OnInitialized() => _elo = Team.Elo;
+  protected override void OnInitialized() => _elo = Team.Elo;
 
-    // Name is intentionally not edited here: NamedUniqueId.Name is init-only on the
-    // shared base class (used by Confederation, Country, Competition — none of which
-    // should be renameable). Promoting Name to a settable property is a deliberate
-    // Core-lib change for another day; the user story specifies Elo editing.
-    bool IsDirty => _elo != Team.Elo;
+  // Name is intentionally not edited here: NamedUniqueId.Name is init-only on the
+  // shared base class (used by Confederation, Country, Competition — none of which
+  // should be renameable). Promoting Name to a settable property is a deliberate
+  // Core-lib change for another day; the user story specifies Elo editing.
+  bool IsDirty => _elo != Team.Elo;
 
-    void Cancel() => MudDialog.Cancel();
+  void Cancel() => MudDialog.Cancel();
 
-    // OnKeyUp (not OnKeyDown) so the Enter keystroke's full lifecycle ends before
-    // we close the dialog. With OnKeyDown, closing mid-keystroke restores focus to
-    // the Edit button — and the same keystroke (or its keyup) was re-triggering it,
-    // reopening the dialog.
-    // Enter mirrors the Save button: only fires when there's something to save.
-    void OnKeyUp(KeyboardEventArgs e)
-    {
-        if (e.Key == "Enter" && IsDirty) { Save(); }
-    }
+  // OnKeyUp (not OnKeyDown) so the Enter keystroke's full lifecycle ends before
+  // we close the dialog. With OnKeyDown, closing mid-keystroke restores focus to
+  // the Edit button — and the same keystroke (or its keyup) was re-triggering it,
+  // reopening the dialog.
+  // Enter mirrors the Save button: only fires when there's something to save.
+  void OnKeyUp(KeyboardEventArgs e)
+  {
+    if (e.Key == "Enter" && IsDirty) { Save(); }
+  }
 
-    // Returns the new Elo to the caller (TeamDetail page) which owns the
-    // mutate+persist+broadcast — keeps this dialog from mutating a [Parameter]
-    // object it doesn't own.
-    void Save() => MudDialog.Close(DialogResult.Ok(_elo));
+  // Returns the new Elo to the caller (TeamDetail page) which owns the
+  // mutate+persist+broadcast — keeps this dialog from mutating a [Parameter]
+  // object it doesn't own.
+  void Save() => MudDialog.Close(DialogResult.Ok(_elo));
 }
