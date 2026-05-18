@@ -1,9 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Models;
-using FantasyFootball.Repositories;
 using FantasyFootball.Services;
 using static FantasyFootball.Messaging;
 
@@ -26,7 +24,7 @@ public partial class TeamsViewModel : ObservableObject
 
   List<TeamListItem> _allTeams = [];
 
-  public TeamsViewModel(IDataService dataService, IRepository repo)
+  public TeamsViewModel(IDataService dataService)
   {
     _dataService = dataService;
 
@@ -53,7 +51,6 @@ public partial class TeamsViewModel : ObservableObject
   [ObservableProperty]
   public partial bool IsBusy { get; set; }
 
-  [RelayCommand]
   void LoadTeams()
   {
     IsBusy = true;
