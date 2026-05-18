@@ -19,5 +19,13 @@ builder.Services.AddScoped<IRepository, LocalStorageRepository>();
 builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
 builder.Services.AddScoped<IDataService, CsvDataService>();
 builder.Services.AddScoped<SettingsViewModel>();
+builder.Services.AddScoped<TeamsViewModel>();
 
-await builder.Build().RunAsync();
+var app = builder.Build();
+
+// Pre-warm IDataService so the embedded-CSV parse / LocalStorage polymorphic
+// deserialize (~200 teams + countries + confederations) runs during the WASM
+// boot splash rather than stalling the first navigation to Teams / Competitions.
+_ = app.Services.GetRequiredService<IDataService>();
+
+await app.RunAsync();
