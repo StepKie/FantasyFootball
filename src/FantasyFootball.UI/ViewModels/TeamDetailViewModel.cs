@@ -44,11 +44,12 @@ public partial class TeamDetailViewModel : ObservableObject
 
   public void Load(int teamId)
   {
+    var previous = Team;
     Team = _repo.Get<Team>(teamId);
     Rank = Team is null ? 0 : _dataService.AllTeams.RankByElo(teamId);
 
-    // Force notify — repo returns same Team ref, in-place Elo mutation doesn't trip [ObservableProperty].
-    OnPropertyChanged(nameof(Team));
+    // Force notify only on same-ref reload (in-place Elo mutation) — [ObservableProperty]'s setter already fires when the ref changes.
+    if (ReferenceEquals(previous, Team)) { OnPropertyChanged(nameof(Team)); }
   }
 
   // Persists a new Elo for the currently-loaded team. Owns the mutation so the

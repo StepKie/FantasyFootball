@@ -5,5 +5,5 @@ namespace FantasyFootball.UI.Helpers;
 /// </summary>
 public static class FlagHelper
 {
-  public static string Url(string code2) => $"https://flagcdn.com/{code2.ToLower()}.svg";
+  public static string Url(string code2) => $"https://flagcdn.com/{code2.ToLowerInvariant()}.svg";
 }
