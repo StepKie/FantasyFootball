@@ -1,8 +1,4 @@
-@using CommunityToolkit.Mvvm.Messaging
 @using FantasyFootball.Models
-@using FantasyFootball.Repositories
-@using static FantasyFootball.Messaging
-@inject IRepository Repo
 
 <MudDialog>
   <DialogContent>
@@ -53,15 +49,8 @@
     if (e.Key == "Enter") { Save(); }
   }
 
-  void Save()
-  {
-    // Close as Ok (not Cancel) on a no-op: Enter on unchanged value is user-confirm, not dismiss.
-    if (!IsDirty) { MudDialog.Close(DialogResult.Ok(Team)); return; }
-
-    Team.Elo = _elo;
-    Repo.Save(Team);
-    MessageBus.Send(new TeamUpdatedMessage(Team));
-
-    MudDialog.Close(DialogResult.Ok(Team));
-  }
+  // Returns the new Elo to the caller (TeamDetail page) which owns the
+  // mutate+persist+broadcast — keeps this dialog from mutating a [Parameter]
+  // object it doesn't own.
+  void Save() => MudDialog.Close(DialogResult.Ok(_elo));
 }

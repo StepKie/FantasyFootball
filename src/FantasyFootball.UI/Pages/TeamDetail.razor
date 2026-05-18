@@ -86,8 +86,12 @@ else
     {
       { x => x.Team, ViewModel.Team }
     };
-    await DialogService.ShowAsync<EditTeamDialog>("Edit team", parameters);
-    // Dialog persists + broadcasts TeamUpdatedMessage; VM subscribes and reloads.
+    var dialog = await DialogService.ShowAsync<EditTeamDialog>("Edit team", parameters);
+    var result = await dialog.Result;
+    if (result is { Canceled: false, Data: int newElo })
+    {
+      ViewModel.UpdateElo(newElo);
+    }
   }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;

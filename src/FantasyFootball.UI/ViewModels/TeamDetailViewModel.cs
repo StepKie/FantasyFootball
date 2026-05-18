@@ -50,4 +50,15 @@ public partial class TeamDetailViewModel : ObservableObject
     // Force notify — repo returns same Team ref, in-place Elo mutation doesn't trip [ObservableProperty].
     OnPropertyChanged(nameof(Team));
   }
+
+  // Persists a new Elo for the currently-loaded team. Owns the mutation so the
+  // edit dialog doesn't have to touch a [Parameter] object it doesn't own.
+  public void UpdateElo(int newElo)
+  {
+    if (Team is null || newElo == Team.Elo) { return; }
+
+    Team.Elo = newElo;
+    _repo.Save(Team);
+    MessageBus.Send(new TeamUpdatedMessage(Team));
+  }
 }
