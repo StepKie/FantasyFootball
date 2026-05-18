@@ -28,9 +28,19 @@ public class GroupQualifier : Qualifier
 			// stage must be finished — a per-group check would throw the moment any
 			// single group finished, before the others.
 			3 when Group?.Stage is { } stage && stage.Groups.All(g => g.IsFinished)
-				=> TournamentFormatRegistry.ForGroupCount(stage.Groups.Count).ResolveThirdPlaceQualifier(stage, ThirdPlaceCombination),
+				=> TryResolveThirdPlace(stage, ThirdPlaceCombination),
 			_ => null,
 		};
+
+		// The greedy 3rd-place allocation in ExpandedWorldCupFormat can occasionally
+		// fail to fit every slot (issue #12 — the real fix is FIFA's 495-scenario
+		// lookup table). Falling back to null lets the UI show a placeholder
+		// instead of crashing the render or breaking JSON persistence.
+		static Team? TryResolveThirdPlace(Stage stage, string combination)
+		{
+			try { return TournamentFormatRegistry.ForGroupCount(stage.Groups.Count).ResolveThirdPlaceQualifier(stage, combination); }
+			catch (InvalidOperationException) { return null; }
+		}
 	}
 
 	public override Team GetPlaceholder() => new() { Name = $"{FinalPlacement}. {Group?.Name ?? GroupId.ToString()}", ShortName = "TBD", Type = TeamType.PLACEHOLDER, };
