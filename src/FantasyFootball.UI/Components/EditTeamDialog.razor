@@ -44,9 +44,10 @@
   // we close the dialog. With OnKeyDown, closing mid-keystroke restores focus to
   // the Edit button — and the same keystroke (or its keyup) was re-triggering it,
   // reopening the dialog.
+  // Enter mirrors the Save button: only fires when there's something to save.
   void OnKeyUp(KeyboardEventArgs e)
   {
-    if (e.Key == "Enter") { Save(); }
+    if (e.Key == "Enter" && IsDirty) { Save(); }
   }
 
   // Returns the new Elo to the caller (TeamDetail page) which owns the

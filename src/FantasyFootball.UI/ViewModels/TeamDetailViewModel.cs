@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
-using FantasyFootball.UI.Helpers;
 using static FantasyFootball.Messaging;
 
 namespace FantasyFootball.UI.ViewModels;
