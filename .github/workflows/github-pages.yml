@@ -1,34 +1,57 @@
-name: github pages
+name: Deploy Web to GitHub Pages
 
-# Manual-trigger only for now. Flip to `push: branches: [main]` in Phase 4 of #10
-# once the Blazor WASM project (FantasyFootball.Web) is production-ready. Until
-# then the workflow exists so it can be run on demand via `gh workflow run github-pages`
-# without touching the public site.
+# Auto-deploys src/FantasyFootball.Web (Blazor WASM) to
+# https://stepkie.github.io/FantasyFootball/ on every push to main.
+# Manual trigger via workflow_dispatch is kept for one-off deploys.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
+# Required by actions/deploy-pages
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+# Serialize Pages deployments — never overlap two builds racing to publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4.3.1
         with:
           dotnet-version: 10.0.x
 
       - name: Install .NET WASM Build Tools
         run: dotnet workload install wasm-tools
 
-      - name: Publish BlazorWebAssembly Project
-        run: dotnet publish src/FantasyFootball.Web/FantasyFootball.Web.csproj -c:Release -p:GHPages=true -o dist/Web --nologo
+      # GHPages=true activates PublishSPAforGitHubPages.Build: rewrites <base href> to
+      # /FantasyFootball/ and emits a 404.html so deep links work on GitHub Pages.
+      - name: Publish Blazor WASM
+        run: dotnet publish src/FantasyFootball.Web/FantasyFootball.Web.csproj -c Release -p:GHPages=true -o dist/Web --nologo
 
-      - name: Commit wwwroot to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+      - name: Configure Pages
+        uses: actions/configure-pages@v5.0.0
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3.0.1
         with:
-          BRANCH: gh-pages
-          FOLDER: dist/Web/wwwroot
+          path: dist/Web/wwwroot
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5

@@ -137,9 +137,11 @@ also happen to be accessible) remain in scope under their non-a11y framing.
   and PR back to `develop`.
 - **`main`** is the release branch. When `develop` is release-ready, open a PR
   from `develop` → `main`, bump version, tag the merge commit (e.g. `0.3.0`).
-- **`gh-pages`** is force-pushed by `.github/workflows/github-pages.yml` on each
-  push to `main` once Phase 4 of the Blazor port (#10) flips the trigger from
-  `workflow_dispatch` to `push: branches: [main]`.
+- **GitHub Pages deployment** is handled by `.github/workflows/github-pages.yml`,
+  which auto-deploys on push to `main`. It uses the modern Pages-from-Actions
+  artifact pattern (`actions/configure-pages` + `upload-pages-artifact` +
+  `deploy-pages`) — no `gh-pages` branch involved. The repo's Pages source must
+  be set to "GitHub Actions" in Settings → Pages for the workflow to publish.
 - CI build/test (`.github/workflows/dotnet.yml`) runs only on push/PR to `main`.
   PRs to `develop` get the Claude auto-review but not the .NET build — verify
   locally before opening develop-targeted PRs.
