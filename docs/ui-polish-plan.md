@@ -409,7 +409,7 @@ Done:
 
 Still open (next session):
 
-- [ ] Keyboard navigation (full mapping; help overlay; About reference).
+- [x] Keyboard navigation (full mapping; help overlay; About reference).
 - [ ] Undo stack (in-memory, JSON-snapshot-per-action, capped at 50).
 - [ ] Just-finished game highlight (game row + standings rows pulse).
 - [ ] Score reveal animation.

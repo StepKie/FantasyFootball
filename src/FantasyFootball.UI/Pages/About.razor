@@ -1,4 +1,5 @@
 @page "/about"
+@using FantasyFootball.UI.Components
 
 <PageTitle>About — Fantasy Football</PageTitle>
 
@@ -14,27 +15,9 @@
   <div>
     <MudText Typo="Typo.subtitle1" Class="mb-2"><strong>Keyboard shortcuts</strong></MudText>
     <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
-      Documented here; will become active once keyboard navigation lands (planned for PR 3).
+      Active on the competition detail page. Press <kbd>?</kbd> there to open this list as an overlay.
     </MudText>
-    <MudSimpleTable Dense="true" Hover="false" Bordered="false" Striped="true" Style="max-width: 32rem;">
-      <thead>
-        <tr>
-          <th style="width: 9rem;">Key</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td><kbd>Space</kbd></td><td>Simulate next game</td></tr>
-        <tr><td><kbd>R</kbd> / <kbd>Shift+Space</kbd></td><td>Simulate round</td></tr>
-        <tr><td><kbd>S</kbd></td><td>Simulate stage</td></tr>
-        <tr><td><kbd>T</kbd></td><td>Simulate tournament</td></tr>
-        <tr><td><kbd>←</kbd> / <kbd>→</kbd></td><td>Prev / next round</td></tr>
-        <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Prev / next stage</td></tr>
-        <tr><td><kbd>Ctrl+Z</kbd> / <kbd>U</kbd></td><td>Undo last sim</td></tr>
-        <tr><td><kbd>Esc</kbd></td><td>Back to competitions</td></tr>
-        <tr><td><kbd>?</kbd></td><td>Show this help</td></tr>
-      </tbody>
-    </MudSimpleTable>
+    <KeyboardShortcuts />
   </div>
 
   <div>
