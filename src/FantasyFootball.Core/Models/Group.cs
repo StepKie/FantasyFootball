@@ -25,7 +25,6 @@ public class Group : NamedUniqueId
 	/// <see cref="StageId"/>, <see cref="Stage"/>, and <see cref="NamedUniqueId.Id"/>
 	/// are intentionally NOT copied — they're set post-construction by SQLite
 	/// (FK hydration) or by <c>CompetitionFactory.WireBackReferences</c>.
-	/// **Update this method whenever Group gains a new factory-settable property.**
 	/// </summary>
 	public Group ShallowClone() => new()
 	{
