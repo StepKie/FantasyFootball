@@ -72,10 +72,7 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		while (!round.IsFinished)
 		{
 			var current = round.CurrentGame!;
-			// Progress check: if SimulateGame can't advance the same game twice in a row,
-			// the round is stuck (typically a KoGame whose qualifier returned a placeholder
-			// because greedy 3rd-place allocation failed — issue #12). Bail rather than
-			// spinning forever and freezing the browser tab.
+			// Bail if CurrentGame doesn't progress — placeholder-team KO games would otherwise spin forever (issue #12).
 			if (ReferenceEquals(current, lastAttempted))
 			{
 				Log.Warning($"Round {round.Name}: game {current} stays non-ready; bailing out of sim loop.");
@@ -92,9 +89,7 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		if (!game.IsReadyToStart)
 		{
 			Log.Debug($"Game {game} is not ready to start...");
-			// Yield even on the early-return path so the browser stays responsive
-			// if any other caller spins on us — defence in depth against the freeze
-			// SimulateRound's progress-check now prevents.
+			// Yield even on early-return; defence in depth in case any caller spins on a non-ready game.
 			await Task.Yield();
 			return;
 		}

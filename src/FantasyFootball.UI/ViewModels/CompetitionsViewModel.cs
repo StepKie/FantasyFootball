@@ -78,13 +78,9 @@ public partial class CompetitionsViewModel : ObservableObject
 		var freshType = _dataService.SelectedCompetitionType;
 		if (SelectedCompetitionType != freshType)
 		{
-			// Setter triggers OnSelectedCompetitionTypeChanged → Reload, which refreshes
-			// ActiveCompetitions / FinishedCompetitions for the new type.
 			SelectedCompetitionType = freshType;
 		}
-		// Default to Active when there's something active OR when the user has
-		// nothing yet — Active's empty state has the "Press New" CTA, Finished's
-		// is dead-end text. Land on Finished only after some history exists.
+		// First-time users (no comps) land on Active — its empty state has the "Press New" CTA.
 		ActiveTabIndex = (ActiveCompetitions.Count > 0 || FinishedCompetitions.Count == 0) ? 0 : 1;
 	}
 
@@ -106,12 +102,8 @@ public partial class CompetitionsViewModel : ObservableObject
 
 			ActiveCompetitions = new ObservableCollection<Competition>(ofType.Where(c => !c.IsFinished));
 			FinishedCompetitions = new ObservableCollection<Competition>(ofType.Where(c => c.IsFinished));
-			// Reuse FinishedCompetitions so the "finished" predicate stays in one place.
 			OverallRecords = Standings.CreateFrom(FinishedCompetitions.SelectMany(c => c.GamesByDate));
-			// Re-pick the tab on every reload (including bus-driven ones like
-			// DataResetMessage fired while the user is already on this page).
-			// Same rule as SyncFromDataService: prefer Active when there's
-			// something to do or when nothing exists yet.
+			// Re-pick tab on every reload — DataResetMessage can fire while the user is on this page.
 			ActiveTabIndex = (ActiveCompetitions.Count > 0 || FinishedCompetitions.Count == 0) ? 0 : 1;
 		}
 		finally

@@ -39,14 +39,7 @@ public sealed class ExpandedWorldCupFormat : ITournamentFormat
 			.Take(AdvancingThirdPlaceCount)
 			.ToList();
 
-		// Backtracking assignment over the 8 slot × 8 team bipartite graph. The
-		// previous greedy ("most-constrained slot first, best team first") can
-		// lock out late slots whose only-eligible team was already picked, leaving
-		// the KO round stuck on placeholders (issue #12). Backtracking always
-		// finds a valid assignment if one exists; with 8×8 the search space is
-		// trivially small. NOT the FIFA-canonical 495-scenario mapping — that
-		// remains the canonical follow-up; here we just want any feasible draw
-		// so the bracket is playable.
+		// Backtracking over the 8×8 slot/team bipartite graph — greedy could lock out feasible assignments (issue #12). Not the FIFA-canonical 495-scenario map; any feasible draw will do.
 		var assignments = new Team?[_slots.Length];
 		var usedLetters = new HashSet<string>();
 		if (!TryAssign(0))

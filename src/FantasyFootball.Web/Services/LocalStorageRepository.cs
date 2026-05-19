@@ -139,9 +139,7 @@ public sealed class LocalStorageRepository : IRepository
     }
     catch (JsonException ex)
     {
-      // Quarantine the corrupt blob so the page renders rather than crashing,
-      // and stash the raw JSON in a sibling LocalStorage key for diagnosis.
-      // Reset Database (Settings) clears both.
+      // Quarantine the corrupt blob so the page renders; Settings → Reset clears both.
       try
       {
         var bad = KeyFor<T>() + ":corrupt-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
@@ -151,9 +149,7 @@ public sealed class LocalStorageRepository : IRepository
       }
       catch (Exception quarantineEx)
       {
-        // Quarantine SetItemAsString can throw QuotaExceededError when the
-        // browser's LocalStorage is full. Best-effort: remove the corrupt key
-        // anyway so the next load doesn't loop on it, and log loudly.
+        // SetItemAsString can throw QuotaExceededError when storage is full; best-effort cleanup.
         Log.Warning("[LocalStorageRepository] Quarantine write for {Bucket} failed: {Error}. Removing corrupt key and continuing with empty bucket.", typeof(T).Name, quarantineEx.Message);
         try { _localStorage.RemoveItem(KeyFor<T>()); }
         catch (Exception removeEx) { Log.Warning("[LocalStorageRepository] Could not remove corrupt {Bucket} key: {Error}. Corrupt data may persist on next load.", typeof(T).Name, removeEx.Message); }

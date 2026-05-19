@@ -73,16 +73,13 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		Competition = _repo.Get<Competition>(competitionId);
 		if (Competition is null) { return; }
 
-		// Sync the global selected-type so Back-to-Competitions lands on the same
-		// category we just left (and the Setup page's pre-filled type matches).
+		// Sync global type so Back-to-Competitions lands on the same category.
 		_dataService.SelectedCompetitionType = Competition.Type;
 
 		SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
 		SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
 
-		// Initial speed = Settings default mapped onto the nearest preset.
-		// ApplySpeedToSimulator below overwrites GameDelay from Speed.ToDelay(),
-		// so no need to pass a msGameDelay to the constructor.
+		// ApplySpeedToSimulator below sets the actual GameDelay from Speed.ToDelay().
 		Speed = SimulationSpeedExtensions.FromTimeSpan(_settings.SimulationSpeed);
 		_simulator = new CompetitionSimulator(Competition, _repo);
 		ApplySpeedToSimulator();
