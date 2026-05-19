@@ -104,7 +104,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.SimulateGame(Competition.CurrentGame);
 			_repo.Save(Competition);
 		}
-		finally { IsBusy = false; }
+		finally { OnSimBatchComplete(); }
 	}
 
 	public async Task SimulateRound()
@@ -116,7 +116,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
 			_repo.Save(Competition);
 		}
-		finally { IsBusy = false; }
+		finally { OnSimBatchComplete(); }
 	}
 
 	public async Task SimulateStage()
@@ -128,7 +128,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.SimulateStage(Competition.CurrentStage);
 			_repo.Save(Competition);
 		}
-		finally { IsBusy = false; }
+		finally { OnSimBatchComplete(); }
 	}
 
 	public async Task SimulateAll()
@@ -140,7 +140,26 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.Simulate();
 			_repo.Save(Competition);
 		}
-		finally { IsBusy = false; }
+		finally { OnSimBatchComplete(); }
+	}
+
+	/// <summary>
+	/// Post-sim-batch hook called from every <c>SimulateX</c> finally. Advances
+	/// Stage/Round to the current non-finished entry, re-publishes Competition
+	/// so the page rebinds, and clears <see cref="IsBusy"/>. OnGameFinished
+	/// keeps selection live in non-Quiet mode per game, but Quiet/Instant
+	/// suppresses those broadcasts — without this hook the page would still be
+	/// pinned to the round selected before the batch started.
+	/// </summary>
+	void OnSimBatchComplete()
+	{
+		if (Competition is not null)
+		{
+			SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
+			SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
+			OnPropertyChanged(nameof(Competition));
+		}
+		IsBusy = false;
 	}
 
 	public void Delete()

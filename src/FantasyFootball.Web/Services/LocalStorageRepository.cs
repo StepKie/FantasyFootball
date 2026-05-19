@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Blazored.LocalStorage;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
+using Serilog;
 
 namespace FantasyFootball.Web.Services;
 
@@ -144,7 +145,7 @@ public sealed class LocalStorageRepository : IRepository
       var bad = KeyFor<T>() + ":corrupt-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
       _localStorage.SetItemAsString(bad, raw);
       _localStorage.RemoveItem(KeyFor<T>());
-      Console.Error.WriteLine($"[LocalStorageRepository] Failed to deserialize {typeof(T).Name} bucket; corrupt blob moved to '{bad}'. Length={raw?.Length ?? 0}. Error: {ex.Message}");
+      Log.Warning("[LocalStorageRepository] Failed to deserialize {Bucket} bucket; corrupt blob moved to '{Quarantine}'. Length={Length}. Error: {Error}", typeof(T).Name, bad, raw?.Length ?? 0, ex.Message);
       items = [];
     }
     var bucket = items.ToDictionary(x => x.Id, x => (NamedUniqueId)x);

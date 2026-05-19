@@ -103,7 +103,8 @@ public partial class CompetitionsViewModel : ObservableObject
 
 			ActiveCompetitions = new ObservableCollection<Competition>(ofType.Where(c => !c.IsFinished));
 			FinishedCompetitions = new ObservableCollection<Competition>(ofType.Where(c => c.IsFinished));
-			OverallRecords = Standings.CreateFrom(ofType.Where(c => c.IsFinished).SelectMany(c => c.GamesByDate));
+			// Reuse FinishedCompetitions so the "finished" predicate stays in one place.
+			OverallRecords = Standings.CreateFrom(FinishedCompetitions.SelectMany(c => c.GamesByDate));
 		}
 		finally
 		{

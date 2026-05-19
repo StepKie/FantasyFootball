@@ -302,8 +302,8 @@ session-spanning context (bugs hit, what's fixed, what's left).
 - [x] Bug: third-place match populates winners, not losers.
 - [x] Kill Home page; `/` → `/competitions`.
 - [x] Kill H1s on all pages; add breadcrumb context line where useful.
-- [ ] **Merge Competitions + Statistics** into one page with Active /
-  Finished tabs. *(Deferred — the only PR 1 item not yet shipped.)*
+- [x] **Merge Competitions + Statistics** into one page with Active /
+  Finished tabs.
 - [x] About page reachable via `?` icon (placeholder content + keyboard
   help table that fills in once PR 3 lands).
 - [x] Constrain picker widths; type + year on one row.
