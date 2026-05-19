@@ -25,6 +25,8 @@ public partial class SettingsViewModel : ObservableObject
 
 		SelectedLanguage = settings.LastUsedLanguage;
 		SimulationSpeedMs = settings.SimulationSpeed.TotalMilliseconds;
+		SelectedFlagStyle = settings.FlagStyle;
+		UseOfficialCompetitionLogos = settings.UseOfficialCompetitionLogos;
 		SupportedLanguages = [new("en"), new("de")];
 	}
 
@@ -35,6 +37,12 @@ public partial class SettingsViewModel : ObservableObject
 
 	[ObservableProperty]
 	public partial double SimulationSpeedMs { get; set; }
+
+	[ObservableProperty]
+	public partial FlagStyle SelectedFlagStyle { get; set; }
+
+	[ObservableProperty]
+	public partial bool UseOfficialCompetitionLogos { get; set; }
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
@@ -53,6 +61,12 @@ public partial class SettingsViewModel : ObservableObject
 
 	partial void OnSimulationSpeedMsChanged(double value)
 		=> _settings.SimulationSpeed = TimeSpan.FromMilliseconds(value);
+
+	partial void OnSelectedFlagStyleChanged(FlagStyle value)
+		=> _settings.FlagStyle = value;
+
+	partial void OnUseOfficialCompetitionLogosChanged(bool value)
+		=> _settings.UseOfficialCompetitionLogos = value;
 
 	[RelayCommand]
 	async Task ResetDatabase()

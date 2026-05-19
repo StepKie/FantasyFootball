@@ -37,16 +37,9 @@
     </HeaderContent>
     <RowTemplate>
       <MudTd>@context.Rank</MudTd>
-      <MudTd>
-        @if (!string.IsNullOrEmpty(context.Team.Country?.Code2))
-        {
-          <img src="@FlagHelper.Url(context.Team.Country.Code2)"
-               alt="@context.Team.Country.Name"
-               style="width: 1.75rem; height: auto; vertical-align: middle;" />
-        }
-      </MudTd>
+      <MudTd><FlagIcon Team="context.Team" Size="24" /></MudTd>
       <MudTd>@context.Team.Name</MudTd>
-      <MudTd Style="text-align: right;">@context.Team.Elo</MudTd>
+      <MudTd Style="text-align: right;"><span class="elo-muted">@context.Team.Elo</span></MudTd>
     </RowTemplate>
   </MudTable>
 

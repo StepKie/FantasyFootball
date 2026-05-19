@@ -25,12 +25,9 @@ else
   <MudPaper Class="pa-4" Elevation="1">
     <MudGrid AlignItems="AlignItems.Center" Spacing="4">
       <MudItem xs="12" sm="3" md="2">
-        @if (!string.IsNullOrEmpty(ViewModel.Team.Country?.Code2))
-        {
-          <img src="@FlagHelper.Url(ViewModel.Team.Country.Code2)"
-               alt="@ViewModel.Team.Country.Name"
-               style="width: 100%; max-width: 7rem; height: auto;" />
-        }
+        <div style="width: 100%; max-width: 7rem;">
+          <FlagIcon Team="ViewModel.Team" Size="112" />
+        </div>
       </MudItem>
       <MudItem xs="12" sm="6" md="8">
         <MudText Typo="Typo.h5" HtmlTag="h1" GutterBottom="false">
@@ -41,7 +38,7 @@ else
           @ViewModel.Team.Country?.Confederation?.Continent
         </MudText>
         <MudText Typo="Typo.body1" Class="mt-2">
-          Rank <strong>#@ViewModel.Rank</strong> · Elo <strong>@ViewModel.Team.Elo</strong>
+          Rank <strong>#@ViewModel.Rank</strong> <span class="elo-muted">· Elo @ViewModel.Team.Elo</span>
         </MudText>
       </MudItem>
       <MudItem xs="12" sm="3" md="2" Class="d-flex justify-end">

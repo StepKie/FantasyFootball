@@ -1,0 +1,50 @@
+@using FantasyFootball.Data
+@using FantasyFootball.Services
+@inject ISettingsService Settings
+
+@if (FallbackIcon is { Length: > 0 } icon)
+{
+  @if (Settings.UseOfficialCompetitionLogos && OfficialPath is { } src)
+  {
+    @* Both layers render. img sits on top via CSS; if its src 404s, onerror hides it and the MudIcon underneath shows through — no broken-image placeholder. *@
+    <span class="comp-type-icon-stack" style="@StackStyle">
+      <MudIcon Icon="@icon" Style="@($"font-size: {Size}px;")" Color="Color.Inherit" Title="@AltText" />
+      <img src="@src" alt="@AltText" class="comp-type-icon-overlay" onerror="this.style.display='none';" />
+    </span>
+  }
+  else
+  {
+    <MudIcon Icon="@icon" Style="@($"font-size: {Size}px;")" Color="Color.Inherit" Title="@AltText" />
+  }
+}
+
+@code {
+  [Parameter] public CompetitionType Type { get; set; }
+  [Parameter] public int Size { get; set; } = 24;
+
+  // Material Icons used when the "official logos" flag is off OR the official file 404s. Default arm so an unhandled enum value still renders something.
+  string? FallbackIcon => Type switch
+  {
+    CompetitionType.WM => Icons.Material.Filled.EmojiEvents,
+    CompetitionType.EM => Icons.Material.Filled.Stars,
+    _ => Icons.Material.Filled.SportsSoccer,
+  };
+
+  // User drops their own assets under wwwroot/competition-icons/official/ (gitignored).
+  string? OfficialPath => Type switch
+  {
+    CompetitionType.WM => "competition-icons/official/wm.svg",
+    CompetitionType.EM => "competition-icons/official/em.svg",
+    _ => null,
+  };
+
+  // Human-readable alt/title — raw enum names ("WM", "EM") would be spelled out letter-by-letter by screen readers.
+  string AltText => Type switch
+  {
+    CompetitionType.WM => "FIFA World Cup",
+    CompetitionType.EM => "UEFA European Championship",
+    _ => Type.ToString(),
+  };
+
+  string StackStyle => $"width: {Size}px; height: {Size}px;";
+}

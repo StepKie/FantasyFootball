@@ -1,23 +1,29 @@
 @using FantasyFootball.Models
 
-<div class="d-flex align-center py-1" style="gap: 0.5rem;">
-  @if (Game.HomeTeam.Country?.Code2 is { Length: > 0 } homeCode)
-  {
-    <img src="@FlagHelper.Url(homeCode)" alt="@Game.HomeTeam.Name"
-         style="width: 1.5rem; height: auto;" />
-  }
-  <MudText Typo="Typo.body2" Style="flex: 1;">@Game.HomeTeam.Name</MudText>
-  <MudText Typo="Typo.body2" Style="min-width: 4rem; text-align: center; font-weight: bold;">
-    @Game.Result
-  </MudText>
-  <MudText Typo="Typo.body2" Style="flex: 1; text-align: right;">@Game.AwayTeam.Name</MudText>
-  @if (Game.AwayTeam.Country?.Code2 is { Length: > 0 } awayCode)
-  {
-    <img src="@FlagHelper.Url(awayCode)" alt="@Game.AwayTeam.Name"
-         style="width: 1.5rem; height: auto;" />
-  }
+<div class="scoreboard-row">
+  <div class="scoreboard-team scoreboard-team-home @TeamClass(HomeIsWinner)">
+    <span class="scoreboard-team-name">@Game.HomeTeam.Name</span>
+    <FlagIcon Team="Game.HomeTeam" Size="24" />
+  </div>
+  <div class="scoreboard-score @(HasResult ? "" : "scoreboard-pending")">@Game.Result</div>
+  <div class="scoreboard-team scoreboard-team-away @TeamClass(AwayIsWinner)">
+    <FlagIcon Team="Game.AwayTeam" Size="24" />
+    <span class="scoreboard-team-name">@Game.AwayTeam.Name</span>
+  </div>
 </div>
 
 @code {
   [Parameter] public Game Game { get; set; } = null!;
+
+  bool HasResult => Game.IsFinished;
+  bool IsDraw => HasResult && Game.Winner is null;
+  // Id compare instead of reference: NamedUniqueId overrides Equals but not operator==, and Winner from a deserialized graph could be a different instance.
+  bool HomeIsWinner => HasResult && Game.Winner?.Id == Game.HomeTeam.Id;
+  bool AwayIsWinner => HasResult && Game.Winner?.Id == Game.AwayTeam.Id;
+
+  // Winner: bolded. Loser: dimmed. Draw: both teams render at normal weight. Pre-game (no result): normal weight too.
+  string TeamClass(bool isThisSideWinner) =>
+    isThisSideWinner ? "scoreboard-winner" :
+    HasResult && !IsDraw ? "scoreboard-loser" :
+    "";
 }

@@ -16,6 +16,8 @@ public interface ISettingsService
 	string LastUsedCompetition { get; set; }
 	TimeSpan SimulationSpeed { get; set; }
 	public CultureInfo LastUsedLanguage { get; set; }
+	FlagStyle FlagStyle { get; set; }
+	bool UseOfficialCompetitionLogos { get; set; }
 
 	bool GetValueOrDefault(string key, bool defaultValue);
 	string GetValueOrDefault(string key, string defaultValue);

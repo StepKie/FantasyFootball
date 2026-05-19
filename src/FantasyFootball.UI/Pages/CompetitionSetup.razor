@@ -61,12 +61,7 @@
           @foreach (var team in group.Teams)
           {
             <div class="d-flex align-center mb-1" style="gap: 0.5rem;">
-              @if (team.Country?.Code2 is { Length: > 0 } code)
-              {
-                <img src="@FlagHelper.Url(code)"
-                     alt="@team.Country.Name"
-                     style="width: 1.5rem; height: auto;" />
-              }
+              <FlagIcon Team="team" Size="20" />
               <MudText Typo="Typo.body2">@team.Name</MudText>
               <MudSpacer />
               <MudText Typo="Typo.caption" Color="Color.Secondary">@team.Elo</MudText>
