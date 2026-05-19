@@ -1,7 +1,10 @@
 ﻿// Contains global usings imported into all files in the project
 global using System;
+global using System.Collections.Generic;
 global using System.Linq;
 global using System.Threading.Tasks;
+
+global using Res = FantasyFootball.Resources.AppResources;
 
 global using AwesomeAssertions;
 

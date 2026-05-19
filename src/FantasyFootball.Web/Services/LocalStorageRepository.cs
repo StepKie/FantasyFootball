@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Blazored.LocalStorage;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
+using Serilog;
 
 namespace FantasyFootball.Web.Services;
 
@@ -129,9 +130,32 @@ public sealed class LocalStorageRepository : IRepository
     if (_buckets.TryGetValue(typeof(T), out var cached)) return cached;
 
     var raw = _localStorage.GetItemAsString(KeyFor<T>());
-    var items = string.IsNullOrEmpty(raw)
-      ? []
-      : JsonSerializer.Deserialize<List<T>>(raw, JsonOptions) ?? [];
+    List<T> items;
+    try
+    {
+      items = string.IsNullOrEmpty(raw)
+        ? []
+        : JsonSerializer.Deserialize<List<T>>(raw, JsonOptions) ?? [];
+    }
+    catch (JsonException ex)
+    {
+      // Quarantine the corrupt blob so the page renders; Settings → Reset clears both.
+      try
+      {
+        var bad = KeyFor<T>() + ":corrupt-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+        _localStorage.SetItemAsString(bad, raw!);
+        _localStorage.RemoveItem(KeyFor<T>());
+        Log.Warning("[LocalStorageRepository] Failed to deserialize {Bucket} bucket; corrupt blob moved to '{Quarantine}'. Length={Length}. Error: {Error}", typeof(T).Name, bad, raw!.Length, ex.Message);
+      }
+      catch (Exception quarantineEx)
+      {
+        // SetItemAsString can throw QuotaExceededError when storage is full; best-effort cleanup.
+        Log.Warning("[LocalStorageRepository] Quarantine write for {Bucket} failed: {Error}. Removing corrupt key and continuing with empty bucket.", typeof(T).Name, quarantineEx.Message);
+        try { _localStorage.RemoveItem(KeyFor<T>()); }
+        catch (Exception removeEx) { Log.Warning("[LocalStorageRepository] Could not remove corrupt {Bucket} key: {Error}. Corrupt data may persist on next load.", typeof(T).Name, removeEx.Message); }
+      }
+      items = [];
+    }
     var bucket = items.ToDictionary(x => x.Id, x => (NamedUniqueId)x);
     _buckets[typeof(T)] = bucket;
     return bucket;

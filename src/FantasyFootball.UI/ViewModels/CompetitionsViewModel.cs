@@ -10,14 +10,14 @@ using static FantasyFootball.Messaging;
 namespace FantasyFootball.UI.ViewModels;
 
 /// <summary>
-/// Backs the /competitions list page. Shows past competitions filtered by
-/// CompetitionType. Row click navigation (to /competitions/{id}) and the
-/// Start-new button (to /competitions/setup) are handled by the .razor page;
-/// this VM only owns the type filter + the filtered roster.
+/// Backs the merged /competitions page (Active + Finished tabs, plus the
+/// all-time TeamRecord aggregate that used to live on /statistics). Owns the
+/// CompetitionType filter; row navigation and the Start-new button are
+/// handled by the .razor page.
 ///
-/// MAUI's FantasyFootball.ViewModels.CompetitionsViewModel doubles as the
-/// navigation coordinator (calls Shell.Current.GoToAsync on row select).
-/// The web port pushes that into the page — the VM stays pure state.
+/// MAUI splits this into CompetitionsViewModel + StatisticsViewModel; the
+/// web port collapses them since both halves are filtered by the same
+/// CompetitionType and render on one screen.
 /// </summary>
 public partial class CompetitionsViewModel : ObservableObject
 {
@@ -29,13 +29,13 @@ public partial class CompetitionsViewModel : ObservableObject
 		_repo = repo;
 		_dataService = dataService;
 
-		// Reload list when a simulation finishes (broadcast from CompetitionSimulator),
-		// so navigating back to /competitions after a sim shows fresh data.
-		MessageBus.Register<CompetitionFinishedMessage>(this, (_, _) => ReloadCompetitions());
-		MessageBus.Register<DataResetMessage>(this, (_, _) => ReloadCompetitions());
+		MessageBus.Register<CompetitionCreatedMessage>(this, (_, _) => Reload());
+		MessageBus.Register<CompetitionFinishedMessage>(this, (_, _) => Reload());
+		MessageBus.Register<CompetitionDeletedMessage>(this, (_, _) => Reload());
+		MessageBus.Register<DataResetMessage>(this, (_, _) => Reload());
 
 		SelectedCompetitionType = dataService.SelectedCompetitionType;
-		ReloadCompetitions();
+		Reload();
 	}
 
 	// Only WM + EM ship implementations today — CHAMPIONS_LEAGUE and DOMESTIC_LEAGUE
@@ -46,26 +46,67 @@ public partial class CompetitionsViewModel : ObservableObject
 	public partial CompetitionType SelectedCompetitionType { get; set; }
 
 	[ObservableProperty]
-	public partial ObservableCollection<Competition> StoredCompetitionsForSelectedType { get; set; } = [];
+	public partial ObservableCollection<Competition> ActiveCompetitions { get; set; } = [];
+
+	[ObservableProperty]
+	public partial ObservableCollection<Competition> FinishedCompetitions { get; set; } = [];
+
+	[ObservableProperty]
+	public partial IList<TeamRecord> OverallRecords { get; set; } = [];
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
 
+	/// <summary>
+	/// Active / Finished tab selection. Auto-defaults on navigation:
+	/// 0 (Active) when at least one active competition of the selected type
+	/// exists, otherwise 1 (Finished) — so navigating back from a finished
+	/// competition lands on the tab that actually has content.
+	/// </summary>
+	[ObservableProperty]
+	public partial int ActiveTabIndex { get; set; }
+
+	/// <summary>
+	/// Refresh the type filter from <see cref="IDataService"/> and auto-select
+	/// the tab based on what's currently available. The VM is registered
+	/// <c>AddScoped</c>, so without this call the filter stays on whatever was
+	/// picked at first navigation — even if the user has since viewed a
+	/// competition of a different type elsewhere.
+	/// </summary>
+	public void SyncFromDataService()
+	{
+		var freshType = _dataService.SelectedCompetitionType;
+		if (SelectedCompetitionType != freshType)
+		{
+			SelectedCompetitionType = freshType;
+		}
+		AutoSelectTab();
+	}
+
+	// First-time users (no comps) land on Active — its empty state has the "Press New" CTA.
+	void AutoSelectTab() => ActiveTabIndex = (ActiveCompetitions.Count > 0 || FinishedCompetitions.Count == 0) ? 0 : 1;
+
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
 	{
 		_dataService.SelectedCompetitionType = value;
-		ReloadCompetitions();
+		Reload();
 	}
 
-	public void ReloadCompetitions()
+	public void Reload()
 	{
 		IsBusy = true;
 		try
 		{
-			var filtered = _repo.GetAll<Competition>()
+			var ofType = _repo.GetAll<Competition>()
 				.Where(c => c.Type == SelectedCompetitionType)
-				.OrderByDescending(c => c.SimulationStart);
-			StoredCompetitionsForSelectedType = new ObservableCollection<Competition>(filtered);
+				.OrderByDescending(c => c.SimulationStart)
+				.ToList();
+
+			ActiveCompetitions = new ObservableCollection<Competition>(ofType.Where(c => !c.IsFinished));
+			FinishedCompetitions = new ObservableCollection<Competition>(ofType.Where(c => c.IsFinished));
+			OverallRecords = Standings.CreateFrom(FinishedCompetitions.SelectMany(c => c.GamesByDate));
+			// Re-pick tab on every reload — DataResetMessage can fire while the user is on this page.
+			AutoSelectTab();
 		}
 		finally
 		{

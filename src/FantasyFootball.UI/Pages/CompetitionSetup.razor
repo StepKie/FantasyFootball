@@ -16,34 +16,27 @@
 </MudButton>
 
 <MudStack Spacing="3">
-  <MudText Typo="Typo.h3" HtmlTag="h1">New competition</MudText>
-
-  <MudGrid Spacing="2">
-    <MudItem xs="12" sm="6">
-      <MudSelect T="CompetitionType"
-                 Label="Competition"
-                 Value="ViewModel.SelectedCompetitionType"
-                 ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)"
-                 FullWidth="true">
-        @foreach (var t in ViewModel.CompetitionTypes)
-        {
-          <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
-        }
-      </MudSelect>
-    </MudItem>
-    <MudItem xs="12" sm="6">
-      <MudSelect T="int"
-                 Label="Year"
-                 Value="ViewModel.SelectedYear"
-                 ValueChanged="@(v => ViewModel.SelectedYear = v)"
-                 FullWidth="true">
-        @foreach (var year in ViewModel.Years)
-        {
-          <MudSelectItem Value="@year">@year</MudSelectItem>
-        }
-      </MudSelect>
-    </MudItem>
-  </MudGrid>
+  <MudStack Row="true" Spacing="2" Style="max-width: 40rem;">
+    <MudSelect T="CompetitionType"
+               Label="Competition"
+               Value="ViewModel.SelectedCompetitionType"
+               ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)">
+      @foreach (var t in ViewModel.CompetitionTypes)
+      {
+        <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
+      }
+    </MudSelect>
+    <MudSelect T="int"
+               Label="Year"
+               Value="ViewModel.SelectedYear"
+               ValueChanged="@(v => ViewModel.SelectedYear = v)"
+               Style="max-width: 10rem;">
+      @foreach (var year in ViewModel.Years)
+      {
+        <MudSelectItem Value="@year">@year</MudSelectItem>
+      }
+    </MudSelect>
+  </MudStack>
 
   <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap">
     <MudButton Variant="Variant.Outlined"
@@ -100,7 +93,13 @@
 </MudStack>
 
 @code {
-  protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
+  protected override void OnInitialized()
+  {
+    ViewModel.PropertyChanged += OnVmChanged;
+    // ViewModel is AddScoped (per-tab singleton); refresh from IDataService on
+    // each navigation so the picker reflects the currently-selected type/year.
+    ViewModel.SyncFromDataService();
+  }
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
 

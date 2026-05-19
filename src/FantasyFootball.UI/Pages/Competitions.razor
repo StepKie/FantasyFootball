@@ -1,3 +1,4 @@
+@page "/"
 @page "/competitions"
 @using FantasyFootball.Data
 @using FantasyFootball.Models
@@ -9,14 +10,12 @@
 <PageTitle>Competitions — Fantasy Football</PageTitle>
 
 <MudStack Spacing="3">
-  <MudText Typo="Typo.h3" HtmlTag="h1">Competitions</MudText>
-
   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
     <MudSelect T="CompetitionType"
                Label="Competition"
                Value="ViewModel.SelectedCompetitionType"
                ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)"
-               FullWidth="true">
+               Style="max-width: 20rem;">
       @foreach (var t in ViewModel.CompetitionTypes)
       {
         <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
@@ -24,50 +23,134 @@
     </MudSelect>
     <MudButton Variant="Variant.Filled"
                Color="Color.Primary"
-               StartIcon="@Icons.Material.Filled.PlayArrow"
+               StartIcon="@Icons.Material.Filled.Add"
                OnClick="StartNew">
-      Start new
+      New
     </MudButton>
   </MudStack>
 
-  <MudTable Items="ViewModel.StoredCompetitionsForSelectedType"
-            T="Competition"
-            Loading="ViewModel.IsBusy"
-            Hover="true"
-            Dense="true"
-            Breakpoint="Breakpoint.None"
-            OnRowClick="OnRowClick">
-    <NoRecordsContent>
-      <MudText Typo="Typo.body2" Color="Color.Secondary">
-        No @DisplayName(ViewModel.SelectedCompetitionType) competitions yet. Press <strong>Start new</strong> to simulate one.
-      </MudText>
-    </NoRecordsContent>
-    <HeaderContent>
-      <MudTh Style="width: 4rem;">#</MudTh>
-      <MudTh>Name</MudTh>
-      <MudTh Style="width: 10rem;">Started</MudTh>
-      <MudTh Style="width: 2.5rem;"></MudTh>
-      <MudTh>Status</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-      <MudTd>@context.Id</MudTd>
-      <MudTd>@context.ShortName</MudTd>
-      <MudTd>@context.SimulationStart.ToString("g")</MudTd>
-      <MudTd>
-        @if (context.Winner?.Country?.Code2 is { Length: > 0 } code)
+  <MudTabs Elevation="0" Rounded="true" Border="false" ApplyEffectsToContainer="true" PanelClass="pa-0 pt-3"
+           ActivePanelIndex="ViewModel.ActiveTabIndex"
+           ActivePanelIndexChanged="@(i => ViewModel.ActiveTabIndex = i)">
+    <MudTabPanel Text="@($"Active ({ViewModel.ActiveCompetitions.Count})")">
+      <MudTable Items="ViewModel.ActiveCompetitions"
+                T="Competition"
+                Loading="ViewModel.IsBusy"
+                Hover="true"
+                Dense="true"
+                Breakpoint="Breakpoint.None"
+                OnRowClick="OnRowClick">
+        <NoRecordsContent>
+          <MudText Typo="Typo.body2" Color="Color.Secondary">
+            No active @DisplayName(ViewModel.SelectedCompetitionType) competitions. Press <strong>New</strong> to simulate one.
+          </MudText>
+        </NoRecordsContent>
+        <HeaderContent>
+          <MudTh Style="width: 4rem;">#</MudTh>
+          <MudTh>Name</MudTh>
+          <MudTh Style="width: 10rem;">Started</MudTh>
+          <MudTh>Status</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+          <MudTd>@context.Id</MudTd>
+          <MudTd>@context.ShortName</MudTd>
+          <MudTd>@context.SimulationStart.ToString("g")</MudTd>
+          <MudTd>@context.CurrentStatus</MudTd>
+        </RowTemplate>
+      </MudTable>
+    </MudTabPanel>
+
+    <MudTabPanel Text="@($"Finished ({ViewModel.FinishedCompetitions.Count})")">
+      <MudStack Spacing="4">
+        <MudTable Items="ViewModel.FinishedCompetitions"
+                  T="Competition"
+                  Loading="ViewModel.IsBusy"
+                  Hover="true"
+                  Dense="true"
+                  Breakpoint="Breakpoint.None"
+                  OnRowClick="OnRowClick">
+          <NoRecordsContent>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+              No finished @DisplayName(ViewModel.SelectedCompetitionType) competitions yet.
+            </MudText>
+          </NoRecordsContent>
+          <HeaderContent>
+            <MudTh Style="width: 4rem;">#</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh Style="width: 10rem;">Started</MudTh>
+            <MudTh Style="width: 2.5rem;"></MudTh>
+            <MudTh>Winner</MudTh>
+          </HeaderContent>
+          <RowTemplate>
+            <MudTd>@context.Id</MudTd>
+            <MudTd>@context.ShortName</MudTd>
+            <MudTd>@context.SimulationStart.ToString("g")</MudTd>
+            <MudTd>
+              @if (context.Winner?.Country?.Code2 is { Length: > 0 } code)
+              {
+                <img src="@FlagHelper.Url(code)"
+                     alt="@context.Winner.Country.Name"
+                     style="width: 1.75rem; height: auto; vertical-align: middle;" />
+              }
+            </MudTd>
+            <MudTd>@context.Winner?.Name</MudTd>
+          </RowTemplate>
+        </MudTable>
+
+        @if (ViewModel.OverallRecords.Count > 0)
         {
-          <img src="@FlagHelper.Url(code)"
-               alt="@context.Winner.Country.Name"
-               style="width: 1.75rem; height: auto; vertical-align: middle;" />
+          <div>
+            <MudText Typo="Typo.subtitle1" Class="mb-2">All-time standings</MudText>
+            <MudTable Items="ViewModel.OverallRecords"
+                      T="TeamRecord"
+                      Hover="true"
+                      Dense="true"
+                      Breakpoint="Breakpoint.None">
+              <HeaderContent>
+                <MudTh Style="width: 2.5rem;">#</MudTh>
+                <MudTh Style="width: 2.5rem;"></MudTh>
+                <MudTh>Team</MudTh>
+                <MudTh Style="width: 3rem; text-align: right;">G</MudTh>
+                <MudTh Style="width: 4rem; text-align: right;">Goals</MudTh>
+                <MudTh Style="width: 3rem; text-align: right;">GD</MudTh>
+                <MudTh Style="width: 3rem; text-align: right;">Pts</MudTh>
+                <MudTh Style="width: 3rem; text-align: right;">PPG</MudTh>
+                <MudTh Style="width: 3rem; text-align: right;">W</MudTh>
+              </HeaderContent>
+              <RowTemplate>
+                <MudTd>@context.Position</MudTd>
+                <MudTd>
+                  @if (context.Team.Country?.Code2 is { Length: > 0 } code)
+                  {
+                    <img src="@FlagHelper.Url(code)" alt="@context.Team.Country.Name"
+                         style="width: 1.5rem; height: auto; vertical-align: middle;" />
+                  }
+                </MudTd>
+                <MudTd>@context.Team.Name</MudTd>
+                <MudTd Style="text-align: right;">@context.MatchesPlayed</MudTd>
+                <MudTd Style="text-align: right;">@context.GoalsFor:@context.GoalsAgainst</MudTd>
+                <MudTd Style="text-align: right;">@context.GoalDifference</MudTd>
+                <MudTd Style="text-align: right; font-weight: bold;">@context.Points</MudTd>
+                <MudTd Style="text-align: right;">@context.AveragePointsPerGame.ToString("F2")</MudTd>
+                <MudTd Style="text-align: right; font-weight: bold;">@context.CompetitionWins</MudTd>
+              </RowTemplate>
+            </MudTable>
+          </div>
         }
-      </MudTd>
-      <MudTd>@context.CurrentStatus</MudTd>
-    </RowTemplate>
-  </MudTable>
+      </MudStack>
+    </MudTabPanel>
+  </MudTabs>
 </MudStack>
 
 @code {
-  protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
+  protected override void OnInitialized()
+  {
+    ViewModel.PropertyChanged += OnVmChanged;
+    // VM is AddScoped (per-tab singleton). Refresh the type filter from
+    // IDataService and auto-pick the tab on every navigation so Back-to-Competitions
+    // lands on the same category we just left and on the tab with content.
+    ViewModel.SyncFromDataService();
+  }
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
 

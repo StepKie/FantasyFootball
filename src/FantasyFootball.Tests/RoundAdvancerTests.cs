@@ -45,6 +45,52 @@ public class RoundAdvancerTests(ITestOutputHelper output) : BaseTest(output, lev
 	}
 
 	[Fact]
+	public async Task ExpandedWorldCupFormat_50RandomizedRuns_AllR32SlotsFilledWithCanonicalThirdPlace()
+	{
+		// Randomised property test: 50 independent WC 2026 simulations. For each run,
+		// verify the R32 has 32 distinct non-placeholder teams AND the 8 third-place
+		// qualifiers are exactly the top-8 third-place finishers by standings tiebreak.
+		// Greedy slot-fill heuristics can succeed on most random inputs but fail on
+		// adversarial standings (the live bug surfaced as TBD placeholders in the
+		// R32). 50 independent random runs explore enough of the standings space to
+		// hit failure cases the deterministic fixture-style tests miss.
+		const int Runs = 50;
+		for (var run = 0; run < Runs; run++)
+		{
+			var wm = CompetitionFactory.Default(CompetitionType.WM, DataService, 2026).Create();
+			var simulator = new CompetitionSimulator(wm, Repo, msGameDelay: 0);
+			await simulator.SimulateStage(wm.Stages[0]);
+
+			var r32 = wm.Stages[1].Rounds.First();
+			var participants = r32.KoGames.SelectMany<KoGame, Team>(g => [g.HomeTeam, g.AwayTeam]).ToList();
+
+			participants.Should().HaveCount(32, $"run {run}: R32 has 32 slots");
+			participants.Should().NotContain(t => t.Type == TeamType.PLACEHOLDER, $"run {run}: every R32 slot must resolve to a real team");
+			participants.Should().OnlyHaveUniqueItems($"run {run}: each R32 slot must be a distinct team");
+
+			// Canonical-advancer property: the 8 third-place qualifiers must be exactly
+			// the top-8 third-place finishers (by points → GD → GF, the standing's
+			// IComparable order), and the bottom-4 must NOT appear.
+			var thirdPlaceRanked = wm.Groups
+				.Select(g => g.GetStandings()[2])
+				.OrderByDescending(r => r)
+				.ToList();
+			var topEight = thirdPlaceRanked.Take(8).Select(r => r.Team).ToHashSet();
+			var bottomFour = thirdPlaceRanked.Skip(8).Select(r => r.Team).ToHashSet();
+
+			var thirdPlaceAdvancers = r32.KoGames
+				.SelectMany<KoGame, Qualifier>(g => [g.HomeQualifier, g.AwayQualifier])
+				.OfType<GroupQualifier>()
+				.Where(q => q.FinalPlacement == 3)
+				.Select(q => q.Get()!)
+				.ToList();
+			thirdPlaceAdvancers.Should().HaveCount(8, $"run {run}: R32 has 8 third-place slots");
+			thirdPlaceAdvancers.Should().OnlyContain(t => topEight.Contains(t), $"run {run}: only the 8 best third-place finishers advance");
+			thirdPlaceAdvancers.Should().NotContain(t => bottomFour.Contains(t), $"run {run}: the 4 worst third-place finishers must not advance");
+		}
+	}
+
+	[Fact]
 	public async Task ExpandedWorldCupFormat_FullSimulationProducesDistinctR32Teams()
 	{
 		// End-to-end: every simulated 2026 tournament must produce a R32 with 32 unique participants.

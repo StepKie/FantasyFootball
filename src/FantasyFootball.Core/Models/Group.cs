@@ -19,4 +19,16 @@ public class Group : NamedUniqueId
 	public IList<Game> Games => Stage.Games.Where(g => Teams.Contains(g.HomeTeam!) && Teams.Contains(g.AwayTeam!)).ToList();
 
 	[Ignore] public bool IsFinished => Games.All(g => g.IsFinished);
+
+	/// <summary>
+	/// Copies all factory-settable properties to a new Group instance.
+	/// <see cref="StageId"/>, <see cref="Stage"/>, and <see cref="NamedUniqueId.Id"/>
+	/// are intentionally NOT copied — they're set post-construction by SQLite
+	/// (FK hydration) or by <c>CompetitionFactory.WireBackReferences</c>.
+	/// </summary>
+	public Group ShallowClone() => new()
+	{
+		Name = Name,
+		Teams = [.. Teams],
+	};
 }

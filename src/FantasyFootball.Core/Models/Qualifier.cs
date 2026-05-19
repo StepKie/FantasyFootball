@@ -18,6 +18,14 @@ public abstract class Qualifier : NamedUniqueId
 	public abstract Team? Get();
 	public abstract Team GetPlaceholder();
 
+	/// <summary>
+	/// UI-convenience getter that falls back to a placeholder Team when the qualifier
+	/// can't yet resolve (group stage in progress, or — rarely — a greedy 3rd-place
+	/// allocation that can't fit). <see cref="IgnoreAttribute"/> so it stays out of
+	/// the persisted JSON: serializing a getter that can throw on a partially-built
+	/// graph would surface as an unhandled exception during Save.
+	/// </summary>
+	[Ignore]
 	public Team QualifiedTeam => Get() ?? GetPlaceholder();
 
 	public static GroupQualifier FromGroup(int groupNo, int place) => new() { GroupId = groupNo, FinalPlacement = place, };

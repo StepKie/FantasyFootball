@@ -23,13 +23,15 @@ public partial class CompetitionDetailViewModel : ObservableObject
 {
 	readonly IRepository _repo;
 	readonly ISettingsService _settings;
+	readonly IDataService _dataService;
 
 	CompetitionSimulator? _simulator;
 
-	public CompetitionDetailViewModel(IRepository repo, ISettingsService settings)
+	public CompetitionDetailViewModel(IRepository repo, ISettingsService settings, IDataService dataService)
 	{
 		_repo = repo;
 		_settings = settings;
+		_dataService = dataService;
 
 		MessageBus.Register<GameFinishedMessage>(this, (_, msg) => OnGameFinished(msg.FinishedGame));
 	}
@@ -51,6 +53,15 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
 
+	/// <summary>
+	/// Per-session speed override for sim actions. Defaults to the Settings value
+	/// on Load; the page's speed control mutates it for the current visit only.
+	/// `Instant` short-circuits the inter-game delay and suppresses per-game
+	/// re-render messages — a 72-game group stage renders once, not 72 times.
+	/// </summary>
+	[ObservableProperty]
+	public partial SimulationSpeed Speed { get; set; } = SimulationSpeed.Normal;
+
 	public IList<Stage> Stages => Competition?.Stages ?? [];
 	public IList<Round> Rounds => SelectedStage?.Rounds ?? [];
 	public IList<Group> Groups => Competition?.Groups ?? [];
@@ -62,10 +73,25 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		Competition = _repo.Get<Competition>(competitionId);
 		if (Competition is null) { return; }
 
+		// Sync global type so Back-to-Competitions lands on the same category.
+		_dataService.SelectedCompetitionType = Competition.Type;
+
 		SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
 		SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
 
-		_simulator = new CompetitionSimulator(Competition, _repo, (int)_settings.SimulationSpeed.TotalMilliseconds);
+		// ApplySpeedToSimulator below sets the actual GameDelay from Speed.ToDelay().
+		Speed = SimulationSpeedExtensions.FromTimeSpan(_settings.SimulationSpeed);
+		_simulator = new CompetitionSimulator(Competition, _repo);
+		ApplySpeedToSimulator();
+	}
+
+	partial void OnSpeedChanged(SimulationSpeed value) => ApplySpeedToSimulator();
+
+	void ApplySpeedToSimulator()
+	{
+		if (_simulator is null) { return; }
+		_simulator.GameDelay = Speed.ToDelay();
+		_simulator.Quiet = Speed == SimulationSpeed.Instant;
 	}
 
 	public async Task SimulateGame()
@@ -77,7 +103,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.SimulateGame(Competition.CurrentGame);
 			_repo.Save(Competition);
 		}
-		finally { IsBusy = false; }
+		finally { OnSimBatchComplete(); }
 	}
 
 	public async Task SimulateRound()
@@ -89,7 +115,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
 			_repo.Save(Competition);
 		}
-		finally { IsBusy = false; }
+		finally { OnSimBatchComplete(); }
 	}
 
 	public async Task SimulateStage()
@@ -101,7 +127,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.SimulateStage(Competition.CurrentStage);
 			_repo.Save(Competition);
 		}
-		finally { IsBusy = false; }
+		finally { OnSimBatchComplete(); }
 	}
 
 	public async Task SimulateAll()
@@ -113,14 +139,35 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.Simulate();
 			_repo.Save(Competition);
 		}
-		finally { IsBusy = false; }
+		finally { OnSimBatchComplete(); }
+	}
+
+	/// <summary>
+	/// Post-sim-batch hook called from every <c>SimulateX</c> finally. Advances
+	/// Stage/Round to the current non-finished entry, re-publishes Competition
+	/// so the page rebinds, and clears <see cref="IsBusy"/>. OnGameFinished
+	/// keeps selection live in non-Quiet mode per game, but Quiet/Instant
+	/// suppresses those broadcasts — without this hook the page would still be
+	/// pinned to the round selected before the batch started.
+	/// </summary>
+	void OnSimBatchComplete()
+	{
+		if (Competition is not null)
+		{
+			SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
+			SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
+			OnPropertyChanged(nameof(Competition));
+		}
+		IsBusy = false;
 	}
 
 	public void Delete()
 	{
 		if (Competition is null) { return; }
+		var deletedId = Competition.Id;
 		_repo.Delete(Competition);
 		Competition = null;
+		MessageBus.Send(new CompetitionDeletedMessage(deletedId));
 	}
 
 	void OnGameFinished(Game finished)

@@ -59,6 +59,9 @@ public abstract class CompetitionFactory
 	{
 		if (Groups is null || Groups.Count == 0) { throw new InvalidOperationException("Groups must be not empty or initialized before calling Create()"); }
 
+		// Defensive clone: callers (CompetitionSetupViewModel) reuse the same Groups list across Creates; without this, WireBackReferences for the second Competition would overwrite group.Stage for the first and corrupt the saved JSON.
+		Groups = [.. Groups.Select(g => g.ShallowClone())];
+
 		Competition competition = new()
 		{
 			Name = $"{CompetitionType.Name().Long} {StartDate.Year}",

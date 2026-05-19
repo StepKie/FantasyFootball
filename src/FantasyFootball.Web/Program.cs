@@ -24,7 +24,6 @@ builder.Services.AddScoped<TeamDetailViewModel>();
 builder.Services.AddScoped<CompetitionsViewModel>();
 builder.Services.AddScoped<CompetitionSetupViewModel>();
 builder.Services.AddScoped<CompetitionDetailViewModel>();
-builder.Services.AddScoped<StatisticsViewModel>();
 
 var app = builder.Build();
 
