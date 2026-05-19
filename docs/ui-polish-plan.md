@@ -410,7 +410,8 @@ Done:
 Still open (next session):
 
 - [x] Keyboard navigation (full mapping; help overlay; About reference).
-- [x] Undo stack (in-memory, JSON-snapshot-per-action, capped at 50).
+- [x] Undo stack (in-memory, per-game snapshot, capped at 50; UI attaches the
+  Undo button to the row of the just-simmed game).
 - [ ] Just-finished game highlight (game row + standings rows pulse).
 - [ ] Score reveal animation.
 - [ ] Standings row reorder via FLIP.

@@ -33,71 +33,30 @@ else
       <MudText Typo="Typo.h5" HtmlTag="h1">
         @ViewModel.Competition.ShortName <span style="opacity: 0.6;">#@ViewModel.Competition.Id</span>
       </MudText>
+      @if (!ViewModel.IsFinished)
+      {
+        <MudIconButton Icon="@Icons.Material.Filled.DoubleArrow"
+                       Size="Size.Small"
+                       OnClick="@(async () => await ViewModel.SimulateAll())"
+                       Disabled="ViewModel.IsBusy"
+                       title="Simulate tournament (T)" />
+      }
+      @if (ViewModel.IsBusy)
+      {
+        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+      }
       @if (ViewModel.IsFinished && ViewModel.Winner is not null)
       {
         <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.EmojiEvents" Size="Size.Small">
           Winner: @ViewModel.Winner.Name
         </MudChip>
       }
+      <MudSpacer />
+      <MudIconButton Icon="@Icons.Material.Filled.Keyboard"
+                     Size="Size.Small"
+                     OnClick="@(() => _helpOpen = true)"
+                     title="Quick settings &amp; keyboard shortcuts (H or ?)" />
     </MudStack>
-
-    @if (!ViewModel.IsFinished)
-    {
-      <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap" AlignItems="AlignItems.Center">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                   StartIcon="@Icons.Material.Filled.PlayArrow"
-                   OnClick="@(async () => await ViewModel.SimulateGame())"
-                   Disabled="ViewModel.IsBusy">
-          Game
-        </MudButton>
-        <MudButton Variant="Variant.Outlined"
-                   StartIcon="@Icons.Material.Filled.SkipNext"
-                   OnClick="@(async () => await ViewModel.SimulateRound())"
-                   Disabled="ViewModel.IsBusy">
-          Round
-        </MudButton>
-        <MudButton Variant="Variant.Outlined"
-                   StartIcon="@Icons.Material.Filled.FastForward"
-                   OnClick="@(async () => await ViewModel.SimulateStage())"
-                   Disabled="ViewModel.IsBusy">
-          Stage
-        </MudButton>
-        <MudButton Variant="Variant.Outlined"
-                   StartIcon="@Icons.Material.Filled.DoubleArrow"
-                   OnClick="@(async () => await ViewModel.SimulateAll())"
-                   Disabled="ViewModel.IsBusy">
-          Tournament
-        </MudButton>
-        <MudIconButton Icon="@Icons.Material.Filled.Undo"
-                       Size="Size.Small"
-                       OnClick="@(() => ViewModel.Undo())"
-                       Disabled="@(!ViewModel.CanUndo || ViewModel.IsBusy)"
-                       title="Undo last simulated game (Ctrl+Z or U)" />
-        @if (ViewModel.IsBusy)
-        {
-          <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-        }
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.Keyboard"
-                       Size="Size.Small"
-                       OnClick="@(() => _helpOpen = true)"
-                       title="Keyboard shortcuts (H or ?)" />
-        <MudToggleGroup T="SimulationSpeed"
-                        Value="ViewModel.Speed"
-                        ValueChanged="@((SimulationSpeed v) => ViewModel.Speed = v)"
-                        Size="Size.Small"
-                        Color="Color.Primary"
-                        CheckMark="false"
-                        SelectionMode="SelectionMode.SingleSelection"
-                        Disabled="ViewModel.IsBusy"
-                        title="Simulation speed (overrides Settings for this session)">
-          <MudToggleItem Value="SimulationSpeed.Slow" Text="🐢" />
-          <MudToggleItem Value="SimulationSpeed.Normal" Text="▶" />
-          <MudToggleItem Value="SimulationSpeed.Fast" Text="🐇" />
-          <MudToggleItem Value="SimulationSpeed.Instant" Text="⚡" />
-        </MudToggleGroup>
-      </MudStack>
-    }
 
     <MudGrid Spacing="2">
       <MudItem xs="12" sm="6">
@@ -131,11 +90,23 @@ else
     <MudGrid Spacing="3">
       <MudItem xs="12" md="7">
         <MudPaper Class="pa-3" Elevation="1">
-          <MudText Typo="Typo.h6" GutterBottom="true">Games</MudText>
+          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1" Class="mb-2">
+            <MudText Typo="Typo.h6">Games</MudText>
+            @if (!ViewModel.IsFinished && ViewModel.SelectedRound is not null)
+            {
+              <MudIconButton Icon="@Icons.Material.Filled.SkipNext"
+                             Size="Size.Small"
+                             OnClick="@(async () => await ViewModel.SimulateRound())"
+                             Disabled="ViewModel.IsBusy"
+                             title="Simulate round (R or Shift+Space)" />
+            }
+          </MudStack>
           @if (ViewModel.SelectedRound is not null)
           {
             var games = ViewModel.SelectedRound.AllGames.OrderBy(g => g.PlayedOn).ToList();
             var multiDay = games.Select(g => g.PlayedOn.Date).Distinct().Count() > 1;
+            var currentGameId = ViewModel.Competition?.CurrentGame?.Id;
+            var undoTargetGameId = ViewModel.UndoTargetGameId;
             @foreach (var dayGroup in games.GroupBy(g => g.PlayedOn.Date))
             {
               @if (multiDay)
@@ -144,7 +115,12 @@ else
               }
               @foreach (var game in dayGroup)
               {
-                <GameViewRow Game="game" />
+                <GameViewRow Game="game"
+                             ShowSim="@(game.Id == currentGameId)"
+                             ShowUndo="@(game.Id == undoTargetGameId)"
+                             Disabled="@ViewModel.IsBusy"
+                             OnSim="@(async () => await ViewModel.SimulateGame())"
+                             OnUndo="@(() => ViewModel.Undo())" />
               }
             }
           }
@@ -164,12 +140,34 @@ else
 }
 
 <MudOverlay Visible="_helpOpen" DarkBackground="true" ZIndex="9999" @onclick="@(() => _helpOpen = false)">
-  <MudPaper Class="pa-4" Elevation="6" @onclick:stopPropagation="true">
-    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
-      <MudText Typo="Typo.h6">Keyboard shortcuts</MudText>
+  <MudPaper Class="pa-4" Elevation="6" Style="max-width: 36rem;" @onclick:stopPropagation="true">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-3">
+      <MudText Typo="Typo.h6">Quick settings &amp; shortcuts</MudText>
       <MudSpacer />
       <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" OnClick="@(() => _helpOpen = false)" />
     </MudStack>
+
+    <MudText Typo="Typo.subtitle2" Class="mb-2">Simulation speed</MudText>
+    <MudToggleGroup T="SimulationSpeed"
+                    Value="ViewModel.Speed"
+                    ValueChanged="@((SimulationSpeed v) => ViewModel.Speed = v)"
+                    Size="Size.Small"
+                    Color="Color.Primary"
+                    CheckMark="false"
+                    SelectionMode="SelectionMode.SingleSelection"
+                    Disabled="ViewModel.IsBusy">
+      <MudToggleItem Value="SimulationSpeed.Slow" Text="🐢 Slow" />
+      <MudToggleItem Value="SimulationSpeed.Normal" Text="▶ Normal" />
+      <MudToggleItem Value="SimulationSpeed.Fast" Text="🐇 Fast" />
+      <MudToggleItem Value="SimulationSpeed.Instant" Text="⚡ Instant" />
+    </MudToggleGroup>
+    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mt-1 d-block">
+      Overrides the global Settings default for this session.
+    </MudText>
+
+    <MudDivider Class="my-3" />
+
+    <MudText Typo="Typo.subtitle2" Class="mb-2">Keyboard shortcuts</MudText>
     <KeyboardShortcuts />
   </MudPaper>
 </MudOverlay>
@@ -219,7 +217,6 @@ else
       if (e.Key == " " && e.ShiftKey) { await ViewModel.SimulateRound(); return; }
       if (e.Key == " ") { await ViewModel.SimulateGame(); return; }
       if (e.Key is "r" or "R") { await ViewModel.SimulateRound(); return; }
-      if (e.Key is "s" or "S") { await ViewModel.SimulateStage(); return; }
       if (e.Key is "t" or "T") { await ViewModel.SimulateAll(); return; }
     }
 

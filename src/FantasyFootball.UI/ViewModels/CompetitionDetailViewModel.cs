@@ -27,10 +27,13 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 	CompetitionSimulator? _simulator;
 
-	// In-memory rewind stack. JSON snapshot per user-initiated sim action (Game / Round / Stage / Tournament).
-	// Cap mirrors the failure-log sketch: 50 is more than a per-game WC48 run would ever push.
+	// In-memory rewind stack. JSON snapshot per user-initiated Sim Game action.
+	// Each entry remembers which game was *about to be* simmed at snapshot time, so the per-row
+	// undo button can attach to that specific game once the sim is done.
+	// Cap is generous: 50 is more than a per-game WC48 run would ever push.
 	const int UndoCap = 50;
-	readonly Stack<string> _undoStack = new();
+	readonly record struct UndoEntry(string Json, int SimmedGameId);
+	readonly Stack<UndoEntry> _undoStack = new();
 
 	public CompetitionDetailViewModel(IRepository repo, ISettingsService settings, IDataService dataService)
 	{
@@ -76,6 +79,10 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 	public bool CanUndo => _undoStack.Count > 0;
 
+	// Game.Id of the most recently simmed game (= top-of-stack snapshot's target). Drives per-row
+	// undo button placement: the undo lives on the row of the game it would un-do.
+	public int? UndoTargetGameId => _undoStack.TryPeek(out var top) ? top.SimmedGameId : null;
+
 	public void Load(int competitionId)
 	{
 		ClearUndo();
@@ -106,7 +113,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public async Task SimulateGame()
 	{
 		if (_simulator is null || Competition?.CurrentGame is null || IsBusy) { return; }
-		PushUndoSnapshot();
+		PushUndoSnapshot(Competition.CurrentGame.Id);
 		IsBusy = true;
 		try
 		{
@@ -162,8 +169,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public void Undo()
 	{
 		if (_undoStack.Count == 0 || Competition is null || IsBusy) { return; }
-		var json = _undoStack.Pop();
-		var restored = CompetitionSnapshot.Deserialize(json);
+		var entry = _undoStack.Pop();
+		var restored = CompetitionSnapshot.Deserialize(entry.Json);
 		if (restored is null) { OnPropertyChanged(nameof(CanUndo)); return; }
 
 		// NamedUniqueId.Equals compares by Id, so the restored instance is "equal" to the live one;
@@ -180,12 +187,13 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		// Re-resolve selection against the new object graph.
 		OnSimBatchComplete();
 		OnPropertyChanged(nameof(CanUndo));
+		OnPropertyChanged(nameof(UndoTargetGameId));
 	}
 
-	void PushUndoSnapshot()
+	void PushUndoSnapshot(int simmedGameId)
 	{
 		if (Competition is null) { return; }
-		_undoStack.Push(CompetitionSnapshot.Serialize(Competition));
+		_undoStack.Push(new UndoEntry(CompetitionSnapshot.Serialize(Competition), simmedGameId));
 		// Cap. Stack<T> has no Dequeue, so drop oldest by rebuilding when over.
 		if (_undoStack.Count > UndoCap)
 		{
@@ -194,6 +202,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			foreach (var s in keep) { _undoStack.Push(s); }
 		}
 		OnPropertyChanged(nameof(CanUndo));
+		OnPropertyChanged(nameof(UndoTargetGameId));
 	}
 
 	void ClearUndo()
@@ -201,6 +210,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (_undoStack.Count == 0) { return; }
 		_undoStack.Clear();
 		OnPropertyChanged(nameof(CanUndo));
+		OnPropertyChanged(nameof(UndoTargetGameId));
 	}
 
 	/// <summary>
@@ -223,6 +233,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		}
 		IsBusy = false;
 		OnPropertyChanged(nameof(CanUndo));
+		OnPropertyChanged(nameof(UndoTargetGameId));
 	}
 
 	void OnGameFinished(Game finished)

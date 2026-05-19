@@ -111,6 +111,15 @@ body {
 .scoreboard-loser { opacity: 0.65; }
 .scoreboard-pending { opacity: 0.65; }
 
+/* Right-side action column on a game row — Sim Game button on the current game, Undo on the most recent. */
+.scoreboard-action {
+  min-width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 /* Group letter + kickoff time at the start of each scoreboard row. Letter is blank for KO games (teams span groups); kickoff stays. */
 .scoreboard-group-tag {
   display: inline-flex;

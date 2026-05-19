@@ -14,10 +14,34 @@
     <FlagIcon Team="Game.AwayTeam" Size="24" />
     <span class="scoreboard-team-name">@Game.AwayTeam.Name</span>
   </div>
+  <div class="scoreboard-action">
+    @if (ShowSim)
+    {
+      <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
+                     Color="Color.Primary"
+                     Size="Size.Small"
+                     Disabled="Disabled"
+                     OnClick="OnSim"
+                     title="Simulate this game (Space)" />
+    }
+    else if (ShowUndo)
+    {
+      <MudIconButton Icon="@Icons.Material.Filled.Undo"
+                     Size="Size.Small"
+                     Disabled="Disabled"
+                     OnClick="OnUndo"
+                     title="Undo this game (Ctrl+Z or U)" />
+    }
+  </div>
 </div>
 
 @code {
   [Parameter] public Game Game { get; set; } = null!;
+  [Parameter] public bool ShowSim { get; set; }
+  [Parameter] public bool ShowUndo { get; set; }
+  [Parameter] public bool Disabled { get; set; }
+  [Parameter] public EventCallback OnSim { get; set; }
+  [Parameter] public EventCallback OnUndo { get; set; }
 
   bool HasResult => Game.IsFinished;
   bool IsDraw => HasResult && Game.Winner is null;
