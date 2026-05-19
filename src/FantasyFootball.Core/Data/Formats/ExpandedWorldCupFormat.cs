@@ -3,7 +3,7 @@ namespace FantasyFootball.Data.Formats;
 /// <summary>
 /// 48-team FIFA World Cup format introduced in 2026.
 /// 12 groups of 4 → top 2 of each group + 8 best third-place finishers advance to a 32-team R32.
-/// Uses most-constrained-first greedy assignment over the 8 R32 third-place slot constraints.
+/// Uses backtracking over the 8 R32 third-place slot constraints to find any feasible assignment.
 /// TODO Replace with FIFA's official 495-scenario lookup table for exact bracket fidelity.
 /// </summary>
 public sealed class ExpandedWorldCupFormat : ITournamentFormat
