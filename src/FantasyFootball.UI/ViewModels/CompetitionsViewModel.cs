@@ -80,9 +80,11 @@ public partial class CompetitionsViewModel : ObservableObject
 		{
 			SelectedCompetitionType = freshType;
 		}
-		// First-time users (no comps) land on Active — its empty state has the "Press New" CTA.
-		ActiveTabIndex = (ActiveCompetitions.Count > 0 || FinishedCompetitions.Count == 0) ? 0 : 1;
+		AutoSelectTab();
 	}
+
+	// First-time users (no comps) land on Active — its empty state has the "Press New" CTA.
+	void AutoSelectTab() => ActiveTabIndex = (ActiveCompetitions.Count > 0 || FinishedCompetitions.Count == 0) ? 0 : 1;
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
 	{
@@ -104,7 +106,7 @@ public partial class CompetitionsViewModel : ObservableObject
 			FinishedCompetitions = new ObservableCollection<Competition>(ofType.Where(c => c.IsFinished));
 			OverallRecords = Standings.CreateFrom(FinishedCompetitions.SelectMany(c => c.GamesByDate));
 			// Re-pick tab on every reload — DataResetMessage can fire while the user is on this page.
-			ActiveTabIndex = (ActiveCompetitions.Count > 0 || FinishedCompetitions.Count == 0) ? 0 : 1;
+			AutoSelectTab();
 		}
 		finally
 		{

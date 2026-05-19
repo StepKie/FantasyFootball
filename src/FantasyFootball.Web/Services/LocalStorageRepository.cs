@@ -143,9 +143,9 @@ public sealed class LocalStorageRepository : IRepository
       try
       {
         var bad = KeyFor<T>() + ":corrupt-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-        _localStorage.SetItemAsString(bad, raw);
+        _localStorage.SetItemAsString(bad, raw!);
         _localStorage.RemoveItem(KeyFor<T>());
-        Log.Warning("[LocalStorageRepository] Failed to deserialize {Bucket} bucket; corrupt blob moved to '{Quarantine}'. Length={Length}. Error: {Error}", typeof(T).Name, bad, raw.Length, ex.Message);
+        Log.Warning("[LocalStorageRepository] Failed to deserialize {Bucket} bucket; corrupt blob moved to '{Quarantine}'. Length={Length}. Error: {Error}", typeof(T).Name, bad, raw!.Length, ex.Message);
       }
       catch (Exception quarantineEx)
       {
