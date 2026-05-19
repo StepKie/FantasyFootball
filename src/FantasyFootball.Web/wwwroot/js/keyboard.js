@@ -15,15 +15,17 @@ window.ffKeyboard = {
         return;
       }
 
-      // Suppress browser defaults for keys we own — scroll on Space + arrows, browser undo on Ctrl+Z.
-      if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      // Suppress browser defaults for keys we own — scroll on Space + arrows, browser undo/redo on Ctrl+Z / Ctrl+Y.
+      // Skip the Alt+arrow case so the browser's history-navigation shortcut (Alt+←/→ in Firefox / some Chromium) keeps working.
+      if (!e.altKey && (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
         e.preventDefault();
       }
       if (e.ctrlKey && (e.key === 'z' || e.key === 'Z' || e.key === 'y' || e.key === 'Y')) {
         e.preventDefault();
       }
 
-      this._dotNetRef.invokeMethodAsync('OnKeyDown', e.key, e.ctrlKey, e.shiftKey);
+      // Swallow rejections from a dispose race — if the component is gone, there's nothing to recover.
+      this._dotNetRef.invokeMethodAsync('OnKeyDown', e.key, e.ctrlKey, e.shiftKey).catch(() => {});
     };
     document.addEventListener('keydown', this._handler);
   },

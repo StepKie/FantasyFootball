@@ -134,7 +134,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		_ = FlashRecentlyFinished(gameBeingSimmed);
 	}
 
-	// Round / Stage / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
+	// Round / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
 	// If the user opts into a bigger sim and isn't happy, the recovery path is to re-sim the tournament,
 	// not to rewind mass amounts of state. Any prior single-game undo entries are cleared too,
 	// since they belong to a graph that's now been simmed past.
@@ -146,19 +146,6 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		try
 		{
 			await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
-			_repo.Save(Competition);
-		}
-		finally { OnSimBatchComplete(); }
-	}
-
-	public async Task SimulateStage()
-	{
-		if (_simulator is null || Competition?.CurrentStage is null || IsBusy) { return; }
-		ClearUndo();
-		IsBusy = true;
-		try
-		{
-			await _simulator.SimulateStage(Competition.CurrentStage);
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }
@@ -184,9 +171,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 		game.ClearResult();
 		_repo.Save(Competition);
+		// OnSimBatchComplete owns the CanUndo / UndoTargetGame notifications.
 		OnSimBatchComplete();
-		OnPropertyChanged(nameof(CanUndo));
-		OnPropertyChanged(nameof(UndoTargetGame));
 	}
 
 	/// <summary>
