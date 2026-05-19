@@ -41,6 +41,28 @@ Unsorted feature/UX ideas that aren't yet committed to a PR plan. Promote to
   entity with proper relationships. Probably a follow-up to whatever
   surface lands first.
 
+## Confederation + governing-body logos in pickers
+
+- **Confederation logos** (UEFA, CONMEBOL, AFC, CAF, CONCACAF, OFC, plus
+  FIFA as the global parent) shown in the team picker and next to
+  confederation-scoped filters / dropdowns.
+- **FIFA WC + UEFA Euros marks** next to the competition-type picker on
+  `/competitions` (and on the start-new dialog), so the visual identity of
+  the tournament is immediately recognisable.
+- Asset source: user has the sortitoutsi.net FM24 graphics pack locally —
+  `logos/confeds/normal/{1..7}.png` (7 PNGs) and selected entries from
+  `logos/comps/normal/` (5975 PNGs total; need to pick out WC + Euros IDs
+  via `config.xml`).
+- **Caveats**:
+  - FM IDs are numeric, not ISO/UEFA-style codes. Need a small hand-
+    maintained mapping table: `Confederation` enum → file ID, comp-type
+    enum → file ID.
+  - Licensing — sortitoutsi.net assets are community-aggregated, often cut
+    from real broadcast/marketing material. Public GitHub Pages deploy
+    means thinking about redistribution risk before bundling. Possible
+    mitigations: serve from a separate static origin, or replace with
+    permissively-licensed equivalents (Wikipedia SVGs, simpleicons.org).
+
 ## Manual competition setup — drawing-ceremony UX
 
 Applies to the *manual* setup mode only (Classic / Random unchanged):
