@@ -3,9 +3,6 @@
 [Table(nameof(GroupQualifier))]
 public class GroupQualifier : Qualifier
 {
-	// used to cache the result, i.e. once the team is determined, store it here and return it in Get()
-	Team? _qualified;
-
 	public int GroupId { get; init; }
 	public int FinalPlacement { get; init; }
 
@@ -14,10 +11,14 @@ public class GroupQualifier : Qualifier
 
 	public Group? Group => Competition?.Groups[GroupId];
 
-	// TODO Remove static reference to EuroRoundAdvancer
+	// Recomputes each call. Caching the resolved team led to stale KO bracket display after an
+	// undo on a group-stage game, because the cache had no invalidation hook. The recompute is
+	// cheap (one GetStandings pass over a 4-team group, or a single ResolveThirdPlaceQualifier
+	// call once the stage finishes) and the IsFinished guards inside ensure null is returned
+	// whenever the source state isn't ready.
 	public override Team? Get()
 	{
-		return _qualified ??= GetQualifier();
+		return GetQualifier();
 
 		Team? GetQualifier() => FinalPlacement switch
 		{

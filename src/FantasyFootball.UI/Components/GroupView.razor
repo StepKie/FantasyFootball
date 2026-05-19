@@ -86,12 +86,11 @@
       var ownThirdPlaceTeam = _standings.ElementAtOrDefault(2)?.Team;
       if (ownThirdPlaceTeam is not null)
       {
-        var advancedIds = laterQualifiers
+        // Reference equality, not Id: nested Team instances inside Competition have Id=0
+        // in the LocalStorage path, so {0}.Contains(0) would falsely mark every group green.
+        _thirdPlaceAdvanced = laterQualifiers
           .Where(q => !string.IsNullOrEmpty(q.ThirdPlaceCombination))
-          .Select(q => q.Get()?.Id)
-          .OfType<int>()
-          .ToHashSet();
-        _thirdPlaceAdvanced = advancedIds.Contains(ownThirdPlaceTeam.Id);
+          .Any(q => ReferenceEquals(q.Get(), ownThirdPlaceTeam));
       }
     }
   }

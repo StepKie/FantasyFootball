@@ -64,6 +64,14 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public partial bool IsBusy { get; set; }
 
 	/// <summary>
+	/// The game whose result was most recently established (or replaced) via a single-game sim.
+	/// Set immediately after Simulate / Redo, cleared automatically after ~1.5s so the row's pulse
+	/// animation only fires once per action. Multi-game sims (round / stage / tournament) don't pulse.
+	/// </summary>
+	[ObservableProperty]
+	public partial Game? RecentlyFinishedGame { get; set; }
+
+	/// <summary>
 	/// Per-session speed override for sim actions. Defaults to the Settings value
 	/// on Load; the page's speed control mutates it for the current visit only.
 	/// `Instant` short-circuits the inter-game delay and suppresses per-game
@@ -123,9 +131,10 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			PushUndoEntry(gameBeingSimmed);
 		}
 		finally { OnSimBatchComplete(); }
+		_ = FlashRecentlyFinished(gameBeingSimmed);
 	}
 
-	// Round / Stage / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
+	// Round / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
 	// If the user opts into a bigger sim and isn't happy, the recovery path is to re-sim the tournament,
 	// not to rewind mass amounts of state. Any prior single-game undo entries are cleared too,
 	// since they belong to a graph that's now been simmed past.
@@ -137,19 +146,6 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		try
 		{
 			await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
-			_repo.Save(Competition);
-		}
-		finally { OnSimBatchComplete(); }
-	}
-
-	public async Task SimulateStage()
-	{
-		if (_simulator is null || Competition?.CurrentStage is null || IsBusy) { return; }
-		ClearUndo();
-		IsBusy = true;
-		try
-		{
-			await _simulator.SimulateStage(Competition.CurrentStage);
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }
@@ -175,9 +171,37 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 		game.ClearResult();
 		_repo.Save(Competition);
+		// OnSimBatchComplete owns the CanUndo / UndoTargetGame notifications.
 		OnSimBatchComplete();
-		OnPropertyChanged(nameof(CanUndo));
-		OnPropertyChanged(nameof(UndoTargetGame));
+	}
+
+	/// <summary>
+	/// Replaces the most recently simmed game's result with a fresh draw. Equivalent to Undo + SimulateGame
+	/// on the same game, but in one click. The undo stack is unchanged so the user can still revert this
+	/// new result.
+	/// </summary>
+	public async Task RedoLastGame()
+	{
+		if (_simulator is null || Competition is null || IsBusy) { return; }
+		if (!_undoStack.TryPeek(out var game)) { return; }
+
+		IsBusy = true;
+		try
+		{
+			game.ClearResult();
+			await _simulator.SimulateGame(game);
+			_repo.Save(Competition);
+		}
+		finally { OnSimBatchComplete(); }
+		_ = FlashRecentlyFinished(game);
+	}
+
+	async Task FlashRecentlyFinished(Game game)
+	{
+		RecentlyFinishedGame = game;
+		await Task.Delay(1500);
+		// Only clear if no later sim has overwritten us — otherwise the next pulse races with ours.
+		if (ReferenceEquals(RecentlyFinishedGame, game)) { RecentlyFinishedGame = null; }
 	}
 
 	void PushUndoEntry(Game simmedGame)

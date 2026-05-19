@@ -6,11 +6,11 @@
 @inject CompetitionDetailViewModel ViewModel
 @inject NavigationManager Nav
 @inject IJSRuntime JS
-@implements IDisposable
+@implements IAsyncDisposable
 
 <PageTitle>@(ViewModel.Competition?.ShortName ?? "Competition") — Fantasy Football</PageTitle>
 
-<div tabindex="0" @ref="_pageRoot" @onkeydown="HandleKey" style="outline: none;">
+<div>
 
 <MudButton Href="/competitions"
            StartIcon="@Icons.Material.Filled.ArrowBack"
@@ -122,9 +122,11 @@ else
                 <GameViewRow Game="game"
                              ShowSim="@(ReferenceEquals(game, currentGame))"
                              ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
+                             IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"
                              Disabled="@ViewModel.IsBusy"
                              OnSim="@(async () => await ViewModel.SimulateGame())"
-                             OnUndo="@(() => ViewModel.Undo())" />
+                             OnUndo="@(() => ViewModel.Undo())"
+                             OnRedo="@(async () => await ViewModel.RedoLastGame())" />
               }
             }
           }
@@ -182,8 +184,8 @@ else
   [Parameter] public int Id { get; set; }
 
   int? _lastLoadedId;
-  ElementReference _pageRoot;
   bool _helpOpen;
+  DotNetObjectReference<CompetitionDetail>? _selfRef;
 
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
 
@@ -198,24 +200,25 @@ else
   {
     if (firstRender)
     {
-      // Suppress browser scroll defaults for Space + arrows on the page root, then focus it.
-      await JS.InvokeVoidAsync("ffKeyboard.registerPreventScroll", _pageRoot);
-      await _pageRoot.FocusAsync();
+      // Document-level keydown forwarder. Listening on document (not the page root div) means Space + arrows
+      // work without the user clicking into the page first; the JS side skips when focus is on an input.
+      _selfRef = DotNetObjectReference.Create(this);
+      await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
     }
   }
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
 
-  // Page-level keyboard handler. CompetitionDetail has no text inputs, so we don't filter by event target.
-  // Sim keys no-op once a tournament has finished; nav keys remain available.
-  async Task HandleKey(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs e)
+  // Invoked by the document-level JS keydown listener. Sim keys no-op once finished; nav keys remain.
+  [JSInvokable]
+  public async Task OnKeyDown(string key, bool ctrlKey, bool shiftKey)
   {
     // Overlay keys ABOVE the IsBusy gate — user must always be able to open / close help, even while a sim runs.
     // H or ? toggles. H works on every layout; ? is awkward on de-DE (Shift+ß).
-    if (e.Key is "?" or "h" or "H") { _helpOpen = !_helpOpen; return; }
+    if (key is "?" or "h" or "H") { _helpOpen = !_helpOpen; StateHasChanged(); return; }
     if (_helpOpen)
     {
-      if (e.Key == "Escape") { _helpOpen = false; }
+      if (key == "Escape") { _helpOpen = false; StateHasChanged(); }
       // Swallow everything else while the overlay is up — no sim shortcuts firing behind it.
       return;
     }
@@ -224,20 +227,26 @@ else
 
     if (!ViewModel.IsFinished)
     {
-      if (e.Key == " " && e.ShiftKey) { await ViewModel.SimulateRound(); return; }
-      if (e.Key == " ") { await ViewModel.SimulateGame(); return; }
-      if (e.Key is "r" or "R") { await ViewModel.SimulateRound(); return; }
-      if (e.Key is "t" or "T") { await ViewModel.SimulateAll(); return; }
+      if (key == " " && shiftKey) { await ViewModel.SimulateRound(); return; }
+      if (key == " ") { await ViewModel.SimulateGame(); return; }
+      if (key is "r" or "R") { await ViewModel.SimulateRound(); return; }
+      if (key is "t" or "T") { await ViewModel.SimulateAll(); return; }
     }
 
-    if ((e.CtrlKey && e.Key is "z" or "Z") || (!e.CtrlKey && e.Key is "u" or "U"))
+    if ((ctrlKey && key is "z" or "Z") || (!ctrlKey && key is "u" or "U"))
     {
       ViewModel.Undo();
       return;
     }
 
+    if (ctrlKey && key is "y" or "Y")
+    {
+      await ViewModel.RedoLastGame();
+      return;
+    }
+
     // Prev/next round wraps within the current stage; prev/next stage wraps within the competition.
-    switch (e.Key)
+    switch (key)
     {
       case "ArrowLeft": StepRound(-1); break;
       case "ArrowRight": StepRound(+1); break;
@@ -265,5 +274,15 @@ else
     ViewModel.SelectedStage = stages[(i + delta + stages.Count) % stages.Count];
   }
 
-  public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
+  public async ValueTask DisposeAsync()
+  {
+    ViewModel.PropertyChanged -= OnVmChanged;
+    if (_selfRef is not null)
+    {
+      try { await JS.InvokeVoidAsync("ffKeyboard.unregisterDocumentHandler"); }
+      catch (JSDisconnectedException) { /* Page navigated away; the listener's gone with it. */ }
+      _selfRef.Dispose();
+      _selfRef = null;
+    }
+  }
 }
