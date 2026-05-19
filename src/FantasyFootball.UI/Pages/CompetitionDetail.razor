@@ -5,9 +5,12 @@
 @using FantasyFootball.UI.ViewModels
 @inject CompetitionDetailViewModel ViewModel
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 @implements IDisposable
 
 <PageTitle>@(ViewModel.Competition?.ShortName ?? "Competition") — Fantasy Football</PageTitle>
+
+<div tabindex="0" @ref="_pageRoot" @onkeydown="HandleKey" style="outline: none;">
 
 <MudButton Href="/competitions"
            StartIcon="@Icons.Material.Filled.ArrowBack"
@@ -70,6 +73,10 @@ else
           <MudProgressCircular Size="Size.Small" Indeterminate="true" />
         }
         <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Keyboard"
+                       Size="Size.Small"
+                       OnClick="@(() => _helpOpen = true)"
+                       title="Keyboard shortcuts (H or ?)" />
         <MudToggleGroup T="SimulationSpeed"
                         Value="ViewModel.Speed"
                         ValueChanged="@((SimulationSpeed v) => ViewModel.Speed = v)"
@@ -151,10 +158,25 @@ else
   </MudStack>
 }
 
+<MudOverlay Visible="_helpOpen" DarkBackground="true" ZIndex="9999" @onclick="@(() => _helpOpen = false)">
+  <MudPaper Class="pa-4" Elevation="6" @onclick:stopPropagation="true">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
+      <MudText Typo="Typo.h6">Keyboard shortcuts</MudText>
+      <MudSpacer />
+      <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" OnClick="@(() => _helpOpen = false)" />
+    </MudStack>
+    <KeyboardShortcuts />
+  </MudPaper>
+</MudOverlay>
+
+</div>
+
 @code {
   [Parameter] public int Id { get; set; }
 
   int? _lastLoadedId;
+  ElementReference _pageRoot;
+  bool _helpOpen;
 
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
 
@@ -165,7 +187,65 @@ else
     ViewModel.Load(Id);
   }
 
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      // Suppress browser scroll defaults for Space + arrows on the page root, then focus it.
+      await JS.InvokeVoidAsync("ffKeyboard.registerPreventScroll", _pageRoot);
+      await _pageRoot.FocusAsync();
+    }
+  }
+
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+  // Page-level keyboard handler. CompetitionDetail has no text inputs, so we don't filter by event target.
+  // Sim keys no-op once a tournament has finished; nav keys remain available.
+  async Task HandleKey(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs e)
+  {
+    if (ViewModel.IsBusy || ViewModel.Competition is null) { return; }
+
+    // H or ? toggles the help overlay. H works on every layout; ? is awkward on de-DE (Shift+ß).
+    if (e.Key is "?" or "h" or "H") { _helpOpen = !_helpOpen; return; }
+    if (_helpOpen && e.Key == "Escape") { _helpOpen = false; return; }
+
+    if (!ViewModel.IsFinished)
+    {
+      if (e.Key == " " && e.ShiftKey) { await ViewModel.SimulateRound(); return; }
+      if (e.Key == " ") { await ViewModel.SimulateGame(); return; }
+      if (e.Key is "r" or "R") { await ViewModel.SimulateRound(); return; }
+      if (e.Key is "s" or "S") { await ViewModel.SimulateStage(); return; }
+      if (e.Key is "t" or "T") { await ViewModel.SimulateAll(); return; }
+    }
+
+    // Prev/next round wraps within the current stage; prev/next stage wraps within the competition.
+    switch (e.Key)
+    {
+      case "ArrowLeft": StepRound(-1); break;
+      case "ArrowRight": StepRound(+1); break;
+      case "ArrowUp": StepStage(-1); break;
+      case "ArrowDown": StepStage(+1); break;
+      case "Escape": Nav.NavigateTo("/competitions"); break;
+    }
+  }
+
+  void StepRound(int delta)
+  {
+    var rounds = ViewModel.Rounds;
+    if (rounds.Count == 0 || ViewModel.SelectedRound is null) { return; }
+    var i = rounds.IndexOf(ViewModel.SelectedRound);
+    if (i < 0) { return; }
+    ViewModel.SelectedRound = rounds[(i + delta + rounds.Count) % rounds.Count];
+  }
+
+  void StepStage(int delta)
+  {
+    var stages = ViewModel.Stages;
+    if (stages.Count == 0 || ViewModel.SelectedStage is null) { return; }
+    var i = stages.IndexOf(ViewModel.SelectedStage);
+    if (i < 0) { return; }
+    ViewModel.SelectedStage = stages[(i + delta + stages.Count) % stages.Count];
+  }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
 }

@@ -50,6 +50,42 @@ dotnet workload install maui
 - XAML formatting governed by Settings.XamlStyler
 - Follow .editorconfig rules
 
+## Iteration loop — keep the dev server running
+
+While iterating on UI work, **launch the Blazor web host yourself** in the
+background (`dotnet run --project src/FantasyFootball.Web`, then open
+`https://localhost:7140`) so the user can visually inspect progress and give
+feedback at regular intervals. Don't wait to be asked. After a meaningful
+chunk lands, point the user at what to look at on the running site.
+
+Only ask the user to launch from Visual Studio when interactive debugging
+(breakpoints, step-through) is genuinely needed — pure visual inspection
+should happen on the server you're already running.
+
+### Verification checklist on each run
+
+Every time a fresh build is up, give the user a concrete checklist of what
+to look at — they shouldn't have to guess. Cover:
+
+- **What to check** (the change you just made — pages, components, flows
+  to open and the steps to reproduce the behaviour).
+- **What to test** (interactions, edge cases, keyboard / hover / click
+  paths, mobile layout if relevant).
+- **What to verify or sign off on** (correctness criteria — "this should
+  look like X", "Y should now work", "Z should no longer happen").
+- **What feedback you'd specifically like** (open questions, judgment
+  calls — copy choices, animation timing, layout density).
+
+Format it as a short bulleted list with the URL/path for each item, not a
+wall of prose. Keep it scannable — the user is opening the browser, not
+reading a manual.
+
+**Frame it as a diff since the last launch.** The user has already looked
+at everything else. List only what's new or changed since the previous
+running build — skip features that landed in earlier rounds and are
+already signed off. If the previous run was many commits ago, summarise
+the commits being verified at the top so the user knows the scope.
+
 ## Out of scope
 
 **Accessibility (a11y) is not a priority at this stage.** Do not invest effort
