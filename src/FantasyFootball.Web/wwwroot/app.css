@@ -145,10 +145,6 @@ body {
   margin-top: 0.5rem;
 }
 
-.game-day-divider:first-child {
-  margin-top: 0;
-}
-
 /* Competition-type icon stack: MudIcon underneath, img overlay on top. If img 404s, onerror hides it and the MudIcon shows through. */
 .comp-type-icon-stack {
   display: inline-flex;

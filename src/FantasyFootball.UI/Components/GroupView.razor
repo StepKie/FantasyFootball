@@ -2,7 +2,7 @@
 
 <div class="group-block">
 <div class="group-letter-heading">@Letter</div>
-<MudTable Items="Group.GetStandings()"
+<MudTable Items="_standings"
           T="TeamRecord"
           Hover="false"
           Dense="true"
@@ -39,12 +39,14 @@
     ? parts[^1].ToUpperInvariant()
     : "?";
 
+  IList<TeamRecord> _standings = [];
   HashSet<int> _directSlots = [];
   bool _thirdPlaceEligible;
   bool? _thirdPlaceAdvanced; // null = stage not finished yet (undetermined), true/false = resolved.
 
   protected override void OnParametersSet()
   {
+    _standings = Group.GetStandings();
     _directSlots = [];
     _thirdPlaceEligible = false;
     _thirdPlaceAdvanced = null;
@@ -78,7 +80,7 @@
     // Once the group stage is finished we can resolve ThirdPlace qualifiers to actual teams. Position 3 then promotes from "no bar" to advance / out.
     if (_thirdPlaceEligible && Group.Stage.IsFinished)
     {
-      var ownThirdPlaceTeam = Group.GetStandings().ElementAtOrDefault(2)?.Team;
+      var ownThirdPlaceTeam = _standings.ElementAtOrDefault(2)?.Team;
       if (ownThirdPlaceTeam is not null)
       {
         var advancedIds = laterQualifiers
