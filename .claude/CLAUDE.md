@@ -80,6 +80,12 @@ Format it as a short bulleted list with the URL/path for each item, not a
 wall of prose. Keep it scannable — the user is opening the browser, not
 reading a manual.
 
+**Frame it as a diff since the last launch.** The user has already looked
+at everything else. List only what's new or changed since the previous
+running build — skip features that landed in earlier rounds and are
+already signed off. If the previous run was many commits ago, summarise
+the commits being verified at the top so the user knows the scope.
+
 ## Out of scope
 
 **Accessibility (a11y) is not a priority at this stage.** Do not invest effort
