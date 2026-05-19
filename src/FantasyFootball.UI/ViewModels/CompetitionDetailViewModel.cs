@@ -196,7 +196,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		try
 		{
 			game.ClearResult();
-			await _simulator.SimulateGame(game);
+			// Same as SimulateGame: single-game user click, no inter-game pacing.
+			await _simulator.SimulateGame(game, delayAfter: false);
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }

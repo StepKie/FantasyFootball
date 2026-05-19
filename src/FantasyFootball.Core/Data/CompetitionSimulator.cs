@@ -84,7 +84,14 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		Log.Debug("--------------------------------------");
 	}
 
-	public async Task SimulateGame(Game game)
+	/// <summary>
+	/// Simulates a single game. When called from a multi-game loop (Round / Stage / Tournament)
+	/// the caller leaves <paramref name="delayAfter"/> as true so the GameDelay pacing applies
+	/// between games. For a one-off user click on Sim Game / Redo there is no "next game" to
+	/// pace against — the delay would just block the busy spinner from clearing — so the VM
+	/// passes false.
+	/// </summary>
+	public async Task SimulateGame(Game game, bool delayAfter = true)
 	{
 		if (!game.IsReadyToStart)
 		{
@@ -106,7 +113,7 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		else
 		{
 			MessageBus.Send(new GameFinishedMessage(game));
-			await Task.Delay(GameDelay);
+			if (delayAfter) { await Task.Delay(GameDelay); }
 		}
 
 		// Persistence is the caller's responsibility — saving per game escalates to a full
