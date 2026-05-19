@@ -82,7 +82,10 @@ public partial class CompetitionsViewModel : ObservableObject
 			// ActiveCompetitions / FinishedCompetitions for the new type.
 			SelectedCompetitionType = freshType;
 		}
-		ActiveTabIndex = ActiveCompetitions.Count > 0 ? 0 : 1;
+		// Default to Active when there's something active OR when the user has
+		// nothing yet — Active's empty state has the "Press New" CTA, Finished's
+		// is dead-end text. Land on Finished only after some history exists.
+		ActiveTabIndex = (ActiveCompetitions.Count > 0 || FinishedCompetitions.Count == 0) ? 0 : 1;
 	}
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)

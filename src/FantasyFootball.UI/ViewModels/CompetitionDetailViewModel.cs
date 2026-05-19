@@ -81,8 +81,10 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
 
 		// Initial speed = Settings default mapped onto the nearest preset.
+		// ApplySpeedToSimulator below overwrites GameDelay from Speed.ToDelay(),
+		// so no need to pass a msGameDelay to the constructor.
 		Speed = SimulationSpeedExtensions.FromTimeSpan(_settings.SimulationSpeed);
-		_simulator = new CompetitionSimulator(Competition, _repo, (int)_settings.SimulationSpeed.TotalMilliseconds);
+		_simulator = new CompetitionSimulator(Competition, _repo);
 		ApplySpeedToSimulator();
 	}
 
