@@ -1,0 +1,229 @@
+/* Identity: PR 2 first chunk. Body in Inter, display in Barlow Condensed, tabular numerics globally so scores like 1-0 and 11-10 align. */
+
+:root {
+  font-variant-numeric: tabular-nums;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Wordmark in the top app bar. */
+.brand-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.brand-mark {
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* Tournament/round titles use the display face — match-card scores will get it later. */
+.display-condensed {
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Flag rendering — see FlagIcon.razor. Style picked from ISettingsService.FlagStyle. */
+.flag-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.flag-square {
+  /* No clipping; the default flagcdn SVG aspect ratio. */
+  object-fit: contain;
+}
+
+.flag-round {
+  border-radius: 50%;
+}
+
+/* RoundTier — same circular clip plus an Elo-tiered border, drawn via box-shadow so it doesn't shrink the image. */
+.flag-tier-gold { box-shadow: 0 0 0 2px #C9A227; }
+.flag-tier-silver { box-shadow: 0 0 0 2px #9CA3AF; }
+.flag-tier-bronze { box-shadow: 0 0 0 2px #B8732E; }
+.flag-tier-none { box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.35); }
+
+/* Scoreboard match-card row. Symmetric layout: [flag][team] — SCORE — [team][flag]. */
+.scoreboard-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  min-height: 56px;
+}
+
+.scoreboard-row + .scoreboard-row {
+  margin-top: 4px;
+}
+
+.scoreboard-row:hover {
+  background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
+}
+
+.scoreboard-team {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.scoreboard-team-home {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.scoreboard-team-away {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.scoreboard-team-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scoreboard-score {
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+  min-width: 5rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.scoreboard-winner { font-weight: 600; }
+.scoreboard-loser { opacity: 0.65; }
+.scoreboard-pending { opacity: 0.65; }
+
+/* Just-finished pulse: brief green tint that fades to transparent, fires once per single-game sim. */
+@keyframes scoreboard-pulse {
+  0%   { background-color: rgba(0, 184, 107, 0.22); }
+  100% { background-color: transparent; }
+}
+.scoreboard-row-just-finished {
+  animation: scoreboard-pulse 1.5s ease-out;
+}
+
+/* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
+.scoreboard-action {
+  min-width: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.1rem;
+  flex-shrink: 0;
+}
+
+/* Group letter + kickoff time at the start of each scoreboard row. Letter is blank for KO games (teams span groups); kickoff stays. */
+.scoreboard-group-tag {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  color: var(--mud-palette-text-secondary);
+  min-width: 2.5rem;
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+
+.scoreboard-group-tag-letter {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.scoreboard-group-tag-time {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */
+.game-day-divider {
+  font-size: 0.75rem;
+  color: var(--mud-palette-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.5rem 0.75rem 0.25rem;
+  margin-top: 0.5rem;
+}
+
+/* Competition-type icon stack: MudIcon underneath, img overlay on top. If img 404s, onerror hides it and the MudIcon shows through. */
+.comp-type-icon-stack {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.comp-type-icon-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Qualification-zone left-edge bar in standings rows. Slim, muted column inset from row edges. */
+.standings-qual-bar {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+}
+
+.standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
+.standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
+
+/* Group block wraps heading + table. Big gap between blocks, zero between letter and its own table.
+   .group-letter-heading has no margin; .group-standings has negative top margin to pull the MudTable
+   header (P GD Pts) tight against the letter, then a quiet divider afterwards via mb. */
+.group-block {
+  margin-top: 1.75rem;
+}
+
+.group-block:first-of-type {
+  margin-top: 0;
+}
+
+.group-letter-heading {
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: var(--mud-palette-primary);
+  line-height: 1;
+  margin: 0;
+  padding-left: 0.5rem;
+}
+
+.group-standings .mud-table-head .mud-table-cell {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+/* Elo numbers tone down so they don't compete with team names. */
+.elo-muted {
+  color: var(--mud-palette-text-secondary, #9CA3AF);
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}

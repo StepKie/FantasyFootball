@@ -1,0 +1,284 @@
+@page "/competitions/{Id:int}"
+@using FantasyFootball.Models
+@using FantasyFootball.Services
+@using FantasyFootball.UI.Components
+@using FantasyFootball.UI.ViewModels
+@inject CompetitionDetailViewModel ViewModel
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<PageTitle>@(ViewModel.Competition?.ShortName ?? "Competition") — Fantasy Football</PageTitle>
+
+<MudButton Href="/competitions"
+           StartIcon="@Icons.Material.Filled.ArrowBack"
+           Variant="Variant.Text"
+           Class="mb-3">
+  Back to competitions
+</MudButton>
+
+@if (ViewModel.Competition is null)
+{
+  <MudAlert Severity="Severity.Warning">
+    Competition not found. <MudLink Href="/competitions">Return to the competitions list.</MudLink>
+  </MudAlert>
+}
+else
+{
+  <MudStack Spacing="3">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
+      <CompetitionTypeIcon Type="@ViewModel.Competition.Type" Size="36" />
+      <MudText Typo="Typo.h5" HtmlTag="h1">
+        @ViewModel.Competition.ShortName <span style="opacity: 0.6;">#@ViewModel.Competition.Id</span>
+      </MudText>
+      @if (!ViewModel.IsFinished)
+      {
+        <MudIconButton Icon="@Icons.Material.Filled.DoubleArrow"
+                       Size="Size.Small"
+                       OnClick="@(async () => await ViewModel.SimulateAll())"
+                       Disabled="ViewModel.IsBusy"
+                       title="Simulate tournament (T)" />
+      }
+      @if (ViewModel.IsBusy)
+      {
+        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+      }
+      @if (ViewModel.IsFinished && ViewModel.Winner is not null)
+      {
+        <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.EmojiEvents" Size="Size.Small">
+          Winner: @ViewModel.Winner.Name
+        </MudChip>
+      }
+      <MudSpacer />
+      <MudIconButton Icon="@Icons.Material.Filled.Keyboard"
+                     Size="Size.Small"
+                     OnClick="@(() => _helpOpen = true)"
+                     title="Quick settings &amp; keyboard shortcuts (H or ?)" />
+    </MudStack>
+
+    <MudGrid Spacing="2">
+      <MudItem xs="12" sm="6">
+        <MudSelect T="Stage"
+                   Label="Stage"
+                   Value="ViewModel.SelectedStage"
+                   ValueChanged="@(v => ViewModel.SelectedStage = v)"
+                   ToStringFunc="@(s => s?.Name ?? "")"
+                   FullWidth="true">
+          @foreach (var s in ViewModel.Stages)
+          {
+            <MudSelectItem Value="@s">@s.Name</MudSelectItem>
+          }
+        </MudSelect>
+      </MudItem>
+      <MudItem xs="12" sm="6">
+        <MudSelect T="Round"
+                   Label="Round"
+                   Value="ViewModel.SelectedRound"
+                   ValueChanged="@(v => ViewModel.SelectedRound = v)"
+                   ToStringFunc="@(r => r?.Name ?? "")"
+                   FullWidth="true">
+          @foreach (var r in ViewModel.Rounds)
+          {
+            <MudSelectItem Value="@r">@r.Name</MudSelectItem>
+          }
+        </MudSelect>
+      </MudItem>
+    </MudGrid>
+
+    <MudGrid Spacing="3">
+      <MudItem xs="12" md="7">
+        <MudPaper Class="pa-3" Elevation="1">
+          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1" Class="mb-2">
+            <MudText Typo="Typo.h6">Games</MudText>
+            @if (!ViewModel.IsFinished && ViewModel.SelectedRound is not null)
+            {
+              <MudIconButton Icon="@Icons.Material.Filled.SkipNext"
+                             Size="Size.Small"
+                             OnClick="@(async () => await ViewModel.SimulateRound())"
+                             Disabled="ViewModel.IsBusy"
+                             title="Simulate round (R or Shift+Space)" />
+            }
+          </MudStack>
+          @if (ViewModel.SelectedRound is not null)
+          {
+            var games = ViewModel.SelectedRound.AllGames.OrderBy(g => g.PlayedOn).ToList();
+            var multiDay = games.Select(g => g.PlayedOn.Date).Distinct().Count() > 1;
+            // Reference-compare, not Id-compare: nested entities in the LocalStorage path keep Id=0
+            // (LocalStorageRepository only assigns IDs to aggregate roots), so `game.Id == X.Id` is true
+            // for every row when X.Id is also 0. Reference equality works because both sides come from
+            // the live Competition graph rendered this pass.
+            var currentGame = ViewModel.Competition?.CurrentGame;
+            var undoTargetGame = ViewModel.UndoTargetGame;
+            @foreach (var dayGroup in games.GroupBy(g => g.PlayedOn.Date))
+            {
+              @if (multiDay)
+              {
+                <div class="game-day-divider">@dayGroup.Key.ToString("ddd d MMM", System.Globalization.CultureInfo.CurrentCulture)</div>
+              }
+              @foreach (var game in dayGroup)
+              {
+                <GameViewRow Game="game"
+                             ShowSim="@(ReferenceEquals(game, currentGame))"
+                             ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
+                             IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"
+                             Disabled="@ViewModel.IsBusy"
+                             OnSim="@(async () => await ViewModel.SimulateGame())"
+                             OnUndo="@(() => ViewModel.Undo())"
+                             OnRedo="@(async () => await ViewModel.RedoLastGame())" />
+              }
+            }
+          }
+        </MudPaper>
+      </MudItem>
+      <MudItem xs="12" md="5">
+        <MudPaper Class="pa-3" Elevation="1">
+          <MudText Typo="Typo.h6" GutterBottom="true">Standings</MudText>
+          @foreach (var group in ViewModel.Groups)
+          {
+            <GroupView Group="group" />
+          }
+        </MudPaper>
+      </MudItem>
+    </MudGrid>
+  </MudStack>
+}
+
+<MudOverlay Visible="_helpOpen" DarkBackground="true" ZIndex="9999" @onclick="@(() => _helpOpen = false)">
+  <MudPaper Class="pa-4" Elevation="6" Style="max-width: 36rem;" @onclick:stopPropagation="true">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-3">
+      <MudText Typo="Typo.h6">Quick settings &amp; shortcuts</MudText>
+      <MudSpacer />
+      <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" OnClick="@(() => _helpOpen = false)" />
+    </MudStack>
+
+    <MudText Typo="Typo.subtitle2" Class="mb-2">Simulation speed</MudText>
+    <MudToggleGroup T="SimulationSpeed"
+                    Value="ViewModel.Speed"
+                    ValueChanged="@((SimulationSpeed v) => ViewModel.Speed = v)"
+                    Size="Size.Small"
+                    Color="Color.Primary"
+                    CheckMark="false"
+                    SelectionMode="SelectionMode.SingleSelection"
+                    Disabled="ViewModel.IsBusy">
+      <MudToggleItem Value="SimulationSpeed.Slow" Text="🐢 Slow" />
+      <MudToggleItem Value="SimulationSpeed.Normal" Text="▶ Normal" />
+      <MudToggleItem Value="SimulationSpeed.Fast" Text="🐇 Fast" />
+      <MudToggleItem Value="SimulationSpeed.Instant" Text="⚡ Instant" />
+    </MudToggleGroup>
+    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mt-1 d-block">
+      Overrides the global Settings default for this session.
+    </MudText>
+
+    <MudDivider Class="my-3" />
+
+    <MudText Typo="Typo.subtitle2" Class="mb-2">Keyboard shortcuts</MudText>
+    <KeyboardShortcuts />
+  </MudPaper>
+</MudOverlay>
+
+@code {
+  [Parameter] public int Id { get; set; }
+
+  int? _lastLoadedId;
+  bool _helpOpen;
+  DotNetObjectReference<CompetitionDetail>? _selfRef;
+
+  protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
+
+  protected override void OnParametersSet()
+  {
+    if (_lastLoadedId == Id) { return; }
+    _lastLoadedId = Id;
+    ViewModel.Load(Id);
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      // Document-level keydown forwarder. Listening on document (not the page root div) means Space + arrows
+      // work without the user clicking into the page first; the JS side skips when focus is on an input.
+      _selfRef = DotNetObjectReference.Create(this);
+      await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
+    }
+  }
+
+  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+  // Invoked by the document-level JS keydown listener. Sim keys no-op once finished; nav keys remain.
+  [JSInvokable]
+  public async Task OnKeyDown(string key, bool ctrlKey, bool shiftKey)
+  {
+    // Overlay keys ABOVE the IsBusy gate — user must always be able to open / close help, even while a sim runs.
+    // H or ? toggles. H works on every layout; ? is awkward on de-DE (Shift+ß).
+    if (key is "?" or "h" or "H") { _helpOpen = !_helpOpen; StateHasChanged(); return; }
+    if (_helpOpen)
+    {
+      if (key == "Escape") { _helpOpen = false; StateHasChanged(); }
+      // Swallow everything else while the overlay is up — no sim shortcuts firing behind it.
+      return;
+    }
+
+    if (ViewModel.IsBusy || ViewModel.Competition is null) { return; }
+
+    if (!ViewModel.IsFinished)
+    {
+      if (key == " " && shiftKey) { await ViewModel.SimulateRound(); return; }
+      if (key == " ") { await ViewModel.SimulateGame(); return; }
+      if (key is "r" or "R") { await ViewModel.SimulateRound(); return; }
+      if (key is "t" or "T") { await ViewModel.SimulateAll(); return; }
+    }
+
+    if ((ctrlKey && key is "z" or "Z") || (!ctrlKey && key is "u" or "U"))
+    {
+      ViewModel.Undo();
+      return;
+    }
+
+    if (ctrlKey && key is "y" or "Y")
+    {
+      await ViewModel.RedoLastGame();
+      return;
+    }
+
+    // Prev/next round wraps within the current stage; prev/next stage wraps within the competition.
+    switch (key)
+    {
+      case "ArrowLeft": StepRound(-1); break;
+      case "ArrowRight": StepRound(+1); break;
+      case "ArrowUp": StepStage(-1); break;
+      case "ArrowDown": StepStage(+1); break;
+      case "Escape": Nav.NavigateTo("/competitions"); break;
+    }
+  }
+
+  void StepRound(int delta)
+  {
+    var rounds = ViewModel.Rounds;
+    if (rounds.Count == 0 || ViewModel.SelectedRound is null) { return; }
+    var i = rounds.IndexOf(ViewModel.SelectedRound);
+    if (i < 0) { return; }
+    ViewModel.SelectedRound = rounds[(i + delta + rounds.Count) % rounds.Count];
+  }
+
+  void StepStage(int delta)
+  {
+    var stages = ViewModel.Stages;
+    if (stages.Count == 0 || ViewModel.SelectedStage is null) { return; }
+    var i = stages.IndexOf(ViewModel.SelectedStage);
+    if (i < 0) { return; }
+    ViewModel.SelectedStage = stages[(i + delta + stages.Count) % stages.Count];
+  }
+
+  public async ValueTask DisposeAsync()
+  {
+    ViewModel.PropertyChanged -= OnVmChanged;
+    if (_selfRef is not null)
+    {
+      try { await JS.InvokeVoidAsync("ffKeyboard.unregisterDocumentHandler"); }
+      catch (JSDisconnectedException) { /* Page navigated away; the listener's gone with it. */ }
+      _selfRef.Dispose();
+      _selfRef = null;
+    }
+  }
+}

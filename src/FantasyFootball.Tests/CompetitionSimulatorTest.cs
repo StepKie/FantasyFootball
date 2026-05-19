@@ -104,4 +104,36 @@ public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(outpu
 		// TODO Test different rules:
 		// goal difference, head-to-head, more goals scored etc.
 	}
+
+	[Fact]
+	public async Task SimulateRound_DoesNotHang_WhenAllGamesArePlaceholders()
+	{
+		// Reproduces the live freeze: a Round whose only Game has a placeholder team
+		// (qualifier returned null — e.g. greedy 3rd-place allocation failed). Pre-fix,
+		// SimulateRound's `while (!round.IsFinished)` loop calls SimulateGame, which
+		// early-returns because IsReadyToStart is false. CurrentGame stays the same.
+		// The loop spins synchronously forever and freezes the browser tab.
+		var roundOf16 = new Round { Name = "Round of 16" };
+		var koGame = new KoGame(
+			idInCompetition: 1,
+			qualifierHome: Qualifier.FromGroup("A1"),
+			qualifierAway: Qualifier.FromGroup("B2"),
+			playedOn: new DateTime(2024, 1, 1));
+		koGame.Round = roundOf16;
+		koGame.HomeGroupQualifier!.Game = koGame;
+		koGame.AwayGroupQualifier!.Game = koGame;
+		roundOf16.KoGames.Add(koGame);
+		// Qualifier.Get returns null (no Competition/Group wired) → HomeTeam is a placeholder
+		// → IsReadyToStart is false.
+		koGame.HomeTeam.Type.Should().Be(TeamType.PLACEHOLDER);
+
+		var competition = new Competition { Name = "Dummy", ShortName = "X" };
+		var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 0);
+
+		// Without the progress check this hangs forever. Cap with a generous timeout —
+		// the fix should bail in microseconds.
+		var act = async () => await simulator.SimulateRound(roundOf16).WaitAsync(TimeSpan.FromSeconds(5));
+		await act.Should().NotThrowAsync("simulator must bail when a round can't make progress");
+		roundOf16.IsFinished.Should().BeFalse("the stuck game is still SCHEDULED — bail is intentional, not completion");
+	}
 }

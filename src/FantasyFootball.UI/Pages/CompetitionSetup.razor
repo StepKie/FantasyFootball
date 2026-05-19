@@ -1,0 +1,115 @@
+@page "/competitions/setup"
+@using FantasyFootball.Data
+@using FantasyFootball.Models
+@using FantasyFootball.UI.ViewModels
+@inject CompetitionSetupViewModel ViewModel
+@inject NavigationManager Nav
+@implements IDisposable
+
+<PageTitle>New competition — Fantasy Football</PageTitle>
+
+<MudButton Href="/competitions"
+           StartIcon="@Icons.Material.Filled.ArrowBack"
+           Variant="Variant.Text"
+           Class="mb-3">
+  Back to competitions
+</MudButton>
+
+<MudStack Spacing="3">
+  <MudStack Row="true" Spacing="2" Style="max-width: 40rem;">
+    <MudSelect T="CompetitionType"
+               Label="Competition"
+               Value="ViewModel.SelectedCompetitionType"
+               ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)">
+      @foreach (var t in ViewModel.CompetitionTypes)
+      {
+        <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
+      }
+    </MudSelect>
+    <MudSelect T="int"
+               Label="Year"
+               Value="ViewModel.SelectedYear"
+               ValueChanged="@(v => ViewModel.SelectedYear = v)"
+               Style="max-width: 10rem;">
+      @foreach (var year in ViewModel.Years)
+      {
+        <MudSelectItem Value="@year">@year</MudSelectItem>
+      }
+    </MudSelect>
+  </MudStack>
+
+  <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap">
+    <MudButton Variant="Variant.Outlined"
+               StartIcon="@Icons.Material.Filled.History"
+               OnClick="@(() => ViewModel.ResetToHistoricTeams())">
+      Original teams
+    </MudButton>
+    <MudButton Variant="Variant.Outlined"
+               StartIcon="@Icons.Material.Filled.Shuffle"
+               OnClick="@(() => ViewModel.FillRandomTeams())">
+      Random draw
+    </MudButton>
+  </MudStack>
+
+  <MudGrid Spacing="2">
+    @foreach (var group in ViewModel.Groups)
+    {
+      <MudItem xs="12" sm="6" md="4" lg="3">
+        <MudPaper Class="pa-3" Elevation="1" Style="height: 100%;">
+          <MudText Typo="Typo.subtitle1" GutterBottom="true">@group.Name</MudText>
+          <MudDivider Class="mb-2" />
+          @foreach (var team in group.Teams)
+          {
+            <div class="d-flex align-center mb-1" style="gap: 0.5rem;">
+              <FlagIcon Team="team" Size="20" />
+              <MudText Typo="Typo.body2">@team.Name</MudText>
+              <MudSpacer />
+              <MudText Typo="Typo.caption" Color="Color.Secondary">@team.Elo</MudText>
+            </div>
+          }
+        </MudPaper>
+      </MudItem>
+    }
+  </MudGrid>
+
+  <MudStack Row="true" Justify="Justify.Center" Spacing="2">
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Size="Size.Large"
+               StartIcon="@Icons.Material.Filled.PlayArrow"
+               OnClick="StartSim"
+               Disabled="@(ViewModel.IsBusy || ViewModel.Groups.Count == 0)">
+      Simulate
+    </MudButton>
+  </MudStack>
+
+  @* Manual per-team edit deferred — will land as a MudDialog opening a team
+     picker. Same for batch simulation ("simulate N of these"). *@
+</MudStack>
+
+@code {
+  protected override void OnInitialized()
+  {
+    ViewModel.PropertyChanged += OnVmChanged;
+    // ViewModel is AddScoped (per-tab singleton); refresh from IDataService on
+    // each navigation so the picker reflects the currently-selected type/year.
+    ViewModel.SyncFromDataService();
+  }
+
+  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+  static string DisplayName(CompetitionType t) => t switch
+  {
+    CompetitionType.WM => "World Cup",
+    CompetitionType.EM => "European Championship",
+    _ => t.ToString(),
+  };
+
+  void StartSim()
+  {
+    var competition = ViewModel.Create();
+    Nav.NavigateTo($"/competitions/{competition.Id}");
+  }
+
+  public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
+}

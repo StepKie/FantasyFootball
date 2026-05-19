@@ -1,0 +1,110 @@
+@page "/settings"
+@using FantasyFootball.Data
+@using FantasyFootball.Services
+@using FantasyFootball.UI.ViewModels
+@inject SettingsViewModel ViewModel
+@implements IDisposable
+
+<PageTitle>Settings — Fantasy Football</PageTitle>
+
+<MudPaper Class="pa-4" Elevation="1">
+  <MudStack Spacing="4">
+    <MudSelect T="CultureInfo"
+               Label="Language"
+               Value="ViewModel.SelectedLanguage"
+               ValueChanged="@(c => ViewModel.SelectedLanguage = c)"
+               ToStringFunc="@(c => c?.NativeName ?? "")">
+      @foreach (var c in ViewModel.SupportedLanguages)
+      {
+        <MudSelectItem Value="@c">@c.NativeName</MudSelectItem>
+      }
+    </MudSelect>
+
+    <div>
+      <MudText Typo="Typo.body2" Class="mb-2"><strong>Default simulation speed</strong></MudText>
+      <MudToggleGroup T="SimulationSpeed"
+                      Value="ViewModel.SelectedSimulationSpeed"
+                      ValueChanged="@((SimulationSpeed v) => ViewModel.SelectedSimulationSpeed = v)"
+                      Size="Size.Small"
+                      Color="Color.Primary"
+                      CheckMark="false"
+                      SelectionMode="SelectionMode.SingleSelection"
+                      Style="width: fit-content;">
+        <MudToggleItem Value="SimulationSpeed.Slow" Text="🐢 Slow" />
+        <MudToggleItem Value="SimulationSpeed.Normal" Text="▶ Normal" />
+        <MudToggleItem Value="SimulationSpeed.Fast" Text="🐇 Fast" />
+        <MudToggleItem Value="SimulationSpeed.Instant" Text="⚡ Instant" />
+      </MudToggleGroup>
+      <MudText Typo="Typo.caption" Color="Color.Secondary" Class="d-block mt-1">
+        Per-session override available in the quick settings overlay on the competition page (press <kbd>H</kbd> or <kbd>?</kbd>).
+      </MudText>
+    </div>
+
+    <div>
+      <MudText Typo="Typo.body2" Class="mb-2"><strong>Flag style</strong></MudText>
+      <MudRadioGroup T="FlagStyle"
+                     Value="ViewModel.SelectedFlagStyle"
+                     ValueChanged="@(v => ViewModel.SelectedFlagStyle = v)">
+        <MudRadio Value="@FlagStyle.Square">Square</MudRadio>
+        <MudRadio Value="@FlagStyle.Round">Round</MudRadio>
+        <MudRadio Value="@FlagStyle.RoundTier">Round with Elo tier</MudRadio>
+      </MudRadioGroup>
+      <MudText Typo="Typo.caption" Color="Color.Secondary" Class="d-block mt-2 mb-2">
+        Preview (changes apply across the app immediately):
+      </MudText>
+      <div class="d-flex align-center" style="gap: 1.5rem;" @key="ViewModel.SelectedFlagStyle">
+        <FlagIcon Code="br" Elo="1850" Size="40" Title="Gold tier" Alt="" />
+        <FlagIcon Code="dk" Elo="1550" Size="40" Title="Silver tier" Alt="" />
+        <FlagIcon Code="sa" Elo="1400" Size="40" Title="Bronze tier" Alt="" />
+        <FlagIcon Code="bo" Elo="1200" Size="40" Title="No tier" Alt="" />
+      </div>
+    </div>
+
+    <div>
+      <MudText Typo="Typo.body2" Class="mb-2"><strong>Competition logos</strong></MudText>
+      <MudSwitch T="bool"
+                 Value="ViewModel.UseOfficialCompetitionLogos"
+                 ValueChanged="@(v => ViewModel.UseOfficialCompetitionLogos = v)"
+                 Color="Color.Primary"
+                 Label="Use official logos (if locally placed)" />
+      <MudText Typo="Typo.caption" Color="Color.Secondary" Class="d-block mt-1">
+        Off: built-in Material Icons. On: app loads from
+        <code>wwwroot/competition-icons/official/{type}.svg</code>. Files
+        not placed there yet fall back to the Material Icon automatically
+        (no broken-image placeholders).
+      </MudText>
+      <div class="d-flex align-center mt-3" style="gap: 1.5rem;">
+        <CompetitionTypeIcon Type="@CompetitionType.WM" Size="40" />
+        <CompetitionTypeIcon Type="@CompetitionType.EM" Size="40" />
+      </div>
+    </div>
+
+    <MudDivider />
+
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+      <MudButton Variant="Variant.Outlined"
+                 Color="Color.Error"
+                 OnClick="ViewModel.ResetDatabaseCommand.ExecuteAsync"
+                 Disabled="ViewModel.IsBusy">
+        Reset database
+      </MudButton>
+      @if (ViewModel.IsBusy)
+      {
+        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+        <MudText Typo="Typo.body2">Resetting…</MudText>
+      }
+    </MudStack>
+
+    <MudDivider />
+
+    <MudText Typo="Typo.caption">App version: @ViewModel.AppVersion</MudText>
+  </MudStack>
+</MudPaper>
+
+@code {
+  protected override void OnInitialized() => ViewModel.PropertyChanged += OnViewModelChanged;
+
+  void OnViewModelChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+  public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
+}

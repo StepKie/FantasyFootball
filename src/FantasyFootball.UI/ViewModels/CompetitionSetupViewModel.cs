@@ -1,100 +1,104 @@
-﻿namespace FantasyFootball.ViewModels;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using FantasyFootball.Data;
+using FantasyFootball.Data.CompetitionFactories;
+using FantasyFootball.Models;
+using FantasyFootball.Repositories;
+using FantasyFootball.Services;
+using static FantasyFootball.Messaging;
 
-[QueryProperty(nameof(SelectedCompetitionType), nameof(SelectedCompetitionType))]
-[QueryProperty(nameof(NewTeamIdSelected), nameof(NewTeamIdSelected))]
-public partial class CompetitionSetupViewModel : GeneralViewModel
+namespace FantasyFootball.UI.ViewModels;
+
+/// <summary>
+/// Backs the /competitions/setup page. Pick a competition type + year,
+/// reset the participants to the historical lineup or draw a random one
+/// weighted by Elo, then simulate. The page navigates to /competitions/{id}
+/// on simulate so the user lands in the games + standings view.
+///
+/// MAUI's <c>CompetitionSetupViewModel</c> also supports per-team manual
+/// edit (round-trip to TeamsPage with SelectionType.RETURN_ID) and batch
+/// simulation; both are deferred for the web port — manual edit will land
+/// as a MudDialog when needed, batch sim is a small follow-up.
+///
+/// Per-run Elo override (the "make my favourite team stronger for this
+/// run only" feature from the user story) is deferred behind #19.
+/// </summary>
+public partial class CompetitionSetupViewModel : ObservableObject
 {
+	readonly IRepository _repo;
 	readonly IDataService _dataService;
+	// Suppresses the OnSelectedYearChanged → ResetToHistoricTeams cascade during ctor,
+	// so we don't pay for CSV parsing twice on page load (once via the type-change
+	// cascade, once via the explicit SelectedYear assignment below).
+	readonly bool _initialized;
+
+	public CompetitionSetupViewModel(IRepository repo, IDataService dataService)
+	{
+		_repo = repo;
+		_dataService = dataService;
+		SyncFromDataService();
+		_initialized = true;
+		ResetToHistoricTeams();
+	}
+
+	/// <summary>
+	/// Refresh the picker state from <see cref="IDataService"/>. The VM is
+	/// registered <c>AddScoped</c>, so it's a per-tab singleton — without this,
+	/// returning to <c>/competitions/setup</c> after changing the type filter
+	/// elsewhere keeps the stale selection from the first navigation.
+	/// Page calls this in <c>OnInitialized</c>; the constructor also calls it.
+	/// </summary>
+	public void SyncFromDataService()
+	{
+		SelectedCompetitionType = _dataService.SelectedCompetitionType;
+		// Guard: if the persisted year isn't available for the current type,
+		// fall back to the most recent year for that type.
+		var validYears = SelectedCompetitionType.AvailableYears().ToList();
+		SelectedYear = validYears.Contains(_dataService.SelectedCompetitionYear)
+			? _dataService.SelectedCompetitionYear
+			: validYears.Last();
+	}
+
+	public IList<CompetitionType> CompetitionTypes { get; } = [CompetitionType.WM, CompetitionType.EM];
 
 	[ObservableProperty]
-	public partial int NewTeamIdSelected { get; set; }
-
-	[ObservableProperty]
-	[NotifyPropertyChangedFor(nameof(CompetitionLogo))]
 	[NotifyPropertyChangedFor(nameof(Years))]
-	[NotifyPropertyChangedFor(nameof(SelectedYear))]
 	public partial CompetitionType SelectedCompetitionType { get; set; }
 
 	[ObservableProperty]
 	public partial int SelectedYear { get; set; }
 
 	[ObservableProperty]
-	public partial int DefaultAmountOfBatchSimulations { get; set; } = 5;
+	public partial List<Group> Groups { get; set; } = [];
 
 	[ObservableProperty]
-	public partial List<Group> Groups { get; set; }
-
-	/// <summary>
-	/// Stable collection backing the Setup page's grouped CollectionView.
-	/// Windows MAUI's CollectionView with IsGrouped=True crashes (stowed exception in
-	/// Microsoft.UI.Xaml.dll) when ItemsSource is replaced with a fresh List reference.
-	/// We keep one ObservableCollection and rebuild its contents whenever Groups changes.
-	/// </summary>
-	public ObservableCollection<TeamsGroup> TeamsByGroup { get; } = [];
-
-	void RebuildTeamsByGroup()
-	{
-		TeamsByGroup.Clear();
-		if (Groups is null) return;
-		foreach (var g in Groups)
-		{
-			TeamsByGroup.Add(new TeamsGroup(g));
-		}
-	}
-
-	partial void OnGroupsChanged(List<Group> value) => RebuildTeamsByGroup();
-
-	public CompetitionSetupViewModel(IDataService dataService)
-	{
-		_dataService = dataService;
-		SelectedCompetitionType = _dataService.SelectedCompetitionType;
-		SelectedYear = _dataService.SelectedCompetitionYear;
-		ResetToHistoricTeams();
-	}
-
-	public IList<CompetitionType> CompetitionTypes { get; } = [CompetitionType.WM, CompetitionType.EM];
+	public partial bool IsBusy { get; set; }
 
 	public IList<int> Years => SelectedCompetitionType.AvailableYears().ToList();
-	public ImageSource CompetitionLogo => IconStrings.GetCompetitionLogo(SelectedCompetitionType);
-	public TeamViewModel? SelectedTeam { get; set; }
 
-	[RelayCommand]
-	void ResetToHistoricTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType, SelectedYear).CreateFromHistoricalData(SelectedYear);
+	public void ResetToHistoricTeams() =>
+		Groups = GroupFactory.For(_dataService, SelectedCompetitionType, SelectedYear)
+			.CreateFromHistoricalData(SelectedYear);
 
-	[RelayCommand]
-	void FillRandomTeams() => Groups = GroupFactory.For(_dataService, SelectedCompetitionType, SelectedYear).DrawRandom();
+	public void FillRandomTeams() =>
+		Groups = GroupFactory.For(_dataService, SelectedCompetitionType, SelectedYear).DrawRandom();
 
-	[RelayCommand]
-	async Task SimulateSingle()
+	public Competition Create()
 	{
-		AppShell.SetGamesVisible(true);
-		var competition = CreateCompetition();
-		ServiceHelper.GetService<StandingsViewModel>()!.UpdateStandings(competition);
-		var route = $"//PlayTab/{nameof(GamesPage)}?{nameof(GamesViewModel.CompetitionId)}={competition.Id}";
-		await Shell.Current.GoToAsync(route);
-	}
-
-	[RelayCommand]
-	async Task SimulateBatch()
-	{
-		await Shell.Current.GoToAsync("..").ConfigureAwait(false);
-		// TODO Show Progress on CompetitionsPage
-		for (int i = 1; i <= DefaultAmountOfBatchSimulations; i++)
+		IsBusy = true;
+		try
 		{
-			var competition = CreateCompetition();
-			var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 0);
-			IsBusy = true;
-			await simulator.Simulate().ConfigureAwait(false);
-			IsBusy = false;
-			Log.Debug($"Simulation {i} of {DefaultAmountOfBatchSimulations} complete.");
-		}
-	}
+			var factory = CompetitionFactory.For(SelectedCompetitionType, SelectedYear, Groups);
+			var competition = factory.Create();
+			_repo.Save(competition);
+			MessageBus.Send(new CompetitionCreatedMessage(competition));
 
-	[RelayCommand]
-	async Task SelectTeam(TeamViewModel old)
-	{
-		SelectedTeam = old;
-		await Shell.Current.GoToAsync($"{nameof(TeamsPage)}?{nameof(TeamsViewModel.SelectionMode)}={(int)SelectionType.RETURN_ID}");
+			return competition;
+		}
+		finally
+		{
+			IsBusy = false;
+		}
 	}
 
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
@@ -106,30 +110,6 @@ public partial class CompetitionSetupViewModel : GeneralViewModel
 	partial void OnSelectedYearChanged(int value)
 	{
 		_dataService.SelectedCompetitionYear = value;
-		ResetToHistoricTeams();
-	}
-
-	partial void OnNewTeamIdSelectedChanged(int value)
-	{
-		if (SelectedTeam is not null)
-		{
-			Group containingGroup = Groups.First(g => g.Teams.Contains(SelectedTeam.Team));
-			containingGroup.Teams.Replace(t => t.Equals(SelectedTeam.Team), Repo.Get<Team>(value)!);
-			OnPropertyChanged(nameof(Groups));
-			RebuildTeamsByGroup();
-			SelectedTeam = null;
-		}
-	}
-
-	Competition CreateCompetition()
-	{
-		IsBusy = true;
-		var factory = CompetitionFactory.For(SelectedCompetitionType, SelectedYear, Groups);
-		var competition = factory.Create();
-		Repo.Save(competition);
-		Log.Debug("Competition created");
-		IsBusy = false;
-
-		return competition;
+		if (_initialized) { ResetToHistoricTeams(); }
 	}
 }

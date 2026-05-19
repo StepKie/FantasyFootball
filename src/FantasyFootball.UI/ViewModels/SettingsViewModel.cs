@@ -1,52 +1,84 @@
-﻿namespace FantasyFootball.ViewModels;
+using System.Reflection;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using FantasyFootball.Services;
 
-public partial class SettingsViewModel : GeneralViewModel
+namespace FantasyFootball.UI.ViewModels;
+
+/// <summary>
+/// Settings page view-model. Lives in the shared UI library so the same instance
+/// works in both Blazor WASM and the future MAUI BlazorWebView host.
+///
+/// Uses constructor DI (no service-locator). The MAUI XAML version of this VM
+/// still exists in the FantasyFootball.Maui project and continues to back the
+/// XAML SettingsPage until the BlazorWebView host (Phase 5) takes over.
+/// </summary>
+public partial class SettingsViewModel : ObservableObject
 {
-	public IList<CultureInfo> SupportedLanguages { get; init; }
+	readonly ISettingsService _settings;
+	readonly IDataService _dataService;
+
+	public SettingsViewModel(ISettingsService settings, IDataService dataService)
+	{
+		_settings = settings;
+		_dataService = dataService;
+
+		SelectedLanguage = settings.LastUsedLanguage;
+		SelectedSimulationSpeed = SimulationSpeedExtensions.FromTimeSpan(settings.SimulationSpeed);
+		SelectedFlagStyle = settings.FlagStyle;
+		UseOfficialCompetitionLogos = settings.UseOfficialCompetitionLogos;
+		SupportedLanguages = [new("en"), new("de")];
+	}
+
+	public IList<CultureInfo> SupportedLanguages { get; }
 
 	[ObservableProperty]
 	public partial CultureInfo SelectedLanguage { get; set; }
 
 	[ObservableProperty]
-	public partial double SimulationSpeedMs { get; set; }
+	public partial SimulationSpeed SelectedSimulationSpeed { get; set; }
 
 	[ObservableProperty]
-	public partial bool IsBusyA { get; set; }
-	public bool IsBusyB { get; set; }
+	public partial FlagStyle SelectedFlagStyle { get; set; }
 
-	readonly ISettingsService _settings;
-	readonly IDataService _dataService;
+	[ObservableProperty]
+	public partial bool UseOfficialCompetitionLogos { get; set; }
 
-	public SettingsViewModel(ISettingsService settingsService, IDataService dataService)
-	{
-		_settings = settingsService;
-		_dataService = dataService;
-		SelectedLanguage = settingsService.LastUsedLanguage;
+	[ObservableProperty]
+	public partial bool IsBusy { get; set; }
 
-		SimulationSpeedMs = _settings.SimulationSpeed.TotalMilliseconds;
-		SupportedLanguages = [new("en"), new("de"),];
-	}
-
-	public string AppVersion => AppInfo.VersionString;
+	// GetEntryAssembly returns the host (FantasyFootball.Web or FantasyFootball.Maui),
+	// not this Razor library — so the displayed version reflects the running app.
+	public string AppVersion => Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "dev";
 
 	partial void OnSelectedLanguageChanged(CultureInfo value)
 	{
-		_settings.AddOrUpdateValue("Language", value.Name);
-		// TODO Changed in .NET MAUI 10
-		// LocalizationResourceManager.Current.CurrentCulture = value;
-		CultureInfo.CurrentUICulture = value;
-		CultureInfo.DefaultThreadCurrentCulture = value;
-		CultureInfo.DefaultThreadCurrentUICulture = value;
+		_settings.LastUsedLanguage = value;
+		// TODO: applying the culture to running localized strings in Blazor WASM requires
+		// a separate i18n strategy (e.g., IStringLocalizer + StateHasChanged broadcasting).
+		// Tracked as a follow-up; for now the choice persists but only takes effect on reload.
 	}
 
-	partial void OnSimulationSpeedMsChanged(double value) => _settings.SimulationSpeed = TimeSpan.FromMilliseconds(value);
+	partial void OnSelectedSimulationSpeedChanged(SimulationSpeed value)
+		=> _settings.SimulationSpeed = value.ToDelay();
+
+	partial void OnSelectedFlagStyleChanged(FlagStyle value)
+		=> _settings.FlagStyle = value;
+
+	partial void OnUseOfficialCompetitionLogosChanged(bool value)
+		=> _settings.UseOfficialCompetitionLogos = value;
 
 	[RelayCommand]
 	async Task ResetDatabase()
 	{
-		// TODO The ActivityIndicator will not show on Android: https://github.com/dotnet/maui/issues/8135
 		IsBusy = true;
-		await Task.Run(_dataService.Reset).ConfigureAwait(false);
-		IsBusy = false;
+		try
+		{
+			await Task.Run(_dataService.Reset).ConfigureAwait(false);
+		}
+		finally
+		{
+			IsBusy = false;
+		}
 	}
 }

@@ -1,0 +1,29 @@
+@page "/about"
+@using FantasyFootball.UI.Components
+
+<PageTitle>About — Fantasy Football</PageTitle>
+
+<MudStack Spacing="4" Style="max-width: 48rem;">
+  <div>
+    <MudText Typo="Typo.h5" HtmlTag="h1">Fantasy Football</MudText>
+    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-1">
+      Simulate football competitions — World Cups and Euros — directly in your browser.
+      Saved competitions live in this browser's local storage; nothing is sent to a server.
+    </MudText>
+  </div>
+
+  <div>
+    <MudText Typo="Typo.subtitle1" Class="mb-2"><strong>Keyboard shortcuts</strong></MudText>
+    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
+      Active on the competition detail page. Press <kbd>?</kbd> there to open this list as an overlay.
+    </MudText>
+    <KeyboardShortcuts />
+  </div>
+
+  <div>
+    <MudText Typo="Typo.subtitle1" Class="mb-1"><strong>Source &amp; issues</strong></MudText>
+    <MudText Typo="Typo.body2" Color="Color.Secondary">
+      <MudLink Href="https://github.com/StepKie/FantasyFootball" Target="_blank" Rel="noopener noreferrer">github.com/StepKie/FantasyFootball</MudLink>
+    </MudText>
+  </div>
+</MudStack>

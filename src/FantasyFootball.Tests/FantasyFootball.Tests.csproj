@@ -37,7 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FantasyFootball\FantasyFootball.csproj" />
+    <ProjectReference Include="..\FantasyFootball.Core\FantasyFootball.Core.csproj" />
+    <ProjectReference Include="..\FantasyFootball.UI\FantasyFootball.UI.csproj" />
   </ItemGroup>
 
 </Project>

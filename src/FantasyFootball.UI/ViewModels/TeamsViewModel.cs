@@ -1,78 +1,89 @@
-﻿namespace FantasyFootball.ViewModels;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using FantasyFootball.Models;
+using FantasyFootball.Services;
+using static FantasyFootball.Messaging;
 
-[QueryProperty(nameof(SelectionMode), nameof(SelectionMode))]
-[QueryProperty(nameof(SelectedConfederation), nameof(SelectedConfederation))]
-public partial class TeamsViewModel : GeneralViewModel
+namespace FantasyFootball.UI.ViewModels;
+
+/// <summary>
+/// Teams page view-model. Lives in the shared UI library so the same instance
+/// works in both Blazor WASM and the future MAUI BlazorWebView host.
+///
+/// Differences from the MAUI VM (FantasyFootball.ViewModels.TeamsViewModel):
+/// - No Shell navigation; the .razor page handles row-click navigation via NavigationManager.
+/// - No SelectionMode / QueryProperty plumbing; that flow was MAUI-Shell specific and will
+///   be replaced by a dialog/route on the web side as the CompetitionSetup port lands.
+/// - +new-team is deliberately omitted: the MAUI version is [Obsolete] and shows an
+///   "under construction" dialog. Will land as a MudDialog when the feature is built.
+/// </summary>
+public partial class TeamsViewModel : ObservableObject
 {
-	[ObservableProperty]
-	public partial string SelectedConfederation { get; set; } = Res.All;
+	readonly IDataService _dataService;
 
-	[ObservableProperty]
-	public partial int SelectionMode { get; set; }
+	List<TeamListItem> _allTeams = [];
 
-	/// <summary> Currently unused </summary>
-	[ObservableProperty]
-	public partial TeamType SelectedType { get; set; }
-
-	[ObservableProperty]
-	public partial TeamViewModel? SelectedTeam { get; set; }
-
-	List<TeamViewModel> _allTeams = [];
-
-	[ObservableProperty]
-	public partial ObservableCollection<TeamViewModel> TeamsInSelectedConfederation { get; set; } = [];
-
-	public IList<string> Confederations { get; } = Confederation.ALL.Select(c => c.Name).Prepend(Res.All).ToList();
-
-	public TeamsViewModel()
+	public TeamsViewModel(IDataService dataService)
 	{
+		_dataService = dataService;
+
 		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => LoadTeams());
+		MessageBus.Register<DataResetMessage>(this, (_, _) => LoadTeams());
+
+		Confederations = Confederation.ALL.Select(c => c.Name).Prepend(AllLabel).ToList();
+		SelectedConfederation = AllLabel;
 		LoadTeams();
 	}
 
-	[RelayCommand]
+	// "All" sentinel used to show every confederation. AppResources.All exists but the
+	// resource manager isn't reliably initialized in Blazor WASM without extra wiring;
+	// a fixed English string is fine here until the i18n follow-up lands.
+	public const string AllLabel = "All";
+
+	public IList<string> Confederations { get; }
+
+	[ObservableProperty]
+	public partial string SelectedConfederation { get; set; }
+
+	[ObservableProperty]
+	public partial ObservableCollection<TeamListItem> TeamsInSelectedConfederation { get; set; } = [];
+
+	[ObservableProperty]
+	public partial bool IsBusy { get; set; }
+
 	void LoadTeams()
 	{
 		IsBusy = true;
-		var teamsDb = DataService.AllTeams;
-		_allTeams = new(teamsDb.OrderByDescending(t => t.Elo).Select((t, rank) => TeamViewModel.Create(rank + 1, t.Id)));
-		IsBusy = false;
-		UpdateSelectedTeams();
-	}
-
-	partial void OnSelectedConfederationChanged(string value)
-	{
-		Log.Debug($"Selected confederation changed to {value}");
-		UpdateSelectedTeams();
-	}
-
-	async partial void OnSelectedTeamChanged(TeamViewModel? value)
-	{
-		if (value is null) { return; }
-
-		var route = (SelectionType)SelectionMode switch
+		try
 		{
-			SelectionType.SHOW_DETAILS => $"{nameof(TeamDetailPage)}?{nameof(TeamViewModel.TeamId)}={value.TeamId}&{nameof(TeamViewModel.Rank)}={value.Rank}",
-			SelectionType.RETURN_ID => $"//{nameof(CompetitionsPage)}/{nameof(CompetitionSetupPage)}?{nameof(CompetitionSetupViewModel.NewTeamIdSelected)}={value.Team.Id}",
-			_ => throw new ArgumentOutOfRangeException($"Unexpected SelectionType {SelectionMode}"),
-		};
-
-		// Clear selection, reset selection mode and navigate away
-		SelectedTeam = null;
-		SelectionMode = (int)SelectionType.SHOW_DETAILS;
-		await Shell.Current.GoToAsync(route);
-
+			_allTeams = _dataService.AllTeams
+				.OrderByDescending(t => t.Elo)
+				.Select((t, i) => new TeamListItem(i + 1, t))
+				.ToList();
+			UpdateFilteredTeams();
+		}
+		finally
+		{
+			IsBusy = false;
+		}
 	}
 
-	void UpdateSelectedTeams()
+	partial void OnSelectedConfederationChanged(string value) => UpdateFilteredTeams();
+
+	void UpdateFilteredTeams()
 	{
-		TeamsInSelectedConfederation = new(_allTeams.Where(tvm => SelectedConfederation == Res.All || tvm.Team.Country.Confederation.Name == SelectedConfederation));
+		var filtered = _allTeams.Where(item =>
+			SelectedConfederation == AllLabel ||
+			item.Team.Country.Confederation.Name == SelectedConfederation);
+
+		TeamsInSelectedConfederation = new ObservableCollection<TeamListItem>(filtered);
 	}
-
-	[RelayCommand]
-	[Obsolete]
-	Task AddNewTeam() => Shell.Current.DisplayAlert(Res.UnderConstruction, Res.UnderConstructionDetailMsg, "OK"); // Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
-
-	[RelayCommand]
-	Task OpenSelectedTeam(Team selected) => Shell.Current.GoToAsync($"{nameof(TeamDetailPage)}");
 }
+
+/// <summary>
+/// Lightweight projection for the Teams list. Rank is computed once at load time
+/// from the global Elo ordering; the full TeamViewModel (with editing/save logic)
+/// will land with the TeamDetail page port.
+/// </summary>
+public record TeamListItem(int Rank, Team Team);
