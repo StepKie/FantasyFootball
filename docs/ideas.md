@@ -24,6 +24,23 @@ Unsorted feature/UX ideas that aren't yet committed to a PR plan. Promote to
   without navigating away and back.
 - Mirrors how OneFootball / Sofascore handle preferences.
 
+## Venue / location surface
+
+- **Show venue on game cards** (e.g. where the kickoff time sits, or next to it).
+  Configurable visibility so users who want a clean row can hide it.
+- **A richer location surface** somewhere in the app — stadium, city,
+  capacity, previous games played here in this competition, the home team
+  if it's a club ground / national stadium, anything else venue-flavoured.
+  Open question on shape:
+  - Popover/drawer when clicking the venue chip on a game card?
+  - Dedicated "Venues" tab on the competition page?
+  - Venue page reachable from each game's details popover (see
+    `ui-polish-plan.md § Click-for-game-details`)?
+- Data work first: venue is currently a `Game.Location` string (or
+  similar). For previous-games / capacity / coords we'd need a Venue
+  entity with proper relationships. Probably a follow-up to whatever
+  surface lands first.
+
 ## Manual competition setup — drawing-ceremony UX
 
 Applies to the *manual* setup mode only (Classic / Random unchanged):
