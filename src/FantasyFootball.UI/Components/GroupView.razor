@@ -86,11 +86,12 @@
       var ownThirdPlaceTeam = _standings.ElementAtOrDefault(2)?.Team;
       if (ownThirdPlaceTeam is not null)
       {
-        // Reference equality, not Id: nested Team instances inside Competition have Id=0
-        // in the LocalStorage path, so {0}.Contains(0) would falsely mark every group green.
+        // NamedUniqueId.Equals handles both worlds: ReferenceEquals fallback for Id=0 entities
+        // (LocalStorage path — Team instances inside Competition have unset Ids), and Id-equality
+        // for Id>0 entities (future SQLite-backed BlazorWebView host). Stable across both paths.
         _thirdPlaceAdvanced = laterQualifiers
           .Where(q => !string.IsNullOrEmpty(q.ThirdPlaceCombination))
-          .Any(q => ReferenceEquals(q.Get(), ownThirdPlaceTeam));
+          .Any(q => Equals(q.Get(), ownThirdPlaceTeam));
       }
     }
   }

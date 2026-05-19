@@ -10,8 +10,6 @@
 
 <PageTitle>@(ViewModel.Competition?.ShortName ?? "Competition") — Fantasy Football</PageTitle>
 
-<div>
-
 <MudButton Href="/competitions"
            StartIcon="@Icons.Material.Filled.ArrowBack"
            Variant="Variant.Text"
@@ -177,8 +175,6 @@ else
     <KeyboardShortcuts />
   </MudPaper>
 </MudOverlay>
-
-</div>
 
 @code {
   [Parameter] public int Id { get; set; }

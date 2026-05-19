@@ -95,6 +95,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public void Load(int competitionId)
 	{
 		ClearUndo();
+		// Clear any in-flight pulse target — a FlashRecentlyFinished from a previous
+		// competition would otherwise eventually fire StateHasChanged on this page for nothing.
+		RecentlyFinishedGame = null;
 		Competition = _repo.Get<Competition>(competitionId);
 		if (Competition is null) { return; }
 
@@ -123,15 +126,27 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (_simulator is null || Competition?.CurrentGame is null || IsBusy) { return; }
 		var gameBeingSimmed = Competition.CurrentGame;
+		// Set undo target + pulse marker UP FRONT, before the sim's Task.Delay throws an
+		// async yield. The next render flushes them in the same frame as the new score —
+		// otherwise the buttons + pulse appear ~Task.Delay(GameDelay) ms after the score,
+		// visibly lagging the click.
+		PushUndoEntry(gameBeingSimmed);
+		_ = FlashRecentlyFinished(gameBeingSimmed);
 		IsBusy = true;
 		try
 		{
-			await _simulator.SimulateGame(gameBeingSimmed);
+			// Single-game user click — no inter-game pacing needed; tell the simulator to skip
+			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
+			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
 			_repo.Save(Competition);
-			PushUndoEntry(gameBeingSimmed);
 		}
-		finally { OnSimBatchComplete(); }
-		_ = FlashRecentlyFinished(gameBeingSimmed);
+		finally
+		{
+			// In finally, not try, so an exception inside SimulateGame can't leave a stale entry
+			// pointing at a still-SCHEDULED game (Undo icon would otherwise appear on an unplayed row).
+			if (!gameBeingSimmed.IsFinished) { _undoStack.TryPop(out _); }
+			OnSimBatchComplete();
+		}
 	}
 
 	// Round / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
@@ -185,15 +200,23 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (_simulator is null || Competition is null || IsBusy) { return; }
 		if (!_undoStack.TryPeek(out var game)) { return; }
 
+		// Pulse fires before the await — same reasoning as SimulateGame, so the new score
+		// and the pulse animation land in the same render frame.
+		_ = FlashRecentlyFinished(game);
 		IsBusy = true;
 		try
 		{
 			game.ClearResult();
-			await _simulator.SimulateGame(game);
+			// Same as SimulateGame: single-game user click, no inter-game pacing.
+			await _simulator.SimulateGame(game, delayAfter: false);
 			_repo.Save(Competition);
 		}
-		finally { OnSimBatchComplete(); }
-		_ = FlashRecentlyFinished(game);
+		finally
+		{
+			// Exception-safe pop — if the sim throws after ClearResult, we still leave the stack honest.
+			if (!game.IsFinished) { _undoStack.TryPop(out _); }
+			OnSimBatchComplete();
+		}
 	}
 
 	async Task FlashRecentlyFinished(Game game)
