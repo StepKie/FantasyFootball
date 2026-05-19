@@ -108,6 +108,11 @@ public partial class CompetitionsViewModel : ObservableObject
 			FinishedCompetitions = new ObservableCollection<Competition>(ofType.Where(c => c.IsFinished));
 			// Reuse FinishedCompetitions so the "finished" predicate stays in one place.
 			OverallRecords = Standings.CreateFrom(FinishedCompetitions.SelectMany(c => c.GamesByDate));
+			// Re-pick the tab on every reload (including bus-driven ones like
+			// DataResetMessage fired while the user is already on this page).
+			// Same rule as SyncFromDataService: prefer Active when there's
+			// something to do or when nothing exists yet.
+			ActiveTabIndex = (ActiveCompetitions.Count > 0 || FinishedCompetitions.Count == 0) ? 0 : 1;
 		}
 		finally
 		{

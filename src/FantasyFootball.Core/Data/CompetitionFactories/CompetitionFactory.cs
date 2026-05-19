@@ -68,7 +68,7 @@ public abstract class CompetitionFactory
 		// invalid Preserve JSON with forward $refs (MetadataReferenceNotFound on
 		// next load). Cloning before CreateStages binds the cloned list to this
 		// Competition's Stages + Games for the rest of the build.
-		Groups = Groups.Select(g => new Group { Name = g.Name, Teams = [.. g.Teams] }).ToList();
+		Groups = [.. Groups.Select(g => g.ShallowClone())];
 
 		Competition competition = new()
 		{

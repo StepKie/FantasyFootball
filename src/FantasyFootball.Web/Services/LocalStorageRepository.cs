@@ -155,7 +155,8 @@ public sealed class LocalStorageRepository : IRepository
         // browser's LocalStorage is full. Best-effort: remove the corrupt key
         // anyway so the next load doesn't loop on it, and log loudly.
         Log.Warning("[LocalStorageRepository] Quarantine write for {Bucket} failed: {Error}. Removing corrupt key and continuing with empty bucket.", typeof(T).Name, quarantineEx.Message);
-        try { _localStorage.RemoveItem(KeyFor<T>()); } catch { /* nothing else we can do */ }
+        try { _localStorage.RemoveItem(KeyFor<T>()); }
+        catch (Exception removeEx) { Log.Warning("[LocalStorageRepository] Could not remove corrupt {Bucket} key: {Error}. Corrupt data may persist on next load.", typeof(T).Name, removeEx.Message); }
       }
       items = [];
     }
