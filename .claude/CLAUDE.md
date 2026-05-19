@@ -65,15 +65,28 @@ changes). `dotnet watch` auto-rebuilds on file changes and tells the open
 browser tab to reload itself.
 
 ```bash
-dotnet watch --project src/FantasyFootball.Web run --launch-profile https
+DOTNET_WATCH_RESTART_ON_RUDE_EDIT=true \
+  dotnet watch --project src/FantasyFootball.Web run --launch-profile https --non-interactive
 ```
 
-Do **not** pass `--no-hot-reload` — that disables the browser-refresh
-signal as a side effect, so the open tab stays on the old bundle even
-after the rebuild completes. Default behaviour auto-rebuilds AND tells
-the open tab to reload itself. C# hot-reload itself is flaky for WASM,
-but the page reload still picks up changes correctly because the
-rebuilt DLLs are downloaded fresh by the page on reload.
+Three flags / env vars worth understanding:
+
+- **No `--no-hot-reload`** — that disables the browser-refresh signal as
+  a side effect, leaving the open tab on the old bundle.
+- **`--non-interactive`** — without this, "rude edits" (e.g. changing
+  the type of a field) cause `dotnet watch` to prompt
+  `Restart? Yes/No/Always/Never` on stdin. The background process can't
+  receive that input and the watch hangs — the old WASM bundle keeps
+  being served while new code is uncompiled. Symptom: file changes
+  silently don't appear in the browser.
+- **`DOTNET_WATCH_RESTART_ON_RUDE_EDIT=true`** — answers the rude-edit
+  prompt as "Always restart" so the same trap doesn't reopen if
+  `--non-interactive` ever stops being respected.
+
+If you see file changes not landing in the browser despite a successful
+rebuild log, suspect the rude-edit prompt — kill all `dotnet` processes
+(`Get-Process dotnet | Stop-Process -Force`) and relaunch with the env
+var + flag above.
 
 If `dotnet watch` exits with code 127 in the background task notifications,
 that's the harness reporting the process was killed (e.g. by Stop-Process

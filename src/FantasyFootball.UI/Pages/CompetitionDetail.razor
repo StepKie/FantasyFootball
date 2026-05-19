@@ -206,11 +206,17 @@ else
   // Sim keys no-op once a tournament has finished; nav keys remain available.
   async Task HandleKey(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs e)
   {
-    if (ViewModel.IsBusy || ViewModel.Competition is null) { return; }
-
-    // H or ? toggles the help overlay. H works on every layout; ? is awkward on de-DE (Shift+ß).
+    // Overlay keys ABOVE the IsBusy gate — user must always be able to open / close help, even while a sim runs.
+    // H or ? toggles. H works on every layout; ? is awkward on de-DE (Shift+ß).
     if (e.Key is "?" or "h" or "H") { _helpOpen = !_helpOpen; return; }
-    if (_helpOpen && e.Key == "Escape") { _helpOpen = false; return; }
+    if (_helpOpen)
+    {
+      if (e.Key == "Escape") { _helpOpen = false; }
+      // Swallow everything else while the overlay is up — no sim shortcuts firing behind it.
+      return;
+    }
+
+    if (ViewModel.IsBusy || ViewModel.Competition is null) { return; }
 
     if (!ViewModel.IsFinished)
     {

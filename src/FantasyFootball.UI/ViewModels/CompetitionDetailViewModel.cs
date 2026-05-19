@@ -30,7 +30,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	// In-memory rewind stack. JSON snapshot per user-initiated Sim Game action.
 	// Each entry remembers which game was *about to be* simmed at snapshot time, so the per-row
 	// undo button can attach to that specific game once the sim is done.
-	// Cap is generous: 50 is more than a per-game WC48 run would ever push.
+	// Cap at 50: a per-game WC48 run (80 group + KO games) will exceed this and evict the oldest
+	// entries beyond the 50 most recent. Acceptable: users rarely undo across more than a handful of games.
 	const int UndoCap = 50;
 	readonly record struct UndoEntry(string Json, int SimmedGameId);
 	readonly Stack<UndoEntry> _undoStack = new();
@@ -194,7 +195,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (Competition is null) { return; }
 		_undoStack.Push(new UndoEntry(CompetitionSnapshot.Serialize(Competition), simmedGameId));
-		// Cap. Stack<T> has no Dequeue, so drop oldest by rebuilding when over.
+		// Cap. Stack<T> has no Dequeue, so drop the oldest (bottom-of-stack) by rebuilding from the top.
+		// .Take(UndoCap) takes the newest UndoCap entries (Stack enumerates top→bottom), .Reverse()
+		// puts them in bottom→top order so pushing back replays the original ordering.
 		if (_undoStack.Count > UndoCap)
 		{
 			var keep = _undoStack.Take(UndoCap).Reverse().ToArray();
