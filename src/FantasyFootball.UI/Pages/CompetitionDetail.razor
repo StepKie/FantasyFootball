@@ -36,10 +36,6 @@ else
           Winner: @ViewModel.Winner.Name
         </MudChip>
       }
-      <MudSpacer />
-      <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                     Color="Color.Error"
-                     OnClick="DeleteAndExit" />
     </MudStack>
 
     @if (!ViewModel.IsFinished)
@@ -161,13 +157,6 @@ else
   }
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
-
-  void DeleteAndExit()
-  {
-    // TODO: confirmation dialog before destroy.
-    ViewModel.Delete();
-    Nav.NavigateTo("/competitions");
-  }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
 }

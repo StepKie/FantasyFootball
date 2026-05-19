@@ -5,6 +5,7 @@
 @using FantasyFootball.UI.ViewModels
 @inject CompetitionsViewModel ViewModel
 @inject NavigationManager Nav
+@inject IDialogService DialogService
 @implements IDisposable
 
 <PageTitle>Competitions — Fantasy Football</PageTitle>
@@ -50,6 +51,7 @@
           <MudTh>Name</MudTh>
           <MudTh Style="width: 10rem;">Started</MudTh>
           <MudTh>Status</MudTh>
+          <MudTh Style="width: 3rem;"></MudTh>
         </HeaderContent>
         <RowTemplate>
           <MudTd>@context.Id</MudTd>
@@ -61,6 +63,12 @@
           </MudTd>
           <MudTd>@context.SimulationStart.ToString("g")</MudTd>
           <MudTd>@context.CurrentStatus</MudTd>
+          <MudTd Style="text-align: right;" @onclick:stopPropagation="true">
+            <MudIconButton Icon="@Icons.Material.Filled.DeleteOutline"
+                           Size="Size.Small"
+                           Color="Color.Default"
+                           OnClick="@(() => ConfirmDelete(context))" />
+          </MudTd>
         </RowTemplate>
       </MudTable>
     </MudTabPanel>
@@ -85,6 +93,7 @@
             <MudTh Style="width: 10rem;">Started</MudTh>
             <MudTh Style="width: 2.5rem;"></MudTh>
             <MudTh>Winner</MudTh>
+            <MudTh Style="width: 3rem;"></MudTh>
           </HeaderContent>
           <RowTemplate>
             <MudTd>@context.Id</MudTd>
@@ -97,6 +106,12 @@
             <MudTd>@context.SimulationStart.ToString("g")</MudTd>
             <MudTd><FlagIcon Team="context.Winner" Size="24" /></MudTd>
             <MudTd>@context.Winner?.Name</MudTd>
+            <MudTd Style="text-align: right;" @onclick:stopPropagation="true">
+              <MudIconButton Icon="@Icons.Material.Filled.DeleteOutline"
+                             Size="Size.Small"
+                             Color="Color.Default"
+                             OnClick="@(() => ConfirmDelete(context))" />
+            </MudTd>
           </RowTemplate>
         </MudTable>
 
@@ -170,6 +185,19 @@
   }
 
   void StartNew() => Nav.NavigateTo("/competitions/setup");
+
+  async Task ConfirmDelete(Competition competition)
+  {
+    var options = new MessageBoxOptions
+    {
+      Title = "Delete competition?",
+      Message = $"Delete {competition.ShortName} #{competition.Id}? This cannot be undone.",
+      YesText = "Delete",
+      CancelText = "Cancel",
+    };
+    var confirmed = await DialogService.ShowMessageBoxAsync(options);
+    if (confirmed == true) { ViewModel.Delete(competition); }
+  }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
 }

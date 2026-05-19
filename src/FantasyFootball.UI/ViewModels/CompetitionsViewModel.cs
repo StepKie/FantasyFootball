@@ -92,6 +92,12 @@ public partial class CompetitionsViewModel : ObservableObject
 		Reload();
 	}
 
+	public void Delete(Competition competition)
+	{
+		_repo.Delete(competition);
+		MessageBus.Send(new CompetitionDeletedMessage(competition.Id));
+	}
+
 	public void Reload()
 	{
 		IsBusy = true;
