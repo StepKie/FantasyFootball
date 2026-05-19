@@ -95,6 +95,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public void Load(int competitionId)
 	{
 		ClearUndo();
+		// Clear any in-flight pulse target — a FlashRecentlyFinished from a previous
+		// competition would otherwise eventually fire StateHasChanged on this page for nothing.
+		RecentlyFinishedGame = null;
 		Competition = _repo.Get<Competition>(competitionId);
 		if (Competition is null) { return; }
 
@@ -135,6 +138,10 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			// Single-game user click — no inter-game pacing needed; tell the simulator to skip
 			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
 			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
+			// If the sim bailed early (e.g. game wasn't ready), the speculative undo entry we
+			// pushed up front would be stale. Pop it so the per-row Undo icon doesn't appear
+			// on an unplayed game.
+			if (!gameBeingSimmed.IsFinished) { _undoStack.TryPop(out _); }
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }
@@ -200,6 +207,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			game.ClearResult();
 			// Same as SimulateGame: single-game user click, no inter-game pacing.
 			await _simulator.SimulateGame(game, delayAfter: false);
+			// Sim could fail / be skipped after we cleared the result — pop the undo entry
+			// so the Undo button doesn't sit on a now-blank row.
+			if (!game.IsFinished) { _undoStack.TryPop(out _); }
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }
