@@ -122,6 +122,7 @@ else
                 <GameViewRow Game="game"
                              ShowSim="@(ReferenceEquals(game, currentGame))"
                              ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
+                             IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"
                              Disabled="@ViewModel.IsBusy"
                              OnSim="@(async () => await ViewModel.SimulateGame())"
                              OnUndo="@(() => ViewModel.Undo())"

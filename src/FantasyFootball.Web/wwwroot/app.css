@@ -111,6 +111,15 @@ body {
 .scoreboard-loser { opacity: 0.65; }
 .scoreboard-pending { opacity: 0.65; }
 
+/* Just-finished pulse: brief green tint that fades to transparent, fires once per single-game sim. */
+@keyframes scoreboard-pulse {
+  0%   { background-color: rgba(0, 184, 107, 0.22); }
+  100% { background-color: transparent; }
+}
+.scoreboard-row-just-finished {
+  animation: scoreboard-pulse 1.5s ease-out;
+}
+
 /* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
 .scoreboard-action {
   min-width: 5rem;

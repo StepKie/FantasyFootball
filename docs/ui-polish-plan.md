@@ -412,7 +412,8 @@ Still open (next session):
 - [x] Keyboard navigation (full mapping; help overlay; About reference).
 - [x] Undo stack (in-memory, per-game snapshot, capped at 50; UI attaches the
   Undo button to the row of the just-simmed game).
-- [ ] Just-finished game highlight (game row + standings rows pulse).
+- [x] Just-finished game highlight (game row pulse on single-game sim and redo;
+  standings-row pulse deferred to a follow-up).
 - [ ] Score reveal animation.
 - [ ] Standings row reorder via FLIP.
 - [ ] Optional `Qual %` column in group stage (Monte Carlo).

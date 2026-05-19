@@ -64,6 +64,14 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public partial bool IsBusy { get; set; }
 
 	/// <summary>
+	/// The game whose result was most recently established (or replaced) via a single-game sim.
+	/// Set immediately after Simulate / Redo, cleared automatically after ~1.5s so the row's pulse
+	/// animation only fires once per action. Multi-game sims (round / stage / tournament) don't pulse.
+	/// </summary>
+	[ObservableProperty]
+	public partial Game? RecentlyFinishedGame { get; set; }
+
+	/// <summary>
 	/// Per-session speed override for sim actions. Defaults to the Settings value
 	/// on Load; the page's speed control mutates it for the current visit only.
 	/// `Instant` short-circuits the inter-game delay and suppresses per-game
@@ -123,6 +131,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			PushUndoEntry(gameBeingSimmed);
 		}
 		finally { OnSimBatchComplete(); }
+		_ = FlashRecentlyFinished(gameBeingSimmed);
 	}
 
 	// Round / Stage / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
@@ -198,6 +207,15 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }
+		_ = FlashRecentlyFinished(game);
+	}
+
+	async Task FlashRecentlyFinished(Game game)
+	{
+		RecentlyFinishedGame = game;
+		await Task.Delay(1500);
+		// Only clear if no later sim has overwritten us — otherwise the next pulse races with ours.
+		if (ReferenceEquals(RecentlyFinishedGame, game)) { RecentlyFinishedGame = null; }
 	}
 
 	void PushUndoEntry(Game simmedGame)

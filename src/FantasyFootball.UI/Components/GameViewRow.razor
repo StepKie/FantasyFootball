@@ -1,6 +1,6 @@
 @using FantasyFootball.Models
 
-<div class="scoreboard-row">
+<div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "")">
   <div class="scoreboard-group-tag">
     <span class="scoreboard-group-tag-letter">@_groupLetter</span>
     <span class="scoreboard-group-tag-time">@Game.PlayedOn.ToString("HH:mm")</span>
@@ -45,6 +45,7 @@
   [Parameter] public Game Game { get; set; } = null!;
   [Parameter] public bool ShowSim { get; set; }
   [Parameter] public bool ShowUndo { get; set; }
+  [Parameter] public bool IsJustFinished { get; set; }
   [Parameter] public bool Disabled { get; set; }
   [Parameter] public EventCallback OnSim { get; set; }
   [Parameter] public EventCallback OnUndo { get; set; }
