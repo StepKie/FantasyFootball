@@ -138,13 +138,15 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			// Single-game user click — no inter-game pacing needed; tell the simulator to skip
 			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
 			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
-			// If the sim bailed early (e.g. game wasn't ready), the speculative undo entry we
-			// pushed up front would be stale. Pop it so the per-row Undo icon doesn't appear
-			// on an unplayed game.
-			if (!gameBeingSimmed.IsFinished) { _undoStack.TryPop(out _); }
 			_repo.Save(Competition);
 		}
-		finally { OnSimBatchComplete(); }
+		finally
+		{
+			// In finally, not try, so an exception inside SimulateGame can't leave a stale entry
+			// pointing at a still-SCHEDULED game (Undo icon would otherwise appear on an unplayed row).
+			if (!gameBeingSimmed.IsFinished) { _undoStack.TryPop(out _); }
+			OnSimBatchComplete();
+		}
 	}
 
 	// Round / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
@@ -207,12 +209,14 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			game.ClearResult();
 			// Same as SimulateGame: single-game user click, no inter-game pacing.
 			await _simulator.SimulateGame(game, delayAfter: false);
-			// Sim could fail / be skipped after we cleared the result — pop the undo entry
-			// so the Undo button doesn't sit on a now-blank row.
-			if (!game.IsFinished) { _undoStack.TryPop(out _); }
 			_repo.Save(Competition);
 		}
-		finally { OnSimBatchComplete(); }
+		finally
+		{
+			// Exception-safe pop — if the sim throws after ClearResult, we still leave the stack honest.
+			if (!game.IsFinished) { _undoStack.TryPop(out _); }
+			OnSimBatchComplete();
+		}
 	}
 
 	async Task FlashRecentlyFinished(Game game)
