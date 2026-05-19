@@ -23,9 +23,16 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 
 	public async Task Simulate()
 	{
+		Stage? lastAttempted = null;
 		while (!Competition.IsFinished)
 		{
 			var stage = Competition.Stages.First(stage => !stage.IsFinished);
+			if (ReferenceEquals(stage, lastAttempted))
+			{
+				Log.Warning($"Tournament sim stuck on stage {stage.Name}; bailing.");
+				break;
+			}
+			lastAttempted = stage;
 			await SimulateStage(stage);
 		}
 
@@ -37,9 +44,17 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		Log.Debug("------------------------------------");
 		Log.Debug($"Starting Stage: {stage.Name}");
 		Log.Debug("------------------------------------");
+		Round? lastAttempted = null;
 		while (!stage.IsFinished)
 		{
-			await SimulateRound(stage.CurrentRound!);
+			var current = stage.CurrentRound!;
+			if (ReferenceEquals(current, lastAttempted))
+			{
+				Log.Warning($"Stage {stage.Name} stuck on round {current.Name}; bailing.");
+				break;
+			}
+			lastAttempted = current;
+			await SimulateRound(current);
 			foreach (var group in stage.Groups)
 			{
 				Print(group);
@@ -53,9 +68,21 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		Log.Debug("--------------------------------------");
 		Log.Debug($"Starting Round: {round.Name}");
 		Log.Debug("--------------------------------------");
+		Game? lastAttempted = null;
 		while (!round.IsFinished)
 		{
-			await SimulateGame(round.CurrentGame!);
+			var current = round.CurrentGame!;
+			// Progress check: if SimulateGame can't advance the same game twice in a row,
+			// the round is stuck (typically a KoGame whose qualifier returned a placeholder
+			// because greedy 3rd-place allocation failed — issue #12). Bail rather than
+			// spinning forever and freezing the browser tab.
+			if (ReferenceEquals(current, lastAttempted))
+			{
+				Log.Warning($"Round {round.Name}: game {current} stays non-ready; bailing out of sim loop.");
+				break;
+			}
+			lastAttempted = current;
+			await SimulateGame(current);
 		}
 		Log.Debug("--------------------------------------");
 	}
@@ -65,6 +92,10 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		if (!game.IsReadyToStart)
 		{
 			Log.Debug($"Game {game} is not ready to start...");
+			// Yield even on the early-return path so the browser stays responsive
+			// if any other caller spins on us — defence in depth against the freeze
+			// SimulateRound's progress-check now prevents.
+			await Task.Yield();
 			return;
 		}
 
