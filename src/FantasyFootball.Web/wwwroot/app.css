@@ -111,6 +111,20 @@ body {
 .scoreboard-loser { opacity: 0.65; }
 .scoreboard-pending { opacity: 0.65; }
 
+/* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */
+.game-day-divider {
+  font-size: 0.75rem;
+  color: var(--mud-palette-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.5rem 0.75rem 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.game-day-divider:first-child {
+  margin-top: 0;
+}
+
 /* Competition-type icon stack: MudIcon underneath, img overlay on top. If img 404s, onerror hides it and the MudIcon shows through. */
 .comp-type-icon-stack {
   display: inline-flex;
