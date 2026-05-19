@@ -123,15 +123,19 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (_simulator is null || Competition?.CurrentGame is null || IsBusy) { return; }
 		var gameBeingSimmed = Competition.CurrentGame;
+		// Set undo target + pulse marker UP FRONT, before the sim's Task.Delay throws an
+		// async yield. The next render flushes them in the same frame as the new score —
+		// otherwise the buttons + pulse appear ~Task.Delay(GameDelay) ms after the score,
+		// visibly lagging the click.
+		PushUndoEntry(gameBeingSimmed);
+		_ = FlashRecentlyFinished(gameBeingSimmed);
 		IsBusy = true;
 		try
 		{
 			await _simulator.SimulateGame(gameBeingSimmed);
 			_repo.Save(Competition);
-			PushUndoEntry(gameBeingSimmed);
 		}
 		finally { OnSimBatchComplete(); }
-		_ = FlashRecentlyFinished(gameBeingSimmed);
 	}
 
 	// Round / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
@@ -185,6 +189,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (_simulator is null || Competition is null || IsBusy) { return; }
 		if (!_undoStack.TryPeek(out var game)) { return; }
 
+		// Pulse fires before the await — same reasoning as SimulateGame, so the new score
+		// and the pulse animation land in the same render frame.
+		_ = FlashRecentlyFinished(game);
 		IsBusy = true;
 		try
 		{
@@ -193,7 +200,6 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }
-		_ = FlashRecentlyFinished(game);
 	}
 
 	async Task FlashRecentlyFinished(Game game)
