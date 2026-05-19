@@ -295,18 +295,29 @@ Four PRs, in order. Each branches from `develop` and lands back to
 
 ### PR 1 — IA + speed
 
-- Bug: third-place match populates winners, not losers.
-- Kill Home page; `/` → `/competitions`.
-- Kill H1s on all pages; add breadcrumb context line where useful.
-- Merge Competitions + Statistics into one page with Active / Finished
-  tabs.
-- About page reachable via `?` icon (placeholder content + keyboard help
-  table that fills in once PR 3 lands).
-- Constrain picker widths; type + year on one row.
-- `Start new` → `+` icon button.
-- Standings column header nits (drop `Team`, possibly `#`).
-- Speed control next to sim buttons (Slow / Normal / Fast / Instant);
+**Status**: in flight on branch `feature/ui-polish-1-ia-speed`. Nearly
+all items shipped; one item still open. See `docs/failure-log.md` for
+session-spanning context (bugs hit, what's fixed, what's left).
+
+- [x] Bug: third-place match populates winners, not losers.
+- [x] Kill Home page; `/` → `/competitions`.
+- [x] Kill H1s on all pages; add breadcrumb context line where useful.
+- [ ] **Merge Competitions + Statistics** into one page with Active /
+  Finished tabs. *(Deferred — the only PR 1 item not yet shipped.)*
+- [x] About page reachable via `?` icon (placeholder content + keyboard
+  help table that fills in once PR 3 lands).
+- [x] Constrain picker widths; type + year on one row.
+- [x] `Start new` → `+` icon button.
+- [x] Standings column header nits (drop `Team`, possibly `#`).
+- [x] Speed control next to sim buttons (Slow / Normal / Fast / Instant);
   per-session override of the Settings default `SimulationSpeed`.
+
+**Out-of-scope fixes that landed during PR 1** (bugs found while testing
+the IA pass; see failure-log for detail): third-place placeholder
+"Winner" vs "Loser", premature 3rd-place resolve, post-create stale
+list, Instant-mode UI freeze, `MetadataReferenceNotFound` JSON
+corruption, `[Ignore]` on `Qualifier.QualifiedTeam`, defensive try/catch
+around third-place resolve, corrupt-blob quarantine on load.
 
 ### PR 2 — Identity
 
