@@ -132,7 +132,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		IsBusy = true;
 		try
 		{
-			await _simulator.SimulateGame(gameBeingSimmed);
+			// Single-game user click — no inter-game pacing needed; tell the simulator to skip
+			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
+			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }
