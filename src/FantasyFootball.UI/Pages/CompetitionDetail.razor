@@ -68,6 +68,11 @@ else
                    Disabled="ViewModel.IsBusy">
           Tournament
         </MudButton>
+        <MudIconButton Icon="@Icons.Material.Filled.Undo"
+                       Size="Size.Small"
+                       OnClick="@(() => ViewModel.Undo())"
+                       Disabled="@(!ViewModel.CanUndo || ViewModel.IsBusy)"
+                       title="Undo last sim (Ctrl+Z or U)" />
         @if (ViewModel.IsBusy)
         {
           <MudProgressCircular Size="Size.Small" Indeterminate="true" />
@@ -216,6 +221,12 @@ else
       if (e.Key is "r" or "R") { await ViewModel.SimulateRound(); return; }
       if (e.Key is "s" or "S") { await ViewModel.SimulateStage(); return; }
       if (e.Key is "t" or "T") { await ViewModel.SimulateAll(); return; }
+    }
+
+    if ((e.CtrlKey && e.Key is "z" or "Z") || (!e.CtrlKey && e.Key is "u" or "U"))
+    {
+      ViewModel.Undo();
+      return;
     }
 
     // Prev/next round wraps within the current stage; prev/next stage wraps within the competition.

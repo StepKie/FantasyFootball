@@ -1,9 +1,5 @@
 using System.IO;
-using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
-using SQLite;
 
 namespace FantasyFootball.Tests;
 
@@ -15,12 +11,7 @@ namespace FantasyFootball.Tests;
 /// </summary>
 public class LocalStorageSerializationTests(ITestOutputHelper output) : BaseTest(output)
 {
-	static JsonSerializerOptions BuildOptions() => new()
-	{
-		// Same resolver the Web host uses.
-		TypeInfoResolver = new TestIgnoreResolver(),
-		ReferenceHandler = ReferenceHandler.Preserve,
-	};
+	static JsonSerializerOptions BuildOptions() => CompetitionSnapshot.JsonOptions;
 
 	[Fact]
 	public void CreatedCompetition_FromFactory_RoundTrips()
@@ -141,42 +132,4 @@ public class LocalStorageSerializationTests(ITestOutputHelper output) : BaseTest
 		act.Should().NotThrow();
 	}
 
-	/// <summary>
-	/// Local copy of the Web host's IgnoreAttributeTypeInfoResolver. The Tests
-	/// project does not reference Web, so the resolver can't be shared yet —
-	/// it's <c>public sealed</c>, so InternalsVisibleTo doesn't help either.
-	/// Real fix: relocate the resolver into a shared project (Core or a new
-	/// FantasyFootball.Serialization helper) so both Web and Tests reference
-	/// the same type. Tracked as a follow-up issue.
-	///
-	/// **MAINTENANCE OBLIGATION**: keep this in sync with
-	/// <c>src/FantasyFootball.Web/Services/IgnoreAttributeTypeInfoResolver.cs</c>.
-	/// Any new entry in <c>BackPointerCollections</c> there must be mirrored
-	/// here, or the round-trip tests will silently lose coverage.
-	/// </summary>
-	sealed class TestIgnoreResolver : DefaultJsonTypeInfoResolver
-	{
-		static readonly HashSet<(Type DeclaringType, string PropertyName)> BackPointerCollections =
-		[
-			(typeof(Confederation), nameof(Confederation.Countries)),
-			(typeof(Country), nameof(Country.Clubs)),
-		];
-
-		public override JsonTypeInfo GetTypeInfo(Type type, JsonSerializerOptions options)
-		{
-			var info = base.GetTypeInfo(type, options);
-			var toRemove = new List<JsonPropertyInfo>();
-			foreach (var property in info.Properties)
-			{
-				if (property.AttributeProvider is not PropertyInfo propInfo) { continue; }
-				var hasExactIgnore = propInfo
-					.GetCustomAttributes(typeof(IgnoreAttribute), inherit: false)
-					.Any(a => a.GetType() == typeof(IgnoreAttribute));
-				var isBackPointer = BackPointerCollections.Contains((type, propInfo.Name));
-				if (hasExactIgnore || isBackPointer) { toRemove.Add(property); }
-			}
-			foreach (var p in toRemove) { info.Properties.Remove(p); }
-			return info;
-		}
-	}
 }

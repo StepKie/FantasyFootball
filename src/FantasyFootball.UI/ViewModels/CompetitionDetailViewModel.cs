@@ -27,6 +27,11 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 	CompetitionSimulator? _simulator;
 
+	// In-memory rewind stack. JSON snapshot per user-initiated sim action (Game / Round / Stage / Tournament).
+	// Cap mirrors the failure-log sketch: 50 is more than a per-game WC48 run would ever push.
+	const int UndoCap = 50;
+	readonly Stack<string> _undoStack = new();
+
 	public CompetitionDetailViewModel(IRepository repo, ISettingsService settings, IDataService dataService)
 	{
 		_repo = repo;
@@ -34,6 +39,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		_dataService = dataService;
 
 		MessageBus.Register<GameFinishedMessage>(this, (_, msg) => OnGameFinished(msg.FinishedGame));
+		MessageBus.Register<DataResetMessage>(this, (_, _) => ClearUndo());
 	}
 
 	[ObservableProperty]
@@ -68,8 +74,11 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public Team? Winner => Competition?.Winner;
 	public bool IsFinished => Competition?.IsFinished ?? false;
 
+	public bool CanUndo => _undoStack.Count > 0;
+
 	public void Load(int competitionId)
 	{
+		ClearUndo();
 		Competition = _repo.Get<Competition>(competitionId);
 		if (Competition is null) { return; }
 
@@ -97,6 +106,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public async Task SimulateGame()
 	{
 		if (_simulator is null || Competition?.CurrentGame is null || IsBusy) { return; }
+		PushUndoSnapshot();
 		IsBusy = true;
 		try
 		{
@@ -109,6 +119,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public async Task SimulateRound()
 	{
 		if (_simulator is null || Competition?.CurrentStage?.CurrentRound is null || IsBusy) { return; }
+		PushUndoSnapshot();
 		IsBusy = true;
 		try
 		{
@@ -121,6 +132,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public async Task SimulateStage()
 	{
 		if (_simulator is null || Competition?.CurrentStage is null || IsBusy) { return; }
+		PushUndoSnapshot();
 		IsBusy = true;
 		try
 		{
@@ -133,6 +145,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public async Task SimulateAll()
 	{
 		if (_simulator is null || Competition is null || Competition.IsFinished || IsBusy) { return; }
+		PushUndoSnapshot();
 		IsBusy = true;
 		try
 		{
@@ -140,6 +153,43 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			_repo.Save(Competition);
 		}
 		finally { OnSimBatchComplete(); }
+	}
+
+	public void Undo()
+	{
+		if (_undoStack.Count == 0 || Competition is null || IsBusy) { return; }
+		var json = _undoStack.Pop();
+		var restored = CompetitionSnapshot.Deserialize(json);
+		if (restored is null) { OnPropertyChanged(nameof(CanUndo)); return; }
+
+		Competition = restored;
+		_repo.Save(Competition);
+		_simulator = new CompetitionSimulator(Competition, _repo);
+		ApplySpeedToSimulator();
+		// Re-resolve selection against the new object graph; OnSimBatchComplete does exactly that.
+		OnSimBatchComplete();
+		OnPropertyChanged(nameof(CanUndo));
+	}
+
+	void PushUndoSnapshot()
+	{
+		if (Competition is null) { return; }
+		_undoStack.Push(CompetitionSnapshot.Serialize(Competition));
+		// Cap. Stack<T> has no Dequeue, so drop oldest by rebuilding when over.
+		if (_undoStack.Count > UndoCap)
+		{
+			var keep = _undoStack.Take(UndoCap).Reverse().ToArray();
+			_undoStack.Clear();
+			foreach (var s in keep) { _undoStack.Push(s); }
+		}
+		OnPropertyChanged(nameof(CanUndo));
+	}
+
+	void ClearUndo()
+	{
+		if (_undoStack.Count == 0) { return; }
+		_undoStack.Clear();
+		OnPropertyChanged(nameof(CanUndo));
 	}
 
 	/// <summary>
@@ -157,8 +207,11 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
 			SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
 			OnPropertyChanged(nameof(Competition));
+			// Finished competitions are immutable in the UX — the user can't go back to before the trophy.
+			if (Competition.IsFinished) { ClearUndo(); }
 		}
 		IsBusy = false;
+		OnPropertyChanged(nameof(CanUndo));
 	}
 
 	void OnGameFinished(Game finished)

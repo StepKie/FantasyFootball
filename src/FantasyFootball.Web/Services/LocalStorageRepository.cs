@@ -1,8 +1,8 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Blazored.LocalStorage;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
+using FantasyFootball.Services;
 using Serilog;
 
 namespace FantasyFootball.Web.Services;
@@ -32,12 +32,7 @@ public sealed class LocalStorageRepository : IRepository
     typeof(Country),
   ];
 
-  // STJ freezes JsonSerializerOptions on first use; one shared instance is the documented best practice.
-  static readonly JsonSerializerOptions JsonOptions = new()
-  {
-    TypeInfoResolver = new IgnoreAttributeTypeInfoResolver(),
-    ReferenceHandler = ReferenceHandler.Preserve,
-  };
+  static readonly JsonSerializerOptions JsonOptions = CompetitionSnapshot.JsonOptions;
 
   readonly ISyncLocalStorageService _localStorage;
   readonly Dictionary<Type, Dictionary<int, NamedUniqueId>> _buckets = [];
