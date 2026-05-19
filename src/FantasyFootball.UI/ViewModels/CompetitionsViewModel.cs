@@ -57,6 +57,34 @@ public partial class CompetitionsViewModel : ObservableObject
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
 
+	/// <summary>
+	/// Active / Finished tab selection. Auto-defaults on navigation:
+	/// 0 (Active) when at least one active competition of the selected type
+	/// exists, otherwise 1 (Finished) — so navigating back from a finished
+	/// competition lands on the tab that actually has content.
+	/// </summary>
+	[ObservableProperty]
+	public partial int ActiveTabIndex { get; set; }
+
+	/// <summary>
+	/// Refresh the type filter from <see cref="IDataService"/> and auto-select
+	/// the tab based on what's currently available. The VM is registered
+	/// <c>AddScoped</c>, so without this call the filter stays on whatever was
+	/// picked at first navigation — even if the user has since viewed a
+	/// competition of a different type elsewhere.
+	/// </summary>
+	public void SyncFromDataService()
+	{
+		var freshType = _dataService.SelectedCompetitionType;
+		if (SelectedCompetitionType != freshType)
+		{
+			// Setter triggers OnSelectedCompetitionTypeChanged → Reload, which refreshes
+			// ActiveCompetitions / FinishedCompetitions for the new type.
+			SelectedCompetitionType = freshType;
+		}
+		ActiveTabIndex = ActiveCompetitions.Count > 0 ? 0 : 1;
+	}
+
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
 	{
 		_dataService.SelectedCompetitionType = value;

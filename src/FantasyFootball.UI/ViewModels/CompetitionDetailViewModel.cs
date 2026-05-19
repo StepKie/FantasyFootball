@@ -23,13 +23,15 @@ public partial class CompetitionDetailViewModel : ObservableObject
 {
 	readonly IRepository _repo;
 	readonly ISettingsService _settings;
+	readonly IDataService _dataService;
 
 	CompetitionSimulator? _simulator;
 
-	public CompetitionDetailViewModel(IRepository repo, ISettingsService settings)
+	public CompetitionDetailViewModel(IRepository repo, ISettingsService settings, IDataService dataService)
 	{
 		_repo = repo;
 		_settings = settings;
+		_dataService = dataService;
 
 		MessageBus.Register<GameFinishedMessage>(this, (_, msg) => OnGameFinished(msg.FinishedGame));
 	}
@@ -70,6 +72,10 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		Competition = _repo.Get<Competition>(competitionId);
 		if (Competition is null) { return; }
+
+		// Sync the global selected-type so Back-to-Competitions lands on the same
+		// category we just left (and the Setup page's pre-filled type matches).
+		_dataService.SelectedCompetitionType = Competition.Type;
 
 		SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
 		SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();

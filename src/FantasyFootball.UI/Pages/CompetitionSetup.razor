@@ -93,7 +93,13 @@
 </MudStack>
 
 @code {
-  protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
+  protected override void OnInitialized()
+  {
+    ViewModel.PropertyChanged += OnVmChanged;
+    // ViewModel is AddScoped (per-tab singleton); refresh from IDataService on
+    // each navigation so the picker reflects the currently-selected type/year.
+    ViewModel.SyncFromDataService();
+  }
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
 

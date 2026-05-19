@@ -36,7 +36,20 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	{
 		_repo = repo;
 		_dataService = dataService;
+		SyncFromDataService();
+		_initialized = true;
+		ResetToHistoricTeams();
+	}
 
+	/// <summary>
+	/// Refresh the picker state from <see cref="IDataService"/>. The VM is
+	/// registered <c>AddScoped</c>, so it's a per-tab singleton — without this,
+	/// returning to <c>/competitions/setup</c> after changing the type filter
+	/// elsewhere keeps the stale selection from the first navigation.
+	/// Page calls this in <c>OnInitialized</c>; the constructor also calls it.
+	/// </summary>
+	public void SyncFromDataService()
+	{
 		SelectedCompetitionType = _dataService.SelectedCompetitionType;
 		// Guard: if the persisted year isn't available for the current type,
 		// fall back to the most recent year for that type.
@@ -44,9 +57,6 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		SelectedYear = validYears.Contains(_dataService.SelectedCompetitionYear)
 			? _dataService.SelectedCompetitionYear
 			: validYears.Last();
-
-		_initialized = true;
-		ResetToHistoricTeams();
 	}
 
 	public IList<CompetitionType> CompetitionTypes { get; } = [CompetitionType.WM, CompetitionType.EM];
