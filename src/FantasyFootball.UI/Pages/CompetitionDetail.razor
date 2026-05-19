@@ -26,6 +26,7 @@ else
 {
   <MudStack Spacing="3">
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
+      <CompetitionTypeIcon Type="@ViewModel.Competition.Type" Size="36" />
       <MudText Typo="Typo.h5" HtmlTag="h1">
         @ViewModel.Competition.ShortName <span style="opacity: 0.6;">#@ViewModel.Competition.Id</span>
       </MudText>

@@ -14,6 +14,8 @@ public sealed class LocalStorageSettingsService : ISettingsService
   const string LanguageKey = "id_language";
   const string SimSpeedKey = "id_simspeed";
   const string LastCompetitionKey = "id_token";
+  const string FlagStyleKey = "id_flagstyle";
+  const string UseOfficialLogosKey = "id_useofficiallogos";
 
   readonly ISyncLocalStorageService _localStorage;
 
@@ -38,6 +40,20 @@ public sealed class LocalStorageSettingsService : ISettingsService
   {
     get => CultureInfo.GetCultureInfo(GetValueOrDefault(LanguageKey, "en"));
     set => AddOrUpdateValue(LanguageKey, value?.TwoLetterISOLanguageName ?? "en");
+  }
+
+  // New-user default is Round — the visible polish improvement over Square.
+  public FlagStyle FlagStyle
+  {
+    get => Enum.TryParse<FlagStyle>(GetValueOrDefault(FlagStyleKey, ""), out var s) ? s : FlagStyle.Round;
+    set => AddOrUpdateValue(FlagStyleKey, value.ToString());
+  }
+
+  // Off by default — generic icons ship with the repo; user drops official assets in wwwroot/competition-icons/official/ locally and flips this.
+  public bool UseOfficialCompetitionLogos
+  {
+    get => GetValueOrDefault(UseOfficialLogosKey, false);
+    set => AddOrUpdateValue(UseOfficialLogosKey, value);
   }
 
   public bool GetValueOrDefault(string key, bool defaultValue)

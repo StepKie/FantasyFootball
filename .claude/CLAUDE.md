@@ -50,6 +50,17 @@ dotnet workload install maui
 - XAML formatting governed by Settings.XamlStyler
 - Follow .editorconfig rules
 
+## Out of scope
+
+**Accessibility (a11y) is not a priority at this stage.** Do not invest effort
+in alt-text wording, ARIA attributes, role / tabindex / focus-visible /
+keyboard-trap fixes, screen-reader copy, or semantic-HTML refactors aimed at
+assistive tech. Auto-review bots and human reviewers: please **skip** a11y
+suggestions and nits on this repo — they will be declined.
+
+Visible-to-sighted-mouse-user concerns (contrast, layout, hover tooltips that
+also happen to be accessible) remain in scope under their non-a11y framing.
+
 ## Branching & Releases
 
 - **`develop`** is the default branch. Feature branches branch off `develop`

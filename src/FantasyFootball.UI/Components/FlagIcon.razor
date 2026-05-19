@@ -1,0 +1,58 @@
+@using FantasyFootball.Models
+@using FantasyFootball.Services
+@using FantasyFootball.UI.Helpers
+@inject ISettingsService Settings
+
+@if (Resolved is { } code)
+{
+  <img src="@FlagHelper.Url(code)"
+       alt="@ResolvedAlt"
+       class="@CssClass"
+       style="@InlineStyle"
+       title="@Title" />
+}
+
+@code {
+  /// <summary>Team to render the flag for. Convenience parameter — reads <c>Team.Country.Code2</c> and <c>Team.Elo</c>.</summary>
+  [Parameter] public Team? Team { get; set; }
+
+  /// <summary>ISO 3166-1 alpha-2 code. Used when <see cref="Team"/> isn't passed.</summary>
+  [Parameter] public string? Code { get; set; }
+
+  /// <summary>Elo rating for RoundTier border colour. Used when <see cref="Team"/> isn't passed.</summary>
+  [Parameter] public int? Elo { get; set; }
+
+  /// <summary>Pixel size — 16 (table rows), 24 (match cards, default), 40 (headers).</summary>
+  [Parameter] public int Size { get; set; } = 24;
+
+  /// <summary>Override the alt text. Pass <c>""</c> for decorative use (suppresses screen-reader announcement). Defaults to country / team name, falling back to the ISO code.</summary>
+  [Parameter] public string? Alt { get; set; }
+
+  /// <summary>Optional tooltip.</summary>
+  [Parameter] public string? Title { get; set; }
+
+  string? Resolved => Team?.Country?.Code2 is { Length: > 0 } c ? c : (string.IsNullOrEmpty(Code) ? null : Code);
+
+  // Caller-set Alt wins (including "" for decorative). Otherwise prefer country name → team name → code as last resort.
+  string ResolvedAlt => Alt ?? Team?.Country?.Name ?? Team?.Name ?? Resolved ?? "";
+
+  int? ResolvedElo => Team?.Elo ?? Elo;
+
+  string CssClass => Settings.FlagStyle switch
+  {
+    FlagStyle.Round => "flag-icon flag-round",
+    FlagStyle.RoundTier => $"flag-icon flag-round flag-tier-{Tier(ResolvedElo)}",
+    _ => "flag-icon flag-square",
+  };
+
+  // Plain pixel dimensions only — max-width:100% collapses inside MudTable cells (the table-cell width is fluid, creating a circular constraint that resolves the img to 0 width).
+  string InlineStyle => $"width: {Size}px; height: {Size}px;";
+
+  static string Tier(int? elo) => elo switch
+  {
+    >= 1700 => "gold",
+    >= 1500 => "silver",
+    >= 1300 => "bronze",
+    _ => "none",
+  };
+}
