@@ -72,7 +72,7 @@ else
                        Size="Size.Small"
                        OnClick="@(() => ViewModel.Undo())"
                        Disabled="@(!ViewModel.CanUndo || ViewModel.IsBusy)"
-                       title="Undo last sim (Ctrl+Z or U)" />
+                       title="Undo last simulated game (Ctrl+Z or U)" />
         @if (ViewModel.IsBusy)
         {
           <MudProgressCircular Size="Size.Small" Indeterminate="true" />

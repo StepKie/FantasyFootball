@@ -53,14 +53,32 @@ dotnet workload install maui
 ## Iteration loop — keep the dev server running
 
 While iterating on UI work, **launch the Blazor web host yourself** in the
-background (`dotnet run --project src/FantasyFootball.Web`, then open
-`https://localhost:7140`) so the user can visually inspect progress and give
-feedback at regular intervals. Don't wait to be asked. After a meaningful
-chunk lands, point the user at what to look at on the running site.
+background and keep it running. The user can visually inspect progress and
+give feedback without being asked. Don't wait to be asked. After a
+meaningful chunk lands, point the user at what to look at on the running
+site at `https://localhost:7140`.
+
+**Use `dotnet watch`, not `dotnet run`.** Plain `dotnet run` requires a
+manual kill + restart for each change *and* a browser hard-refresh (Blazor
+WASM caches the runtime / DLLs in the tab; plain F5 won't pick up C#
+changes). `dotnet watch` auto-rebuilds on file changes and tells the open
+browser tab to reload itself.
+
+```bash
+dotnet watch --project src/FantasyFootball.Web run --launch-profile https --no-hot-reload
+```
+
+`--no-hot-reload` is intentional: WASM hot-reload is flaky and can
+silently fail to apply C# changes. With it disabled, every file change
+does a full rebuild + browser reload — slower but always correct.
+
+If `dotnet watch` exits with code 127 in the background task notifications,
+that's the harness reporting the process was killed (e.g. by Stop-Process
+when freeing port 7140) — it's not a build failure.
 
 Only ask the user to launch from Visual Studio when interactive debugging
 (breakpoints, step-through) is genuinely needed — pure visual inspection
-should happen on the server you're already running.
+should happen on the watch server you're already running.
 
 ### Verification checklist on each run
 

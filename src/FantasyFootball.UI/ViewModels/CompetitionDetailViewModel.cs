@@ -116,10 +116,14 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		finally { OnSimBatchComplete(); }
 	}
 
+	// Round / Stage / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
+	// If the user opts into a bigger sim and isn't happy, the recovery path is to re-sim the tournament,
+	// not to rewind mass amounts of state. Any prior single-game undo entries are cleared too,
+	// since they belong to a graph that's now been simmed past.
 	public async Task SimulateRound()
 	{
 		if (_simulator is null || Competition?.CurrentStage?.CurrentRound is null || IsBusy) { return; }
-		PushUndoSnapshot();
+		ClearUndo();
 		IsBusy = true;
 		try
 		{
@@ -132,7 +136,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public async Task SimulateStage()
 	{
 		if (_simulator is null || Competition?.CurrentStage is null || IsBusy) { return; }
-		PushUndoSnapshot();
+		ClearUndo();
 		IsBusy = true;
 		try
 		{
@@ -145,7 +149,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public async Task SimulateAll()
 	{
 		if (_simulator is null || Competition is null || Competition.IsFinished || IsBusy) { return; }
-		PushUndoSnapshot();
+		ClearUndo();
 		IsBusy = true;
 		try
 		{
