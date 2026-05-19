@@ -111,6 +111,30 @@ body {
 .scoreboard-loser { opacity: 0.65; }
 .scoreboard-pending { opacity: 0.65; }
 
+/* Group letter + kickoff time at the start of each scoreboard row. Letter is blank for KO games (teams span groups); kickoff stays. */
+.scoreboard-group-tag {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  color: var(--mud-palette-text-secondary);
+  min-width: 2.5rem;
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+
+.scoreboard-group-tag-letter {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.scoreboard-group-tag-time {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */
 .game-day-divider {
   font-size: 0.75rem;
