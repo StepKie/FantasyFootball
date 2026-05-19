@@ -65,12 +65,15 @@ changes). `dotnet watch` auto-rebuilds on file changes and tells the open
 browser tab to reload itself.
 
 ```bash
-dotnet watch --project src/FantasyFootball.Web run --launch-profile https --no-hot-reload
+dotnet watch --project src/FantasyFootball.Web run --launch-profile https
 ```
 
-`--no-hot-reload` is intentional: WASM hot-reload is flaky and can
-silently fail to apply C# changes. With it disabled, every file change
-does a full rebuild + browser reload — slower but always correct.
+Do **not** pass `--no-hot-reload` — that disables the browser-refresh
+signal as a side effect, so the open tab stays on the old bundle even
+after the rebuild completes. Default behaviour auto-rebuilds AND tells
+the open tab to reload itself. C# hot-reload itself is flaky for WASM,
+but the page reload still picks up changes correctly because the
+rebuilt DLLs are downloaded fresh by the page on reload.
 
 If `dotnet watch` exits with code 127 in the background task notifications,
 that's the harness reporting the process was killed (e.g. by Stop-Process
