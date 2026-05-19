@@ -166,11 +166,18 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		var restored = CompetitionSnapshot.Deserialize(json);
 		if (restored is null) { OnPropertyChanged(nameof(CanUndo)); return; }
 
+		// NamedUniqueId.Equals compares by Id, so the restored instance is "equal" to the live one;
+		// CommunityToolkit's [ObservableProperty] setter would no-op and the page would keep
+		// rendering the simmed graph. Force the field update via null transition.
+		Competition = null;
 		Competition = restored;
+		SelectedStage = null;
+		SelectedRound = null;
+
 		_repo.Save(Competition);
 		_simulator = new CompetitionSimulator(Competition, _repo);
 		ApplySpeedToSimulator();
-		// Re-resolve selection against the new object graph; OnSimBatchComplete does exactly that.
+		// Re-resolve selection against the new object graph.
 		OnSimBatchComplete();
 		OnPropertyChanged(nameof(CanUndo));
 	}
