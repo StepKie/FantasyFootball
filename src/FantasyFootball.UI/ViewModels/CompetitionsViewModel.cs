@@ -10,14 +10,14 @@ using static FantasyFootball.Messaging;
 namespace FantasyFootball.UI.ViewModels;
 
 /// <summary>
-/// Backs the /competitions list page. Shows past competitions filtered by
-/// CompetitionType. Row click navigation (to /competitions/{id}) and the
-/// Start-new button (to /competitions/setup) are handled by the .razor page;
-/// this VM only owns the type filter + the filtered roster.
+/// Backs the merged /competitions page (Active + Finished tabs, plus the
+/// all-time TeamRecord aggregate that used to live on /statistics). Owns the
+/// CompetitionType filter; row navigation and the Start-new button are
+/// handled by the .razor page.
 ///
-/// MAUI's FantasyFootball.ViewModels.CompetitionsViewModel doubles as the
-/// navigation coordinator (calls Shell.Current.GoToAsync on row select).
-/// The web port pushes that into the page — the VM stays pure state.
+/// MAUI splits this into CompetitionsViewModel + StatisticsViewModel; the
+/// web port collapses them since both halves are filtered by the same
+/// CompetitionType and render on one screen.
 /// </summary>
 public partial class CompetitionsViewModel : ObservableObject
 {
@@ -29,15 +29,13 @@ public partial class CompetitionsViewModel : ObservableObject
 		_repo = repo;
 		_dataService = dataService;
 
-		// Reload list when a competition is created, simulated, deleted, or the data
-		// store is reset — so navigating back to /competitions always shows fresh data.
-		MessageBus.Register<CompetitionCreatedMessage>(this, (_, _) => ReloadCompetitions());
-		MessageBus.Register<CompetitionFinishedMessage>(this, (_, _) => ReloadCompetitions());
-		MessageBus.Register<CompetitionDeletedMessage>(this, (_, _) => ReloadCompetitions());
-		MessageBus.Register<DataResetMessage>(this, (_, _) => ReloadCompetitions());
+		MessageBus.Register<CompetitionCreatedMessage>(this, (_, _) => Reload());
+		MessageBus.Register<CompetitionFinishedMessage>(this, (_, _) => Reload());
+		MessageBus.Register<CompetitionDeletedMessage>(this, (_, _) => Reload());
+		MessageBus.Register<DataResetMessage>(this, (_, _) => Reload());
 
 		SelectedCompetitionType = dataService.SelectedCompetitionType;
-		ReloadCompetitions();
+		Reload();
 	}
 
 	// Only WM + EM ship implementations today — CHAMPIONS_LEAGUE and DOMESTIC_LEAGUE
@@ -48,7 +46,13 @@ public partial class CompetitionsViewModel : ObservableObject
 	public partial CompetitionType SelectedCompetitionType { get; set; }
 
 	[ObservableProperty]
-	public partial ObservableCollection<Competition> StoredCompetitionsForSelectedType { get; set; } = [];
+	public partial ObservableCollection<Competition> ActiveCompetitions { get; set; } = [];
+
+	[ObservableProperty]
+	public partial ObservableCollection<Competition> FinishedCompetitions { get; set; } = [];
+
+	[ObservableProperty]
+	public partial IList<TeamRecord> OverallRecords { get; set; } = [];
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
@@ -56,18 +60,22 @@ public partial class CompetitionsViewModel : ObservableObject
 	partial void OnSelectedCompetitionTypeChanged(CompetitionType value)
 	{
 		_dataService.SelectedCompetitionType = value;
-		ReloadCompetitions();
+		Reload();
 	}
 
-	public void ReloadCompetitions()
+	public void Reload()
 	{
 		IsBusy = true;
 		try
 		{
-			var filtered = _repo.GetAll<Competition>()
+			var ofType = _repo.GetAll<Competition>()
 				.Where(c => c.Type == SelectedCompetitionType)
-				.OrderByDescending(c => c.SimulationStart);
-			StoredCompetitionsForSelectedType = new ObservableCollection<Competition>(filtered);
+				.OrderByDescending(c => c.SimulationStart)
+				.ToList();
+
+			ActiveCompetitions = new ObservableCollection<Competition>(ofType.Where(c => !c.IsFinished));
+			FinishedCompetitions = new ObservableCollection<Competition>(ofType.Where(c => c.IsFinished));
+			OverallRecords = Standings.CreateFrom(ofType.Where(c => c.IsFinished).SelectMany(c => c.GamesByDate));
 		}
 		finally
 		{
