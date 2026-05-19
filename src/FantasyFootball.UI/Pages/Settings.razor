@@ -21,14 +21,23 @@
     </MudSelect>
 
     <div>
-      <MudText Typo="Typo.body2" Class="mb-2">
-        Simulation speed: <strong>@ViewModel.SimulationSpeedMs.ToString("F0") ms</strong> per game
+      <MudText Typo="Typo.body2" Class="mb-2"><strong>Default simulation speed</strong></MudText>
+      <MudToggleGroup T="SimulationSpeed"
+                      Value="ViewModel.SelectedSimulationSpeed"
+                      ValueChanged="@((SimulationSpeed v) => ViewModel.SelectedSimulationSpeed = v)"
+                      Size="Size.Small"
+                      Color="Color.Primary"
+                      CheckMark="false"
+                      SelectionMode="SelectionMode.SingleSelection"
+                      Style="width: fit-content;">
+        <MudToggleItem Value="SimulationSpeed.Slow" Text="🐢 Slow" />
+        <MudToggleItem Value="SimulationSpeed.Normal" Text="▶ Normal" />
+        <MudToggleItem Value="SimulationSpeed.Fast" Text="🐇 Fast" />
+        <MudToggleItem Value="SimulationSpeed.Instant" Text="⚡ Instant" />
+      </MudToggleGroup>
+      <MudText Typo="Typo.caption" Color="Color.Secondary" Class="d-block mt-1">
+        Per-session override available next to the sim buttons on the competition page.
       </MudText>
-      <MudSlider T="double"
-                 Min="0" Max="500" Step="10"
-                 Value="ViewModel.SimulationSpeedMs"
-                 ValueChanged="@(v => ViewModel.SimulationSpeedMs = v)"
-                 Color="Color.Primary" />
     </div>
 
     <div>
