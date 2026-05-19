@@ -39,37 +39,44 @@ public sealed class ExpandedWorldCupFormat : ITournamentFormat
 			.Take(AdvancingThirdPlaceCount)
 			.ToList();
 
-		// Track used groups by Letter (string), not by tuple — TeamRecord.Equals returns false
-		// for unsaved records (Id == 0), so removing tuples by value would silently fail.
-		var used = new HashSet<string>();
-		var assignments = new Dictionary<string, Team>();
-		var pending = _slots.ToList();
-
-		while (pending.Count > 0)
+		// Backtracking assignment over the 8 slot × 8 team bipartite graph. The
+		// previous greedy ("most-constrained slot first, best team first") can
+		// lock out late slots whose only-eligible team was already picked, leaving
+		// the KO round stuck on placeholders (issue #12). Backtracking always
+		// finds a valid assignment if one exists; with 8×8 the search space is
+		// trivially small. NOT the FIFA-canonical 495-scenario mapping — that
+		// remains the canonical follow-up; here we just want any feasible draw
+		// so the bracket is playable.
+		var assignments = new Team?[_slots.Length];
+		var usedLetters = new HashSet<string>();
+		if (!TryAssign(0))
 		{
-			// Most-constrained slot first: fewest remaining candidates
-			var slot = pending
-				.OrderBy(s => topEight.Count(t => s.Split('/').Contains(t.Letter) && !used.Contains(t.Letter)))
-				.First();
-
-			var allowed = slot.Split('/');
-			var pick = topEight
-				.Where(t => allowed.Contains(t.Letter) && !used.Contains(t.Letter))
-				.OrderByDescending(t => t.Record)
-				.FirstOrDefault();
-
-			if (pick.Record is not null)
-			{
-				assignments[slot] = pick.Record.Team;
-				used.Add(pick.Letter);
-			}
-			pending.Remove(slot);
+			throw new InvalidOperationException(
+				$"No feasible 3rd-place assignment for top-8: {string.Join(", ", topEight.Select(t => $"{t.Letter}={t.Record.Team.ShortName}"))}.");
 		}
 
-		Log.Debug($"WC 2026 third-place assignments: {string.Join(", ", assignments.Select(kv => $"{kv.Key}={kv.Value.ShortName}"))}");
+		Log.Debug($"WC 2026 third-place assignments: {string.Join(", ", _slots.Zip(assignments).Select(p => $"{p.First}={p.Second?.ShortName}"))}");
 
-		return assignments.TryGetValue(thirdPlaceSlot, out var assigned)
-			? assigned
-			: throw new InvalidOperationException($"No 3rd-place team could be assigned to slot {thirdPlaceSlot}");
+		var slotIndex = Array.IndexOf(_slots, thirdPlaceSlot);
+		return slotIndex >= 0 && assignments[slotIndex] is { } team
+			? team
+			: throw new InvalidOperationException($"Unknown 3rd-place slot {thirdPlaceSlot}");
+
+		bool TryAssign(int slotIndex)
+		{
+			if (slotIndex == _slots.Length) { return true; }
+			var allowed = _slots[slotIndex].Split('/');
+			foreach (var candidate in topEight)
+			{
+				if (usedLetters.Contains(candidate.Letter)) { continue; }
+				if (!allowed.Contains(candidate.Letter)) { continue; }
+				assignments[slotIndex] = candidate.Record.Team;
+				usedLetters.Add(candidate.Letter);
+				if (TryAssign(slotIndex + 1)) { return true; }
+				usedLetters.Remove(candidate.Letter);
+				assignments[slotIndex] = null;
+			}
+			return false;
+		}
 	}
 }
