@@ -128,7 +128,7 @@ else
             {
               @if (multiDay)
               {
-                <div class="game-day-divider">@dayGroup.Key.ToString("ddd d MMM", System.Globalization.CultureInfo.InvariantCulture)</div>
+                <div class="game-day-divider">@dayGroup.Key.ToString("ddd d MMM", System.Globalization.CultureInfo.CurrentCulture)</div>
               }
               @foreach (var game in dayGroup)
               {

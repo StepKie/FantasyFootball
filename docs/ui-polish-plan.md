@@ -375,25 +375,58 @@ around third-place resolve, corrupt-blob quarantine on load.
 
 ### PR 3 — Sim feel
 
-- Speed control (Slow / Normal / Fast / Instant) on competition page.
-- **Unify Settings speed UI with the detail picker** — replace the
-  0–500 ms slider with the same 4-preset picker (decision noted under
-  Functionality § Speed control).
-- **Delete competitions from the list, not the detail page** — move the
-  trash icon off `/competitions/{id}` to per-row delete on `/competitions`
-  with a confirm dialog.
-- **Day-grouping dividers in the games panel** when `PlayedOn.Date`
-  varies (`Mon 25 Jun` subtle separator).
-- Keyboard navigation (full mapping; help overlay; About reference).
-- Undo stack (in-memory, JSON-snapshot-per-action, capped at 50).
-- Just-finished game highlight (game row + standings rows pulse).
-- Score reveal animation.
-- Standings row reorder via FLIP.
-- Standings qualifier highlight (left-edge bar).
-- Optional `Qual %` column in group stage (Monte Carlo).
-- Click-for-game-details popover / drawer.
-- Replay button on `Competition.IsFinished`.
-- Confetti burst on finish.
+**Status**: in flight on branch `feature/ui-polish-3-sim-feel`. Five
+chunks committed locally (not pushed yet). Pick up the remaining items
+in a fresh session; merge PR 3 once a meaningful slice is complete.
+
+Local commits on this branch (latest first):
+
+| SHA | Chunk |
+|---|---|
+| `e450e07` | Standings: qualification-zone left-edge bar + group-letter spacing |
+| `db91c3e` | Group letter + kickoff time on scoreboard rows |
+| `7fae924` | Day-grouping dividers in the games panel |
+| `bbe6df0` | Unify Settings speed UI with detail picker |
+| `1095c86` | Move competition delete from detail page to per-row list action |
+
+Done:
+
+- [x] Speed control (Slow / Normal / Fast / Instant) on competition page.
+  (Already shipped in PR 1; left here for plan completeness.)
+- [x] **Unify Settings speed UI with the detail picker** — replace the
+  0–500 ms slider with the same 4-preset picker.
+- [x] **Delete competitions from the list, not the detail page** — move
+  the trash icon off `/competitions/{id}` to per-row delete on
+  `/competitions` with a confirm dialog.
+- [x] **Day-grouping dividers in the games panel** when `PlayedOn.Date`
+  varies (`ddd d MMM` subtle separator).
+- [x] **Group letter + kickoff time on scoreboard rows** (vertical tag
+  on the leading side of each match-card row; letter blank for KO games
+  whose teams span groups, kickoff time always shown).
+- [x] **Standings qualifier highlight** (left-edge bar) — slim 3px
+  muted-green / muted-red column inset from row edges; resolves
+  ThirdPlace combination eligibility once the group stage finishes.
+
+Still open (next session):
+
+- [ ] Keyboard navigation (full mapping; help overlay; About reference).
+- [ ] Undo stack (in-memory, JSON-snapshot-per-action, capped at 50).
+- [ ] Just-finished game highlight (game row + standings rows pulse).
+- [ ] Score reveal animation.
+- [ ] Standings row reorder via FLIP.
+- [ ] Optional `Qual %` column in group stage (Monte Carlo).
+- [ ] Click-for-game-details popover / drawer.
+- [ ] Replay button on `Competition.IsFinished`.
+- [ ] Confetti burst on finish.
+
+Open visual / correctness questions deferred from this session:
+
+- Group H standings sometimes show GD/Pts combos that contradict the
+  sort (e.g. Spain GD +7, Pts 4, sitting above teams with higher GD).
+  Tie-break logic or `Standings.CreateFrom` ordering is suspect — file
+  a separate bug rather than rolling into PR 3.
+- Per-row delete confirmation dialog text wording: revisit once the
+  About page mentions the action.
 
 ### PR 4 — KO bracket
 
