@@ -124,7 +124,8 @@ else
                              ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
                              Disabled="@ViewModel.IsBusy"
                              OnSim="@(async () => await ViewModel.SimulateGame())"
-                             OnUndo="@(() => ViewModel.Undo())" />
+                             OnUndo="@(() => ViewModel.Undo())"
+                             OnRedo="@(async () => await ViewModel.RedoLastGame())" />
               }
             }
           }
@@ -234,6 +235,12 @@ else
     if ((ctrlKey && key is "z" or "Z") || (!ctrlKey && key is "u" or "U"))
     {
       ViewModel.Undo();
+      return;
+    }
+
+    if (ctrlKey && key is "y" or "Y")
+    {
+      await ViewModel.RedoLastGame();
       return;
     }
 

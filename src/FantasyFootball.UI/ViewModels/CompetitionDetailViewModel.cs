@@ -180,6 +180,26 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		OnPropertyChanged(nameof(UndoTargetGame));
 	}
 
+	/// <summary>
+	/// Replaces the most recently simmed game's result with a fresh draw. Equivalent to Undo + SimulateGame
+	/// on the same game, but in one click. The undo stack is unchanged so the user can still revert this
+	/// new result.
+	/// </summary>
+	public async Task RedoLastGame()
+	{
+		if (_simulator is null || Competition is null || IsBusy) { return; }
+		if (!_undoStack.TryPeek(out var game)) { return; }
+
+		IsBusy = true;
+		try
+		{
+			game.ClearResult();
+			await _simulator.SimulateGame(game);
+			_repo.Save(Competition);
+		}
+		finally { OnSimBatchComplete(); }
+	}
+
 	void PushUndoEntry(Game simmedGame)
 	{
 		_undoStack.Push(simmedGame);

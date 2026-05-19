@@ -19,7 +19,7 @@ window.ffKeyboard = {
       if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         e.preventDefault();
       }
-      if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) {
+      if (e.ctrlKey && (e.key === 'z' || e.key === 'Z' || e.key === 'y' || e.key === 'Y')) {
         e.preventDefault();
       }
 

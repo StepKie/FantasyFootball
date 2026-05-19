@@ -26,6 +26,12 @@
     }
     else if (ShowUndo)
     {
+      <MudIconButton Icon="@Icons.Material.Filled.Replay"
+                     Color="Color.Primary"
+                     Size="Size.Small"
+                     Disabled="Disabled"
+                     OnClick="OnRedo"
+                     title="Re-simulate this game (Ctrl+Y)" />
       <MudIconButton Icon="@Icons.Material.Filled.Undo"
                      Size="Size.Small"
                      Disabled="Disabled"
@@ -42,6 +48,7 @@
   [Parameter] public bool Disabled { get; set; }
   [Parameter] public EventCallback OnSim { get; set; }
   [Parameter] public EventCallback OnUndo { get; set; }
+  [Parameter] public EventCallback OnRedo { get; set; }
 
   bool HasResult => Game.IsFinished;
   bool IsDraw => HasResult && Game.Winner is null;
