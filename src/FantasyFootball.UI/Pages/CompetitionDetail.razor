@@ -5,6 +5,7 @@
 @using FantasyFootball.UI.ViewModels
 @inject CompetitionDetailViewModel ViewModel
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 @implements IDisposable
 
 <PageTitle>@(ViewModel.Competition?.ShortName ?? "Competition") — Fantasy Football</PageTitle>
@@ -72,6 +73,10 @@ else
           <MudProgressCircular Size="Size.Small" Indeterminate="true" />
         }
         <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Keyboard"
+                       Size="Size.Small"
+                       OnClick="@(() => _helpOpen = true)"
+                       title="Keyboard shortcuts (H or ?)" />
         <MudToggleGroup T="SimulationSpeed"
                         Value="ViewModel.Speed"
                         ValueChanged="@((SimulationSpeed v) => ViewModel.Speed = v)"
@@ -184,7 +189,12 @@ else
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    if (firstRender) { await _pageRoot.FocusAsync(); }
+    if (firstRender)
+    {
+      // Suppress browser scroll defaults for Space + arrows on the page root, then focus it.
+      await JS.InvokeVoidAsync("ffKeyboard.registerPreventScroll", _pageRoot);
+      await _pageRoot.FocusAsync();
+    }
   }
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
@@ -195,7 +205,8 @@ else
   {
     if (ViewModel.IsBusy || ViewModel.Competition is null) { return; }
 
-    if (e.Key == "?") { _helpOpen = !_helpOpen; return; }
+    // H or ? toggles the help overlay. H works on every layout; ? is awkward on de-DE (Shift+ß).
+    if (e.Key is "?" or "h" or "H") { _helpOpen = !_helpOpen; return; }
     if (_helpOpen && e.Key == "Escape") { _helpOpen = false; return; }
 
     if (!ViewModel.IsFinished)
