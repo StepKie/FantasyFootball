@@ -1,13 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FantasyFootball.Models;
 
 namespace FantasyFootball.Services;
 
 /// <summary>
-/// Shared JSON snapshot helpers for the Competition aggregate.
-/// Used by LocalStorageRepository (persistence) and the undo stack (in-memory rewind).
-/// Both must use identical options so a string captured by one path round-trips through the other.
+/// Shared JSON serializer options for the Competition aggregate.
+/// Used by the LocalStorage repository (persistence) and the test suite (round-trip checks).
 /// </summary>
 public static class CompetitionSnapshot
 {
@@ -17,8 +15,4 @@ public static class CompetitionSnapshot
 		TypeInfoResolver = new IgnoreAttributeTypeInfoResolver(),
 		ReferenceHandler = ReferenceHandler.Preserve,
 	};
-
-	public static string Serialize(Competition competition) => JsonSerializer.Serialize(competition, JsonOptions);
-
-	public static Competition? Deserialize(string json) => JsonSerializer.Deserialize<Competition>(json, JsonOptions);
 }
