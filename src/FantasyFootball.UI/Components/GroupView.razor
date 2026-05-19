@@ -1,15 +1,16 @@
 @using FantasyFootball.Models
 
-<div class="group-letter-heading mt-3 mb-1">@Letter</div>
+<div class="group-block">
+<div class="group-letter-heading">@Letter</div>
 <MudTable Items="Group.GetStandings()"
           T="TeamRecord"
           Hover="false"
           Dense="true"
           Breakpoint="Breakpoint.None"
           Elevation="0"
-          Class="mb-3">
+          Class="group-standings">
   <HeaderContent>
-    <MudTh Style="width: 1.5rem;"></MudTh>
+    <MudTh Style="width: 1.5rem; padding-left: 0.75rem;"></MudTh>
     <MudTh Style="width: 2rem;"></MudTh>
     <MudTh></MudTh>
     <MudTh Style="width: 2.5rem; text-align: right;">P</MudTh>
@@ -17,7 +18,10 @@
     <MudTh Style="width: 2.5rem; text-align: right;">Pts</MudTh>
   </HeaderContent>
   <RowTemplate>
-    <MudTd>@context.Position</MudTd>
+    <MudTd Style="position: relative; padding-left: 0.75rem;">
+      <span class="standings-qual-bar @QualBarClass(context.Position)"></span>
+      @context.Position
+    </MudTd>
     <MudTd><FlagIcon Team="context.Team" Size="20" /></MudTd>
     <MudTd>@context.Team.Name</MudTd>
     <MudTd Style="text-align: right;">@context.MatchesPlayed</MudTd>
@@ -25,6 +29,7 @@
     <MudTd Style="text-align: right; font-weight: bold;">@context.Points</MudTd>
   </RowTemplate>
 </MudTable>
+</div>
 
 @code {
   [Parameter] public Group Group { get; set; } = null!;
@@ -33,4 +38,66 @@
   string Letter => Group.Name?.Split(' ', StringSplitOptions.RemoveEmptyEntries) is { Length: > 0 } parts
     ? parts[^1].ToUpperInvariant()
     : "?";
+
+  HashSet<int> _directSlots = [];
+  bool _thirdPlaceEligible;
+  bool? _thirdPlaceAdvanced; // null = stage not finished yet (undetermined), true/false = resolved.
+
+  protected override void OnParametersSet()
+  {
+    _directSlots = [];
+    _thirdPlaceEligible = false;
+    _thirdPlaceAdvanced = null;
+
+    var competition = Group.Stage?.Competition;
+    if (competition is null) { return; }
+
+    var ownStageIndex = competition.Stages.IndexOf(Group.Stage);
+    var ownGroupIndex = competition.Groups.IndexOf(Group);
+    if (ownStageIndex < 0 || ownGroupIndex < 0) { return; }
+
+    var laterQualifiers = competition.Stages
+      .Skip(ownStageIndex + 1)
+      .SelectMany(s => s.Games.OfType<KoGame>())
+      .SelectMany(g => new[] { g.HomeGroupQualifier, g.AwayGroupQualifier })
+      .OfType<GroupQualifier>()
+      .ToList();
+
+    foreach (var q in laterQualifiers)
+    {
+      if (string.IsNullOrEmpty(q.ThirdPlaceCombination))
+      {
+        if (q.GroupId == ownGroupIndex) { _directSlots.Add(q.FinalPlacement); }
+      }
+      else if (q.ThirdPlaceCombination.Contains(Letter, StringComparison.OrdinalIgnoreCase))
+      {
+        _thirdPlaceEligible = true;
+      }
+    }
+
+    // Once the group stage is finished we can resolve ThirdPlace qualifiers to actual teams. Position 3 then promotes from "no bar" to advance / out.
+    if (_thirdPlaceEligible && Group.Stage.IsFinished)
+    {
+      var ownThirdPlaceTeam = Group.GetStandings().ElementAtOrDefault(2)?.Team;
+      if (ownThirdPlaceTeam is not null)
+      {
+        var advancedIds = laterQualifiers
+          .Where(q => !string.IsNullOrEmpty(q.ThirdPlaceCombination))
+          .Select(q => q.Get()?.Id)
+          .Where(id => id is not null)
+          .ToHashSet();
+        _thirdPlaceAdvanced = advancedIds.Contains(ownThirdPlaceTeam.Id);
+      }
+    }
+  }
+
+  // Position referenced unconditionally → green. Position 3 of a 3rd-place-eligible group:
+  // - stage not finished → no bar (fate undetermined).
+  // - stage finished, this group's 3rd place made the cross-group cut → green; else → red.
+  // All other positions → red.
+  string QualBarClass(int position) =>
+    _directSlots.Contains(position) ? "standings-qual-bar-advance" :
+    position == 3 && _thirdPlaceEligible && _thirdPlaceAdvanced is null ? "" :
+    position == 3 && _thirdPlaceEligible && _thirdPlaceAdvanced == true ? "standings-qual-bar-advance" :
+    "standings-qual-bar-out";
 }

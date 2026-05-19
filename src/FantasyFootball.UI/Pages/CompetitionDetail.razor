@@ -36,10 +36,6 @@ else
           Winner: @ViewModel.Winner.Name
         </MudChip>
       }
-      <MudSpacer />
-      <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                     Color="Color.Error"
-                     OnClick="DeleteAndExit" />
     </MudStack>
 
     @if (!ViewModel.IsFinished)
@@ -126,9 +122,18 @@ else
           <MudText Typo="Typo.h6" GutterBottom="true">Games</MudText>
           @if (ViewModel.SelectedRound is not null)
           {
-            foreach (var game in ViewModel.SelectedRound.AllGames.OrderBy(g => g.PlayedOn))
+            var games = ViewModel.SelectedRound.AllGames.OrderBy(g => g.PlayedOn).ToList();
+            var multiDay = games.Select(g => g.PlayedOn.Date).Distinct().Count() > 1;
+            @foreach (var dayGroup in games.GroupBy(g => g.PlayedOn.Date))
             {
-              <GameViewRow Game="game" />
+              @if (multiDay)
+              {
+                <div class="game-day-divider">@dayGroup.Key.ToString("ddd d MMM", System.Globalization.CultureInfo.InvariantCulture)</div>
+              }
+              @foreach (var game in dayGroup)
+              {
+                <GameViewRow Game="game" />
+              }
             }
           }
         </MudPaper>
@@ -161,13 +166,6 @@ else
   }
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
-
-  void DeleteAndExit()
-  {
-    // TODO: confirmation dialog before destroy.
-    ViewModel.Delete();
-    Nav.NavigateTo("/competitions");
-  }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
 }

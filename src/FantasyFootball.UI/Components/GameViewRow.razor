@@ -1,6 +1,10 @@
 @using FantasyFootball.Models
 
 <div class="scoreboard-row">
+  <div class="scoreboard-group-tag">
+    <span class="scoreboard-group-tag-letter">@GroupLetter</span>
+    <span class="scoreboard-group-tag-time">@Game.PlayedOn.ToString("HH:mm")</span>
+  </div>
   <div class="scoreboard-team scoreboard-team-home @TeamClass(HomeIsWinner)">
     <span class="scoreboard-team-name">@Game.HomeTeam.Name</span>
     <FlagIcon Team="Game.HomeTeam" Size="24" />
@@ -26,4 +30,16 @@
     isThisSideWinner ? "scoreboard-winner" :
     HasResult && !IsDraw ? "scoreboard-loser" :
     "";
+
+  // Group letter when both teams sit in the same group of the parent stage (group-stage games). KO games span groups → blank.
+  string GroupLetter
+  {
+    get
+    {
+      var stage = Game.Round?.Stage;
+      if (stage is null) { return ""; }
+      var group = stage.Groups.FirstOrDefault(g => g.Teams.Contains(Game.HomeTeam) && g.Teams.Contains(Game.AwayTeam));
+      return group?.Name?.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault()?.ToUpperInvariant() ?? "";
+    }
+  }
 }

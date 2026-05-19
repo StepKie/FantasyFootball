@@ -24,7 +24,7 @@ public partial class SettingsViewModel : ObservableObject
 		_dataService = dataService;
 
 		SelectedLanguage = settings.LastUsedLanguage;
-		SimulationSpeedMs = settings.SimulationSpeed.TotalMilliseconds;
+		SelectedSimulationSpeed = SimulationSpeedExtensions.FromTimeSpan(settings.SimulationSpeed);
 		SelectedFlagStyle = settings.FlagStyle;
 		UseOfficialCompetitionLogos = settings.UseOfficialCompetitionLogos;
 		SupportedLanguages = [new("en"), new("de")];
@@ -36,7 +36,7 @@ public partial class SettingsViewModel : ObservableObject
 	public partial CultureInfo SelectedLanguage { get; set; }
 
 	[ObservableProperty]
-	public partial double SimulationSpeedMs { get; set; }
+	public partial SimulationSpeed SelectedSimulationSpeed { get; set; }
 
 	[ObservableProperty]
 	public partial FlagStyle SelectedFlagStyle { get; set; }
@@ -59,8 +59,8 @@ public partial class SettingsViewModel : ObservableObject
 		// Tracked as a follow-up; for now the choice persists but only takes effect on reload.
 	}
 
-	partial void OnSimulationSpeedMsChanged(double value)
-		=> _settings.SimulationSpeed = TimeSpan.FromMilliseconds(value);
+	partial void OnSelectedSimulationSpeedChanged(SimulationSpeed value)
+		=> _settings.SimulationSpeed = value.ToDelay();
 
 	partial void OnSelectedFlagStyleChanged(FlagStyle value)
 		=> _settings.FlagStyle = value;

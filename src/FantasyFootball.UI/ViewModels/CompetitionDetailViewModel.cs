@@ -161,15 +161,6 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		IsBusy = false;
 	}
 
-	public void Delete()
-	{
-		if (Competition is null) { return; }
-		var deletedId = Competition.Id;
-		_repo.Delete(Competition);
-		Competition = null;
-		MessageBus.Send(new CompetitionDeletedMessage(deletedId));
-	}
-
 	void OnGameFinished(Game finished)
 	{
 		// Bail if the message is for a different competition.

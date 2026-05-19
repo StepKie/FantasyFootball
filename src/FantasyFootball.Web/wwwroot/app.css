@@ -111,6 +111,44 @@ body {
 .scoreboard-loser { opacity: 0.65; }
 .scoreboard-pending { opacity: 0.65; }
 
+/* Group letter + kickoff time at the start of each scoreboard row. Letter is blank for KO games (teams span groups); kickoff stays. */
+.scoreboard-group-tag {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  color: var(--mud-palette-text-secondary);
+  min-width: 2.5rem;
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+
+.scoreboard-group-tag-letter {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.scoreboard-group-tag-time {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */
+.game-day-divider {
+  font-size: 0.75rem;
+  color: var(--mud-palette-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.5rem 0.75rem 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.game-day-divider:first-child {
+  margin-top: 0;
+}
+
 /* Competition-type icon stack: MudIcon underneath, img overlay on top. If img 404s, onerror hides it and the MudIcon shows through. */
 .comp-type-icon-stack {
   display: inline-flex;
@@ -128,14 +166,44 @@ body {
   object-fit: contain;
 }
 
-/* Group section heading — typographic letter only (OneFootball-style). No chip, no noun. */
+/* Qualification-zone left-edge bar in standings rows. Slim, muted column inset from row edges. */
+.standings-qual-bar {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+}
+
+.standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
+.standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
+
+/* Group block wraps heading + table. Big gap between blocks, zero between letter and its own table.
+   .group-letter-heading has no margin; .group-standings has negative top margin to pull the MudTable
+   header (P GD Pts) tight against the letter, then a quiet divider afterwards via mb. */
+.group-block {
+  margin-top: 1.75rem;
+}
+
+.group-block:first-of-type {
+  margin-top: 0;
+}
+
 .group-letter-heading {
   font-family: 'Barlow Condensed', 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   letter-spacing: 1px;
   color: var(--mud-palette-primary);
   line-height: 1;
+  margin: 0;
+  padding-left: 0.5rem;
+}
+
+.group-standings .mud-table-head .mud-table-cell {
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 /* Elo numbers tone down so they don't compete with team names. */
