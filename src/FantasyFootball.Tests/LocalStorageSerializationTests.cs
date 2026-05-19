@@ -142,9 +142,17 @@ public class LocalStorageSerializationTests(ITestOutputHelper output) : BaseTest
 	}
 
 	/// <summary>
-	/// Local copy of the Web host's IgnoreAttributeTypeInfoResolver so this test
-	/// project doesn't need to reference Web. Kept in sync by hand — if the
-	/// production resolver changes meaningfully, update this too.
+	/// Local copy of the Web host's IgnoreAttributeTypeInfoResolver. The Tests
+	/// project does not reference Web, so the resolver can't be shared yet —
+	/// it's <c>public sealed</c>, so InternalsVisibleTo doesn't help either.
+	/// Real fix: relocate the resolver into a shared project (Core or a new
+	/// FantasyFootball.Serialization helper) so both Web and Tests reference
+	/// the same type. Tracked as a follow-up issue.
+	///
+	/// **MAINTENANCE OBLIGATION**: keep this in sync with
+	/// <c>src/FantasyFootball.Web/Services/IgnoreAttributeTypeInfoResolver.cs</c>.
+	/// Any new entry in <c>BackPointerCollections</c> there must be mirrored
+	/// here, or the round-trip tests will silently lose coverage.
 	/// </summary>
 	sealed class TestIgnoreResolver : DefaultJsonTypeInfoResolver
 	{

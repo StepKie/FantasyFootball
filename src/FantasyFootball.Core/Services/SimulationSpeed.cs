@@ -27,7 +27,7 @@ public static class SimulationSpeedExtensions
 		SimulationSpeed.Normal => TimeSpan.FromMilliseconds(100),
 		SimulationSpeed.Fast => TimeSpan.FromMilliseconds(20),
 		SimulationSpeed.Instant => TimeSpan.Zero,
-		_ => TimeSpan.FromMilliseconds(100),
+		_ => throw new ArgumentOutOfRangeException(nameof(speed), speed, null),
 	};
 
 	/// <summary>

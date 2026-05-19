@@ -142,10 +142,21 @@ public sealed class LocalStorageRepository : IRepository
       // Quarantine the corrupt blob so the page renders rather than crashing,
       // and stash the raw JSON in a sibling LocalStorage key for diagnosis.
       // Reset Database (Settings) clears both.
-      var bad = KeyFor<T>() + ":corrupt-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-      _localStorage.SetItemAsString(bad, raw);
-      _localStorage.RemoveItem(KeyFor<T>());
-      Log.Warning("[LocalStorageRepository] Failed to deserialize {Bucket} bucket; corrupt blob moved to '{Quarantine}'. Length={Length}. Error: {Error}", typeof(T).Name, bad, raw.Length, ex.Message);
+      try
+      {
+        var bad = KeyFor<T>() + ":corrupt-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+        _localStorage.SetItemAsString(bad, raw);
+        _localStorage.RemoveItem(KeyFor<T>());
+        Log.Warning("[LocalStorageRepository] Failed to deserialize {Bucket} bucket; corrupt blob moved to '{Quarantine}'. Length={Length}. Error: {Error}", typeof(T).Name, bad, raw.Length, ex.Message);
+      }
+      catch (Exception quarantineEx)
+      {
+        // Quarantine SetItemAsString can throw QuotaExceededError when the
+        // browser's LocalStorage is full. Best-effort: remove the corrupt key
+        // anyway so the next load doesn't loop on it, and log loudly.
+        Log.Warning("[LocalStorageRepository] Quarantine write for {Bucket} failed: {Error}. Removing corrupt key and continuing with empty bucket.", typeof(T).Name, quarantineEx.Message);
+        try { _localStorage.RemoveItem(KeyFor<T>()); } catch { /* nothing else we can do */ }
+      }
       items = [];
     }
     var bucket = items.ToDictionary(x => x.Id, x => (NamedUniqueId)x);
