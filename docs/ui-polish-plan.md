@@ -49,6 +49,10 @@ doc captures only the directives we're acting on.
   competition-type picker. Drop the two-line wrapping pill.
 - **Standings column headers**: drop `Team` (obvious), consider dropping
   `#` or merging it into the team cell as a dim leading number.
+- **Delete competitions from the list, not the detail page.** Move the
+  trash icon off `/competitions/{id}` (where it sits next to back-nav and
+  is dangerously easy to mis-click) into a per-row delete on the
+  `/competitions` Active and Finished tables, with a confirmation dialog.
 
 ### Flag rendering
 
@@ -75,6 +79,32 @@ doc captures only the directives we're acting on.
 - Replace the current body-text "Czech Republic 2-1 South Africa" list
   with proper game cards with subtle backgrounds and visible delimiters
   between groups.
+- **Day-grouping dividers.** When the games panel shows games spanning
+  multiple `PlayedOn.Date` values, insert a subtle date label
+  (e.g. `Mon 25 Jun`) above each day's first card. Tiny text, secondary
+  colour, single-pixel divider below — visible structure without
+  competing with the cards.
+- **Single-line scoreboard stays.** Multi-line layouts in apps like
+  OneFootball exist to pack live status / scorer ticker / links to match
+  pages — we don't have that data, so the symmetric single-row scoreboard
+  is the right shape. Confirmed deliberate choice; do not multi-line.
+- **`GameListMode` setting: `OnePerRound` vs `AllOfStage`.** The round
+  picker on `/competitions/{id}` forces Round 1 → Round 2 → Round 3
+  clicking to see everything. Add an alternative mode where the entire
+  current Stage renders in one scrollable list, with day-grouping
+  dividers between matchdays (and group letters where the stage has
+  groups). The round picker stays but switches to "scroll-to-round"
+  behaviour in this mode. Default and persisted via Settings.
+- **Round picker shows date ranges next to round name.** Currently
+  `Sechzehntelfinale` / `Final` — no temporal context. kicker.de:
+  `Achtelfinale (10.03. - 18.03.)`. Annotate each picker entry with the
+  min/max `PlayedOn` of the round so users see when it happens before
+  switching. Same treatment for the stage picker.
+- **Sub-score for extra-time / penalty games.** Currently the Result
+  string crams "5-4 a.e.t." into one line. Separate: main 90-minute
+  score on top, smaller sub-score below (matches the kicker.de pattern
+  — `5:4` then `3:2` under). Cleaner visual hierarchy on KO bracket
+  rows that ran past full time.
 - **Configurable pre-match detail** via a `GameRowDetail` setting:
   - `Minimal` (default, current behaviour) — team names + score only.
   - `Probabilities` — pre-match win % shown subtly greyed inline,
@@ -150,6 +180,12 @@ doc captures only the directives we're acting on.
   otherwise we still pay 72 re-renders for a group stage).
 - Implementation: make `Simulator.GameDelay` mutable, set before each
   sim call; add a `Quiet` flag to suppress per-game messaging.
+- **Unify Settings UI with the detail picker.** Replace the 0–500 ms
+  slider on `/settings` with the same Slow / Normal / Fast / Instant
+  preset picker. Loses arbitrary-ms granularity, gains a single shared
+  vocabulary — settings persists the global default, detail overrides
+  per visit. Avoids the current clash where the slider's value
+  (e.g. 75 ms) doesn't map to any of the four detail buckets.
 
 ### Keyboard navigation
 
@@ -321,21 +357,33 @@ around third-place resolve, corrupt-blob quarantine on load.
 
 ### PR 2 — Identity
 
-- Favicon + wordmark.
-- Primary colour off purple → green accent ≤10% usage.
-- Typography: Barlow Condensed / Oswald for tournament titles + scores;
-  tabular-numerics globally on score / numeric cells.
-- `<FlagIcon>` component with `FlagStyle` setting
-  (`Square` / `Round` / `RoundTier`).
-- Scoreboard-style game cards (symmetric, winner-bolded), with
-  configurable pre-match detail (`GameRowDetail` setting:
-  `Minimal` / `Probabilities` / `EloAndProbabilities`).
-- Group cards with header band / letter badge.
-- Elo number colour tone-down.
+**Status**: in flight on branch `feature/ui-polish-2-identity`.
+
+- [ ] Favicon (asset still to source/design).
+- [x] Wordmark in top app bar (Barlow Condensed bold uppercase + ball glyph).
+- [x] Primary colour off purple → green accent (`#00B86B`).
+- [x] Typography: Inter body + Barlow Condensed display; tabular numerics
+  globally on `:root`.
+- [x] `<FlagIcon>` component (Team / Code / Size / Elo) with `FlagStyle`
+  setting (`Square` / `Round` / `RoundTier`) wired to Settings.
+- [x] Scoreboard-style game cards (symmetric, winner-bolded, loser dimmed,
+  score in Barlow Condensed). Configurable pre-match detail
+  (`GameRowDetail`) deferred to PR 3.
+- [x] Group letter heading (typographic OneFootball-style, no chip, no
+  noun).
+- [x] Elo number tone-down on Teams + TeamDetail.
 
 ### PR 3 — Sim feel
 
 - Speed control (Slow / Normal / Fast / Instant) on competition page.
+- **Unify Settings speed UI with the detail picker** — replace the
+  0–500 ms slider with the same 4-preset picker (decision noted under
+  Functionality § Speed control).
+- **Delete competitions from the list, not the detail page** — move the
+  trash icon off `/competitions/{id}` to per-row delete on `/competitions`
+  with a confirm dialog.
+- **Day-grouping dividers in the games panel** when `PlayedOn.Date`
+  varies (`Mon 25 Jun` subtle separator).
 - Keyboard navigation (full mapping; help overlay; About reference).
 - Undo stack (in-memory, JSON-snapshot-per-action, capped at 50).
 - Just-finished game highlight (game row + standings rows pulse).
