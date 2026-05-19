@@ -93,6 +93,28 @@ public class LocalStorageSerializationTests(ITestOutputHelper output) : BaseTest
 	}
 
 	[Fact]
+	public void TwoCompetitions_SharingFactoryGroups_RoundTrips()
+	{
+		// Repro of the live bug: user picks EM 2016, creates Comp A, then clicks
+		// "Start new" again without changing year. The Setup VM keeps its Groups
+		// field across Create() calls (only ResetToHistoricTeams refreshes it on
+		// year change), so Comp B is built from the SAME List<Group> as Comp A.
+		// WireBackReferences for Comp B overwrites group.Stage to Comp B's Stage,
+		// breaking Comp A's graph. Bucket serialize then writes invalid Preserve
+		// JSON with forward $refs → MetadataReferenceNotFound on next load.
+		var sharedGroups = GroupFactory.For(DataService, CompetitionType.EM, 2016).CreateFromHistoricalData(2016);
+		var compA = CompetitionFactory.For(CompetitionType.EM, 2016, sharedGroups).Create();
+		var compB = CompetitionFactory.For(CompetitionType.EM, 2016, sharedGroups).Create();
+
+		var options = BuildOptions();
+		var json = JsonSerializer.Serialize(new List<Competition> { compA, compB }, options);
+		Output.WriteLine($"Length={json.Length}");
+
+		var act = () => JsonSerializer.Deserialize<List<Competition>>(json, options);
+		act.Should().NotThrow();
+	}
+
+	[Fact]
 	public void AfterDeserialize_GroupStage_Is_Still_Same_Instance_As_Group_BackReference()
 	{
 		// THE actual web bug: Setup saves a fresh competition (good JSON). Detail

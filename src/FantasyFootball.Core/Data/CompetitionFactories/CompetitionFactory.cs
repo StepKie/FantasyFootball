@@ -59,6 +59,17 @@ public abstract class CompetitionFactory
 	{
 		if (Groups is null || Groups.Count == 0) { throw new InvalidOperationException("Groups must be not empty or initialized before calling Create()"); }
 
+		// Defensive clone: callers (CompetitionSetupViewModel) often hold a single
+		// Groups list across multiple Create() calls — ResetToHistoricTeams only
+		// refreshes it on year change. Two Create()s with the same input list
+		// produce two Competitions whose Stage.Groups point to THE SAME Group
+		// instances. WireBackReferences for the second Competition then overwrites
+		// the first's group.Stage back-pointer, and bucket-serialize writes
+		// invalid Preserve JSON with forward $refs (MetadataReferenceNotFound on
+		// next load). Cloning before CreateStages binds the cloned list to this
+		// Competition's Stages + Games for the rest of the build.
+		Groups = Groups.Select(g => new Group { Name = g.Name, Teams = [.. g.Teams] }).ToList();
+
 		Competition competition = new()
 		{
 			Name = $"{CompetitionType.Name().Long} {StartDate.Year}",

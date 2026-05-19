@@ -5,11 +5,11 @@ cold. Companion to `docs/ui-polish-plan.md` (the strategic plan) — this
 file is the tactical "what bugs we hit, what's fixed, what's still
 lurking" log.
 
-**Branch**: `feature/ui-polish-1-ia-speed` (pushed; target: `develop`).
-**State at handoff**: 11 commits ahead of `develop`. Build is clean
-(0 errors). Tests pass (10/10 in the qualifier + serialization suites;
-the full suite has not been re-run since the audit revert — should be
-~39/39 again).
+**Branch**: `feature/ui-polish-1-ia-speed` (pushed as PR #25 → `develop`).
+**State at last update (2026-05-19)**: 13 commits ahead of `develop`.
+Build is clean (0 errors). Tests: 34 passing / 6 failing — the 6 are
+the pre-existing greedy 3rd-place tournament-sim tests (Outstanding A,
+issue #12), unchanged by any work in this PR.
 
 ## What PR 1 was supposed to do
 
@@ -54,39 +54,54 @@ placeholder branch didn't. Test pinned in `QualifierTests`.
 "created" message. Added `CompetitionCreatedMessage`, broadcast from
 `CompetitionSetupViewModel.Create()`.
 
-### 3. `MetadataReferenceNotFound` JSON corruption — **almost certainly fixed, defensively contained (777d821 + 9b870fc)**
+### 3. `MetadataReferenceNotFound` JSON corruption — **FIXED (real root cause found)**
 
 The symptom: F5 after creating a competition and sim'ing a couple
 games → `JsonException: MetadataReferenceNotFound, NNN, Path: $.$values[0].Stages.$values[0].Groups.$values[1]`,
 blank page.
 
-Inspection of the corrupt JSON (`fantasy-football:Competition:corrupt-…`)
-showed Group[0].Stage being serialized as a **brand-new Stage object**
-(`$id:7`) rather than `$ref:"4"` to the parent Stage. This duplicated
-the entire Stage subtree (Rounds, Games, …) and pushed the eventual
-`$id` assignment of Group[1] past the position where it was first
-encountered as a `$ref`.
+**Real root cause (confirmed 2026-05-19):** `CompetitionSetupViewModel.Groups`
+is a single `List<Group>` instance that only refreshes on year change
+(via `ResetToHistoricTeams`). Creating two competitions of the same
+type+year back-to-back passes the same `List<Group>` (and the same
+Group instances) to two separate `CompetitionFactory.Create()` calls.
+Both Competitions end up with `Stage.Groups` pointing at the same
+Group instances. `WireBackReferences` for Comp #2 overwrites every
+`group.Stage` back-pointer (set moments earlier by Comp #1's pass)
+to point at Comp #2's Stage.
 
-**Hypothesis for root cause** (not 100% proven): another exception
-during serialization (the `Qualifier.QualifiedTeam` getter throwing
-on a greedy 3rd-place allocation failure — see #6) was aborting the
-write mid-graph, leaving STJ's reference handler in an inconsistent
-state. After fixing the throw (commit 9b870fc), the corruption stopped
-reproducing.
+Comp #1's serialize then walks `Stages[0].Groups[0].Stage` → finds
+Comp #2's Stage (a different instance from the parent Stage it just
+$id'd), writes the full Stage body inline, which recursively walks
+`Stage.Competition` → Comp #2 inline, `Comp #2.Stages` → both stages
+inline including the K.O. Phase with all its KoGames and qualifiers.
+Group $ids end up assigned deep inside this nested expansion. The
+outer `Stages[0].Groups[1..N]` then emits `$ref:<deep-id>` to those
+in-nested Groups — but on deserialize, the deep-id $ids haven't been
+encountered by the parser at the position where the $ref lands.
+**Result:** valid-looking JSON that's actually a forward reference in
+Preserve mode, blowing up on the next load.
 
-**Cannot fully reproduce in unit tests.** Two repro tests were added in
-`LocalStorageSerializationTests`:
-- factory-output → serialize → deserialize round-trip (passes)
-- serialize → deserialize → re-serialize → deserialize round-trip
-  (passes)
+**Fix:** defensive clone in `CompetitionFactory.Create()`:
+```csharp
+Groups = Groups.Select(g => new Group { Name = g.Name, Teams = [.. g.Teams] }).ToList();
+```
+Each `Create()` now owns its Group instances. Teams remain shared
+(same `Team` references) — only the Group containers are fresh.
 
-The Web flow doesn't diverge from these in any way we've identified.
-If the corruption ever recurs:
-- `LocalStorageRepository.LoadBucket` quarantines the bad blob to a
-  `fantasy-football:Competition:corrupt-{yyyyMMddHHmmss}` LocalStorage
-  key and logs to the browser console. **Grab that blob next time it
-  happens** — it's the only diagnostic we have for the underlying
-  Web-specific behaviour.
+**Repro test:** `LocalStorageSerializationTests.TwoCompetitions_SharingFactoryGroups_RoundTrips`.
+Fails on tip pre-fix, passes on tip post-fix.
+
+**Earlier hypothesis was wrong.** Commits 777d821 + 9b870fc reduced
+the surface (`[Ignore]` on `Qualifier.QualifiedTeam` stopped a different
+greedy-3rd-place throw mid-serialize), but the underlying shared-Groups
+issue was still there. The corruption recurred on the very next
+two-competitions-same-type+year flow.
+
+**Quarantine still in place.** `LocalStorageRepository.LoadBucket` still
+moves any corrupt blob to a `fantasy-football:Competition:corrupt-{ts}`
+key and logs to console, so future serialization bugs (if any) won't
+brick the page.
 
 ### 4. Premature third-place qualifier resolution — **fixed (737df22)**
 
@@ -180,39 +195,29 @@ reverted (uncommitted). The fix is structural: separate JSON's
 just JSON bloat. Belongs in a follow-up cleanup PR, not this polish
 work.
 
-### C. Tomorrow's next-up — merge Competitions + Statistics
+### C. (done) Merge Competitions + Statistics — PR 1 is now complete
 
-The single remaining PR 1 item. Scope:
-- Single `/competitions` page with Active / Finished tabs.
-- Statistics inline or as a side panel.
-- Drop `/statistics` from `NavMenu`.
-
-Once that lands, PR 1 is done and can merge to `develop`. Then PR 2
-(Identity) starts.
+Landed: PR #25 on `feature/ui-polish-1-ia-speed`. Single `/competitions`
+page with Active / Finished tabs; all-time TeamRecord aggregate below
+the Finished list. `/statistics` route + NavMenu link removed.
 
 ## Diagnostic affordances we added
-
-These are in the tree and useful if the JSON corruption (#3) ever
-recurs:
 
 - **`LocalStorageRepository.LoadBucket` quarantine** (777d821) — on
   any `JsonException`, the corrupt blob is moved to a
   `fantasy-football:{Type}:corrupt-{yyyyMMddHHmmss}` key, the bucket
   starts empty, and the browser console logs blob length + error
-  message. Reset Database (Settings) clears both.
-- **`LocalStorageSerializationTests`** (3793d59, 0907827) — repro
-  scaffold using the actual factory output (not SQLite-rehydrated).
-  Currently green; if the Web ever produces JSON we can't, copying
-  the corrupt blob and running it through this test is the path to a
-  failing fixture.
+  message. Reset Database (Settings) clears both. This caught the
+  shared-Groups corruption (#3) on 2026-05-19 and preserved the
+  diagnostic blob that pinned the root cause.
+- **`LocalStorageSerializationTests`** (3793d59, 0907827, + new
+  `TwoCompetitions_SharingFactoryGroups_RoundTrips`) — repro scaffold
+  using the actual factory output (not SQLite-rehydrated). The new
+  test fails on tip pre-fix, passes post-fix; pins the
+  shared-Groups regression.
 
 ## What I'm NOT confident about
 
-- Whether the `MetadataReferenceNotFound` corruption (#3) is fully
-  closed or just hidden behind the absence of the `QualifiedTeam`
-  throw. The unit tests can't reproduce it, and we never proved the
-  causal chain conclusively. If it recurs, the quarantine + console
-  log will give us the smoking gun.
 - The `KoGame.HomeTeam` / `AwayTeam` overrides without `[Ignore]`
   still serialize placeholder Team objects into the JSON. Round-trip
   works (the override is read-only, deserialize discards, getter
@@ -228,6 +233,5 @@ dotnet run --project src/FantasyFootball.Web --launch-profile https
 # → https://localhost:7140
 ```
 
-Next coding task: merge Competitions + Statistics (PR 1 § task C
-above). After that lands, open `feature/ui-polish-1-ia-speed` →
-`develop` PR.
+Next coding task: once PR #25 merges, start PR 2 (Identity) on a
+fresh branch off `develop`.
