@@ -4,7 +4,7 @@ using MathNet.Numerics.Distributions;
 namespace FantasyFootball.Models;
 
 /// <summary>
-/// TODO There is no good way to create a Game from a string, or create a Game with a result already set, or clear an existing result
+/// TODO There is no good way to create a Game from a string, or create a Game with a result already set
 /// </summary>
 [Table(nameof(Game))]
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$kind")]
@@ -113,6 +113,15 @@ public class Game : NamedUniqueId
 		AwayScore = awayGoals;
 		Ending = end;
 		State = GameState.FINISHED;
+	}
+
+	/// <summary> Inverse of <see cref="Simulate"/> for the undo flow: returns the game to its pre-sim, scheduled state. </summary>
+	public void ClearResult()
+	{
+		HomeScore = 0;
+		AwayScore = 0;
+		Ending = GameEnd.NORMAL;
+		State = GameState.SCHEDULED;
 	}
 
 	public override string ToString() => $"{PlayedOn,-5:g}, {HomeTeam?.ShortName,-2}-{AwayTeam?.ShortName,2} {Result}";

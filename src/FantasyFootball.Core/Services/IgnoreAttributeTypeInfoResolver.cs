@@ -4,10 +4,11 @@ using System.Text.Json.Serialization.Metadata;
 using FantasyFootball.Models;
 using SQLite;
 
-namespace FantasyFootball.Web.Services;
+namespace FantasyFootball.Services;
 
 /// <summary>
-/// JSON type-info resolver that strips properties we don't want persisted to LocalStorage.
+/// JSON type-info resolver that strips properties we don't want persisted to LocalStorage
+/// or captured in in-memory Competition snapshots (e.g. undo).
 ///
 /// Two filter rules:
 ///

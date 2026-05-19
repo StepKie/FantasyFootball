@@ -55,7 +55,10 @@
     if (competition is null) { return; }
 
     var ownStageIndex = competition.Stages.IndexOf(Group.Stage);
-    var ownGroupIndex = competition.Groups.IndexOf(Group);
+    // GroupQualifier.GroupId is the index within its OWN stage (per Qualifier.FromGroup), not across all
+    // stages. Today only one stage has groups so competition.Groups.IndexOf would happen to agree; using
+    // the stage-scoped list keeps this honest if a future format ever adds a second group stage.
+    var ownGroupIndex = Group.Stage.Groups.IndexOf(Group);
     if (ownStageIndex < 0 || ownGroupIndex < 0) { return; }
 
     var laterQualifiers = competition.Stages
@@ -71,7 +74,7 @@
       {
         if (q.GroupId == ownGroupIndex) { _directSlots.Add(q.FinalPlacement); }
       }
-      else if (q.ThirdPlaceCombination.Contains(Letter, StringComparison.OrdinalIgnoreCase))
+      else if (q.ThirdPlaceCombination.Split('/').Contains(Letter, StringComparer.OrdinalIgnoreCase))
       {
         _thirdPlaceEligible = true;
       }
@@ -86,7 +89,7 @@
         var advancedIds = laterQualifiers
           .Where(q => !string.IsNullOrEmpty(q.ThirdPlaceCombination))
           .Select(q => q.Get()?.Id)
-          .Where(id => id is not null)
+          .OfType<int>()
           .ToHashSet();
         _thirdPlaceAdvanced = advancedIds.Contains(ownThirdPlaceTeam.Id);
       }
