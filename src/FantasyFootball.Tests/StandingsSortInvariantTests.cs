@@ -69,8 +69,9 @@ public class StandingsSortInvariantTests(ITestOutputHelper output) : BaseTest(ou
 			await simulator.SimulateStage(competition.Stages[0]);
 			Repo.Save(competition);
 
-			var reloaded = Repo.Get<Competition>(competition.Id)!;
-			foreach (var group in reloaded.Groups)
+			var reloaded = Repo.Get<Competition>(competition.Id);
+			reloaded.Should().NotBeNull("competition must be retrievable after Save");
+			foreach (var group in reloaded!.Groups)
 			{
 				var standings = group.GetStandings();
 				for (int j = 0; j < standings.Count - 1; j++)
