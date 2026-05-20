@@ -69,6 +69,11 @@ body {
   margin-top: 4px;
 }
 
+/* Whole-row click opens the details popover (see GameViewRow.razor onclick). */
+.scoreboard-row {
+  cursor: pointer;
+}
+
 .scoreboard-row:hover {
   background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
 }
@@ -120,6 +125,20 @@ body {
   animation: scoreboard-pulse 1.5s ease-out;
 }
 
+/* Score reveal — pop in from 140% with the brand-green tint, scale back to 100% over 450ms.
+   Paired with .scoreboard-row-just-finished on single-game sims (and redo) so both the row pulse
+   and the score animation start in the same frame. Opacity catches up faster than scale (35%)
+   so the score reads early; scale + colour settle through the rest. */
+@keyframes scoreboard-score-reveal {
+  0%   { opacity: 0; transform: scale(1.4); color: var(--mud-palette-primary); }
+  35%  { opacity: 1; transform: scale(1.2); color: var(--mud-palette-primary); }
+  100% { opacity: 1; transform: scale(1); color: inherit; }
+}
+.scoreboard-row-just-finished .scoreboard-score {
+  animation: scoreboard-score-reveal 0.45s ease-out;
+  display: inline-block; /* required for transform to apply on inline content */
+}
+
 /* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
 .scoreboard-action {
   min-width: 5rem;
@@ -152,6 +171,58 @@ body {
 .scoreboard-group-tag-time {
   font-size: 0.7rem;
   font-variant-numeric: tabular-nums;
+}
+
+/* Click-for-game-details popover. Anchored under the row via .scoreboard-row-wrapper (position: relative). */
+.scoreboard-row-wrapper {
+  position: relative;
+}
+
+.scoreboard-row-open {
+  background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
+  box-shadow: inset 3px 0 0 var(--mud-palette-primary);
+}
+
+.game-details-popover {
+  padding: 0.75rem 1rem;
+  min-width: 18rem;
+  max-width: 22rem;
+}
+
+.game-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.85rem;
+  padding: 0.15rem 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-details-label {
+  color: var(--mud-palette-text-secondary);
+  font-weight: 500;
+}
+
+.game-details-value {
+  font-weight: 600;
+}
+
+.game-details-sep {
+  color: var(--mud-palette-text-secondary);
+  font-weight: 400;
+  margin: 0 0.15rem;
+}
+
+/* The percentage that matches the actual outcome (only set when Game.IsFinished). */
+.game-details-pct-actual {
+  color: var(--mud-palette-primary);
+  font-weight: 700;
+}
+
+.game-details-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */

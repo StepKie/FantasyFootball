@@ -48,6 +48,14 @@ else
         <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.EmojiEvents" Size="Size.Small">
           Winner: @ViewModel.Winner.Name
         </MudChip>
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Primary"
+                   Size="Size.Small"
+                   StartIcon="@Icons.Material.Filled.Refresh"
+                   OnClick="ReplayCompetition"
+                   Disabled="ViewModel.IsBusy">
+          Simulate again
+        </MudButton>
       }
       <MudSpacer />
       <MudIconButton Icon="@Icons.Material.Filled.Keyboard"
@@ -122,6 +130,8 @@ else
                              ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
                              IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"
                              Disabled="@ViewModel.IsBusy"
+                             DetailsOpen="@(ReferenceEquals(game, _openDetailsGame))"
+                             OnDetailsToggle="@(() => ToggleDetailsGame(game))"
                              OnSim="@(async () => await ViewModel.SimulateGame())"
                              OnUndo="@(() => ViewModel.Undo())"
                              OnRedo="@(async () => await ViewModel.RedoLastGame())" />
@@ -181,7 +191,21 @@ else
 
   int? _lastLoadedId;
   bool _helpOpen;
+  Game? _openDetailsGame;
+  int? _confettiFiredFor;
   DotNetObjectReference<CompetitionDetail>? _selfRef;
+
+  void ToggleDetailsGame(Game game) => _openDetailsGame = ReferenceEquals(_openDetailsGame, game) ? null : game;
+
+  async Task ReplayCompetition()
+  {
+    // Clear in-flight confetti particles from the previous finish — they'd otherwise keep falling on the
+    // new-comp page for 2-3 seconds and look like a fresh celebration. IsBusy + spinner-flush is the VM's job.
+    try { await JS.InvokeVoidAsync("ffConfetti.reset"); }
+    catch (JSDisconnectedException) { /* page disposing */ }
+    var replay = await ViewModel.Replay();
+    Nav.NavigateTo($"/competitions/{replay.Id}");
+  }
 
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
 
@@ -190,6 +214,9 @@ else
     if (_lastLoadedId == Id) { return; }
     _lastLoadedId = Id;
     ViewModel.Load(Id);
+    // Loading an already-finished comp from the list: suppress confetti so the user only sees it
+    // when their own sim crosses the finish line, not when they revisit an old result.
+    _confettiFiredFor = ViewModel.IsFinished ? Id : null;
   }
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -203,7 +230,16 @@ else
     }
   }
 
-  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(async () =>
+  {
+    if (ViewModel.IsFinished && _confettiFiredFor != Id)
+    {
+      _confettiFiredFor = Id;
+      try { await JS.InvokeVoidAsync("ffConfetti.celebrate"); }
+      catch (JSDisconnectedException) { /* Page navigated away while the call was in flight. */ }
+    }
+    StateHasChanged();
+  });
 
   // Invoked by the document-level JS keydown listener. Sim keys no-op once finished; nav keys remain.
   [JSInvokable]
