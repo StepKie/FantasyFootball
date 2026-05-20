@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Data;
+using FantasyFootball.Data.CompetitionFactories;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
@@ -26,6 +27,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	readonly IDataService _dataService;
 
 	CompetitionSimulator? _simulator;
+
+	// True during SimulateAll only; SimulateRound leaves it false to keep the user on the round they just simmed.
+	bool _liveTracking;
 
 	// In-memory undo stack of *just-simmed games*. Undo = pop, call game.ClearResult().
 	// No snapshots / serialization needed: a simmed game is fully reversible by clearing its score
@@ -98,6 +102,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		// Clear any in-flight pulse target — a FlashRecentlyFinished from a previous
 		// competition would otherwise eventually fire StateHasChanged on this page for nothing.
 		RecentlyFinishedGame = null;
+		// Replay flow sets IsBusy=true before navigating; clear here so the new comp's view starts idle.
+		IsBusy = false;
 		Competition = _repo.Get<Competition>(competitionId);
 		if (Competition is null) { return; }
 
@@ -115,6 +121,22 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 	partial void OnSpeedChanged(SimulationSpeed value) => ApplySpeedToSimulator();
 
+	/// <summary>
+	/// When the user picks a new stage (e.g. clicks the K.O. Phase chip while viewing the Group Stage),
+	/// snap <see cref="SelectedRound"/> to a sensible round inside that stage instead of leaving it
+	/// pointing at the previous stage's round (which the round chip strip would then render as nothing
+	/// matching the highlight state). Prefer the tournament's current round if it's in this stage;
+	/// otherwise fall back to the stage's first round.
+	/// </summary>
+	partial void OnSelectedStageChanged(Stage? value)
+	{
+		if (value is null) { SelectedRound = null; return; }
+		var currentRound = Competition?.CurrentGame?.Round;
+		SelectedRound = currentRound is not null && value.Rounds.Contains(currentRound)
+			? currentRound
+			: value.Rounds.FirstOrDefault();
+	}
+
 	void ApplySpeedToSimulator()
 	{
 		if (_simulator is null) { return; }
@@ -126,12 +148,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (_simulator is null || Competition?.CurrentGame is null || IsBusy) { return; }
 		var gameBeingSimmed = Competition.CurrentGame;
-		// Set undo target + pulse marker UP FRONT, before the sim's Task.Delay throws an
-		// async yield. The next render flushes them in the same frame as the new score —
-		// otherwise the buttons + pulse appear ~Task.Delay(GameDelay) ms after the score,
-		// visibly lagging the click.
 		PushUndoEntry(gameBeingSimmed);
-		_ = FlashRecentlyFinished(gameBeingSimmed);
 		IsBusy = true;
 		try
 		{
@@ -139,6 +156,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
 			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
 			_repo.Save(Competition);
+			// Pulse marker AFTER the sim so the class transition + final score land in one render (Space path needs this; click batches via EventCallback).
+			_ = FlashRecentlyFinished(gameBeingSimmed);
 		}
 		finally
 		{
@@ -163,7 +182,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
 			_repo.Save(Competition);
 		}
-		finally { OnSimBatchComplete(); }
+		// Keep the user on the round they just simmed — auto-advancing to the next round hides the results they wanted to see.
+		finally { OnSimBatchComplete(advanceSelection: false); }
 	}
 
 	public async Task SimulateAll()
@@ -171,12 +191,13 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (_simulator is null || Competition is null || Competition.IsFinished || IsBusy) { return; }
 		ClearUndo();
 		IsBusy = true;
+		_liveTracking = true;
 		try
 		{
 			await _simulator.Simulate();
 			_repo.Save(Competition);
 		}
-		finally { OnSimBatchComplete(); }
+		finally { _liveTracking = false; OnSimBatchComplete(); }
 	}
 
 	public void Undo()
@@ -200,9 +221,6 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (_simulator is null || Competition is null || IsBusy) { return; }
 		if (!_undoStack.TryPeek(out var game)) { return; }
 
-		// Pulse fires before the await — same reasoning as SimulateGame, so the new score
-		// and the pulse animation land in the same render frame.
-		_ = FlashRecentlyFinished(game);
 		IsBusy = true;
 		try
 		{
@@ -210,6 +228,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			// Same as SimulateGame: single-game user click, no inter-game pacing.
 			await _simulator.SimulateGame(game, delayAfter: false);
 			_repo.Save(Competition);
+			// FlashRecentlyFinished AFTER the sim — same render-batching reason as SimulateGame.
+			_ = FlashRecentlyFinished(game);
 		}
 		finally
 		{
@@ -252,19 +272,21 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	}
 
 	/// <summary>
-	/// Post-sim-batch hook called from every <c>SimulateX</c> finally. Advances
-	/// Stage/Round to the current non-finished entry, re-publishes Competition
-	/// so the page rebinds, and clears <see cref="IsBusy"/>. OnGameFinished
-	/// keeps selection live in non-Quiet mode per game, but Quiet/Instant
-	/// suppresses those broadcasts — without this hook the page would still be
-	/// pinned to the round selected before the batch started.
+	/// Post-sim-batch hook called from every <c>SimulateX</c> finally. Optionally advances
+	/// Stage/Round to the current non-finished entry, re-publishes Competition so the page
+	/// rebinds, and clears <see cref="IsBusy"/>. SimulateRound passes <c>advanceSelection: false</c>
+	/// so the user stays on the round they just simmed; SimulateGame and SimulateAll let the
+	/// default advance fire (next-game flow and trophy-landing respectively).
 	/// </summary>
-	void OnSimBatchComplete()
+	void OnSimBatchComplete(bool advanceSelection = true)
 	{
 		if (Competition is not null)
 		{
-			SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
-			SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
+			if (advanceSelection)
+			{
+				SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
+				SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
+			}
 			OnPropertyChanged(nameof(Competition));
 			// Finished competitions are immutable in the UX — the user can't go back to before the trophy.
 			if (Competition.IsFinished) { ClearUndo(); }
@@ -274,16 +296,56 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		OnPropertyChanged(nameof(UndoTargetGame));
 	}
 
+	/// <summary>
+	/// Clones the current competition's team lineup into a fresh competition with the same Type + Year
+	/// and saves it. Returns the new Id so the page can navigate to it. Uses today's Elo on each Team
+	/// instance, not a snapshot from the finished comp — issue #19 will tighten this once the per-comp
+	/// Elo snapshot lands. Group.ShallowClone strips Stage / Games / Id; the factory wires everything else fresh.
+	/// Async so the IsBusy spinner can flush to the DOM before the synchronous LocalStorage save blocks;
+	/// IsBusy is left true on return — Load() on the new comp's mount resets it.
+	/// </summary>
+	public async Task<Competition> Replay()
+	{
+		if (Competition is null) { throw new InvalidOperationException("No competition loaded to replay."); }
+		IsBusy = true;
+		await Task.Yield();
+
+		try
+		{
+			var year = Competition.Start?.Year ?? DateTime.Now.Year;
+			var clonedGroups = Competition.Groups.Select(g => g.ShallowClone()).ToList();
+			// CompetitionFactory.For raises NotImplementedException for CHAMPIONS_LEAGUE / DOMESTIC_LEAGUE and ArgumentException for unknown types; clear IsBusy on the exception path so the spinner doesn't lock the page until reload.
+			var factory = CompetitionFactory.For(Competition.Type, year, clonedGroups);
+			var replay = factory.Create();
+			_repo.Save(replay);
+			MessageBus.Send(new CompetitionCreatedMessage(replay));
+
+			return replay;
+		}
+		catch
+		{
+			IsBusy = false;
+			throw;
+		}
+	}
+
 	void OnGameFinished(Game finished)
 	{
 		// Bail if the message is for a different competition.
 		if (Competition is null || finished.Round?.Stage?.Competition is null) { return; }
 		if (finished.Round.Stage.Competition.Id != Competition.Id) { return; }
 
-		// Auto-advance Stage/Round to the next non-finished one so the games
-		// pane follows the simulation forward.
-		SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
-		SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
+		// Live multi-round sims (SimulateAll) follow the playing round; SimulateRound stays put.
+		if (_liveTracking)
+		{
+			var currentRound = Competition.CurrentGame?.Round;
+			if (currentRound is not null && !ReferenceEquals(currentRound, SelectedRound))
+			{
+				// Setting SelectedStage triggers OnSelectedStageChanged which snaps SelectedRound; avoid the double-fire.
+				if (!ReferenceEquals(currentRound.Stage, SelectedStage)) { SelectedStage = currentRound.Stage; }
+				else { SelectedRound = currentRound; }
+			}
+		}
 
 		// Re-publish Competition change so groupings + standings + winner re-evaluate.
 		OnPropertyChanged(nameof(Competition));

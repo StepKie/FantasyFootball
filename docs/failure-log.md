@@ -1,15 +1,13 @@
 # UI polish PR 1 — failure log
 
-Session handoff doc. Read this first if you're picking up the polish work
-cold. Companion to `docs/ui-polish-plan.md` (the strategic plan) — this
-file is the tactical "what bugs we hit, what's fixed, what's still
-lurking" log.
+**Archival**. PR #25 merged to `develop` on 2026-05-19; PR #28 (Identity),
+PR #29 (Sim feel), and release PR #31 followed. This file is kept as
+historical context for the diagnostic affordances + bug catalog from the
+PR 1 era. The bug histories below are accurate as of merge; tracker
+state has moved on.
 
-**Branch**: `feature/ui-polish-1-ia-speed` (pushed as PR #25 → `develop`).
-**State at last update (2026-05-19)**: 13 commits ahead of `develop`.
-Build is clean (0 errors). Tests: 34 passing / 6 failing — the 6 are
-the pre-existing greedy 3rd-place tournament-sim tests (Outstanding A,
-issue #12), unchanged by any work in this PR.
+For the current state of polish work, see `docs/ui-polish-plan.md`.
+For known follow-up cleanup, see issues #12, #27, #32, #33.
 
 ## What PR 1 was supposed to do
 
@@ -178,7 +176,7 @@ slot. Hidden by the placeholder fallback in #6 — the user sees a
 official 495-scenario lookup table per the TODO at the top of
 `ExpandedWorldCupFormat.cs`. Out of scope for the polish PR.
 
-### B. JSON bloat from un-`[Ignore]`'d computed getters — **investigated, NOT fixed (revert in working memory)**
+### B. JSON bloat from un-`[Ignore]`'d computed getters — **tracked in #32**
 
 Audit during this session identified four computed getters on
 persisted types that STJ serializes (unnecessarily):
@@ -192,14 +190,7 @@ simulation tests because **the same SQLite `[Ignore]` attribute also
 removes columns from the SQLite schema**. The audit changes were
 reverted (uncommitted). The fix is structural: separate JSON's
 `[JsonIgnore]` from SQLite's `[Ignore]`. **Not a crash risk** —
-just JSON bloat. Belongs in a follow-up cleanup PR, not this polish
-work.
-
-### C. (done) Merge Competitions + Statistics — PR 1 is now complete
-
-Landed: PR #25 on `feature/ui-polish-1-ia-speed`. Single `/competitions`
-page with Active / Finished tabs; all-time TeamRecord aggregate below
-the Finished list. `/statistics` route + NavMenu link removed.
+just JSON bloat. Now tracked as issue #32.
 
 ## Diagnostic affordances we added
 
@@ -223,15 +214,3 @@ the Finished list. `/statistics` route + NavMenu link removed.
   works (the override is read-only, deserialize discards, getter
   recomputes), but it's noise. Outstanding (B).
 
-## Quick start (for tomorrow / next session)
-
-```bash
-git checkout feature/ui-polish-1-ia-speed
-git pull
-dotnet test src/FantasyFootball.Tests/FantasyFootball.Tests.csproj
-dotnet run --project src/FantasyFootball.Web --launch-profile https
-# → https://localhost:7140
-```
-
-Next coding task: once PR #25 merges, start PR 2 (Identity) on a
-fresh branch off `develop`.

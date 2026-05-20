@@ -7,6 +7,20 @@ using FantasyFootball.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
+using Serilog;
+
+// Serilog → browser DevTools console for the WASM host. Debug in dev; Warning in Release (avoids leaking diagnostics to public-deploy visitors' consoles).
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Is(
+#if DEBUG
+        Serilog.Events.LogEventLevel.Debug
+#else
+        Serilog.Events.LogEventLevel.Warning
+#endif
+    )
+    .Enrich.FromLogContext()
+    .WriteTo.BrowserConsole()
+    .CreateLogger();
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 

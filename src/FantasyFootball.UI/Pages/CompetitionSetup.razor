@@ -54,19 +54,21 @@
   <MudGrid Spacing="2">
     @foreach (var group in ViewModel.Groups)
     {
-      <MudItem xs="12" sm="6" md="4" lg="3">
+      <MudItem xs="12" sm="6" md="4">
         <MudPaper Class="pa-3" Elevation="1" Style="height: 100%;">
           <MudText Typo="Typo.subtitle1" GutterBottom="true">@group.Name</MudText>
           <MudDivider Class="mb-2" />
-          @foreach (var team in group.Teams)
-          {
-            <div class="d-flex align-center mb-1" style="gap: 0.5rem;">
-              <FlagIcon Team="team" Size="20" />
-              <MudText Typo="Typo.body2">@team.Name</MudText>
-              <MudSpacer />
-              <MudText Typo="Typo.caption" Color="Color.Secondary">@team.Elo</MudText>
-            </div>
-          }
+          <div class="setup-team-list">
+            @foreach (var team in group.Teams)
+            {
+              <div class="setup-team-row">
+                <FlagIcon Team="team" Size="28" />
+                <MudText Typo="Typo.body2">@team.Name</MudText>
+                <MudSpacer />
+                <MudText Typo="Typo.caption" Color="Color.Secondary">@team.Elo</MudText>
+              </div>
+            }
+          </div>
         </MudPaper>
       </MudItem>
     }

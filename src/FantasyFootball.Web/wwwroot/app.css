@@ -69,6 +69,154 @@ body {
   margin-top: 4px;
 }
 
+/* Whole-row click opens the details popover (see GameViewRow.razor onclick). */
+.scoreboard-row {
+  cursor: pointer;
+}
+
+/* Hierarchical stage→round chip pickers with a dotted-timeline backdrop. Stage row larger, round row
+   smaller + indented to suggest "rounds belong to the selected stage". The ::before dashed line on each
+   .timeline-chips evokes temporal progression. Chips need an opaque background so the line doesn't
+   show through outlined chips on dark mode (--mud-palette-surface).  */
+.timeline-pickers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.timeline-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.timeline-row-round {
+  padding-left: 1.5rem; /* indent rounds under stages — hierarchical cue */
+}
+
+.timeline-label {
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--mud-palette-text-secondary);
+  min-width: 3.5rem;
+}
+
+.timeline-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.timeline-chips::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0.5rem;
+  right: 0.5rem;
+  border-top: 1px dashed var(--mud-palette-text-secondary);
+  opacity: 0.3;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.timeline-chips .mud-chip {
+  position: relative;
+  z-index: 1;
+}
+
+/* Chip status — encoded redundantly via border style + opacity, not color alone.
+   chip-current: dashed border distinguishes the actively-played round from solid-bordered done/future.
+   chip-future:  dimmed to indicate "not reached yet" without changing chip shape.
+   chip-done:    no border/opacity override; default outlined+default reads as the "white" finished state.
+   All three status classes get an opaque background so the dashed timeline line doesn't pass visibly
+   through them. The filled selected chip has no status class → no override → keeps its primary green. */
+.mud-chip.chip-current,
+.mud-chip.chip-future,
+.mud-chip.chip-done {
+  /* `background` shorthand to also reset background-image; MudBlazor's outlined variant set
+     `background: transparent` which beat the property-level override. */
+  background: var(--mud-palette-background) !important;
+}
+
+/* Inter-chip sim button — sits between round chips on the timeline. Opaque backdrop so the dashed
+   timeline line doesn't pass through. */
+.round-sim-button {
+  background: var(--mud-palette-background) !important;
+  position: relative;
+  z-index: 1;
+}
+
+.mud-chip.chip-current {
+  border-style: dashed !important;
+}
+
+.mud-chip.chip-future {
+  opacity: 0.5;
+}
+
+/* Variant B: whole-stage scroll. Each round renders as a section with a header. */
+.round-section {
+  scroll-margin-top: 1rem;
+  padding-top: 0.25rem;
+}
+
+.round-section + .round-section {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--mud-palette-action-hover, rgba(0, 0, 0, 0.08));
+  padding-top: 1rem;
+}
+
+/* Setup page team list — gap-based spacing so the top (after divider) matches the bottom (before card edge). */
+.setup-team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.setup-team-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Single-column game flow — multi-column was visually noisy; user preferred one column. */
+.round-games-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* Bounded-height card with internal scroll. Page-level scroll is annoying when chip clicks jump
+   between rounds; per-card scroll keeps the chips + header pinned at top. The calc leaves room for
+   the app bar (~64px) + breadcrumb / title (~80px) + chip rows (~100px) + grid spacing.  */
+.bounded-scroll-card {
+  max-height: calc(100vh - 18rem);
+  overflow-y: auto;
+}
+
+.round-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--mud-palette-text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.round-section-selected .round-header {
+  color: var(--mud-palette-primary);
+}
+
 .scoreboard-row:hover {
   background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
 }
@@ -120,6 +268,20 @@ body {
   animation: scoreboard-pulse 1.5s ease-out;
 }
 
+/* Score reveal — pop in from 140% with the brand-green tint, scale back to 100% over 450ms.
+   Paired with .scoreboard-row-just-finished on single-game sims (and redo) so both the row pulse
+   and the score animation start in the same frame. Opacity catches up faster than scale (35%)
+   so the score reads early; scale + colour settle through the rest. */
+@keyframes scoreboard-score-reveal {
+  0%   { opacity: 0; transform: scale(1.4); color: var(--mud-palette-primary); }
+  35%  { opacity: 1; transform: scale(1.2); color: var(--mud-palette-primary); }
+  100% { opacity: 1; transform: scale(1); color: inherit; }
+}
+.scoreboard-row-just-finished .scoreboard-score {
+  animation: scoreboard-score-reveal 0.45s ease-out;
+  display: inline-block; /* required for transform to apply on inline content */
+}
+
 /* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
 .scoreboard-action {
   min-width: 5rem;
@@ -152,6 +314,58 @@ body {
 .scoreboard-group-tag-time {
   font-size: 0.7rem;
   font-variant-numeric: tabular-nums;
+}
+
+/* Click-for-game-details popover. Anchored under the row via .scoreboard-row-wrapper (position: relative). */
+.scoreboard-row-wrapper {
+  position: relative;
+}
+
+.scoreboard-row-open {
+  background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
+  box-shadow: inset 3px 0 0 var(--mud-palette-primary);
+}
+
+.game-details-popover {
+  padding: 0.75rem 1rem;
+  min-width: 18rem;
+  max-width: 22rem;
+}
+
+.game-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.85rem;
+  padding: 0.15rem 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-details-label {
+  color: var(--mud-palette-text-secondary);
+  font-weight: 500;
+}
+
+.game-details-value {
+  font-weight: 600;
+}
+
+.game-details-sep {
+  color: var(--mud-palette-text-secondary);
+  font-weight: 400;
+  margin: 0 0.15rem;
+}
+
+/* The percentage that matches the actual outcome (only set when Game.IsFinished). */
+.game-details-pct-actual {
+  color: var(--mud-palette-primary);
+  font-weight: 700;
+}
+
+.game-details-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */

@@ -38,7 +38,9 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
   claude-auto-review:
-    if: github.event_name == 'pull_request'
+    # Skip auto-review on develop→main PRs — those are pure-formality release PRs
+    # where everything substantial was already reviewed on its way into develop.
+    if: github.event_name == 'pull_request' && github.base_ref != 'main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
