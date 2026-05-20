@@ -65,7 +65,7 @@ else
     </MudStack>
 
     <MudGrid Spacing="2">
-      <MudItem xs="12" sm="6">
+      <MudItem xs="12" sm="4">
         <MudSelect T="Stage"
                    Label="Stage"
                    Value="ViewModel.SelectedStage"
@@ -78,18 +78,28 @@ else
           }
         </MudSelect>
       </MudItem>
-      <MudItem xs="12" sm="6">
-        <MudSelect T="Round"
-                   Label="Round"
-                   Value="ViewModel.SelectedRound"
-                   ValueChanged="@(v => ViewModel.SelectedRound = v)"
-                   ToStringFunc="@(r => r?.Name ?? "")"
-                   FullWidth="true">
+      <MudItem xs="12" sm="8">
+        @* Round picker as a horizontal chip strip. Each chip's visual state encodes status:
+           - Selected round → filled primary.
+           - Finished round (results available)  → outlined success + ✓.
+           - Current round (next to sim)         → outlined primary.
+           - Future round                        → outlined default. *@
+        <div class="round-chip-row">
           @foreach (var r in ViewModel.Rounds)
           {
-            <MudSelectItem Value="@r">@r.Name</MudSelectItem>
+            var isSelected = ReferenceEquals(r, ViewModel.SelectedRound);
+            var isCurrent  = ReferenceEquals(r, ViewModel.SelectedStage?.CurrentRound);
+            var isDone     = r.IsFinished;
+            <MudChip T="Round"
+                     Value="@r"
+                     Variant="@(isSelected ? Variant.Filled : Variant.Outlined)"
+                     Color="@(isSelected ? Color.Primary : isDone ? Color.Success : isCurrent ? Color.Primary : Color.Default)"
+                     Size="Size.Small"
+                     OnClick="@(() => ViewModel.SelectedRound = r)">
+              @r.Name@(isDone ? " ✓" : "")
+            </MudChip>
           }
-        </MudSelect>
+        </div>
       </MudItem>
     </MudGrid>
 
