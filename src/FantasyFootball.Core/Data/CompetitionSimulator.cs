@@ -68,18 +68,22 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		Log.Debug("--------------------------------------");
 		Log.Debug($"Starting Round: {round.Name}");
 		Log.Debug("--------------------------------------");
-		Game? lastAttempted = null;
-		while (!round.IsFinished)
+		// Iterate by PlayedOn so non-Instant sims fill rows in the same order the UI displays them
+		// (CompetitionDetail orders games by PlayedOn). Round.AllGames is factory-defined order
+		// (group A first, then B, …) which interleaves with chronological kickoff times — without
+		// this snapshot, row 3 (16:00) would update *after* row 4 (15:00) once we work down each group.
+		var ordered = round.AllGames.OrderBy(g => g.PlayedOn).ToList();
+		foreach (var game in ordered)
 		{
-			var current = round.CurrentGame!;
-			// Bail if CurrentGame doesn't progress — placeholder-team KO games would otherwise spin forever (issue #12).
-			if (ReferenceEquals(current, lastAttempted))
+			if (game.IsFinished) { continue; }
+			// Skip rather than break: a placeholder-team KO game (issue #12 territory) shouldn't sim,
+			// but it also shouldn't block later games in the same round from running.
+			if (!game.IsReadyToStart)
 			{
-				Log.Warning($"Round {round.Name}: game {current} stays non-ready; bailing out of sim loop.");
-				break;
+				Log.Warning($"Round {round.Name}: game {game} is not ready; skipping.");
+				continue;
 			}
-			lastAttempted = current;
-			await SimulateGame(current);
+			await SimulateGame(game);
 		}
 		Log.Debug("--------------------------------------");
 	}

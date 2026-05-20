@@ -120,6 +120,20 @@ body {
   animation: scoreboard-pulse 1.5s ease-out;
 }
 
+/* Score reveal — pop in from 140% with the brand-green tint, scale back to 100% over 450ms.
+   Paired with .scoreboard-row-just-finished on single-game sims (and redo) so both the row pulse
+   and the score animation start in the same frame. Opacity catches up faster than scale (35%)
+   so the score reads early; scale + colour settle through the rest. */
+@keyframes scoreboard-score-reveal {
+  0%   { opacity: 0; transform: scale(1.4); color: var(--mud-palette-primary); }
+  35%  { opacity: 1; transform: scale(1.2); color: var(--mud-palette-primary); }
+  100% { opacity: 1; transform: scale(1); color: inherit; }
+}
+.scoreboard-row-just-finished .scoreboard-score {
+  animation: scoreboard-score-reveal 0.45s ease-out;
+  display: inline-block; /* required for transform to apply on inline content */
+}
+
 /* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
 .scoreboard-action {
   min-width: 5rem;

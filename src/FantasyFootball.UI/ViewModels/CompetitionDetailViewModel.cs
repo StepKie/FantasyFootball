@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Data;
+using FantasyFootball.Data.CompetitionFactories;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
@@ -98,6 +99,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		// Clear any in-flight pulse target — a FlashRecentlyFinished from a previous
 		// competition would otherwise eventually fire StateHasChanged on this page for nothing.
 		RecentlyFinishedGame = null;
+		// Replay flow sets IsBusy=true before navigating; clear here so the new comp's view starts idle.
+		IsBusy = false;
 		Competition = _repo.Get<Competition>(competitionId);
 		if (Competition is null) { return; }
 
@@ -163,7 +166,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
 			_repo.Save(Competition);
 		}
-		finally { OnSimBatchComplete(); }
+		// Keep the user on the round they just simmed — auto-advancing to the next round hides the results they wanted to see.
+		finally { OnSimBatchComplete(advanceSelection: false); }
 	}
 
 	public async Task SimulateAll()
@@ -252,19 +256,21 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	}
 
 	/// <summary>
-	/// Post-sim-batch hook called from every <c>SimulateX</c> finally. Advances
-	/// Stage/Round to the current non-finished entry, re-publishes Competition
-	/// so the page rebinds, and clears <see cref="IsBusy"/>. OnGameFinished
-	/// keeps selection live in non-Quiet mode per game, but Quiet/Instant
-	/// suppresses those broadcasts — without this hook the page would still be
-	/// pinned to the round selected before the batch started.
+	/// Post-sim-batch hook called from every <c>SimulateX</c> finally. Optionally advances
+	/// Stage/Round to the current non-finished entry, re-publishes Competition so the page
+	/// rebinds, and clears <see cref="IsBusy"/>. SimulateRound passes <c>advanceSelection: false</c>
+	/// so the user stays on the round they just simmed; SimulateGame and SimulateAll let the
+	/// default advance fire (next-game flow and trophy-landing respectively).
 	/// </summary>
-	void OnSimBatchComplete()
+	void OnSimBatchComplete(bool advanceSelection = true)
 	{
 		if (Competition is not null)
 		{
-			SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
-			SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
+			if (advanceSelection)
+			{
+				SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
+				SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
+			}
 			OnPropertyChanged(nameof(Competition));
 			// Finished competitions are immutable in the UX — the user can't go back to before the trophy.
 			if (Competition.IsFinished) { ClearUndo(); }
@@ -274,18 +280,34 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		OnPropertyChanged(nameof(UndoTargetGame));
 	}
 
+	/// <summary>
+	/// Clones the current competition's team lineup into a fresh competition with the same Type + Year
+	/// and saves it. Returns the new Id so the page can navigate to it. Uses today's Elo on each Team
+	/// instance, not a snapshot from the finished comp — issue #19 will tighten this once the per-comp
+	/// Elo snapshot lands. Group.ShallowClone strips Stage / Games / Id; the factory wires everything else fresh.
+	/// </summary>
+	public Competition Replay()
+	{
+		if (Competition is null) { throw new InvalidOperationException("No competition loaded to replay."); }
+		var year = Competition.Start?.Year ?? DateTime.Now.Year;
+		var clonedGroups = Competition.Groups.Select(g => g.ShallowClone()).ToList();
+		var factory = CompetitionFactory.For(Competition.Type, year, clonedGroups);
+		var replay = factory.Create();
+		_repo.Save(replay);
+		MessageBus.Send(new CompetitionCreatedMessage(replay));
+
+		return replay;
+	}
+
 	void OnGameFinished(Game finished)
 	{
 		// Bail if the message is for a different competition.
 		if (Competition is null || finished.Round?.Stage?.Competition is null) { return; }
 		if (finished.Round.Stage.Competition.Id != Competition.Id) { return; }
 
-		// Auto-advance Stage/Round to the next non-finished one so the games
-		// pane follows the simulation forward.
-		SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
-		SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
-
-		// Re-publish Competition change so groupings + standings + winner re-evaluate.
+		// Re-publish Competition change so groupings + standings + winner re-evaluate. Auto-advance is left
+		// to OnSimBatchComplete: doing it per-game during a multi-game sim flipped the panel away from the
+		// round being simmed the moment its last game resolved, hiding the results the user was watching.
 		OnPropertyChanged(nameof(Competition));
 	}
 }
