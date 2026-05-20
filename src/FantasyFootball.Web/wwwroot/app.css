@@ -69,6 +69,11 @@ body {
   margin-top: 4px;
 }
 
+/* Whole-row click opens the details popover (see GameViewRow.razor onclick). */
+.scoreboard-row {
+  cursor: pointer;
+}
+
 .scoreboard-row:hover {
   background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
 }

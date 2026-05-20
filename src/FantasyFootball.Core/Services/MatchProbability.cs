@@ -33,7 +33,7 @@ public static class MatchProbability
 			}
 		}
 
-		// Renormalize: truncating at MaxGoals=10 loses ~1e-9 of mass at the goal counts we care about, but make it exact for callers.
+		// Renormalize: truncating at MaxGoals=10 loses a negligible fraction of mass for near-equal Elos but rises to ~0.1% at extreme spreads (λ near 4.5); the renorm makes the H/D/A split exact regardless.
 		var sum = pH + pD + pA;
 
 		return new WinDrawLossResult(pH / sum, pD / sum, pA / sum);

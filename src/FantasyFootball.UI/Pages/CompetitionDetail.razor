@@ -199,16 +199,11 @@ else
 
   async Task ReplayCompetition()
   {
-    // Set IsBusy + yield so the spinner flushes to the DOM before the synchronous Replay() blocks on the
-    // LocalStorage save. Without the yield the button appears unresponsive: nothing visibly happens between
-    // click and the new-page navigation. Load() on the new comp's mount resets IsBusy.
-    ViewModel.IsBusy = true;
     // Clear in-flight confetti particles from the previous finish — they'd otherwise keep falling on the
-    // new-comp page for 2-3 seconds and look like a fresh celebration.
+    // new-comp page for 2-3 seconds and look like a fresh celebration. IsBusy + spinner-flush is the VM's job.
     try { await JS.InvokeVoidAsync("ffConfetti.reset"); }
     catch (JSDisconnectedException) { /* page disposing */ }
-    await Task.Yield();
-    var replay = ViewModel.Replay();
+    var replay = await ViewModel.Replay();
     Nav.NavigateTo($"/competitions/{replay.Id}");
   }
 

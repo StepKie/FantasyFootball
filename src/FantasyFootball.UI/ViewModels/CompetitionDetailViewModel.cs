@@ -285,18 +285,32 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	/// and saves it. Returns the new Id so the page can navigate to it. Uses today's Elo on each Team
 	/// instance, not a snapshot from the finished comp — issue #19 will tighten this once the per-comp
 	/// Elo snapshot lands. Group.ShallowClone strips Stage / Games / Id; the factory wires everything else fresh.
+	/// Async so the IsBusy spinner can flush to the DOM before the synchronous LocalStorage save blocks;
+	/// IsBusy is left true on return — Load() on the new comp's mount resets it.
 	/// </summary>
-	public Competition Replay()
+	public async Task<Competition> Replay()
 	{
 		if (Competition is null) { throw new InvalidOperationException("No competition loaded to replay."); }
-		var year = Competition.Start?.Year ?? DateTime.Now.Year;
-		var clonedGroups = Competition.Groups.Select(g => g.ShallowClone()).ToList();
-		var factory = CompetitionFactory.For(Competition.Type, year, clonedGroups);
-		var replay = factory.Create();
-		_repo.Save(replay);
-		MessageBus.Send(new CompetitionCreatedMessage(replay));
+		IsBusy = true;
+		await Task.Yield();
 
-		return replay;
+		try
+		{
+			var year = Competition.Start?.Year ?? DateTime.Now.Year;
+			var clonedGroups = Competition.Groups.Select(g => g.ShallowClone()).ToList();
+			// CompetitionFactory.For raises NotImplementedException for CHAMPIONS_LEAGUE / DOMESTIC_LEAGUE and ArgumentException for unknown types; clear IsBusy on the exception path so the spinner doesn't lock the page until reload.
+			var factory = CompetitionFactory.For(Competition.Type, year, clonedGroups);
+			var replay = factory.Create();
+			_repo.Save(replay);
+			MessageBus.Send(new CompetitionCreatedMessage(replay));
+
+			return replay;
+		}
+		catch
+		{
+			IsBusy = false;
+			throw;
+		}
 	}
 
 	void OnGameFinished(Game finished)

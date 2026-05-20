@@ -6,8 +6,7 @@
 
 <div class="scoreboard-row-wrapper">
 <div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "") @(DetailsOpen ? "scoreboard-row-open" : "")"
-     @onclick="OnDetailsToggle"
-     style="cursor: pointer;">
+     @onclick="OnDetailsToggle">
   <div class="scoreboard-group-tag">
     <span class="scoreboard-group-tag-letter">@_groupLetter</span>
     <span class="scoreboard-group-tag-time">@Game.PlayedOn.ToString("HH:mm")</span>
@@ -141,7 +140,8 @@
     _prevDetailsOpen = DetailsOpen;
   }
 
-  static string FormatPct(double p) => $"{p * 100:0}%";
+  // Floor at "<1%": "0%" reads as impossible for a heavy underdog who could still win.
+  static string FormatPct(double p) => p > 0 && p < 0.005 ? "<1%" : $"{p * 100:0}%";
 
   static string PctClass(bool isActualOutcome) => isActualOutcome ? "game-details-pct-actual" : "";
 }

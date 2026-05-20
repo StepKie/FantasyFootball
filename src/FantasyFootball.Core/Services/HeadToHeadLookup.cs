@@ -38,7 +38,8 @@ public static class HeadToHeadLookup
 				var winnerName = game.Winner?.Name;
 				if (winnerName is null) { draws++; }
 				else if (winnerName == nameA) { aWins++; }
-				else { bWins++; }
+				else if (winnerName == nameB) { bWins++; }
+				// else: winner is neither — unreachable today (isMatchup above guarantees it), but the explicit branch keeps the intent legible if Game ever gains a separate winner-track entity.
 			}
 		}
 
