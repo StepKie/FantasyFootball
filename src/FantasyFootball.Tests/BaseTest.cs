@@ -15,7 +15,7 @@ public class BaseTest
 	{
 		Output = output;
 		// Connect global logger
-		Log.Logger = ISettingsService.StandardLoggerConfig.WriteTo.XUnit3TestOutput().CreateLogger();
+		Log.Logger = ISettingsService.StandardLoggerConfig.MinimumLevel.Is(level).WriteTo.XUnit3TestOutput().CreateLogger();
 		Repo = new Repository(inMemory: true);
 		DataService = new CsvDataService(Repo, new CultureInfo("de"));
 	}

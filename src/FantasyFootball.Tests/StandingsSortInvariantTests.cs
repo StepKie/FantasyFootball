@@ -77,11 +77,17 @@ public class StandingsSortInvariantTests(ITestOutputHelper output) : BaseTest(ou
 				{
 					var a = standings[j];
 					var b = standings[j + 1];
-					if (a.Points < b.Points
-						|| (a.Points == b.Points && a.GoalDifference < b.GoalDifference)
-						|| (a.Points == b.Points && a.GoalDifference == b.GoalDifference && a.GoalsFor < b.GoalsFor))
+					if (a.Points < b.Points)
 					{
-						violations.Add($"[iter {i}] {type} {year} {group.Name} (post-roundtrip): {a.Team.ShortName}(P={a.Points},GD={a.GoalDifference},GF={a.GoalsFor}) above {b.Team.ShortName}(P={b.Points},GD={b.GoalDifference},GF={b.GoalsFor})");
+						violations.Add($"[iter {i}] {type} {year} {group.Name} (post-roundtrip): pos {j + 1} {a.Team.ShortName}(P={a.Points}) above pos {j + 2} {b.Team.ShortName}(P={b.Points})");
+					}
+					else if (a.Points == b.Points && a.GoalDifference < b.GoalDifference)
+					{
+						violations.Add($"[iter {i}] {type} {year} {group.Name} (post-roundtrip): pos {j + 1} {a.Team.ShortName}(P={a.Points},GD={a.GoalDifference}) above pos {j + 2} {b.Team.ShortName}(P={b.Points},GD={b.GoalDifference})");
+					}
+					else if (a.Points == b.Points && a.GoalDifference == b.GoalDifference && a.GoalsFor < b.GoalsFor)
+					{
+						violations.Add($"[iter {i}] {type} {year} {group.Name} (post-roundtrip): pos {j + 1} {a.Team.ShortName}(P={a.Points},GD={a.GoalDifference},GF={a.GoalsFor}) above pos {j + 2} {b.Team.ShortName}(P={b.Points},GD={b.GoalDifference},GF={b.GoalsFor})");
 					}
 				}
 			}
