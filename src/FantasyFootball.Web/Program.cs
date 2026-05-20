@@ -7,6 +7,17 @@ using FantasyFootball.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
+using Serilog;
+
+// Serilog logger for the WASM host. BrowserConsole sink so Log.Debug / Log.Information reach the
+// browser DevTools console — the standard config (ISettingsService.StandardLoggerConfig) writes to
+// the System.Diagnostics Debug stream + a temp-dir file, neither of which is reachable from a
+// browser DevTools session. Without this sink, Log calls land in the void on WASM.
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .WriteTo.BrowserConsole()
+    .CreateLogger();
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 

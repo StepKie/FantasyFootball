@@ -74,13 +74,90 @@ body {
   cursor: pointer;
 }
 
-/* Round picker — horizontal chip strip replacing the dropdown. Wraps if the stage has many rounds (group stage = 3, KO = 4-5). */
-.round-chip-row {
+/* Hierarchical stage→round chip pickers with a dotted-timeline backdrop. Stage row larger, round row
+   smaller + indented to suggest "rounds belong to the selected stage". The ::before dashed line on each
+   .timeline-chips evokes temporal progression. Chips need an opaque background so the line doesn't
+   show through outlined chips on dark mode (--mud-palette-surface).  */
+.timeline-pickers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.timeline-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.timeline-row-round {
+  padding-left: 1.5rem; /* indent rounds under stages — hierarchical cue */
+}
+
+.timeline-label {
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--mud-palette-text-secondary);
+  min-width: 3.5rem;
+}
+
+.timeline-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.6rem;
   align-items: center;
-  padding-top: 0.25rem;
+  position: relative;
+  flex: 1;
+}
+
+.timeline-chips::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0.5rem;
+  right: 0.5rem;
+  border-top: 1px dashed var(--mud-palette-text-secondary);
+  opacity: 0.3;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.timeline-chips .mud-chip {
+  position: relative;
+  z-index: 1;
+}
+
+/* Chip status — encoded redundantly via border style + opacity, not color alone.
+   chip-current: dashed border distinguishes the actively-played round from solid-bordered done/future.
+   chip-future:  dimmed to indicate "not reached yet" without changing chip shape.
+   chip-done:    no border/opacity override; default outlined+default reads as the "white" finished state.
+   All three status classes get an opaque background so the dashed timeline line doesn't pass visibly
+   through them. The filled selected chip has no status class → no override → keeps its primary green. */
+.mud-chip.chip-current,
+.mud-chip.chip-future,
+.mud-chip.chip-done {
+  /* `background` shorthand to also reset background-image; MudBlazor's outlined variant set
+     `background: transparent` which beat the property-level override. */
+  background: var(--mud-palette-background) !important;
+}
+
+/* Inter-chip sim button — sits between round chips on the timeline. Opaque backdrop so the dashed
+   timeline line doesn't pass through. */
+.round-sim-button {
+  background: var(--mud-palette-background) !important;
+  position: relative;
+  z-index: 1;
+}
+
+.mud-chip.chip-current {
+  border-style: dashed !important;
+}
+
+.mud-chip.chip-future {
+  opacity: 0.5;
 }
 
 /* Variant B: whole-stage scroll. Each round renders as a section with a header. */
@@ -93,6 +170,34 @@ body {
   margin-top: 1.5rem;
   border-top: 1px solid var(--mud-palette-action-hover, rgba(0, 0, 0, 0.08));
   padding-top: 1rem;
+}
+
+/* Setup page team list — gap-based spacing so the top (after divider) matches the bottom (before card edge). */
+.setup-team-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.setup-team-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Single-column game flow — multi-column was visually noisy; user preferred one column. */
+.round-games-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* Bounded-height card with internal scroll. Page-level scroll is annoying when chip clicks jump
+   between rounds; per-card scroll keeps the chips + header pinned at top. The calc leaves room for
+   the app bar (~64px) + breadcrumb / title (~80px) + chip rows (~100px) + grid spacing.  */
+.bounded-scroll-card {
+  max-height: calc(100vh - 18rem);
+  overflow-y: auto;
 }
 
 .round-header {
