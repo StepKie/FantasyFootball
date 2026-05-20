@@ -168,7 +168,7 @@
 
   // Hardcoded English. ExtensionMethods.Name() goes through Res.WorldCup / Res.European_Championship,
   // which picks the de-DE satellite assembly on browsers where Blazor's culture resolution lands on de.
-  // Wire localization properly via the deferred i18n follow-up (Settings PR #17 TODO).
+  // Localization needs proper wiring via the i18n follow-up.
   static string DisplayName(CompetitionType t) => t switch
   {
     CompetitionType.WM => "World Cup",

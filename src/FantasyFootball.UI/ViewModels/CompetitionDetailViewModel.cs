@@ -299,8 +299,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	/// <summary>
 	/// Clones the current competition's team lineup into a fresh competition with the same Type + Year
 	/// and saves it. Returns the new Id so the page can navigate to it. Uses today's Elo on each Team
-	/// instance, not a snapshot from the finished comp — issue #19 will tighten this once the per-comp
-	/// Elo snapshot lands. Group.ShallowClone strips Stage / Games / Id; the factory wires everything else fresh.
+	/// instance, not a snapshot from the finished comp — per-competition Elo snapshotting is a follow-up.
+	/// Group.ShallowClone strips Stage / Games / Id; the factory wires everything else fresh.
 	/// Async so the IsBusy spinner can flush to the DOM before the synchronous LocalStorage save blocks;
 	/// IsBusy is left true on return — Load() on the new comp's mount resets it.
 	/// </summary>
