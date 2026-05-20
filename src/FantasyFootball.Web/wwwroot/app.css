@@ -83,6 +83,48 @@ body {
   padding-top: 0.25rem;
 }
 
+/* Variant B: whole-stage scroll. Each round renders as a section with a header. */
+.round-section {
+  scroll-margin-top: 1rem;
+  padding-top: 0.25rem;
+}
+
+.round-section + .round-section {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--mud-palette-action-hover, rgba(0, 0, 0, 0.08));
+  padding-top: 1rem;
+}
+
+.round-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--mud-palette-text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.round-section-selected .round-header {
+  color: var(--mud-palette-primary);
+}
+
+.round-header-status {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--mud-palette-success);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.round-header-status-current {
+  color: var(--mud-palette-primary);
+  font-style: italic;
+}
+
 .scoreboard-row:hover {
   background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
 }
