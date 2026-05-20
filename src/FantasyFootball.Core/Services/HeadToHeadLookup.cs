@@ -24,9 +24,13 @@ public static class HeadToHeadLookup
 		var bWins = 0;
 		var draws = 0;
 
+		// Stream the games per competition: no date sort, no per-call list allocation.
+		// GamesByDate would re-do SelectMany + OrderBy + ToList per competition each call.
 		foreach (var comp in repo.GetAll<Competition>())
 		{
-			foreach (var game in comp.GamesByDate)
+			foreach (var stage in comp.Stages)
+			foreach (var round in stage.Rounds)
+			foreach (var game in round.AllGames)
 			{
 				if (!game.IsFinished) { continue; }
 
