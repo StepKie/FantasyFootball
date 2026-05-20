@@ -33,10 +33,10 @@ public class GroupQualifier : Qualifier
 			_ => null,
 		};
 
-		// The greedy 3rd-place allocation in ExpandedWorldCupFormat can occasionally
-		// fail to fit every slot (issue #12 — the real fix is FIFA's 495-scenario
-		// lookup table). Falling back to null lets the UI show a placeholder
-		// instead of crashing the render or breaking JSON persistence.
+		// The 3rd-place allocation in ExpandedWorldCupFormat can occasionally fail
+		// to fit every slot — the real fix is FIFA's 495-scenario lookup table.
+		// Falling back to null lets the UI show a placeholder instead of crashing
+		// the render or breaking JSON persistence.
 		static Team? TryResolveThirdPlace(Stage stage, string combination)
 		{
 			try { return TournamentFormatRegistry.ForGroupCount(stage.Groups.Count).ResolveThirdPlaceQualifier(stage, combination); }

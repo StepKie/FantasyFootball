@@ -161,7 +161,8 @@ else
                     }
                     @foreach (var game in dayGroup)
                     {
-                      <GameViewRow Game="game"
+                      <GameViewRow @key="@game"
+                                   Game="game"
                                    ShowSim="@(ReferenceEquals(game, currentGame))"
                                    ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
                                    IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"

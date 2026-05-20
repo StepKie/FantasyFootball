@@ -39,7 +39,7 @@ public sealed class ExpandedWorldCupFormat : ITournamentFormat
 			.Take(AdvancingThirdPlaceCount)
 			.ToList();
 
-		// Backtracking over the 8×8 slot/team bipartite graph — greedy could lock out feasible assignments (issue #12). Not the FIFA-canonical 495-scenario map; any feasible draw will do.
+		// Backtracking over the 8×8 slot/team bipartite graph — greedy could lock out feasible assignments. Not the FIFA-canonical 495-scenario map; any feasible draw will do.
 		var assignments = new Team?[_slots.Length];
 		var usedLetters = new HashSet<string>();
 		if (!TryAssign(0))

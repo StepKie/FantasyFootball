@@ -44,7 +44,7 @@
   bool _thirdPlaceEligible;
   bool? _thirdPlaceAdvanced; // null = stage not finished yet (undetermined), true/false = resolved.
 
-  // Qualifier-walk cache (issue #34): inputs are invariant per Group; only recompute on Group change or Stage.IsFinished transition.
+  // Qualifier-walk cache: inputs are invariant per Group; only recompute on Group change or Stage.IsFinished transition.
   Group? _walkedGroup;
   bool? _walkedStageFinished;
   List<GroupQualifier>? _walkedLaterQualifiers;

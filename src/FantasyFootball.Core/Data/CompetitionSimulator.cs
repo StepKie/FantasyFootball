@@ -76,8 +76,8 @@ public class CompetitionSimulator(Competition competition, IRepository repo, int
 		foreach (var game in ordered)
 		{
 			if (game.IsFinished) { continue; }
-			// Skip rather than break: a placeholder-team KO game (issue #12 territory) shouldn't sim,
-			// but it also shouldn't block later games in the same round from running.
+			// Skip rather than break: a placeholder-team KO game (unresolved qualifier)
+			// shouldn't sim, but also shouldn't block later games in the same round.
 			if (!game.IsReadyToStart)
 			{
 				Log.Warning($"Round {round.Name}: game {game} is not ready; skipping.");
