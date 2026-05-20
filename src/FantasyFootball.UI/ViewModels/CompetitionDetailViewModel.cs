@@ -28,6 +28,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 	CompetitionSimulator? _simulator;
 
+	// True during SimulateAll only; SimulateRound leaves it false to keep the user on the round they just simmed.
+	bool _liveTracking;
+
 	// In-memory undo stack of *just-simmed games*. Undo = pop, call game.ClearResult().
 	// No snapshots / serialization needed: a simmed game is fully reversible by clearing its score
 	// and state back to SCHEDULED. Downstream state (standings, qualifiers, KO bracket) recomputes
@@ -153,13 +156,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
 			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
 			_repo.Save(Competition);
-			// Pulse marker is set AFTER the sim so the row class transition + new score text
-			// happen in the same render frame regardless of Blazor's render batching. Setting it
-			// up front caused intermediate renders on the keyboard-shortcut path (Space) — the row
-			// gained the class while score was still "-:-", browser saw the animationstart fire
-			// against the wrong content, and the visible animation was lost in the render churn.
-			// EventCallback path (click) coalesces renders so both timings worked there; this is
-			// the consistent path.
+			// Pulse marker AFTER the sim so the class transition + final score land in one render (Space path needs this; click batches via EventCallback).
 			_ = FlashRecentlyFinished(gameBeingSimmed);
 		}
 		finally
@@ -194,12 +191,13 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (_simulator is null || Competition is null || Competition.IsFinished || IsBusy) { return; }
 		ClearUndo();
 		IsBusy = true;
+		_liveTracking = true;
 		try
 		{
 			await _simulator.Simulate();
 			_repo.Save(Competition);
 		}
-		finally { OnSimBatchComplete(); }
+		finally { _liveTracking = false; OnSimBatchComplete(); }
 	}
 
 	public void Undo()
@@ -337,15 +335,15 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (Competition is null || finished.Round?.Stage?.Competition is null) { return; }
 		if (finished.Round.Stage.Competition.Id != Competition.Id) { return; }
 
-		// During multi-game sims the user wants the chip strip + page to FOLLOW the currently-playing
-		// round as it advances, not stay pinned on a manually-clicked round.
-		if (IsBusy)
+		// Live multi-round sims (SimulateAll) follow the playing round; SimulateRound stays put.
+		if (_liveTracking)
 		{
 			var currentRound = Competition.CurrentGame?.Round;
 			if (currentRound is not null && !ReferenceEquals(currentRound, SelectedRound))
 			{
-				SelectedStage = currentRound.Stage; // cross-stage too (group → KO transition)
-				SelectedRound = currentRound;
+				// Setting SelectedStage triggers OnSelectedStageChanged which snaps SelectedRound; avoid the double-fire.
+				if (!ReferenceEquals(currentRound.Stage, SelectedStage)) { SelectedStage = currentRound.Stage; }
+				else { SelectedRound = currentRound; }
 			}
 		}
 
