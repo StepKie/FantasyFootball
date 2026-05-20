@@ -154,6 +154,58 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Click-for-game-details popover. Anchored under the row via .scoreboard-row-wrapper (position: relative). */
+.scoreboard-row-wrapper {
+  position: relative;
+}
+
+.scoreboard-row-open {
+  background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
+  box-shadow: inset 3px 0 0 var(--mud-palette-primary);
+}
+
+.game-details-popover {
+  padding: 0.75rem 1rem;
+  min-width: 18rem;
+  max-width: 22rem;
+}
+
+.game-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.85rem;
+  padding: 0.15rem 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-details-label {
+  color: var(--mud-palette-text-secondary);
+  font-weight: 500;
+}
+
+.game-details-value {
+  font-weight: 600;
+}
+
+.game-details-sep {
+  color: var(--mud-palette-text-secondary);
+  font-weight: 400;
+  margin: 0 0.15rem;
+}
+
+/* The percentage that matches the actual outcome (only set when Game.IsFinished). */
+.game-details-pct-actual {
+  color: var(--mud-palette-primary);
+  font-weight: 700;
+}
+
+.game-details-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */
 .game-day-divider {
   font-size: 0.75rem;

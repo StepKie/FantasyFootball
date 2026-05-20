@@ -122,6 +122,8 @@ else
                              ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
                              IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"
                              Disabled="@ViewModel.IsBusy"
+                             DetailsOpen="@(ReferenceEquals(game, _openDetailsGame))"
+                             OnDetailsToggle="@(() => ToggleDetailsGame(game))"
                              OnSim="@(async () => await ViewModel.SimulateGame())"
                              OnUndo="@(() => ViewModel.Undo())"
                              OnRedo="@(async () => await ViewModel.RedoLastGame())" />
@@ -181,7 +183,10 @@ else
 
   int? _lastLoadedId;
   bool _helpOpen;
+  Game? _openDetailsGame;
   DotNetObjectReference<CompetitionDetail>? _selfRef;
+
+  void ToggleDetailsGame(Game game) => _openDetailsGame = ReferenceEquals(_openDetailsGame, game) ? null : game;
 
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
 
