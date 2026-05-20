@@ -4,7 +4,7 @@
 @using FantasyFootball.Repositories
 @inject IRepository Repo
 
-<div class="scoreboard-row-wrapper">
+<div class="scoreboard-row-wrapper" id="@(ShowSim ? "current-game" : null)">
 <div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "") @(DetailsOpen ? "scoreboard-row-open" : "")"
      @onclick="OnDetailsToggle">
   <div class="scoreboard-group-tag">

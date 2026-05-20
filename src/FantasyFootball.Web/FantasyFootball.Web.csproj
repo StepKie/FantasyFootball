@@ -23,6 +23,10 @@
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="MudBlazor" Version="9.4.0" />
     <PackageReference Include="PublishSPAforGitHubPages.Build" Version="3.0.3" />
+    <!-- Serilog → browser console sink. Without this, Log.Debug / Log.Information from C# only reach
+         the Debug + File sinks configured in ISettingsService.StandardLoggerConfig, neither of which
+         is visible to a developer with the browser DevTools open. -->
+    <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

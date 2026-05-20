@@ -44,54 +44,75 @@
   bool _thirdPlaceEligible;
   bool? _thirdPlaceAdvanced; // null = stage not finished yet (undetermined), true/false = resolved.
 
+  // Cache keys for issue #34: the qualifier walk inputs are structurally invariant within a
+  // competition (Stages + KoGame qualifiers don't change after construction), so we only need
+  // to compute once per Group reference. Third-place resolution depends on Stage.IsFinished
+  // additionally, which DOES change once during the comp.
+  Group? _walkedGroup;
+  bool? _walkedStageFinished;
+  List<GroupQualifier>? _walkedLaterQualifiers;
+
   protected override void OnParametersSet()
   {
     _standings = Group.GetStandings();
-    _directSlots = [];
-    _thirdPlaceEligible = false;
-    _thirdPlaceAdvanced = null;
 
     var competition = Group.Stage?.Competition;
     if (competition is null) { return; }
 
-    var ownStageIndex = competition.Stages.IndexOf(Group.Stage);
-    // GroupQualifier.GroupId is the index within its OWN stage (per Qualifier.FromGroup), not across all
-    // stages. Today only one stage has groups so competition.Groups.IndexOf would happen to agree; using
-    // the stage-scoped list keeps this honest if a future format ever adds a second group stage.
-    var ownGroupIndex = Group.Stage.Groups.IndexOf(Group);
-    if (ownStageIndex < 0 || ownGroupIndex < 0) { return; }
-
-    var laterQualifiers = competition.Stages
-      .Skip(ownStageIndex + 1)
-      .SelectMany(s => s.Games.OfType<KoGame>())
-      .SelectMany(g => new[] { g.HomeGroupQualifier, g.AwayGroupQualifier })
-      .OfType<GroupQualifier>()
-      .ToList();
-
-    foreach (var q in laterQualifiers)
+    // Static walk: depends only on the Group + its competition's KO qualifiers, which are
+    // built once at competition creation. Re-running on every game-finished render across
+    // 12 groups was ~30ms of pure waste — the killer of issue #34.
+    if (!ReferenceEquals(_walkedGroup, Group))
     {
-      if (string.IsNullOrEmpty(q.ThirdPlaceCombination))
+      _walkedGroup = Group;
+      _walkedStageFinished = null; // also force a third-place recompute below
+      _directSlots = [];
+      _thirdPlaceEligible = false;
+
+      var ownStageIndex = competition.Stages.IndexOf(Group.Stage);
+      // GroupQualifier.GroupId is the index within its OWN stage (per Qualifier.FromGroup), not across all
+      // stages. Today only one stage has groups so competition.Groups.IndexOf would happen to agree;
+      // using the stage-scoped list keeps this honest if a future format ever adds a second group stage.
+      var ownGroupIndex = Group.Stage.Groups.IndexOf(Group);
+      if (ownStageIndex < 0 || ownGroupIndex < 0) { return; }
+
+      _walkedLaterQualifiers = competition.Stages
+        .Skip(ownStageIndex + 1)
+        .SelectMany(s => s.Games.OfType<KoGame>())
+        .SelectMany(g => new[] { g.HomeGroupQualifier, g.AwayGroupQualifier })
+        .OfType<GroupQualifier>()
+        .ToList();
+
+      foreach (var q in _walkedLaterQualifiers)
       {
-        if (q.GroupId == ownGroupIndex) { _directSlots.Add(q.FinalPlacement); }
-      }
-      else if (q.ThirdPlaceCombination.Split('/').Contains(Letter, StringComparer.OrdinalIgnoreCase))
-      {
-        _thirdPlaceEligible = true;
+        if (string.IsNullOrEmpty(q.ThirdPlaceCombination))
+        {
+          if (q.GroupId == ownGroupIndex) { _directSlots.Add(q.FinalPlacement); }
+        }
+        else if (q.ThirdPlaceCombination.Split('/').Contains(Letter, StringComparer.OrdinalIgnoreCase))
+        {
+          _thirdPlaceEligible = true;
+        }
       }
     }
 
-    // Once the group stage is finished we can resolve ThirdPlace qualifiers to actual teams. Position 3 then promotes from "no bar" to advance / out.
-    if (_thirdPlaceEligible && Group.Stage.IsFinished)
+    // Third-place resolution: depends on Stage.IsFinished. Recompute only on the false → true transition.
+    var stageFinishedNow = Group.Stage?.IsFinished ?? false;
+    if (_walkedStageFinished != stageFinishedNow)
     {
-      var ownThirdPlaceTeam = _standings.ElementAtOrDefault(2)?.Team;
-      if (ownThirdPlaceTeam is not null)
+      _walkedStageFinished = stageFinishedNow;
+      _thirdPlaceAdvanced = null;
+      if (_thirdPlaceEligible && stageFinishedNow && _walkedLaterQualifiers is not null)
       {
-        // NamedUniqueId.Equals handles both worlds: ReferenceEquals fallback for Id=0 entities
-        // (LocalStorage path — Team instances inside Competition have unset Ids), and Id-equality
-        // for Id>0 entities (future SQLite-backed BlazorWebView host). Stable across both paths.
-        _thirdPlaceAdvanced = laterQualifiers
-          .Where(q => !string.IsNullOrEmpty(q.ThirdPlaceCombination))
-          .Any(q => Equals(q.Get(), ownThirdPlaceTeam));
+        var ownThirdPlaceTeam = _standings.ElementAtOrDefault(2)?.Team;
+        if (ownThirdPlaceTeam is not null)
+        {
+          // NamedUniqueId.Equals handles ReferenceEquals fallback for Id=0 entities (LocalStorage path)
+          // and Id-equality for Id>0 entities (future SQLite-backed BlazorWebView host).
+          _thirdPlaceAdvanced = _walkedLaterQualifiers
+            .Where(q => !string.IsNullOrEmpty(q.ThirdPlaceCombination))
+            .Any(q => Equals(q.Get(), ownThirdPlaceTeam));
+        }
       }
     }
   }

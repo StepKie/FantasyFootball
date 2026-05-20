@@ -118,6 +118,22 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 	partial void OnSpeedChanged(SimulationSpeed value) => ApplySpeedToSimulator();
 
+	/// <summary>
+	/// When the user picks a new stage (e.g. clicks the K.O. Phase chip while viewing the Group Stage),
+	/// snap <see cref="SelectedRound"/> to a sensible round inside that stage instead of leaving it
+	/// pointing at the previous stage's round (which the round chip strip would then render as nothing
+	/// matching the highlight state). Prefer the tournament's current round if it's in this stage;
+	/// otherwise fall back to the stage's first round.
+	/// </summary>
+	partial void OnSelectedStageChanged(Stage? value)
+	{
+		if (value is null) { SelectedRound = null; return; }
+		var currentRound = Competition?.CurrentGame?.Round;
+		SelectedRound = currentRound is not null && value.Rounds.Contains(currentRound)
+			? currentRound
+			: value.Rounds.FirstOrDefault();
+	}
+
 	void ApplySpeedToSimulator()
 	{
 		if (_simulator is null) { return; }
@@ -129,12 +145,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (_simulator is null || Competition?.CurrentGame is null || IsBusy) { return; }
 		var gameBeingSimmed = Competition.CurrentGame;
-		// Set undo target + pulse marker UP FRONT, before the sim's Task.Delay throws an
-		// async yield. The next render flushes them in the same frame as the new score —
-		// otherwise the buttons + pulse appear ~Task.Delay(GameDelay) ms after the score,
-		// visibly lagging the click.
 		PushUndoEntry(gameBeingSimmed);
-		_ = FlashRecentlyFinished(gameBeingSimmed);
 		IsBusy = true;
 		try
 		{
@@ -142,6 +153,14 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
 			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
 			_repo.Save(Competition);
+			// Pulse marker is set AFTER the sim so the row class transition + new score text
+			// happen in the same render frame regardless of Blazor's render batching. Setting it
+			// up front caused intermediate renders on the keyboard-shortcut path (Space) — the row
+			// gained the class while score was still "-:-", browser saw the animationstart fire
+			// against the wrong content, and the visible animation was lost in the render churn.
+			// EventCallback path (click) coalesces renders so both timings worked there; this is
+			// the consistent path.
+			_ = FlashRecentlyFinished(gameBeingSimmed);
 		}
 		finally
 		{
@@ -204,9 +223,6 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (_simulator is null || Competition is null || IsBusy) { return; }
 		if (!_undoStack.TryPeek(out var game)) { return; }
 
-		// Pulse fires before the await — same reasoning as SimulateGame, so the new score
-		// and the pulse animation land in the same render frame.
-		_ = FlashRecentlyFinished(game);
 		IsBusy = true;
 		try
 		{
@@ -214,6 +230,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			// Same as SimulateGame: single-game user click, no inter-game pacing.
 			await _simulator.SimulateGame(game, delayAfter: false);
 			_repo.Save(Competition);
+			// FlashRecentlyFinished AFTER the sim — same render-batching reason as SimulateGame.
+			_ = FlashRecentlyFinished(game);
 		}
 		finally
 		{
@@ -319,9 +337,19 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (Competition is null || finished.Round?.Stage?.Competition is null) { return; }
 		if (finished.Round.Stage.Competition.Id != Competition.Id) { return; }
 
-		// Re-publish Competition change so groupings + standings + winner re-evaluate. Auto-advance is left
-		// to OnSimBatchComplete: doing it per-game during a multi-game sim flipped the panel away from the
-		// round being simmed the moment its last game resolved, hiding the results the user was watching.
+		// During multi-game sims the user wants the chip strip + page to FOLLOW the currently-playing
+		// round as it advances, not stay pinned on a manually-clicked round.
+		if (IsBusy)
+		{
+			var currentRound = Competition.CurrentGame?.Round;
+			if (currentRound is not null && !ReferenceEquals(currentRound, SelectedRound))
+			{
+				SelectedStage = currentRound.Stage; // cross-stage too (group → KO transition)
+				SelectedRound = currentRound;
+			}
+		}
+
+		// Re-publish Competition change so groupings + standings + winner re-evaluate.
 		OnPropertyChanged(nameof(Competition));
 	}
 }
