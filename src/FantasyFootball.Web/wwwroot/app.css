@@ -74,6 +74,15 @@ body {
   cursor: pointer;
 }
 
+/* Round picker — horizontal chip strip replacing the dropdown. Wraps if the stage has many rounds (group stage = 3, KO = 4-5). */
+.round-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  padding-top: 0.25rem;
+}
+
 .scoreboard-row:hover {
   background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
 }
