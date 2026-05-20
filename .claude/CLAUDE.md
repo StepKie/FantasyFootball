@@ -50,6 +50,36 @@ dotnet workload install maui
 - XAML formatting governed by Settings.XamlStyler
 - Follow .editorconfig rules
 
+## Test speed — fast is the default
+
+`CompetitionSimulator`'s constructor defaults to `msGameDelay = 0`
+(instant — no inter-game delay). UI callers that want visible pacing
+(Slow / Normal / Fast speed picker) opt in explicitly. **Tests just
+use the default** — no special argument needed.
+
+```csharp
+// ✅ tests — default is instant
+var simulator = new CompetitionSimulator(competition, Repo);
+
+// ✅ UI — opt into visible pacing
+var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 100);
+// or the Blazor pattern: construct + .GameDelay = Speed.ToDelay() in ApplySpeedToSimulator().
+```
+
+**Design principle behind the default:** the constructor should give
+you the fastest thing that does the job. Slowdown is a presentation
+concern; opt in to it. Defaults are how APIs encode "what should
+happen if you don't think about it" — and the answer for a simulator
+is *not* "wait 100ms between games."
+
+**Plain `dotnet test` should complete in well under a minute.** If a
+test is genuinely long-running for unavoidable reasons (50+ randomised
+property runs that have to be a property test, not a hot-path unit
+test), tag it `[Trait("Category", "Slow")]` and document the filter
+(`dotnet test --filter "Category!=Slow"`) in this file. Today no test
+needs that escape hatch; if you add one that does, add the section
+before merging.
+
 ## Iteration loop — keep the dev server running
 
 While iterating on UI work, **launch the Blazor web host yourself** in the

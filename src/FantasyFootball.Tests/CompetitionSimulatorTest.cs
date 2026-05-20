@@ -128,7 +128,7 @@ public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(outpu
 		koGame.HomeTeam.Type.Should().Be(TeamType.PLACEHOLDER);
 
 		var competition = new Competition { Name = "Dummy", ShortName = "X" };
-		var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 0);
+		var simulator = new CompetitionSimulator(competition, Repo);
 
 		// Without the progress check this hangs forever. Cap with a generous timeout —
 		// the fix should bail in microseconds.

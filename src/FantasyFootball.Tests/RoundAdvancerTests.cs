@@ -58,7 +58,7 @@ public class RoundAdvancerTests(ITestOutputHelper output) : BaseTest(output, lev
 		for (var run = 0; run < Runs; run++)
 		{
 			var wm = CompetitionFactory.Default(CompetitionType.WM, DataService, 2026).Create();
-			var simulator = new CompetitionSimulator(wm, Repo, msGameDelay: 0);
+			var simulator = new CompetitionSimulator(wm, Repo);
 			await simulator.SimulateStage(wm.Stages[0]);
 
 			var r32 = wm.Stages[1].Rounds.First();
