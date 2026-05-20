@@ -7,7 +7,7 @@
 
 <PageTitle>@(ViewModel.Team?.Name ?? "Team") — Fantasy Football</PageTitle>
 
-<MudButton Href="/teams"
+<MudButton Href="teams"
            StartIcon="@Icons.Material.Filled.ArrowBack"
            Variant="Variant.Text"
            Class="mb-3">
@@ -17,7 +17,7 @@
 @if (ViewModel.Team is null)
 {
   <MudAlert Severity="Severity.Warning">
-    Team not found. <MudLink Href="/teams">Return to the teams list.</MudLink>
+    Team not found. <MudLink Href="teams">Return to the teams list.</MudLink>
   </MudAlert>
 }
 else

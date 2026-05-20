@@ -8,7 +8,7 @@
 
 <PageTitle>New competition — Fantasy Football</PageTitle>
 
-<MudButton Href="/competitions"
+<MudButton Href="competitions"
            StartIcon="@Icons.Material.Filled.ArrowBack"
            Variant="Variant.Text"
            Class="mb-3">
@@ -110,7 +110,7 @@
   void StartSim()
   {
     var competition = ViewModel.Create();
-    Nav.NavigateTo($"/competitions/{competition.Id}");
+    Nav.NavigateTo($"competitions/{competition.Id}");
   }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
