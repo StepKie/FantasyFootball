@@ -120,6 +120,33 @@ running build — skip features that landed in earlier rounds and are
 already signed off. If the previous run was many commits ago, summarise
 the commits being verified at the top so the user knows the scope.
 
+## PR merge hygiene
+
+After auto-review rounds, the branch accumulates per-round-fix commits
+("Address PR #N auto-review round K"). **Before merging back to
+`develop`, rebase those into a couple of topical commits aligned with
+the PR's logical feature chunks.** The PR discussion thread already
+records the review history; commits should record the feature work, not
+the round-by-round paper trail. This is what PRs #25, #28, #29 landed
+with.
+
+Mechanics (per session constraints — no `-i` or `-p` flags):
+
+```bash
+git tag prNN-pre-rebase                    # safety net
+git reset --soft <feature-commit-base>     # back to last feature commit; later changes restaged
+git commit -m "<themed summary>"           # one commit per logical chunk
+git diff prNN-pre-rebase HEAD --stat       # verify empty — tree unchanged
+git push --force-with-lease
+```
+
+For cases where review fixes split across multiple feature themes,
+restage by file (and accept that the rebase may produce one "review
+fixes" commit rather than perfectly themed ones — better that than
+patch-mode staging the user can't approve).
+
+Skip the rebase only when explicitly told `merge as-is`.
+
 ## Out of scope
 
 **Accessibility (a11y) is not a priority at this stage.** Do not invest effort
