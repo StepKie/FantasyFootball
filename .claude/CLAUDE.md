@@ -164,6 +164,10 @@ also happen to be accessible) remain in scope under their non-a11y framing.
   and PR back to `develop`.
 - **`main`** is the release branch. When `develop` is release-ready, open a PR
   from `develop` → `main`, bump version, tag the merge commit (e.g. `0.3.0`).
+  The `develop` → `main` PR is a **pure formality** — everything substantial
+  has already been reviewed on its way into `develop`. **Skip the auto-review
+  wait; do not address auto-review comments on these PRs.** Open, then merge
+  as soon as the .NET build is green (the build is real CI, not review).
 - **GitHub Pages deployment** is handled by `.github/workflows/github-pages.yml`,
   which auto-deploys on push to `main`. It uses the modern Pages-from-Actions
   artifact pattern (`actions/configure-pages` + `upload-pages-artifact` +
