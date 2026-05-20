@@ -375,19 +375,10 @@ around third-place resolve, corrupt-blob quarantine on load.
 
 ### PR 3 — Sim feel
 
-**Status**: in flight on branch `feature/ui-polish-3-sim-feel`. Five
-chunks committed locally (not pushed yet). Pick up the remaining items
-in a fresh session; merge PR 3 once a meaningful slice is complete.
-
-Local commits on this branch (latest first):
-
-| SHA | Chunk |
-|---|---|
-| `e450e07` | Standings: qualification-zone left-edge bar + group-letter spacing |
-| `db91c3e` | Group letter + kickoff time on scoreboard rows |
-| `7fae924` | Day-grouping dividers in the games panel |
-| `bbe6df0` | Unify Settings speed UI with detail picker |
-| `1095c86` | Move competition delete from detail page to per-row list action |
+**Status**: merged via PR #29 (2026-05-19). Branch
+`feature/ui-polish-3-sim-feel` was rebased into 6 themed commits
+(`a40310a..70b6127`) plus 5 auto-review rounds, then merged to
+`develop` and re-released to `main` via PR #31.
 
 Done:
 
@@ -406,31 +397,41 @@ Done:
 - [x] **Standings qualifier highlight** (left-edge bar) — slim 3px
   muted-green / muted-red column inset from row edges; resolves
   ThirdPlace combination eligibility once the group stage finishes.
+- [x] **Keyboard navigation** — document-level handler, full mapping,
+  help overlay (`?`), About-page reference.
+- [x] **Undo stack** — in-memory, per-game snapshot, capped at 50; UI
+  attaches the Undo button to the row of the just-simmed game.
+  Speculative undo pop moved into a `finally` block so a simulator
+  exception can't leave a stale entry pointing at a SCHEDULED game.
+- [x] **Just-finished game highlight** — single-game sim and Redo
+  trigger a 1.5s green pulse on the row. Standings-row pulse deferred
+  to a follow-up (see § PR 4 successors).
 
-Still open (next session):
+Still open — candidates for a future PR (PR 3.5 polish round, or
+folded into PR 4):
 
-- [x] Keyboard navigation (full mapping; help overlay; About reference).
-- [x] Undo stack (in-memory, per-game snapshot, capped at 50; UI attaches the
-  Undo button to the row of the just-simmed game).
-- [x] Just-finished game highlight (game row pulse on single-game sim and redo;
-  standings-row pulse deferred to a follow-up).
-- [ ] Score reveal animation.
-- [ ] Standings row reorder via FLIP.
+- [ ] Score reveal animation (count-up or fade `-:-` → final).
+- [ ] Standings row reorder via FLIP technique.
 - [ ] Optional `Qual %` column in group stage (Monte Carlo).
 - [ ] Click-for-game-details popover / drawer.
 - [ ] Replay button on `Competition.IsFinished`.
 - [ ] Confetti burst on finish.
 
-Open visual / correctness questions deferred from this session:
+Open visual / correctness questions:
 
-- Group H standings sometimes show GD/Pts combos that contradict the
-  sort (e.g. Spain GD +7, Pts 4, sitting above teams with higher GD).
-  Tie-break logic or `Standings.CreateFrom` ordering is suspect — file
-  a separate bug rather than rolling into PR 3.
+- Group standings GD/Pts ordering anomaly — tracked in issue #33.
+  Either a tie-break issue in `Standings.CreateFrom`, a stale-snapshot
+  redraw, or a display-only bug.
 - Per-row delete confirmation dialog text wording: revisit once the
   About page mentions the action.
 
-### PR 4 — KO bracket
+### PR 4 — KO bracket (deferred, maybe never)
+
+**Status**: deferred indefinitely (2026-05-20). The bracket-view
+visualization may be added later as a polish item; treat the
+round-list + dropdown as the canonical KO-stage UI for now.
+
+Original scope, preserved for if/when this comes back:
 
 - `<BracketView>` Razor component, CSS-grid based.
 - Replaces the round-list-and-dropdown on KO stages.
