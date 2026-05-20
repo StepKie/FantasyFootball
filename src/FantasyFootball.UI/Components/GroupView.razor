@@ -44,10 +44,7 @@
   bool _thirdPlaceEligible;
   bool? _thirdPlaceAdvanced; // null = stage not finished yet (undetermined), true/false = resolved.
 
-  // Cache keys for issue #34: the qualifier walk inputs are structurally invariant within a
-  // competition (Stages + KoGame qualifiers don't change after construction), so we only need
-  // to compute once per Group reference. Third-place resolution depends on Stage.IsFinished
-  // additionally, which DOES change once during the comp.
+  // Qualifier-walk cache (issue #34): inputs are invariant per Group; only recompute on Group change or Stage.IsFinished transition.
   Group? _walkedGroup;
   bool? _walkedStageFinished;
   List<GroupQualifier>? _walkedLaterQualifiers;
@@ -59,22 +56,20 @@
     var competition = Group.Stage?.Competition;
     if (competition is null) { return; }
 
-    // Static walk: depends only on the Group + its competition's KO qualifiers, which are
-    // built once at competition creation. Re-running on every game-finished render across
-    // 12 groups was ~30ms of pure waste — the killer of issue #34.
     if (!ReferenceEquals(_walkedGroup, Group))
     {
       _walkedGroup = Group;
       _walkedStageFinished = null; // also force a third-place recompute below
       _directSlots = [];
       _thirdPlaceEligible = false;
+      _thirdPlaceAdvanced = null;
+      _walkedLaterQualifiers = null;
 
       var ownStageIndex = competition.Stages.IndexOf(Group.Stage);
-      // GroupQualifier.GroupId is the index within its OWN stage (per Qualifier.FromGroup), not across all
-      // stages. Today only one stage has groups so competition.Groups.IndexOf would happen to agree;
-      // using the stage-scoped list keeps this honest if a future format ever adds a second group stage.
+      // GroupQualifier.GroupId is the index within its OWN stage (per Qualifier.FromGroup); using the stage-scoped list keeps this honest if a future format adds a second group stage.
       var ownGroupIndex = Group.Stage.Groups.IndexOf(Group);
-      if (ownStageIndex < 0 || ownGroupIndex < 0) { return; }
+      // Reset _walkedGroup so the next render retries (the ReferenceEquals guard above would otherwise permanently skip the walk).
+      if (ownStageIndex < 0 || ownGroupIndex < 0) { _walkedGroup = null; return; }
 
       _walkedLaterQualifiers = competition.Stages
         .Skip(ownStageIndex + 1)
@@ -107,8 +102,7 @@
         var ownThirdPlaceTeam = _standings.ElementAtOrDefault(2)?.Team;
         if (ownThirdPlaceTeam is not null)
         {
-          // NamedUniqueId.Equals handles ReferenceEquals fallback for Id=0 entities (LocalStorage path)
-          // and Id-equality for Id>0 entities (future SQLite-backed BlazorWebView host).
+          // NamedUniqueId.Equals: ReferenceEquals fallback for Id=0 (LocalStorage), Id-equality for Id>0 (future SQLite host).
           _thirdPlaceAdvanced = _walkedLaterQualifiers
             .Where(q => !string.IsNullOrEmpty(q.ThirdPlaceCombination))
             .Any(q => Equals(q.Get(), ownThirdPlaceTeam));

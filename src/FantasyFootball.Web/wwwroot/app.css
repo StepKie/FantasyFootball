@@ -217,19 +217,6 @@ body {
   color: var(--mud-palette-primary);
 }
 
-.round-header-status {
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--mud-palette-success);
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-.round-header-status-current {
-  color: var(--mud-palette-primary);
-  font-style: italic;
-}
-
 .scoreboard-row:hover {
   background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
 }

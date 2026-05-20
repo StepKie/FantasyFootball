@@ -41,7 +41,7 @@ else
         <MudIconButton Icon="@Icons.Material.Filled.MyLocation"
                        Size="Size.Small"
                        OnClick="JumpToCurrent"
-                       Disabled="ViewModel.Competition?.CurrentGame is null"
+                       Disabled="ViewModel.Competition?.CurrentGame is null || ViewModel.IsBusy"
                        title="Jump to the current round" />
       }
       @if (ViewModel.IsBusy)
@@ -89,7 +89,8 @@ else
                      Color="@(isSelected ? Color.Primary : Color.Default)"
                      Size="Size.Medium"
                      Class="@ChipStatusClass(isSelected, isCurrent, isDone)"
-                     OnClick="@(() => ViewModel.SelectedStage = stageForChip)">
+                     Disabled="ViewModel.IsBusy"
+                     OnClick="@(() => OnStageChipClick(stageForChip))">
               @s.Name@(isDone ? " ✓" : "")
             </MudChip>
           }
@@ -103,9 +104,7 @@ else
             var roundForChip = r;
             var roundIdxForChip = ViewModel.Rounds.IndexOf(r);
             var isSelected = ReferenceEquals(r, ViewModel.SelectedRound);
-            // "Current" = the single round being played NOW across the whole tournament — not "first
-            // non-finished in the currently-selected stage". The latter incorrectly flagged KO round 1
-            // as current while group stage was still being simmed.
+            // "Current" = round of the tournament's CurrentGame, not SelectedStage.CurrentRound (latter mis-flagged KO rounds while group stage was still being simmed).
             var isCurrent  = ReferenceEquals(r, ViewModel.Competition?.CurrentGame?.Round);
             var isDone     = r.IsFinished;
             <MudChip T="Round"
@@ -114,12 +113,12 @@ else
                      Color="@(isSelected ? Color.Primary : Color.Default)"
                      Size="Size.Small"
                      Class="@ChipStatusClass(isSelected, isCurrent, isDone)"
+                     Disabled="ViewModel.IsBusy"
                      OnClick="@(async () => await OnRoundChipClick(roundForChip, roundIdxForChip))">
               @r.Name@(isDone ? " ✓" : "")
             </MudChip>
-            @* Inter-chip "sim this round" affordance: visible only when the round still has games
-               to simulate. Replaces the previous Games-header sim-round button. *@
-            @if (!r.IsFinished)
+            @* Sim button only on the tournament-current round — ViewModel.SimulateRound always sims CurrentStage.CurrentRound, so rendering on future rounds would mismatch tooltip with behaviour. *@
+            @if (!r.IsFinished && ReferenceEquals(r, ViewModel.Competition?.CurrentGame?.Round))
             {
               <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
                              Size="Size.Small"
@@ -140,10 +139,7 @@ else
           <MudText Typo="Typo.h6" Class="mb-2">Games</MudText>
           @if (ViewModel.SelectedStage is not null)
           {
-            // Variant B: render ALL rounds in the selected stage, each as its own section with a header,
-            // so user keeps prior results visible while scrolling forward. Chip strip above acts as a
-            // scroll-to anchor (see OnRoundChipClick). Day-grouping dividers stay per-round.
-            // Reference-compare, not Id-compare: nested entities in the LocalStorage path keep Id=0.
+            // Render all rounds in the selected stage; chip strip scrolls between them via round-{idx} anchors. Reference-compare since LocalStorage entities keep Id=0.
             var currentGame = ViewModel.Competition?.CurrentGame;
             var undoTargetGame = ViewModel.UndoTargetGame;
             @foreach (var round in ViewModel.SelectedStage.Rounds)
@@ -156,8 +152,6 @@ else
                 <div class="round-header">
                   <span class="round-header-name">@round.Name</span>
                 </div>
-                @* Auto-fit games grid: as many columns as fit at min 22rem each. Single col on narrow,
-                   2-3 cols on wider screens. Day-grouping dividers span all columns via grid-column: 1 / -1. *@
                 <div class="round-games-grid">
                   @foreach (var dayGroup in games.GroupBy(g => g.PlayedOn.Date))
                   {
@@ -244,14 +238,27 @@ else
   int? _lastLoadedId;
   bool _helpOpen;
   Game? _openDetailsGame;
-  // Tracks the *Competition reference* we've already fired confetti for. Reference comparison survives
-  // the race where ViewModel.Load fires property changes BEFORE swapping Competition (so a lambda sees
-  // IsFinished=true on the old comp while Id has already flipped to the new one). Id-based guard misfired
-  // confetti on Simulate Again in that window.
+  // Guard tracks Competition reference, not Id — survives the load-race window where Id swaps before Competition is reassigned.
   Competition? _confettiFiredCompetition;
+  // Scroll target to flush after the next render — set when a state change (e.g. SelectedStage in JumpToCurrent) needs DOM that doesn't exist yet.
+  string? _pendingScrollId;
+  // Tracks last scrolled round during active sim; -1 = no scroll yet.
+  int _lastScrolledRoundIdx = -1;
   DotNetObjectReference<CompetitionDetail>? _selfRef;
 
   void ToggleDetailsGame(Game game) => _openDetailsGame = ReferenceEquals(_openDetailsGame, game) ? null : game;
+
+  // Mirror StepStage's scroll-queue behaviour so mouse and keyboard stage navigation feel consistent.
+  void OnStageChipClick(Stage stage)
+  {
+    _openDetailsGame = null;
+    ViewModel.SelectedStage = stage;
+    if (ViewModel.SelectedRound is { } round)
+    {
+      var idx = stage.Rounds.IndexOf(round);
+      if (idx >= 0) { _pendingScrollId = $"round-{idx}"; }
+    }
+  }
 
   async Task OnRoundChipClick(Round round, int idx)
   {
@@ -264,16 +271,20 @@ else
   {
     var cur = ViewModel.Competition?.CurrentGame?.Round;
     if (cur is null) { return; }
-    ViewModel.SelectedStage = cur.Stage;
+    // OnSelectedStageChanged snaps SelectedRound on stage change; only set explicitly when staying in the same stage.
+    if (!ReferenceEquals(cur.Stage, ViewModel.SelectedStage))
+    {
+      // Stage change queues a re-render — the new stage's #current-game element doesn't exist yet, so defer to OnAfterRenderAsync.
+      ViewModel.SelectedStage = cur.Stage;
+      _pendingScrollId = "current-game";
+      return;
+    }
     ViewModel.SelectedRound = cur;
-    // Scroll to the actual current-game row (the one rendering the Sim button), not just the round
-    // header — a round can have 10+ games and the active one might be far below the header.
     try { await JS.InvokeVoidAsync("ffScroll.toElement", "current-game"); }
     catch (JSDisconnectedException) { /* page disposing */ }
   }
 
-  // SimulateRound triggered by the inter-chip play icon. Switches to that round before simming so the
-  // panel scrolls there (auto-advance in the VM keeps it tracked too).
+  // Switches to the round before simming so the panel follows (VM auto-advance also tracks it).
   async Task SimulateRoundChip(Round round)
   {
     ViewModel.SelectedStage = round.Stage;
@@ -281,13 +292,7 @@ else
     await ViewModel.SimulateRound();
   }
 
-  // Tracks the last round we've scrolled to so OnVmChanged doesn't fire scrollIntoView on every
-  // unrelated property change. -1 means "no scroll yet".
-  int _lastScrolledRoundIdx = -1;
-
-  // Chip status visual encoding (color + border + opacity, not color alone).
-  // Selected: filled brand-primary via Color.Primary. Done: default outline (looks "white" on dark theme).
-  // Current: default outline + dashed border (.chip-current). Future: default outline + 50% opacity (.chip-future).
+  // Chip status: selected=filled primary; current=dashed outline; future=50% opacity; done=solid outline.
   static string ChipStatusClass(bool isSelected, bool isCurrent, bool isDone) =>
     isSelected ? "" :
     isCurrent ? "chip-current" :
@@ -320,10 +325,15 @@ else
   {
     if (firstRender)
     {
-      // Document-level keydown forwarder. Listening on document (not the page root div) means Space + arrows
-      // work without the user clicking into the page first; the JS side skips when focus is on an input.
+      // Document-level keydown forwarder so Space + arrows work without clicking into the page first; JS skips when focus is on an input.
       _selfRef = DotNetObjectReference.Create(this);
       await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
+    }
+    if (_pendingScrollId is { } id)
+    {
+      _pendingScrollId = null;
+      try { await JS.InvokeVoidAsync("ffScroll.toElement", id); }
+      catch (JSDisconnectedException) { /* page disposing */ }
     }
   }
 
@@ -339,10 +349,7 @@ else
       catch (JSDisconnectedException) { /* Page navigated away while the call was in flight. */ }
     }
 
-    // Auto-scroll to follow SelectedRound during ACTIVE multi-game sims, but ONLY on round transitions
-    // (not on the first IsBusy fire). A single-game sim keeps the same SelectedRound — without this
-    // guard the page would scroll to the top of the round the user was already viewing, losing their
-    // place within the round.
+    // Follow round transitions during active sim; first IsBusy fire just records (don't scroll a single-game sim away from the user's viewport).
     if (ViewModel.IsBusy)
     {
       var stage = ViewModel.SelectedStage;
@@ -351,15 +358,13 @@ else
         : -1;
       if (selectedIdx >= 0 && _lastScrolledRoundIdx < 0)
       {
-        // First IsBusy event in this batch — remember the current round without scrolling.
         _lastScrolledRoundIdx = selectedIdx;
       }
       else if (selectedIdx >= 0 && selectedIdx != _lastScrolledRoundIdx)
       {
-        // Round changed mid-sim — scroll to the new one.
         _lastScrolledRoundIdx = selectedIdx;
         try { await JS.InvokeVoidAsync("ffScroll.toElement", $"round-{selectedIdx}"); }
-        catch (JSDisconnectedException) { /* */ }
+        catch (JSDisconnectedException) { /* page disposing */ }
       }
     }
     else
@@ -422,7 +427,9 @@ else
     if (rounds.Count == 0 || ViewModel.SelectedRound is null) { return; }
     var i = rounds.IndexOf(ViewModel.SelectedRound);
     if (i < 0) { return; }
-    ViewModel.SelectedRound = rounds[(i + delta + rounds.Count) % rounds.Count];
+    var newIdx = (i + delta + rounds.Count) % rounds.Count;
+    ViewModel.SelectedRound = rounds[newIdx];
+    _pendingScrollId = $"round-{newIdx}";
   }
 
   void StepStage(int delta)
@@ -432,6 +439,12 @@ else
     var i = stages.IndexOf(ViewModel.SelectedStage);
     if (i < 0) { return; }
     ViewModel.SelectedStage = stages[(i + delta + stages.Count) % stages.Count];
+    // OnSelectedStageChanged snapped SelectedRound; queue scroll to that round's section (which re-renders next).
+    if (ViewModel.SelectedStage is { } stage && ViewModel.SelectedRound is { } round)
+    {
+      var idx = stage.Rounds.IndexOf(round);
+      if (idx >= 0) { _pendingScrollId = $"round-{idx}"; }
+    }
   }
 
   public async ValueTask DisposeAsync()

@@ -9,12 +9,15 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using Serilog;
 
-// Serilog logger for the WASM host. BrowserConsole sink so Log.Debug / Log.Information reach the
-// browser DevTools console — the standard config (ISettingsService.StandardLoggerConfig) writes to
-// the System.Diagnostics Debug stream + a temp-dir file, neither of which is reachable from a
-// browser DevTools session. Without this sink, Log calls land in the void on WASM.
+// Serilog → browser DevTools console for the WASM host. Debug in dev; Warning in Release (avoids leaking diagnostics to public-deploy visitors' consoles).
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
+    .MinimumLevel.Is(
+#if DEBUG
+        Serilog.Events.LogEventLevel.Debug
+#else
+        Serilog.Events.LogEventLevel.Warning
+#endif
+    )
     .Enrich.FromLogContext()
     .WriteTo.BrowserConsole()
     .CreateLogger();
