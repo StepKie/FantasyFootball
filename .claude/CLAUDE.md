@@ -120,32 +120,19 @@ running build — skip features that landed in earlier rounds and are
 already signed off. If the previous run was many commits ago, summarise
 the commits being verified at the top so the user knows the scope.
 
-## PR merge hygiene
+## PR merge protocol
 
-After auto-review rounds, the branch accumulates per-round-fix commits
-("Address PR #N auto-review round K"). **Before merging back to
-`develop`, rebase those into a couple of topical commits aligned with
-the PR's logical feature chunks.** The PR discussion thread already
-records the review history; commits should record the feature work, not
-the round-by-round paper trail. This is what PRs #25, #28, #29 landed
-with.
+This project follows the **Branch Merge Protocol** in the global
+`~/.claude/CLAUDE.md` — topical commits prepared locally, then
+`gh pr merge --merge` for the GitHub merge. See that section for the
+full mechanics + rationale.
 
-Mechanics (per session constraints — no `-i` or `-p` flags):
+Project-specific notes:
 
-```bash
-git tag prNN-pre-rebase                    # safety net
-git reset --soft <feature-commit-base>     # back to last feature commit; later changes restaged
-git commit -m "<themed summary>"           # one commit per logical chunk
-git diff prNN-pre-rebase HEAD --stat       # verify empty — tree unchanged
-git push --force-with-lease
-```
-
-For cases where review fixes split across multiple feature themes,
-restage by file (and accept that the rebase may produce one "review
-fixes" commit rather than perfectly themed ones — better that than
-patch-mode staging the user can't approve).
-
-Skip the rebase only when explicitly told `merge as-is`.
+- Reference PRs that landed with this protocol: #25, #28, #29, #36.
+- Both `feature → develop` AND `develop → main` use the same protocol.
+- For `develop → main`: bump version + tag the merge commit (`X.Y.Z`)
+  after merge — see "Branching & Releases" below.
 
 ## Out of scope
 

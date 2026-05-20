@@ -181,10 +181,10 @@
   void OnRowClick(TableRowClickEventArgs<Competition> args)
   {
     if (args.Item is null) { return; }
-    Nav.NavigateTo($"/competitions/{args.Item.Id}");
+    Nav.NavigateTo($"competitions/{args.Item.Id}");
   }
 
-  void StartNew() => Nav.NavigateTo("/competitions/setup");
+  void StartNew() => Nav.NavigateTo("competitions/setup");
 
   async Task ConfirmDelete(Competition competition)
   {

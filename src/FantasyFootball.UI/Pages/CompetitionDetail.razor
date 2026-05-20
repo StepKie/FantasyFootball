@@ -10,7 +10,7 @@
 
 <PageTitle>@(ViewModel.Competition?.ShortName ?? "Competition") — Fantasy Football</PageTitle>
 
-<MudButton Href="/competitions"
+<MudButton Href="competitions"
            StartIcon="@Icons.Material.Filled.ArrowBack"
            Variant="Variant.Text"
            Class="mb-3">
@@ -20,7 +20,7 @@
 @if (ViewModel.Competition is null)
 {
   <MudAlert Severity="Severity.Warning">
-    Competition not found. <MudLink Href="/competitions">Return to the competitions list.</MudLink>
+    Competition not found. <MudLink Href="competitions">Return to the competitions list.</MudLink>
   </MudAlert>
 }
 else
@@ -306,7 +306,7 @@ else
     try { await JS.InvokeVoidAsync("ffConfetti.reset"); }
     catch (JSDisconnectedException) { /* page disposing */ }
     var replay = await ViewModel.Replay();
-    Nav.NavigateTo($"/competitions/{replay.Id}");
+    Nav.NavigateTo($"competitions/{replay.Id}");
   }
 
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
@@ -417,7 +417,7 @@ else
       case "ArrowRight": StepRound(+1); break;
       case "ArrowUp": StepStage(-1); break;
       case "ArrowDown": StepStage(+1); break;
-      case "Escape": Nav.NavigateTo("/competitions"); break;
+      case "Escape": Nav.NavigateTo("competitions"); break;
     }
   }
 

@@ -55,7 +55,7 @@
   void OnRowClick(TableRowClickEventArgs<TeamListItem> args)
   {
     // /teams/{id} lands with the TeamDetail page port (#7). 404 expected for now.
-    Nav.NavigateTo($"/teams/{args.Item!.Team.Id}");
+    Nav.NavigateTo($"teams/{args.Item!.Team.Id}");
   }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
