@@ -87,6 +87,8 @@ else
         <div class="round-chip-row">
           @foreach (var r in ViewModel.Rounds)
           {
+            var roundForChip = r;
+            var roundIdxForChip = ViewModel.Rounds.IndexOf(r);
             var isSelected = ReferenceEquals(r, ViewModel.SelectedRound);
             var isCurrent  = ReferenceEquals(r, ViewModel.SelectedStage?.CurrentRound);
             var isDone     = r.IsFinished;
@@ -95,7 +97,7 @@ else
                      Variant="@(isSelected ? Variant.Filled : Variant.Outlined)"
                      Color="@(isSelected ? Color.Primary : isDone ? Color.Success : isCurrent ? Color.Primary : Color.Default)"
                      Size="Size.Small"
-                     OnClick="@(() => ViewModel.SelectedRound = r)">
+                     OnClick="@(async () => await OnRoundChipClick(roundForChip, roundIdxForChip))">
               @r.Name@(isDone ? " ✓" : "")
             </MudChip>
           }
@@ -117,35 +119,53 @@ else
                              title="Simulate round (R or Shift+Space)" />
             }
           </MudStack>
-          @if (ViewModel.SelectedRound is not null)
+          @if (ViewModel.SelectedStage is not null)
           {
-            var games = ViewModel.SelectedRound.AllGames.OrderBy(g => g.PlayedOn).ToList();
-            var multiDay = games.Select(g => g.PlayedOn.Date).Distinct().Count() > 1;
-            // Reference-compare, not Id-compare: nested entities in the LocalStorage path keep Id=0
-            // (LocalStorageRepository only assigns IDs to aggregate roots), so `game.Id == X.Id` is true
-            // for every row when X.Id is also 0. Reference equality works because both sides come from
-            // the live Competition graph rendered this pass.
+            // Variant B: render ALL rounds in the selected stage, each as its own section with a header,
+            // so user keeps prior results visible while scrolling forward. Chip strip above acts as a
+            // scroll-to anchor (see OnRoundChipClick). Day-grouping dividers stay per-round.
+            // Reference-compare, not Id-compare: nested entities in the LocalStorage path keep Id=0.
             var currentGame = ViewModel.Competition?.CurrentGame;
             var undoTargetGame = ViewModel.UndoTargetGame;
-            @foreach (var dayGroup in games.GroupBy(g => g.PlayedOn.Date))
+            @foreach (var round in ViewModel.SelectedStage.Rounds)
             {
-              @if (multiDay)
-              {
-                <div class="game-day-divider">@dayGroup.Key.ToString("ddd d MMM", System.Globalization.CultureInfo.CurrentCulture)</div>
-              }
-              @foreach (var game in dayGroup)
-              {
-                <GameViewRow Game="game"
-                             ShowSim="@(ReferenceEquals(game, currentGame))"
-                             ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
-                             IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"
-                             Disabled="@ViewModel.IsBusy"
-                             DetailsOpen="@(ReferenceEquals(game, _openDetailsGame))"
-                             OnDetailsToggle="@(() => ToggleDetailsGame(game))"
-                             OnSim="@(async () => await ViewModel.SimulateGame())"
-                             OnUndo="@(() => ViewModel.Undo())"
-                             OnRedo="@(async () => await ViewModel.RedoLastGame())" />
-              }
+              var roundIdx = ViewModel.SelectedStage.Rounds.IndexOf(round);
+              var games = round.AllGames.OrderBy(g => g.PlayedOn).ToList();
+              var multiDay = games.Select(g => g.PlayedOn.Date).Distinct().Count() > 1;
+              <section id="@($"round-{roundIdx}")"
+                       class="round-section @(ReferenceEquals(round, ViewModel.SelectedRound) ? "round-section-selected" : "")">
+                <div class="round-header">
+                  <span class="round-header-name">@round.Name</span>
+                  @if (round.IsFinished)
+                  {
+                    <span class="round-header-status">✓</span>
+                  }
+                  else if (ReferenceEquals(round, ViewModel.SelectedStage.CurrentRound))
+                  {
+                    <span class="round-header-status round-header-status-current">current</span>
+                  }
+                </div>
+                @foreach (var dayGroup in games.GroupBy(g => g.PlayedOn.Date))
+                {
+                  @if (multiDay)
+                  {
+                    <div class="game-day-divider">@dayGroup.Key.ToString("ddd d MMM", System.Globalization.CultureInfo.CurrentCulture)</div>
+                  }
+                  @foreach (var game in dayGroup)
+                  {
+                    <GameViewRow Game="game"
+                                 ShowSim="@(ReferenceEquals(game, currentGame))"
+                                 ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
+                                 IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"
+                                 Disabled="@ViewModel.IsBusy"
+                                 DetailsOpen="@(ReferenceEquals(game, _openDetailsGame))"
+                                 OnDetailsToggle="@(() => ToggleDetailsGame(game))"
+                                 OnSim="@(async () => await ViewModel.SimulateGame())"
+                                 OnUndo="@(() => ViewModel.Undo())"
+                                 OnRedo="@(async () => await ViewModel.RedoLastGame())" />
+                  }
+                }
+              </section>
             }
           }
         </MudPaper>
@@ -206,6 +226,13 @@ else
   DotNetObjectReference<CompetitionDetail>? _selfRef;
 
   void ToggleDetailsGame(Game game) => _openDetailsGame = ReferenceEquals(_openDetailsGame, game) ? null : game;
+
+  async Task OnRoundChipClick(Round round, int idx)
+  {
+    ViewModel.SelectedRound = round;
+    try { await JS.InvokeVoidAsync("ffScroll.toElement", $"round-{idx}"); }
+    catch (JSDisconnectedException) { /* page disposing */ }
+  }
 
   async Task ReplayCompetition()
   {
