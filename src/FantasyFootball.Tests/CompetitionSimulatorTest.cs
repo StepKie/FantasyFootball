@@ -72,6 +72,10 @@ public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(outpu
 		var winner = final?.Winner;
 		Assert.Equal("Final", final?.Round.Name);
 		Assert.NotNull(winner);
+		// Persist the simulated state before reading it back — CompetitionSimulator leaves
+		// persistence to the caller (see its comment), and the round-trip assertion below
+		// needs the simulated scores to actually be in the DB, not just in memory.
+		Repo.Save(wm);
 		var fromDb = Repo.Get<Competition>(wm.Id);
 		var finalDb = fromDb?.GamesByDate.Last();
 		Assert.Equal(winner, finalDb?.Winner);

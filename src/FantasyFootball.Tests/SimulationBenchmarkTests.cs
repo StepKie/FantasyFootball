@@ -26,12 +26,19 @@ public class SimulationBenchmarkTests(ITestOutputHelper output) : BaseTest(outpu
 			var competition = InitCompetition(type, year);
 			var simulator = new CompetitionSimulator(competition, Repo);
 
-			var sw = Stopwatch.StartNew();
-			await simulator.Simulate();
-			sw.Stop();
-
-			timings[i] = sw.ElapsedMilliseconds;
-			Repo.Delete(competition);
+			try
+			{
+				var sw = Stopwatch.StartNew();
+				await simulator.Simulate();
+				sw.Stop();
+				timings[i] = sw.ElapsedMilliseconds;
+			}
+			finally
+			{
+				// Ensure the in-memory DB doesn't accumulate stale Competitions if a sim throws
+				// — later iterations would otherwise pay extra GetAllWithChildren cost.
+				Repo.Delete(competition);
+			}
 		}
 
 		var totalGames = type switch
@@ -45,7 +52,7 @@ public class SimulationBenchmarkTests(ITestOutputHelper output) : BaseTest(outpu
 		var min = timings.Min();
 		var max = timings.Max();
 		var avg = timings.Average();
-		var perGame = avg / totalGames;
+		var perGame = totalGames > 0 ? avg / totalGames : 0;
 
 		Output.WriteLine($"{label}");
 		Output.WriteLine($"  Runs: {Runs}");
@@ -80,15 +87,23 @@ public class SimulationBenchmarkTests(ITestOutputHelper output) : BaseTest(outpu
 			var competition = factory.Create();
 			sw.Stop(); factoryToCompetition[i] = sw.ElapsedMilliseconds;
 
-			sw.Restart();
-			Repo.Save(competition);
-			sw.Stop(); repoSave[i] = sw.ElapsedMilliseconds;
+			try
+			{
+				sw.Restart();
+				Repo.Save(competition);
+				sw.Stop(); repoSave[i] = sw.ElapsedMilliseconds;
 
-			sw.Restart();
-			_ = Repo.GetAll<Competition>();
-			sw.Stop(); repoGet[i] = sw.ElapsedMilliseconds;
-
-			Repo.Delete(competition);
+				sw.Restart();
+				_ = Repo.GetAll<Competition>();
+				sw.Stop(); repoGet[i] = sw.ElapsedMilliseconds;
+			}
+			finally
+			{
+				// Mirror the cleanup guarantee from TimeFullCompetitionSimulation — a Repo.Save
+				// or Repo.GetAll throw would otherwise leak stale rows into later iterations and
+				// distort the GetAll measurement.
+				Repo.Delete(competition);
+			}
 		}
 
 		Output.WriteLine($"{label}");

@@ -155,7 +155,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			// Single-game user click — no inter-game pacing needed; tell the simulator to skip
 			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
 			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
-			_repo.Save(Competition);
+			// Persist just the one game that changed — on SQLite this is a single-row UPDATE,
+			// on LocalStorage it bubbles up to the Competition write (same cost as before).
+			_repo.Save(gameBeingSimmed);
 			// Pulse marker AFTER the sim so the class transition + final score land in one render (Space path needs this; click batches via EventCallback).
 			_ = FlashRecentlyFinished(gameBeingSimmed);
 		}
@@ -206,7 +208,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		if (!_undoStack.TryPop(out var game)) { return; }
 
 		game.ClearResult();
-		_repo.Save(Competition);
+		// Targeted save — only this game's row changed.
+		_repo.Save(game);
 		// OnSimBatchComplete owns the CanUndo / UndoTargetGame notifications.
 		OnSimBatchComplete();
 	}
@@ -227,7 +230,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			game.ClearResult();
 			// Same as SimulateGame: single-game user click, no inter-game pacing.
 			await _simulator.SimulateGame(game, delayAfter: false);
-			_repo.Save(Competition);
+			// Targeted save — only this game's row changed.
+			_repo.Save(game);
 			// FlashRecentlyFinished AFTER the sim — same render-batching reason as SimulateGame.
 			_ = FlashRecentlyFinished(game);
 		}
