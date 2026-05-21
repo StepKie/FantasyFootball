@@ -18,7 +18,17 @@ public class Repository : IRepository
 	void Initialize(string fullPath)
 	{
 		_dbConnection = new SQLiteConnection(fullPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache | SQLiteOpenFlags.FullMutex);
-		var modelTables = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && t.Namespace == "FantasyFootball.Models" && !t.Attributes.HasFlag(TypeAttributes.NestedPrivate)).ToArray();
+		// Old model is the only thing SQLite knows how to map — gated by
+		// presence of [Table]. New-model types (Flat*, CompetitionSpec, …)
+		// live in the same namespace but skip persistence here; the JSON-
+		// driven flat repo handles those. Removed entirely in the cleanup
+		// PR alongside this file.
+		var modelTables = Assembly.GetExecutingAssembly().GetTypes()
+			.Where(t => t.IsClass
+				&& t.Namespace == "FantasyFootball.Models"
+				&& !t.Attributes.HasFlag(TypeAttributes.NestedPrivate)
+				&& t.GetCustomAttribute<SQLite.TableAttribute>() is not null)
+			.ToArray();
 		_ = _dbConnection.CreateTables(CreateFlags.None, modelTables);
 	}
 
