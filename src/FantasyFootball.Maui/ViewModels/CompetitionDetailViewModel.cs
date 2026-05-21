@@ -51,7 +51,8 @@ public partial class CompetitionDetailViewModel : GeneralViewModel
 			}
 			Competition = loadedCompetitionFromDbById;
 			GamesByRound = new(Competition.Rounds.Select(r => new RoundGroup(r.Name, r.AllGames.OrderBy(g => g.PlayedOn).Select(g => new GameViewModel(g)))));
-			Simulator = new CompetitionSimulator(Competition, Repo);
+			// Match the legacy MAUI pacing — Blazor UI calls ApplySpeedToSimulator() instead.
+			Simulator = new CompetitionSimulator(Competition, Repo, msGameDelay: 100);
 			Title = $"{Competition.ShortName}-{Competition.Id}";
 		}
 		catch (Exception e)

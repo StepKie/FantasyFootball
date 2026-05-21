@@ -72,6 +72,10 @@ public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(outpu
 		var winner = final?.Winner;
 		Assert.Equal("Final", final?.Round.Name);
 		Assert.NotNull(winner);
+		// Persist the simulated state before reading it back — CompetitionSimulator leaves
+		// persistence to the caller (see its comment), and the round-trip assertion below
+		// needs the simulated scores to actually be in the DB, not just in memory.
+		Repo.Save(wm);
 		var fromDb = Repo.Get<Competition>(wm.Id);
 		var finalDb = fromDb?.GamesByDate.Last();
 		Assert.Equal(winner, finalDb?.Winner);
@@ -128,7 +132,7 @@ public class CompetitionSimulatorTest(ITestOutputHelper output) : BaseTest(outpu
 		koGame.HomeTeam.Type.Should().Be(TeamType.PLACEHOLDER);
 
 		var competition = new Competition { Name = "Dummy", ShortName = "X" };
-		var simulator = new CompetitionSimulator(competition, Repo, msGameDelay: 0);
+		var simulator = new CompetitionSimulator(competition, Repo);
 
 		// Without the progress check this hangs forever. Cap with a generous timeout —
 		// the fix should bail in microseconds.

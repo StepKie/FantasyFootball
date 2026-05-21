@@ -1,11 +1,12 @@
 ﻿namespace FantasyFootball.Data;
 
-public class CompetitionSimulator(Competition competition, IRepository repo, int msGameDelay = 100)
+public class CompetitionSimulator(Competition competition, IRepository repo, int msGameDelay = 0)
 {
 	/// <summary>
-	/// Delay between consecutive game simulations. Mutable so the UI's per-session
-	/// speed control (Slow / Normal / Fast / Instant) can override the Settings
-	/// default without rebuilding the simulator.
+	/// Delay between consecutive game simulations. Defaults to 0 (instant) — the
+	/// fastest-thing-that-does-the-job. UI callers that want visible pacing
+	/// (Slow / Normal / Fast speed picker) opt in explicitly by passing
+	/// <paramref name="msGameDelay"/> or by setting this property after construction.
 	/// </summary>
 	public TimeSpan GameDelay { get; set; } = TimeSpan.FromMilliseconds(msGameDelay);
 
