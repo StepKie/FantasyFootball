@@ -18,6 +18,7 @@ public interface ISettingsService
 	public CultureInfo LastUsedLanguage { get; set; }
 	FlagStyle FlagStyle { get; set; }
 	bool UseOfficialCompetitionLogos { get; set; }
+	bool ShowFullStandings { get; set; }
 
 	bool GetValueOrDefault(string key, bool defaultValue);
 	string GetValueOrDefault(string key, string defaultValue);

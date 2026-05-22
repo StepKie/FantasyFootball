@@ -117,6 +117,7 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		IsBusy = false;
 		Competition = await _repo.GetAsync(competitionId);
 		if (Competition is null) { return; }
+
 		var currentGame = Competition.CurrentGame();
 		var currentRoundId = currentGame?.RoundId
 			?? Competition.Rounds.OrderByDescending(r => r.Order).FirstOrDefault()?.Id;
@@ -158,19 +159,23 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		}
 		finally
 		{
+			// Set the pulse marker BEFORE the refresh so the next render sees both
+			// the new competition state AND the recently-finished id together —
+			// the page's auto-scroll prioritises just-finished over current-game,
+			// which prevents a visible jump-to-next-then-jump-back sequence.
+			RecentlyFinishedGameId = game.Id;
 			RefreshAfterSim();
-			_ = PulseRecentlyFinished(game.Id);
+			_ = ClearPulseAfterDelay(game.Id);
 		}
 	}
 
 	/// <summary>
-	/// Set the just-finished pulse marker for a single game and clear it after
-	/// the CSS animation duration. The id-check before clearing avoids racing
-	/// a later sim — if the user sims again within 1.5s, the newer id wins.
+	/// Clear the just-finished pulse marker after the CSS animation duration.
+	/// The id-check before clearing avoids racing a later sim — if the user
+	/// sims again within 1.5s, the newer id wins.
 	/// </summary>
-	async Task PulseRecentlyFinished(int gameId)
+	async Task ClearPulseAfterDelay(int gameId)
 	{
-		RecentlyFinishedGameId = gameId;
 		await Task.Delay(1500);
 		if (RecentlyFinishedGameId == gameId) { RecentlyFinishedGameId = null; }
 	}
@@ -225,8 +230,9 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		}
 		finally
 		{
+			RecentlyFinishedGameId = lastPlayed.Id;
 			RefreshAfterSim(advanceSelection: false);
-			_ = PulseRecentlyFinished(lastPlayed.Id);
+			_ = ClearPulseAfterDelay(lastPlayed.Id);
 		}
 	}
 

@@ -6,6 +6,7 @@
 @using Microsoft.JSInterop
 @inject FlatCompetitionDetailViewModel ViewModel
 @inject IDataService DataService
+@inject ISettingsService Settings
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 @implements IAsyncDisposable
@@ -46,10 +47,6 @@ else
                        Disabled="ViewModel.IsBusy || ViewModel.Competition.CurrentGame() is null"
                        title="Jump to the current round" />
       }
-      <MudIconButton Icon="@Icons.Material.Filled.Help"
-                     Size="Size.Small"
-                     OnClick="@(() => { _showHelp = !_showHelp; })"
-                     title="Keyboard shortcuts (H or ?)" />
       @if (ViewModel.IsBusy)
       {
         <MudProgressCircular Size="Size.Small" Indeterminate="true" />
@@ -64,6 +61,11 @@ else
           <FlagIcon Team="winnerTeam" Code="@winnerId" Size="28" />
         </MudStack>
       }
+      <MudSpacer />
+      <MudIconButton Icon="@Icons.Material.Filled.Keyboard"
+                     Size="Size.Small"
+                     OnClick="@(() => { _showHelp = !_showHelp; })"
+                     title="Keyboard shortcuts (H or ?)" />
     </MudStack>
 
     @if (ViewModel.IsFinished)
@@ -155,7 +157,7 @@ else
 
     @* Games + Standings two-column layout *@
     <MudGrid Spacing="3">
-      <MudItem xs="12" md="7">
+      <MudItem xs="12" md="6">
         <MudPaper Class="pa-3 bounded-scroll-card" Elevation="4">
           <MudText Typo="Typo.h6" Class="mb-2">Games</MudText>
           @{
@@ -168,7 +170,7 @@ else
             {
               var games = ViewModel.Competition.RoundGames(round.Id).OrderBy(g => g.PlayedOn).ToList();
               var multiDay = games.Select(g => g.PlayedOn.Date).Distinct().Count() > 1;
-              <section class="round-section @(round.Id == ViewModel.SelectedRoundId ? "round-section-selected" : "")">
+              <section id="@($"round-{round.Id}")" class="round-section @(round.Id == ViewModel.SelectedRoundId ? "round-section-selected" : "")">
                 <div class="round-header">
                   <span class="round-header-name">@round.Name</span>
                 </div>
@@ -186,10 +188,12 @@ else
                                        ShowSim="@(ReferenceEquals(game, currentGame))"
                                        ShowUndo="@(ReferenceEquals(game, lastFinishedGame))"
                                        IsJustFinished="@(ViewModel.RecentlyFinishedGameId == game.Id)"
+                                       DetailsOpen="@(_openDetailsGameId == game.Id)"
                                        Disabled="@ViewModel.IsBusy"
                                        OnSim="ViewModel.SimulateGame"
                                        OnUndo="ViewModel.UndoLastGame"
-                                       OnRedo="ViewModel.RerollLastGame" />
+                                       OnRedo="ViewModel.RerollLastGame"
+                                       OnDetailsToggle="@(() => ToggleDetails(game.Id))" />
                     }
                   }
                 </div>
@@ -198,51 +202,62 @@ else
           }
         </MudPaper>
       </MudItem>
-      <MudItem xs="12" md="5">
+      <MudItem xs="12" md="6">
         <MudPaper Class="pa-3 bounded-scroll-card" Elevation="4">
           <MudText Typo="Typo.h6" GutterBottom="true">Standings</MudText>
           @* Standings: only group games have a per-round meaning. For KO rounds
              we fall back to showing all groups' final standings (computed in the VM). *@
           @if (ViewModel.GroupStandings.Count > 0)
           {
+            var qualMap = FlatGroupQualification.Compute(ViewModel.Competition);
+            var showWDL = Settings.ShowFullStandings;
             @foreach (var (letter, standings) in ViewModel.GroupStandings)
             {
-              <MudText Typo="Typo.subtitle2" Class="mt-2">Group @letter</MudText>
-              <MudSimpleTable Dense="true" Hover="false">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Team</th>
-                    <th>P</th>
-                    <th>W</th>
-                    <th>D</th>
-                    <th>L</th>
-                    <th>GD</th>
-                    <th>Pts</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach (var row in standings)
-                  {
-                    var rowTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == row.TeamId);
+              var slots = qualMap.TryGetValue(letter, out var s) ? s : default;
+              <div class="group-block">
+                <div class="group-letter-heading">@letter</div>
+                <MudSimpleTable Dense="true" Hover="true" Bordered="false" Striped="false" Elevation="0" Class="group-standings">
+                  <thead>
                     <tr>
-                      <td>@row.Position</td>
-                      <td>
-                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                          <FlagIcon Team="rowTeam" Code="@row.TeamId" Size="20" />
-                          <span>@(rowTeam?.Name ?? row.TeamId)</span>
-                        </MudStack>
-                      </td>
-                      <td>@row.Played</td>
-                      <td>@row.Wins</td>
-                      <td>@row.Draws</td>
-                      <td>@row.Losses</td>
-                      <td>@row.GoalDifference</td>
-                      <td><strong>@row.Points</strong></td>
+                      <th class="standings-pos"></th>
+                      <th class="standings-flag"></th>
+                      <th class="standings-team"></th>
+                      <th class="standings-num">P</th>
+                      @if (showWDL)
+                      {
+                        <th class="standings-num">W</th>
+                        <th class="standings-num">D</th>
+                        <th class="standings-num">L</th>
+                      }
+                      <th class="standings-num">GD</th>
+                      <th class="standings-num">Pts</th>
                     </tr>
-                  }
-                </tbody>
-              </MudSimpleTable>
+                  </thead>
+                  <tbody>
+                    @foreach (var row in standings)
+                    {
+                      var rowTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == row.TeamId);
+                      <tr>
+                        <td class="standings-pos">
+                          <span class="standings-qual-bar @QualBarClass(row.Position, slots)"></span>
+                          @row.Position
+                        </td>
+                        <td class="standings-flag"><FlagIcon Team="rowTeam" Code="@row.TeamId" Size="20" /></td>
+                        <td class="standings-team">@(rowTeam?.Name ?? row.TeamId)</td>
+                        <td class="standings-num">@row.Played</td>
+                        @if (showWDL)
+                        {
+                          <td class="standings-num">@row.Wins</td>
+                          <td class="standings-num">@row.Draws</td>
+                          <td class="standings-num">@row.Losses</td>
+                        }
+                        <td class="standings-num">@row.GoalDifference</td>
+                        <td class="standings-num standings-pts">@row.Points</td>
+                      </tr>
+                    }
+                  </tbody>
+                </MudSimpleTable>
+              </div>
             }
           }
           else
@@ -275,6 +290,27 @@ else
   [Parameter] public int Id { get; set; }
   DotNetObjectReference<CompetitionDetail>? _selfRef;
   bool _showHelp;
+  int? _openDetailsGameId;
+
+  void ToggleDetails(int gameId) => _openDetailsGameId = _openDetailsGameId == gameId ? null : gameId;
+
+  // Position is referenced directly by a KO qualifier → advance (green).
+  // Position 3 of a 3rd-place-eligible group: undetermined until the group stage finishes;
+  // once resolved → advance/out per the actual pool result. All other positions → out (red).
+  static string QualBarClass(int position, FlatGroupQualification.GroupQualSlots slots)
+  {
+    if (slots.DirectSlots.Contains(position)) { return "standings-qual-bar-advance"; }
+    if (position == 3 && slots.ThirdPlaceEligible)
+    {
+      return slots.ThirdPlaceAdvanced switch
+      {
+        null => "",
+        true => "standings-qual-bar-advance",
+        false => "standings-qual-bar-out",
+      };
+    }
+    return "standings-qual-bar-out";
+  }
 
   protected override async Task OnParametersSetAsync()
   {
@@ -282,12 +318,66 @@ else
     await ViewModel.LoadAsync(Id);
   }
 
+  int? _lastScrolledJustFinishedId;
+  int? _lastScrolledCurrentGameId;
+  string? _lastScrolledRoundId;
+
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
     if (firstRender)
     {
       _selfRef = DotNetObjectReference.Create(this);
       await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
+      await JS.InvokeVoidAsync("ffPopover.registerOutsideClickHandler", _selfRef);
+    }
+
+    // Auto-scroll priorities (highest first). On each render at most one fires.
+    // Tracking ids dedupes across renders — we only scroll on change, never on
+    // every parameter pass.
+    //
+    // 1) Just-finished pulse — keep the result visible while the user reads it.
+    //    Also bumps _lastScrolledCurrentGameId so the next render doesn't
+    //    immediately re-scroll to the new current game (which would yank the
+    //    just-played result out of view).
+    if (ViewModel.RecentlyFinishedGameId is { } rfid && rfid != _lastScrolledJustFinishedId)
+    {
+      _lastScrolledJustFinishedId = rfid;
+      _lastScrolledCurrentGameId = ViewModel.Competition?.CurrentGame()?.Id;
+      await JS.InvokeVoidAsync("ffScroll.toElement", "just-finished-game");
+      return;
+    }
+
+    // 2) Current-game shift — initial load, bulk sim end, or any other
+    //    state change where there's no pulse to defer to.
+    var currentGame = ViewModel.Competition?.CurrentGame();
+    if (currentGame is { Id: var cgid } && cgid != _lastScrolledCurrentGameId)
+    {
+      _lastScrolledCurrentGameId = cgid;
+      await JS.InvokeVoidAsync("ffScroll.toElement", "current-game");
+      return;
+    }
+
+    // 3) User clicked a round/stage chip — semantic of "selected round" is that
+    //    its games should be visible.
+    if (ViewModel.SelectedRoundId is { } rid && rid != _lastScrolledRoundId)
+    {
+      _lastScrolledRoundId = rid;
+      await JS.InvokeVoidAsync("ffScroll.toElement", $"round-{rid}");
+    }
+  }
+
+  /// <summary>
+  /// Called from js/keyboard.js's outside-click handler. Closes the open game-details
+  /// popover. Game-row clicks themselves never reach this — the JS handler ignores
+  /// clicks that land inside .scoreboard-row-wrapper / .game-details-popover.
+  /// </summary>
+  [JSInvokable]
+  public void OnOutsideClick()
+  {
+    if (_openDetailsGameId is not null)
+    {
+      _openDetailsGameId = null;
+      StateHasChanged();
     }
   }
 
@@ -380,7 +470,11 @@ else
     ViewModel.PropertyChanged -= OnVmChanged;
     if (_selfRef is not null)
     {
-      try { await JS.InvokeVoidAsync("ffKeyboard.unregisterDocumentHandler"); }
+      try
+      {
+        await JS.InvokeVoidAsync("ffKeyboard.unregisterDocumentHandler");
+        await JS.InvokeVoidAsync("ffPopover.unregisterOutsideClickHandler");
+      }
       catch (JSDisconnectedException) { /* nav teardown: JS bridge already gone */ }
       _selfRef.Dispose();
       _selfRef = null;

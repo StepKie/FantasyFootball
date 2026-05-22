@@ -143,6 +143,15 @@ else
                            OnClickStopPropagation="true"
                            title="Replay (clone and start fresh)" />
           }
+          else
+          {
+            <MudIconButton Icon="@Icons.Material.Filled.DoubleArrow" Size="Size.Small"
+                           Color="Color.Default"
+                           Disabled="ViewModel.IsBusy"
+                           OnClick="@(() => FastForward(id))"
+                           OnClickStopPropagation="true"
+                           title="Fast-forward: simulate remaining games" />
+          }
           <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small"
                          Color="Color.Default"
                          Disabled="ViewModel.IsBusy"
@@ -215,6 +224,8 @@ else
     var newId = await ViewModel.ReplayAsync(id);
     if (newId is { } nid) { Nav.NavigateTo($"competitions/{nid}"); }
   }
+
+  async Task FastForward(int id) => await ViewModel.FastForwardAsync(id);
 
   async Task ConfirmDeleteAll()
   {

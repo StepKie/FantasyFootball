@@ -228,10 +228,14 @@ body {
   text-align: left;
 }
 
+/* Team name: never truncate with ellipsis. Long names (e.g. "Bosnia and
+   Herzegovina") wrap to two lines inside the cell — row grows taller for
+   that game, but the team stays fully readable. Most names fit on one line. */
 .scoreboard-team-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.2;
 }
 
 .scoreboard-score {
@@ -270,6 +274,138 @@ body {
   animation: scoreboard-score-reveal 0.45s ease-out;
   display: inline-block; /* required for transform to apply on inline content */
 }
+
+/* Click-for-game-details popover. Anchored under the row via .scoreboard-row-wrapper (position: relative). */
+.scoreboard-row-wrapper {
+  position: relative;
+}
+
+.scoreboard-row-open {
+  background: var(--mud-palette-action-hover, rgba(0, 0, 0, 0.04));
+  box-shadow: inset 3px 0 0 var(--mud-palette-primary);
+}
+
+.game-details-popover {
+  padding: 0.75rem 1rem;
+  min-width: 18rem;
+  max-width: 22rem;
+}
+
+.game-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.85rem;
+  padding: 0.15rem 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-details-label {
+  color: var(--mud-palette-text-secondary);
+  font-weight: 500;
+}
+
+.game-details-value {
+  font-weight: 600;
+}
+
+.game-details-sep {
+  color: var(--mud-palette-text-secondary);
+  font-weight: 400;
+  margin: 0 0.15rem;
+}
+
+/* The percentage that matches the actual outcome (only set when the game has a Result). */
+.game-details-pct-actual {
+  color: var(--mud-palette-primary);
+  font-weight: 700;
+}
+
+.game-details-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.game-details-team {
+  color: var(--mud-palette-primary);
+  font-weight: 500;
+}
+
+/* Group standings: big letter heading + compact 6-column table. */
+.group-block {
+  margin-top: 1.75rem;
+}
+
+.group-block:first-of-type {
+  margin-top: 0;
+}
+
+.group-letter-heading {
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: var(--mud-palette-primary);
+  line-height: 1;
+  margin: 0;
+  padding-left: 0.5rem;
+}
+
+/* Kill any horizontal scrollbar that MudBlazor's table wrapper imposes. The
+   broad selector list catches whichever element the framework drops the
+   overflow-x:auto on across versions — table root, table container, and the
+   MudPaper that wraps Outlined/Elevated variants. !important beats the
+   framework's normal-specificity rule. */
+.group-standings,
+.mud-table.group-standings,
+.mud-simple-table.group-standings,
+.group-standings .mud-table-container,
+.bounded-scroll-card .mud-paper {
+  overflow-x: visible !important;
+}
+
+/* Column sizing — numeric cols stay narrow; team col gets nowrap but no
+   min-width (panel is now md=6, ~half the page, plenty of room). */
+.group-standings .standings-pos {
+  width: 1.5rem;
+  padding-left: 0.6rem;
+  padding-right: 0.15rem;
+  position: relative;
+}
+.group-standings .standings-flag {
+  width: 1.75rem;
+  padding-left: 0.15rem;
+  padding-right: 0.15rem;
+}
+.group-standings .standings-team {
+  white-space: nowrap;
+  padding-left: 0.25rem;
+  padding-right: 0.5rem;
+}
+.group-standings .standings-num {
+  width: 1.6rem;
+  padding-left: 0.15rem;
+  padding-right: 0.35rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.group-standings .standings-pts {
+  font-weight: bold;
+}
+
+/* Qualification-zone left-edge bar in standings rows. Slim, muted column inset from row edges. */
+.standings-qual-bar {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+}
+
+.standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
+.standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
 
 /* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
 .scoreboard-action {
@@ -396,33 +532,6 @@ body {
 
 .standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
 .standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
-
-/* Group block wraps heading + table. Big gap between blocks, zero between letter and its own table.
-   .group-letter-heading has no margin; .group-standings has negative top margin to pull the MudTable
-   header (P GD Pts) tight against the letter, then a quiet divider afterwards via mb. */
-.group-block {
-  margin-top: 1.75rem;
-}
-
-.group-block:first-of-type {
-  margin-top: 0;
-}
-
-.group-letter-heading {
-  font-family: 'Barlow Condensed', 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 1.4rem;
-  letter-spacing: 1px;
-  color: var(--mud-palette-primary);
-  line-height: 1;
-  margin: 0;
-  padding-left: 0.5rem;
-}
-
-.group-standings .mud-table-head .mud-table-cell {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
 
 /* Elo numbers tone down so they don't compete with team names. */
 .elo-muted {

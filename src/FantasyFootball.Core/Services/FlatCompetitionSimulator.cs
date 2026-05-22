@@ -76,25 +76,117 @@ public sealed class FlatCompetitionSimulator
 
 	static void ResolveKoTeams(FlatCompetition c, FlatKoGame ko)
 	{
-		// Cache resolved IDs so the qualifier walk runs at most once
-		// per slot. Idempotent: a second call after first resolution is a no-op.
+		// 3rd-place pool slots are resolved as a coherent batch (one team per slot,
+		// no double-picks). Forcing a refresh of ResolveAvailableKoTeams before each
+		// KO game guarantees pool slots are populated before per-slot Resolve runs.
+		if (ko.HomeTeamId is null || ko.AwayTeamId is null) { ResolveAvailableKoTeams(c); }
 		ko.HomeTeamId ??= FlatQualifierResolver.Resolve(c, ko.HomeQual);
 		ko.AwayTeamId ??= FlatQualifierResolver.Resolve(c, ko.AwayQual);
 	}
 
 	/// <summary>
-	/// Best-effort pass: resolves <see cref="FlatKoGame.HomeTeamId"/> /
-	/// <see cref="FlatKoGame.AwayTeamId"/> on every KO game whose qualifier
-	/// chain is now satisfiable, so future-round games can display real team
-	/// names + flags as soon as their group / earlier-KO prerequisites land.
-	/// Silent on slots whose prerequisites aren't ready yet.
+	/// Best-effort pass over every KO game. Non-pool qualifiers
+	/// (<see cref="FlatGroupPlacement"/>, <see cref="FlatGameWinner"/>,
+	/// <see cref="FlatGameLoser"/>) resolve per-slot via <see cref="FlatQualifierResolver"/>.
+	/// 3rd-place pools resolve as a batch via <see cref="ResolveThirdPlacePools"/>
+	/// — a single team per slot, no duplicates across overlapping pools.
+	/// Silent on slots whose prerequisites aren't ready.
 	/// </summary>
 	public static void ResolveAvailableKoTeams(FlatCompetition c)
 	{
+		// Hot-path skip: if every KO game already has both team-ids assigned,
+		// no work to do. Avoids per-Space-press parsing + per-slot try-resolve
+		// + pool-batch passes once the bracket is fully resolved.
+		var anyUnresolved = false;
 		foreach (var ko in c.Games.OfType<FlatKoGame>())
 		{
-			ko.HomeTeamId ??= FlatQualifierResolver.TryResolve(c, ko.HomeQual);
-			ko.AwayTeamId ??= FlatQualifierResolver.TryResolve(c, ko.AwayQual);
+			if (ko.HomeTeamId is null || ko.AwayTeamId is null) { anyUnresolved = true; break; }
+		}
+		if (!anyUnresolved) { return; }
+
+		foreach (var ko in c.Games.OfType<FlatKoGame>())
+		{
+			if (ko.HomeTeamId is null && IsNonPool(ko.HomeQual))
+			{
+				ko.HomeTeamId = FlatQualifierResolver.TryResolve(c, ko.HomeQual);
+			}
+			if (ko.AwayTeamId is null && IsNonPool(ko.AwayQual))
+			{
+				ko.AwayTeamId = FlatQualifierResolver.TryResolve(c, ko.AwayQual);
+			}
+		}
+		ResolveThirdPlacePools(c);
+	}
+
+	static bool IsNonPool(string dsl) =>
+		FlatQualifierParser.TryParse(dsl, out var q) && q is not FlatThirdPlacePool;
+
+	static bool IsPool(string dsl) =>
+		FlatQualifierParser.TryParse(dsl, out var q) && q is FlatThirdPlacePool;
+
+	/// <summary>
+	/// Batch-assign 3rd-place pool slots. Globally ranks 3rd-placers across all groups
+	/// referenced by any pool slot, takes the top N (where N = number of pool slots),
+	/// and greedily assigns each to a slot whose <see cref="FlatThirdPlacePool.EligibleGroups"/>
+	/// includes the team's group letter.
+	///
+	/// Only fills NULL slots — preserves existing assignments. Subsequent calls hit
+	/// an empty <c>poolSlots</c> and return immediately, keeping the post-sim refresh
+	/// path cheap on every game tick.
+	/// </summary>
+	static void ResolveThirdPlacePools(FlatCompetition c)
+	{
+		var poolSlots = new List<(FlatKoGame Game, bool IsHome, FlatThirdPlacePool Pool)>();
+		foreach (var ko in c.Games.OfType<FlatKoGame>())
+		{
+			if (ko.HomeTeamId is null
+				&& FlatQualifierParser.TryParse(ko.HomeQual, out var qh)
+				&& qh is FlatThirdPlacePool ph)
+			{
+				poolSlots.Add((ko, true, ph));
+			}
+			if (ko.AwayTeamId is null
+				&& FlatQualifierParser.TryParse(ko.AwayQual, out var qa)
+				&& qa is FlatThirdPlacePool pa)
+			{
+				poolSlots.Add((ko, false, pa));
+			}
+		}
+
+		if (poolSlots.Count == 0) { return; }
+
+		// All groups referenced by any pool slot must have completed games.
+		var groupsNeeded = poolSlots.SelectMany(s => s.Pool.EligibleGroups).Distinct().ToList();
+		foreach (var letter in groupsNeeded)
+		{
+			if (c.GroupGames(letter).Any(g => g.Result is null)) { return; }
+		}
+
+		// Global ranking of 3rd-placers — same tiebreaker cascade as within a group.
+		var thirdPlacers = groupsNeeded
+			.Select(g => (Letter: g, Standing: c.Standings(g)[2]))
+			.OrderByDescending(x => x.Standing.Points)
+			.ThenByDescending(x => x.Standing.GoalDifference)
+			.ThenByDescending(x => x.Standing.GoalsFor)
+			.ThenBy(x => x.Standing.TeamId, StringComparer.Ordinal)
+			.Take(poolSlots.Count)
+			.ToList();
+
+		// Greedy assignment: process the strongest team first; for each, find the first
+		// remaining slot whose EligibleGroups accepts the team's group letter.
+		// To minimise the risk of greedy failing on the last few teams, slots with
+		// FEWEST options (smallest EligibleGroups overlap with remaining teams) would
+		// ideally be filled first — but the WC2026 definitions overlap loosely enough
+		// that simple best-team-first works. Revisit if a future format breaks this.
+		var remaining = new List<(FlatKoGame Game, bool IsHome, FlatThirdPlacePool Pool)>(poolSlots);
+		foreach (var (letter, standing) in thirdPlacers)
+		{
+			var idx = remaining.FindIndex(s => s.Pool.EligibleGroups.Contains(letter));
+			if (idx < 0) { continue; }
+			var slot = remaining[idx];
+			if (slot.IsHome) { slot.Game.HomeTeamId = standing.TeamId; }
+			else { slot.Game.AwayTeamId = standing.TeamId; }
+			remaining.RemoveAt(idx);
 		}
 	}
 }

@@ -33,6 +33,7 @@ public partial class SettingsViewModel : ObservableObject
 		SelectedSimulationSpeed = SimulationSpeedExtensions.FromTimeSpan(settings.SimulationSpeed);
 		SelectedFlagStyle = settings.FlagStyle;
 		UseOfficialCompetitionLogos = settings.UseOfficialCompetitionLogos;
+		ShowFullStandings = settings.ShowFullStandings;
 		SupportedLanguages = [new("en"), new("de")];
 	}
 
@@ -49,6 +50,9 @@ public partial class SettingsViewModel : ObservableObject
 
 	[ObservableProperty]
 	public partial bool UseOfficialCompetitionLogos { get; set; }
+
+	[ObservableProperty]
+	public partial bool ShowFullStandings { get; set; }
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
@@ -73,6 +77,9 @@ public partial class SettingsViewModel : ObservableObject
 
 	partial void OnUseOfficialCompetitionLogosChanged(bool value)
 		=> _settings.UseOfficialCompetitionLogos = value;
+
+	partial void OnShowFullStandingsChanged(bool value)
+		=> _settings.ShowFullStandings = value;
 
 	[RelayCommand]
 	async Task ResetDatabase()

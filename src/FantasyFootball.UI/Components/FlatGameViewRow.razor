@@ -1,12 +1,16 @@
 @using FantasyFootball.Models
+@using FantasyFootball.Repositories
 @using FantasyFootball.Services
 @inject IDataService DataService
+@inject IFlatCompetitionRepository Repo
 
 @* Flat-model game-row. Mirrors the DOM structure of GameViewRow so the
    existing scoreboard-* CSS classes apply identically. *@
 
-<div class="scoreboard-row-wrapper" id="@(ShowSim ? "current-game" : null)">
-<div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "")">
+<div class="scoreboard-row-wrapper" id="@(ShowSim ? "current-game" : ShowUndo ? "just-finished-game" : null)">
+<div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "") @(DetailsOpen ? "scoreboard-row-open" : "")"
+     @onclick="HandleRowClick"
+     style="cursor: pointer;">
   <div class="scoreboard-group-tag">
     <span class="scoreboard-group-tag-letter">@_groupLetter</span>
     <span class="scoreboard-group-tag-time">@Game.PlayedOn.ToString("HH:mm")</span>
@@ -46,6 +50,48 @@
     }
   </div>
 </div>
+<MudPopover Open="DetailsOpen"
+            AnchorOrigin="Origin.BottomCenter"
+            TransformOrigin="Origin.TopCenter"
+            Paper="true"
+            Class="game-details-popover">
+  @if (DetailsOpen)
+  {
+    @if (_homeTeam is null || _awayTeam is null)
+    {
+      <MudText Typo="Typo.body2">Teams not yet decided.</MudText>
+    }
+    else
+    {
+      <div class="game-details-row">
+        <span class="game-details-label">Elo</span>
+        <span class="game-details-value">@_homeTeam.Elo <span class="game-details-sep">—</span> @_awayTeam.Elo</span>
+      </div>
+      <div class="game-details-row">
+        <span class="game-details-label">Win / Draw / Loss</span>
+        <span class="game-details-value">
+          <span class="@PctClass(HomeIsWinner)">@FormatPct(_prob.Home)</span>
+          <span class="game-details-sep">/</span>
+          <span class="@PctClass(IsDraw)">@FormatPct(_prob.Draw)</span>
+          <span class="game-details-sep">/</span>
+          <span class="@PctClass(AwayIsWinner)">@FormatPct(_prob.Away)</span>
+        </span>
+      </div>
+      <div class="game-details-row">
+        <span class="game-details-label">H2H (all sims)</span>
+        <span class="game-details-value">
+          @if (_h2h.Total == 0) { <em>none</em> }
+          else { @($"{_h2h.TeamAWins}–{_h2h.Draws}–{_h2h.TeamBWins}") }
+        </span>
+      </div>
+      <MudDivider Class="my-2" />
+      <div class="game-details-links">
+        <MudLink Href="@($"teams/{_homeTeam.Id}?from=competitions/{Competition?.Id}")" Typo="Typo.body2">@_homeTeam.Name</MudLink>
+        <MudLink Href="@($"teams/{_awayTeam.Id}?from=competitions/{Competition?.Id}")" Typo="Typo.body2">@_awayTeam.Name</MudLink>
+      </div>
+    }
+  }
+</MudPopover>
 </div>
 
 @code {
@@ -54,10 +100,12 @@
   [Parameter] public bool ShowSim { get; set; }
   [Parameter] public bool ShowUndo { get; set; }
   [Parameter] public bool IsJustFinished { get; set; }
+  [Parameter] public bool DetailsOpen { get; set; }
   [Parameter] public bool Disabled { get; set; }
   [Parameter] public EventCallback OnSim { get; set; }
   [Parameter] public EventCallback OnUndo { get; set; }
   [Parameter] public EventCallback OnRedo { get; set; }
+  [Parameter] public EventCallback OnDetailsToggle { get; set; }
 
   Team? _homeTeam;
   Team? _awayTeam;
@@ -65,8 +113,11 @@
   string _awayLabel = "";
   string _groupLetter = "";
   string _resultText = "";
+  bool _prevDetailsOpen;
+  MatchProbability.WinDrawLossResult _prob;
+  FlatHeadToHeadLookup.Result _h2h;
 
-  protected override void OnParametersSet()
+  protected override async Task OnParametersSetAsync()
   {
     var homeId = FlatCompetitionExtensions.HomeTeamIdOf(Game);
     var awayId = FlatCompetitionExtensions.AwayTeamIdOf(Game);
@@ -92,7 +143,23 @@
       _ => "",
     };
     _resultText = Game.Result is { } r ? r.Format() : "v";
+
+    // Compute popover data only on the open-transition. Recomputing every render
+    // would re-walk GetAllAsync()'s LocalStorage scan on every parent re-render
+    // (sim, busy flag, selection change, ...) while a popover stays open.
+    if (DetailsOpen && !_prevDetailsOpen && _homeTeam is not null && _awayTeam is not null)
+    {
+      _prob = MatchProbability.WinDrawLoss(_homeTeam.Elo, _awayTeam.Elo);
+      _h2h = await FlatHeadToHeadLookup.AcrossAsync(Repo, _homeTeam.ShortName, _awayTeam.ShortName);
+    }
+    _prevDetailsOpen = DetailsOpen;
   }
+
+  Task HandleRowClick() => OnDetailsToggle.InvokeAsync();
+
+  static string FormatPct(double p) => $"{p * 100:0}%";
+
+  static string PctClass(bool isActualOutcome) => isActualOutcome ? "game-details-pct-actual" : "";
 
   string? LabelForUnresolved(FlatGame g, bool isHome) => g is FlatKoGame ko
     ? FlatQualifierDescriber.Describe(Competition, isHome ? ko.HomeQual : ko.AwayQual)

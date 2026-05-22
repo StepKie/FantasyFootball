@@ -21,15 +21,18 @@ public partial class FlatCompetitionsViewModel : ObservableObject
 	readonly IFlatCompetitionRepository _repo;
 	readonly IDataService _dataService;
 	readonly FlatCompetitionFactory _factory;
+	readonly FlatCompetitionSimulator _simulator;
 
 	public FlatCompetitionsViewModel(
 		IFlatCompetitionRepository repo,
 		IDataService dataService,
-		FlatCompetitionFactory factory)
+		FlatCompetitionFactory factory,
+		FlatCompetitionSimulator simulator)
 	{
 		_repo = repo;
 		_dataService = dataService;
 		_factory = factory;
+		_simulator = simulator;
 
 		// Hydrate the filter from the shared type pref so the chip
 		// state survives navigation to / from the setup page.
@@ -160,6 +163,33 @@ public partial class FlatCompetitionsViewModel : ObservableObject
 	{
 		await _repo.ResetAsync();
 		await ReloadAsync();
+	}
+
+	/// <summary>
+	/// Fast-forward an unfinished competition to completion: load, sim every
+	/// remaining game, save, refresh the list. Used by the list-row FF button
+	/// so users can finalise an in-progress comp without opening it.
+	/// </summary>
+	public async Task FastForwardAsync(int id)
+	{
+		if (IsBusy) { return; }
+		var comp = await _repo.GetAsync(id);
+		if (comp is null || comp.IsFinished()) { return; }
+		IsBusy = true;
+		try
+		{
+			// Yield once so the IsBusy spinner flushes before the WASM thread
+			// is hogged by the sim. Sim itself is fast (35x old) but a full
+			// WC2026 still warrants a render gap for the spinner to appear.
+			await Task.Yield();
+			_simulator.Simulate(comp);
+			await _repo.SaveAsync(comp);
+			await ReloadAsync();
+		}
+		finally
+		{
+			IsBusy = false;
+		}
 	}
 
 	/// <summary>
