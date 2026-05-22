@@ -79,10 +79,34 @@ public static class FlatCompetitionDefinitionLoader
 				throw new FormatException($"Game {g.Id} references unknown round '{g.RoundId}' in competition '{raw.Id}'.");
 			}
 		}
+		// Game IDs must be unique — qualifiers (W-49 / L-61) look games up by Id.
+		if (raw.Games.Select(g => g.Id).Distinct().Count() != raw.Games.Length)
+		{
+			throw new FormatException($"Duplicate game id in competition '{raw.Id}'.");
+		}
 
 		// Reshape groups dict → array indexed by (letter - 'A'). Skip if
 		// the format is knockout-only (no groups in the JSON).
 		var groupAssignments = ConvertGroupsToArray(raw.Groups, raw.Id);
+
+		// Each group game's home/away team must be a member of its declared group.
+		var membersByLetter = new Dictionary<string, HashSet<string>>(groupAssignments.Length);
+		for (int i = 0; i < groupAssignments.Length; i++)
+		{
+			membersByLetter[((char)('A' + i)).ToString()] = [.. groupAssignments[i]];
+		}
+		foreach (var g in raw.Games.OfType<FlatGroupGame>())
+		{
+			if (!membersByLetter.TryGetValue(g.GroupLetter, out var members)) { continue; }
+			if (!members.Contains(g.HomeTeamId))
+			{
+				throw new FormatException($"Game {g.Id}: homeTeamId '{g.HomeTeamId}' is not in group '{g.GroupLetter}' in competition '{raw.Id}'.");
+			}
+			if (!members.Contains(g.AwayTeamId))
+			{
+				throw new FormatException($"Game {g.Id}: awayTeamId '{g.AwayTeamId}' is not in group '{g.GroupLetter}' in competition '{raw.Id}'.");
+			}
+		}
 
 		return new FlatCompetition
 		{

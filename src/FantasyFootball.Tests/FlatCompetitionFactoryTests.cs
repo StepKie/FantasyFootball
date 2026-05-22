@@ -51,24 +51,32 @@ public class FlatCompetitionFactoryTests
 	[Fact]
 	public void CustomLineup_ReplacesGroupAssignmentsAndGameTeams()
 	{
-		// Substitute Group A's [QAT, ECU, SEN, NED] for [BRA, ARG, MEX, USA].
-		// All other groups stay as-is.
-		var historical = _definitions.Load("wm-2022");
-		var custom = (string[][])historical.GroupAssignments.Select(g => (string[])g.Clone()).ToArray();
-		custom[0] = ["BRA", "ARG", "MEX", "USA"];
+		// Synthetic lineup — fully replaces all 8 groups with T01..T32 so
+		// the uniqueness invariant is satisfied across the whole lineup.
+		// Validates that both GroupAssignments and the group game team IDs
+		// get rewired to the new lineup, preserving the definition's
+		// positional home/away pairing.
+		var custom = new string[8][];
+		for (int g = 0; g < 8; g++)
+		{
+			custom[g] = new string[4];
+			for (int t = 0; t < 4; t++)
+			{
+				custom[g][t] = $"T{g * 4 + t + 1:00}";
+			}
+		}
 
 		var spec = new CustomLineupSpec { DefinitionId = "wm-2022", Groups = custom };
 		var c = _factory.Create(spec);
 
-		c.GroupAssignments[0].Should().BeEquivalentTo(["BRA", "ARG", "MEX", "USA"]);
-		c.GroupAssignments[1].Should().BeEquivalentTo(historical.GroupAssignments[1]);
+		c.GroupAssignments[0].Should().BeEquivalentTo(["T01", "T02", "T03", "T04"]);
+		c.GroupAssignments[1].Should().BeEquivalentTo(["T05", "T06", "T07", "T08"]);
 
 		// First game in the definition is QAT(pos0) vs ECU(pos1); after
-		// substitution that's BRA(pos0) vs ARG(pos1) — the home/away
-		// positional pairing is preserved.
+		// substitution that's T01(pos0) vs T02(pos1) — positional pairing preserved.
 		var firstGroupAGame = c.Games.OfType<FlatGroupGame>().First(g => g.GroupLetter == "A");
-		firstGroupAGame.HomeTeamId.Should().Be("BRA");
-		firstGroupAGame.AwayTeamId.Should().Be("ARG");
+		firstGroupAGame.HomeTeamId.Should().Be("T01");
+		firstGroupAGame.AwayTeamId.Should().Be("T02");
 	}
 
 	[Fact]
@@ -78,6 +86,19 @@ public class FlatCompetitionFactoryTests
 		var spec = new CustomLineupSpec { DefinitionId = "wm-2022", Groups = bad };
 		Action act = () => _factory.Create(spec);
 		act.Should().Throw<ArgumentException>().WithMessage("*3 groups*8*");
+	}
+
+	[Fact]
+	public void CustomLineup_RejectsDuplicateTeamIds()
+	{
+		// Same team in two positions silently corrupts standings (team
+		// plays itself, AllTeamIds reports it twice) — uniqueness must be
+		// enforced at the validation boundary.
+		var dup = new string[8][];
+		for (int g = 0; g < 8; g++) { dup[g] = ["T01", "T02", "T03", "T04"]; }     // same 4 teams in every group
+		var spec = new CustomLineupSpec { DefinitionId = "wm-2022", Groups = dup };
+		Action act = () => _factory.Create(spec);
+		act.Should().Throw<ArgumentException>().WithMessage("*duplicate team IDs*");
 	}
 
 	[Fact]

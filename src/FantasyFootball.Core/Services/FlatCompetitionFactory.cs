@@ -27,6 +27,13 @@ public sealed class FlatCompetitionFactory
 	{
 		var competition = _definitions.Load(spec.DefinitionId);
 
+		if (competition.GroupAssignments.Length == 0 && spec is not HistoricalSpec)
+		{
+			throw new ArgumentException(
+				$"Competition '{spec.DefinitionId}' is knockout-only (no group stage); lineup-substituting specs are not supported. Use HistoricalSpec.",
+				nameof(spec));
+		}
+
 		switch (spec)
 		{
 			case HistoricalSpec:
@@ -67,6 +74,12 @@ public sealed class FlatCompetitionFactory
 				throw new ArgumentException(
 					$"Group {(char)('A' + i)} has {lineup[i].Length} teams; competition '{competition.DefinitionId}' needs {expectedPerGroup} per group.");
 			}
+		}
+		var allIds = lineup.SelectMany(g => g).ToList();
+		if (allIds.Distinct().Count() != allIds.Count)
+		{
+			throw new ArgumentException(
+				$"Lineup for '{competition.DefinitionId}' contains duplicate team IDs.");
 		}
 	}
 

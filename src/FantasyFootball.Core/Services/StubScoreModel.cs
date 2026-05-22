@@ -36,8 +36,6 @@ public sealed class StubScoreModel : IScoreModel
 
 	static (int Home, int Away) StableScore(string home, string away)
 	{
-		// Pseudo-score from team-id hashes, clamped to [0, 4]. Stable
-		// across runs — same inputs give same scores.
 		var hHash = (uint)home.GetHashCode();
 		var aHash = (uint)away.GetHashCode();
 		return ((int)(hHash % 5), (int)(aHash % 5));

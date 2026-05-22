@@ -23,7 +23,7 @@ public class FlatStandingsExtensionTests
 	{
 		var c = _definitions.Load("wm-2022");
 		// Group A: QAT, ECU, SEN, NED (positions 0,1,2,3 in definition)
-		var aGames = c.GroupGames("A").Cast<FlatGroupGame>().ToList();
+		var aGames = c.GroupGames("A").ToList();
 
 		// Force a scripted set of results so we can assert exact positions:
 		//   NED 4-0 QAT  (NED win, NED gd+4, QAT gd-4)

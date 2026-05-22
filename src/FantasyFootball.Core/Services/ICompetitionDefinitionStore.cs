@@ -18,5 +18,13 @@ namespace FantasyFootball.Services;
 public interface ICompetitionDefinitionStore
 {
 	IReadOnlyCollection<string> AvailableIds { get; }
+
+	/// <summary>
+	/// Returns a fresh <see cref="FlatCompetition"/> instance on every
+	/// call — implementations must not share mutable state across
+	/// returned values. Callers (notably <see cref="FlatCompetitionFactory"/>)
+	/// rely on this to mutate the result in place without corrupting
+	/// other consumers.
+	/// </summary>
 	FlatCompetition Load(string definitionId);
 }

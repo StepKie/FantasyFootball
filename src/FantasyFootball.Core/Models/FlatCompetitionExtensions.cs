@@ -18,7 +18,7 @@ public static class FlatCompetitionExtensions
 		c.GroupAssignments.SelectMany(g => g);
 
 	/// <summary>All games in a given group letter (e.g. "A"). Empty for KO games.</summary>
-	public static IEnumerable<FlatGame> GroupGames(this FlatCompetition c, string letter) =>
+	public static IEnumerable<FlatGroupGame> GroupGames(this FlatCompetition c, string letter) =>
 		c.Games.OfType<FlatGroupGame>().Where(g => g.GroupLetter == letter);
 
 	/// <summary>All games in a given round ID.</summary>
@@ -42,10 +42,10 @@ public static class FlatCompetitionExtensions
 	/// All games siblings of <paramref name="g"/> in the same group (excluding itself).
 	/// Empty if <paramref name="g"/> is not a group-stage game.
 	/// </summary>
-	public static IEnumerable<FlatGame> SameGroupGames(this FlatCompetition c, FlatGame g) =>
+	public static IEnumerable<FlatGroupGame> SameGroupGames(this FlatCompetition c, FlatGame g) =>
 		g is FlatGroupGame gg
 			? c.GroupGames(gg.GroupLetter).Where(x => x.Id != g.Id)
-			: [];
+			: Enumerable.Empty<FlatGroupGame>();
 
 	/// <summary>Latest finished game by PlayedOn, or null if none played yet.</summary>
 	public static FlatGame? LastFinishedGame(this FlatCompetition c) =>
@@ -111,7 +111,7 @@ public static class FlatCompetitionExtensions
 		var teamIds = c.GroupAssignments[groupIndex];
 		var stats = teamIds.ToDictionary(t => t, _ => new MutableRow());
 
-		foreach (var game in c.GroupGames(groupLetter).Cast<FlatGroupGame>())
+		foreach (var game in c.GroupGames(groupLetter))
 		{
 			if (game.Result is not { } r) { continue; }     // unplayed — skip
 			var home = stats[game.HomeTeamId];

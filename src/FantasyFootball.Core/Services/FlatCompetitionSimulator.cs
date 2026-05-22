@@ -24,7 +24,7 @@ public sealed class FlatCompetitionSimulator
 
 	public void Simulate(FlatCompetition c)
 	{
-		c.SimulationStart = DateTime.UtcNow;
+		c.SimulationStart ??= DateTime.UtcNow;
 
 		// Games are stored chronologically, but defensive sort: relying on
 		// upstream ordering is a foot-gun if a definition file is hand-

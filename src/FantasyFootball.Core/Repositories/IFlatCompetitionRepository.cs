@@ -25,7 +25,8 @@ public interface IFlatCompetitionRepository
 {
 	/// <summary>
 	/// Persists a competition. If <c>Id == 0</c>, assigns a fresh ID
-	/// and mutates the input to carry it. Returns the (now-assigned) ID.
+	/// and mutates the input to carry it; otherwise overwrites the
+	/// existing entry under that ID. Returns the (now-assigned) ID.
 	/// </summary>
 	Task<int> SaveAsync(FlatCompetition competition);
 

@@ -82,7 +82,7 @@ public class FlatQualifierResolverTests
 		var alphaFirstInA = teamsInA.OrderBy(t => t, StringComparer.Ordinal).First();
 
 		// Find the A game between those two and give the win to alphaLast.
-		var game = c.GroupGames("A").Cast<FlatGroupGame>().First(g =>
+		var game = c.GroupGames("A").First(g =>
 			(g.HomeTeamId == alphaLastInA && g.AwayTeamId == alphaFirstInA) ||
 			(g.HomeTeamId == alphaFirstInA && g.AwayTeamId == alphaLastInA));
 		game.Result = game.HomeTeamId == alphaLastInA
@@ -115,7 +115,7 @@ public class FlatQualifierResolverTests
 	{
 		// Make NED beat everyone (in whatever direction the definition has it).
 		// Make QAT lose to everyone.
-		foreach (var game in c.GroupGames("A").Cast<FlatGroupGame>())
+		foreach (var game in c.GroupGames("A"))
 		{
 			if (game.HomeTeamId == "NED")     { game.Result = new(3, 0, GameEnd.NORMAL); }
 			else if (game.AwayTeamId == "NED") { game.Result = new(0, 3, GameEnd.NORMAL); }

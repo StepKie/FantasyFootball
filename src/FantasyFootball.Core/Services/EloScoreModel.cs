@@ -58,6 +58,7 @@ public sealed class EloScoreModel : IScoreModel
 	(int Home, int Away) SamplePoissonScore(string homeTeamId, string awayTeamId, double lambdaFactor)
 	{
 		var eloDiff = _registry.EloOf(homeTeamId) - _registry.EloOf(awayTeamId);
+		// Floor applies to the 90-min rate; ET scales it down (less time, same per-minute rate).
 		var lambda = Math.Max(0.5, 2.5 + 0.001 * eloDiff) * lambdaFactor;
 		var totalGoals = new Poisson(lambda, _rng).Sample();
 
