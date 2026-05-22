@@ -1,0 +1,681 @@
+{
+  "id": "wm-2022",
+  "title": "World Cup 2022",
+  "type": "WM",
+  "year": 2022,
+  "formatId": "world-cup-32",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "r16",
+      "name": "Round of 16",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "qf",
+      "name": "Quarterfinal",
+      "stageId": "ko",
+      "order": 4
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 5
+    },
+    {
+      "id": "third",
+      "name": "Third Place Match",
+      "stageId": "ko",
+      "order": 6
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 7
+    }
+  ],
+  "groups": {
+    "A": [
+      "QAT",
+      "ECU",
+      "SEN",
+      "NED"
+    ],
+    "B": [
+      "ENG",
+      "IRN",
+      "USA",
+      "WAL"
+    ],
+    "C": [
+      "ARG",
+      "KSA",
+      "MEX",
+      "POL"
+    ],
+    "D": [
+      "FRA",
+      "AUS",
+      "DEN",
+      "TUN"
+    ],
+    "E": [
+      "ESP",
+      "CRC",
+      "GER",
+      "JPN"
+    ],
+    "F": [
+      "BEL",
+      "CAN",
+      "MAR",
+      "CRO"
+    ],
+    "G": [
+      "BRA",
+      "SRB",
+      "SUI",
+      "CMR"
+    ],
+    "H": [
+      "POR",
+      "GHA",
+      "URU",
+      "KOR"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "QAT",
+      "awayTeamId": "ECU",
+      "id": 1,
+      "playedOn": "2022-11-20T17:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "ENG",
+      "awayTeamId": "IRN",
+      "id": 2,
+      "playedOn": "2022-11-21T14:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "SEN",
+      "awayTeamId": "NED",
+      "id": 3,
+      "playedOn": "2022-11-21T17:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "USA",
+      "awayTeamId": "WAL",
+      "id": 4,
+      "playedOn": "2022-11-21T20:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "ARG",
+      "awayTeamId": "KSA",
+      "id": 5,
+      "playedOn": "2022-11-22T11:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "DEN",
+      "awayTeamId": "TUN",
+      "id": 6,
+      "playedOn": "2022-11-22T14:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "MEX",
+      "awayTeamId": "POL",
+      "id": 7,
+      "playedOn": "2022-11-22T17:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "FRA",
+      "awayTeamId": "AUS",
+      "id": 8,
+      "playedOn": "2022-11-22T20:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "MAR",
+      "awayTeamId": "CRO",
+      "id": 9,
+      "playedOn": "2022-11-23T11:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "GER",
+      "awayTeamId": "JPN",
+      "id": 10,
+      "playedOn": "2022-11-23T14:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "ESP",
+      "awayTeamId": "CRC",
+      "id": 11,
+      "playedOn": "2022-11-23T17:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "BEL",
+      "awayTeamId": "CAN",
+      "id": 12,
+      "playedOn": "2022-11-23T20:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "G",
+      "homeTeamId": "SUI",
+      "awayTeamId": "CMR",
+      "id": 13,
+      "playedOn": "2022-11-24T11:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "H",
+      "homeTeamId": "URU",
+      "awayTeamId": "KOR",
+      "id": 14,
+      "playedOn": "2022-11-24T14:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "H",
+      "homeTeamId": "POR",
+      "awayTeamId": "GHA",
+      "id": 15,
+      "playedOn": "2022-11-24T17:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "G",
+      "homeTeamId": "BRA",
+      "awayTeamId": "SRB",
+      "id": 16,
+      "playedOn": "2022-11-24T20:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "WAL",
+      "awayTeamId": "IRN",
+      "id": 17,
+      "playedOn": "2022-11-25T11:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "QAT",
+      "awayTeamId": "SEN",
+      "id": 18,
+      "playedOn": "2022-11-25T14:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "NED",
+      "awayTeamId": "ECU",
+      "id": 19,
+      "playedOn": "2022-11-25T17:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "ENG",
+      "awayTeamId": "USA",
+      "id": 20,
+      "playedOn": "2022-11-25T20:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "TUN",
+      "awayTeamId": "AUS",
+      "id": 21,
+      "playedOn": "2022-11-26T11:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "POL",
+      "awayTeamId": "KSA",
+      "id": 22,
+      "playedOn": "2022-11-26T14:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "FRA",
+      "awayTeamId": "DEN",
+      "id": 23,
+      "playedOn": "2022-11-26T17:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "ARG",
+      "awayTeamId": "MEX",
+      "id": 24,
+      "playedOn": "2022-11-26T20:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "JPN",
+      "awayTeamId": "CRC",
+      "id": 25,
+      "playedOn": "2022-11-27T11:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "BEL",
+      "awayTeamId": "MAR",
+      "id": 26,
+      "playedOn": "2022-11-27T14:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "CRO",
+      "awayTeamId": "CAN",
+      "id": 27,
+      "playedOn": "2022-11-27T17:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "ESP",
+      "awayTeamId": "GER",
+      "id": 28,
+      "playedOn": "2022-11-27T20:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "G",
+      "homeTeamId": "CMR",
+      "awayTeamId": "SRB",
+      "id": 29,
+      "playedOn": "2022-11-28T11:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "H",
+      "homeTeamId": "KOR",
+      "awayTeamId": "GHA",
+      "id": 30,
+      "playedOn": "2022-11-28T14:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "G",
+      "homeTeamId": "BRA",
+      "awayTeamId": "SUI",
+      "id": 31,
+      "playedOn": "2022-11-28T17:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "H",
+      "homeTeamId": "POR",
+      "awayTeamId": "URU",
+      "id": 32,
+      "playedOn": "2022-11-28T20:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "NED",
+      "awayTeamId": "QAT",
+      "id": 33,
+      "playedOn": "2022-11-29T16:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "ECU",
+      "awayTeamId": "SEN",
+      "id": 34,
+      "playedOn": "2022-11-29T16:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "IRN",
+      "awayTeamId": "USA",
+      "id": 35,
+      "playedOn": "2022-11-29T20:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "WAL",
+      "awayTeamId": "ENG",
+      "id": 36,
+      "playedOn": "2022-11-29T20:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "TUN",
+      "awayTeamId": "FRA",
+      "id": 37,
+      "playedOn": "2022-11-30T16:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "AUS",
+      "awayTeamId": "DEN",
+      "id": 38,
+      "playedOn": "2022-11-30T16:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "KSA",
+      "awayTeamId": "MEX",
+      "id": 39,
+      "playedOn": "2022-11-30T20:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "POL",
+      "awayTeamId": "ARG",
+      "id": 40,
+      "playedOn": "2022-11-30T20:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "CAN",
+      "awayTeamId": "MAR",
+      "id": 41,
+      "playedOn": "2022-12-01T16:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "CRO",
+      "awayTeamId": "BEL",
+      "id": 42,
+      "playedOn": "2022-12-01T16:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "CRC",
+      "awayTeamId": "GER",
+      "id": 43,
+      "playedOn": "2022-12-01T20:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "JPN",
+      "awayTeamId": "ESP",
+      "id": 44,
+      "playedOn": "2022-12-01T20:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "H",
+      "homeTeamId": "GHA",
+      "awayTeamId": "URU",
+      "id": 45,
+      "playedOn": "2022-12-02T16:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "H",
+      "homeTeamId": "KOR",
+      "awayTeamId": "POR",
+      "id": 46,
+      "playedOn": "2022-12-02T16:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "G",
+      "homeTeamId": "SRB",
+      "awayTeamId": "SUI",
+      "id": 47,
+      "playedOn": "2022-12-02T20:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "G",
+      "homeTeamId": "CMR",
+      "awayTeamId": "BRA",
+      "id": 48,
+      "playedOn": "2022-12-02T20:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "A1",
+      "awayQual": "B2",
+      "id": 49,
+      "playedOn": "2022-12-03T16:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "C1",
+      "awayQual": "D2",
+      "id": 50,
+      "playedOn": "2022-12-03T20:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "D1",
+      "awayQual": "C2",
+      "id": 51,
+      "playedOn": "2022-12-04T16:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "B1",
+      "awayQual": "A2",
+      "id": 52,
+      "playedOn": "2022-12-04T20:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "E1",
+      "awayQual": "F2",
+      "id": 53,
+      "playedOn": "2022-12-05T16:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "G1",
+      "awayQual": "H2",
+      "id": 54,
+      "playedOn": "2022-12-05T20:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "F1",
+      "awayQual": "E2",
+      "id": 55,
+      "playedOn": "2022-12-06T16:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "H1",
+      "awayQual": "G2",
+      "id": 56,
+      "playedOn": "2022-12-06T20:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-53",
+      "awayQual": "W-54",
+      "id": 57,
+      "playedOn": "2022-12-09T16:00:00Z",
+      "roundId": "qf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-49",
+      "awayQual": "W-50",
+      "id": 58,
+      "playedOn": "2022-12-09T20:00:00Z",
+      "roundId": "qf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-55",
+      "awayQual": "W-56",
+      "id": 59,
+      "playedOn": "2022-12-10T16:00:00Z",
+      "roundId": "qf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-51",
+      "awayQual": "W-52",
+      "id": 60,
+      "playedOn": "2022-12-10T20:00:00Z",
+      "roundId": "qf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-57",
+      "awayQual": "W-58",
+      "id": 61,
+      "playedOn": "2022-12-13T16:00:00Z",
+      "roundId": "sf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-59",
+      "awayQual": "W-60",
+      "id": 62,
+      "playedOn": "2022-12-14T16:00:00Z",
+      "roundId": "sf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "L-61",
+      "awayQual": "L-62",
+      "id": 63,
+      "playedOn": "2022-12-17T16:00:00Z",
+      "roundId": "third"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-61",
+      "awayQual": "W-62",
+      "id": 64,
+      "playedOn": "2022-12-18T16:00:00Z",
+      "roundId": "final"
+    }
+  ]
+}

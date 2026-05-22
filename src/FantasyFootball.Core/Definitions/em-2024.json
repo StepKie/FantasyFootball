@@ -1,0 +1,547 @@
+{
+  "id": "em-2024",
+  "title": "European Championship 2024",
+  "type": "EM",
+  "year": 2024,
+  "formatId": "european-championship-24",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "r16",
+      "name": "Round of 16",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "qf",
+      "name": "Quarterfinal",
+      "stageId": "ko",
+      "order": 4
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 5
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 6
+    }
+  ],
+  "groups": {
+    "A": [
+      "GER",
+      "SCO",
+      "HUN",
+      "SUI"
+    ],
+    "B": [
+      "ESP",
+      "CRO",
+      "ITA",
+      "ALB"
+    ],
+    "C": [
+      "SVN",
+      "DEN",
+      "SRB",
+      "ENG"
+    ],
+    "D": [
+      "POL",
+      "NED",
+      "AUT",
+      "FRA"
+    ],
+    "E": [
+      "BEL",
+      "SVK",
+      "ROU",
+      "UKR"
+    ],
+    "F": [
+      "TUR",
+      "GRE",
+      "POR",
+      "CZE"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "GER",
+      "awayTeamId": "SCO",
+      "id": 1,
+      "playedOn": "2016-06-10T21:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "HUN",
+      "awayTeamId": "SUI",
+      "id": 2,
+      "playedOn": "2016-06-11T15:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "ESP",
+      "awayTeamId": "CRO",
+      "id": 3,
+      "playedOn": "2016-06-11T18:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "ITA",
+      "awayTeamId": "ALB",
+      "id": 4,
+      "playedOn": "2016-06-11T21:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "POL",
+      "awayTeamId": "NED",
+      "id": 5,
+      "playedOn": "2016-06-12T15:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "SVN",
+      "awayTeamId": "DEN",
+      "id": 6,
+      "playedOn": "2016-06-12T18:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "SRB",
+      "awayTeamId": "ENG",
+      "id": 7,
+      "playedOn": "2016-06-12T21:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "BEL",
+      "awayTeamId": "SVK",
+      "id": 8,
+      "playedOn": "2016-06-13T15:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "ROU",
+      "awayTeamId": "UKR",
+      "id": 9,
+      "playedOn": "2016-06-13T18:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "AUT",
+      "awayTeamId": "FRA",
+      "id": 10,
+      "playedOn": "2016-06-13T21:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "TUR",
+      "awayTeamId": "GRE",
+      "id": 11,
+      "playedOn": "2016-06-14T18:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "POR",
+      "awayTeamId": "CZE",
+      "id": 12,
+      "playedOn": "2016-06-14T21:00:00Z",
+      "roundId": "group-r1"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "CRO",
+      "awayTeamId": "ALB",
+      "id": 13,
+      "playedOn": "2016-06-15T15:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "GER",
+      "awayTeamId": "HUN",
+      "id": 14,
+      "playedOn": "2016-06-15T18:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "SCO",
+      "awayTeamId": "SUI",
+      "id": 15,
+      "playedOn": "2016-06-15T21:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "SVN",
+      "awayTeamId": "SRB",
+      "id": 16,
+      "playedOn": "2016-06-16T15:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "DEN",
+      "awayTeamId": "ENG",
+      "id": 17,
+      "playedOn": "2016-06-16T18:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "ESP",
+      "awayTeamId": "ITA",
+      "id": 18,
+      "playedOn": "2016-06-16T21:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "SVK",
+      "awayTeamId": "UKR",
+      "id": 19,
+      "playedOn": "2016-06-17T15:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "POL",
+      "awayTeamId": "AUT",
+      "id": 20,
+      "playedOn": "2016-06-17T18:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "NED",
+      "awayTeamId": "FRA",
+      "id": 21,
+      "playedOn": "2016-06-17T21:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "GRE",
+      "awayTeamId": "CZE",
+      "id": 22,
+      "playedOn": "2016-06-18T15:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "TUR",
+      "awayTeamId": "POR",
+      "id": 23,
+      "playedOn": "2016-06-18T18:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "BEL",
+      "awayTeamId": "ROU",
+      "id": 24,
+      "playedOn": "2016-06-18T21:00:00Z",
+      "roundId": "group-r2"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "SUI",
+      "awayTeamId": "GER",
+      "id": 25,
+      "playedOn": "2016-06-19T21:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "A",
+      "homeTeamId": "SCO",
+      "awayTeamId": "HUN",
+      "id": 26,
+      "playedOn": "2016-06-19T21:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "ALB",
+      "awayTeamId": "ESP",
+      "id": 27,
+      "playedOn": "2016-06-20T21:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "B",
+      "homeTeamId": "CRO",
+      "awayTeamId": "ITA",
+      "id": 28,
+      "playedOn": "2016-06-20T21:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "FRA",
+      "awayTeamId": "POL",
+      "id": 29,
+      "playedOn": "2016-06-21T18:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "D",
+      "homeTeamId": "NED",
+      "awayTeamId": "AUT",
+      "id": 30,
+      "playedOn": "2016-06-21T18:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "ENG",
+      "awayTeamId": "SVN",
+      "id": 31,
+      "playedOn": "2016-06-21T21:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "C",
+      "homeTeamId": "DEN",
+      "awayTeamId": "SRB",
+      "id": 32,
+      "playedOn": "2016-06-21T21:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "UKR",
+      "awayTeamId": "BEL",
+      "id": 33,
+      "playedOn": "2016-06-22T18:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "E",
+      "homeTeamId": "SVK",
+      "awayTeamId": "ROU",
+      "id": 34,
+      "playedOn": "2016-06-22T18:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "CZE",
+      "awayTeamId": "TUR",
+      "id": 35,
+      "playedOn": "2016-06-22T21:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "group",
+      "groupLetter": "F",
+      "homeTeamId": "GRE",
+      "awayTeamId": "POR",
+      "id": 36,
+      "playedOn": "2016-06-22T21:00:00Z",
+      "roundId": "group-r3"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "A2",
+      "awayQual": "B2",
+      "id": 37,
+      "playedOn": "2020-06-26T18:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "A1",
+      "awayQual": "C2",
+      "id": 38,
+      "playedOn": "2020-06-26T21:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "C1",
+      "awayQual": "D/E/F3",
+      "id": 39,
+      "playedOn": "2020-06-27T18:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "B1",
+      "awayQual": "A/D/E/F3",
+      "id": 40,
+      "playedOn": "2020-06-27T21:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "D2",
+      "awayQual": "E2",
+      "id": 41,
+      "playedOn": "2020-06-28T18:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "F1",
+      "awayQual": "A/B/C3",
+      "id": 42,
+      "playedOn": "2020-06-28T21:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "D1",
+      "awayQual": "F2",
+      "id": 43,
+      "playedOn": "2020-06-29T18:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "E1",
+      "awayQual": "A/B/C/D3",
+      "id": 44,
+      "playedOn": "2020-06-29T21:00:00Z",
+      "roundId": "r16"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-41",
+      "awayQual": "W-42",
+      "id": 45,
+      "playedOn": "2020-07-02T18:00:00Z",
+      "roundId": "qf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-39",
+      "awayQual": "W-37",
+      "id": 46,
+      "playedOn": "2020-07-02T21:00:00Z",
+      "roundId": "qf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-40",
+      "awayQual": "W-38",
+      "id": 47,
+      "playedOn": "2020-07-03T18:00:00Z",
+      "roundId": "qf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-43",
+      "awayQual": "W-44",
+      "id": 48,
+      "playedOn": "2020-07-03T21:00:00Z",
+      "roundId": "qf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-46",
+      "awayQual": "W-45",
+      "id": 49,
+      "playedOn": "2020-07-06T21:00:00Z",
+      "roundId": "sf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-48",
+      "awayQual": "W-47",
+      "id": 50,
+      "playedOn": "2020-07-07T21:00:00Z",
+      "roundId": "sf"
+    },
+    {
+      "kind": "ko",
+      "homeQual": "W-49",
+      "awayQual": "W-50",
+      "id": 51,
+      "playedOn": "2020-07-11T21:00:00Z",
+      "roundId": "final"
+    }
+  ]
+}
