@@ -38,7 +38,11 @@ public sealed class BulkSimRunner
 		_repo = repo;
 	}
 
-	public async Task<IReadOnlyList<int>> RunAsync(CompetitionSpec spec, int count)
+	public async Task<IReadOnlyList<int>> RunAsync(
+		CompetitionSpec spec,
+		int count,
+		IProgress<int>? progress = null,
+		CancellationToken cancellationToken = default)
 	{
 		if (count < 1)
 		{
@@ -48,11 +52,18 @@ public sealed class BulkSimRunner
 		var ids = new List<int>(count);
 		for (int i = 0; i < count; i++)
 		{
+			cancellationToken.ThrowIfCancellationRequested();
 			var competition = _factory.Create(spec);
 			_simulator.Simulate(competition);
 			var id = await _repo.SaveAsync(competition);
 			ids.Add(id);
+			progress?.Report(i + 1);
+			// Yield back to the scheduler so a Blazor render loop can paint
+			// the progress update + cancel button between runs (in-memory repo
+			// returns Task.FromResult, otherwise await wouldn't yield).
+			await Task.Yield();
 		}
+
 		return ids;
 	}
 }

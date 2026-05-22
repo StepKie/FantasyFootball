@@ -1,3 +1,4 @@
+using System.Threading;
 using FantasyFootball.Repositories;
 
 namespace FantasyFootball.Tests;
@@ -89,6 +90,34 @@ public class BulkSimRunnerTests
 		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
 		Func<Task> act = () => _runner.RunAsync(spec, 0);
 		await act.Should().ThrowAsync<ArgumentOutOfRangeException>();
+	}
+
+	[Fact]
+	public async Task Run_ReportsProgressEveryIteration()
+	{
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var reports = new List<int>();
+		var progress = new Progress<int>(reports.Add);
+
+		await _runner.RunAsync(spec, count: 5, progress);
+
+		// Progress<T> dispatches asynchronously via the sync context; give it a tick to drain.
+		await Task.Delay(50);
+		reports.Should().Equal(1, 2, 3, 4, 5);
+	}
+
+	[Fact]
+	public async Task Run_HonorsCancellation_StopsMidway()
+	{
+		// Pre-cancelled token: not even the first iteration should run.
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		using var cts = new CancellationTokenSource();
+		cts.Cancel();
+
+		Func<Task> act = () => _runner.RunAsync(spec, count: 10, cancellationToken: cts.Token);
+
+		await act.Should().ThrowAsync<OperationCanceledException>();
+		(await _repo.CountAsync()).Should().Be(0);
 	}
 
 	sealed class StubRegistry : IFlatTeamRegistry

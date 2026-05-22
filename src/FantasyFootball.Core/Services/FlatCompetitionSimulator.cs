@@ -22,30 +22,53 @@ public sealed class FlatCompetitionSimulator
 		_scoreModel = scoreModel;
 	}
 
+	/// <summary>
+	/// Score a single game in place. Resolves KO qualifier chains as needed.
+	/// No-op if the game already has a Result. Caller ensures upstream games
+	/// are played first — KO resolution depends on group standings.
+	/// Stamps <c>SimulationStart</c> on first call (any sim entry point;
+	/// list views can tell scheduled from in-progress competitions).
+	/// </summary>
+	public void SimulateGame(FlatCompetition c, FlatGame game)
+	{
+		if (game.Result is not null) { return; }
+
+		c.SimulationStart ??= DateTime.UtcNow;
+		switch (game)
+		{
+			case FlatGroupGame gg:
+				gg.Result = _scoreModel.ScoreGroupGame(gg.HomeTeamId, gg.AwayTeamId);
+				break;
+			case FlatKoGame ko:
+				ResolveKoTeams(c, ko);
+				ko.Result = _scoreModel.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
+				break;
+		}
+	}
+
+	/// <summary>
+	/// Score every unplayed game in the given round, chronological order.
+	/// </summary>
+	public void SimulateRound(FlatCompetition c, string roundId)
+	{
+		var roundGames = c.Games
+			.Where(g => g.RoundId == roundId && g.Result is null)
+			.OrderBy(g => g.PlayedOn);
+		foreach (var game in roundGames)
+		{
+			SimulateGame(c, game);
+		}
+	}
+
 	public void Simulate(FlatCompetition c)
 	{
 		c.SimulationStart ??= DateTime.UtcNow;
 
-		// Games are stored chronologically, but defensive sort: relying on
-		// upstream ordering is a foot-gun if a definition file is hand-
-		// edited out of order. Cheap at our scale.
-		var ordered = c.Games.OrderBy(g => g.PlayedOn).ToList();
-
-		for (int i = 0; i < ordered.Count; i++)
+		// Defensive sort: relying on upstream order would foot-gun on a
+		// hand-edited out-of-order definition. Cheap at our scale.
+		foreach (var game in c.Games.OrderBy(g => g.PlayedOn))
 		{
-			var game = ordered[i];
-			if (game.Result is not null) { continue; }     // already played — skip
-
-			switch (game)
-			{
-				case FlatGroupGame gg:
-					gg.Result = _scoreModel.ScoreGroupGame(gg.HomeTeamId, gg.AwayTeamId);
-					break;
-				case FlatKoGame ko:
-					ResolveKoTeams(c, ko);
-					ko.Result = _scoreModel.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
-					break;
-			}
+			SimulateGame(c, game);
 		}
 
 		c.SimulationFinished = DateTime.UtcNow;
@@ -53,10 +76,25 @@ public sealed class FlatCompetitionSimulator
 
 	static void ResolveKoTeams(FlatCompetition c, FlatKoGame ko)
 	{
-		// Cache resolved IDs on the KO game so the qualifier walk runs
-		// at most once per slot. Idempotent: a second call after first
-		// resolution is a no-op.
+		// Cache resolved IDs so the qualifier walk runs at most once
+		// per slot. Idempotent: a second call after first resolution is a no-op.
 		ko.HomeTeamId ??= FlatQualifierResolver.Resolve(c, ko.HomeQual);
 		ko.AwayTeamId ??= FlatQualifierResolver.Resolve(c, ko.AwayQual);
+	}
+
+	/// <summary>
+	/// Best-effort pass: resolves <see cref="FlatKoGame.HomeTeamId"/> /
+	/// <see cref="FlatKoGame.AwayTeamId"/> on every KO game whose qualifier
+	/// chain is now satisfiable, so future-round games can display real team
+	/// names + flags as soon as their group / earlier-KO prerequisites land.
+	/// Silent on slots whose prerequisites aren't ready yet.
+	/// </summary>
+	public static void ResolveAvailableKoTeams(FlatCompetition c)
+	{
+		foreach (var ko in c.Games.OfType<FlatKoGame>())
+		{
+			ko.HomeTeamId ??= FlatQualifierResolver.TryResolve(c, ko.HomeQual);
+			ko.AwayTeamId ??= FlatQualifierResolver.TryResolve(c, ko.AwayQual);
+		}
 	}
 }

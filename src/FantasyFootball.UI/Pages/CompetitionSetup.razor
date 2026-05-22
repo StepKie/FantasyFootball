@@ -1,8 +1,9 @@
 @page "/competitions/setup"
 @using FantasyFootball.Data
 @using FantasyFootball.Models
+@using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
-@inject CompetitionSetupViewModel ViewModel
+@inject FlatCompetitionSetupViewModel ViewModel
 @inject NavigationManager Nav
 @implements IDisposable
 
@@ -16,41 +17,134 @@
 </MudButton>
 
 <MudStack Spacing="3">
-  <MudStack Row="true" Spacing="2" Style="max-width: 40rem;">
-    <MudSelect T="CompetitionType"
-               Label="Competition"
-               Value="ViewModel.SelectedCompetitionType"
-               ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)">
-      @foreach (var t in ViewModel.CompetitionTypes)
-      {
-        <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
-      }
-    </MudSelect>
-    <MudSelect T="int"
-               Label="Year"
-               Value="ViewModel.SelectedYear"
-               ValueChanged="@(v => ViewModel.SelectedYear = v)"
-               Style="max-width: 10rem;">
-      @foreach (var year in ViewModel.Years)
-      {
-        <MudSelectItem Value="@year">@year</MudSelectItem>
-      }
-    </MudSelect>
-  </MudStack>
 
-  <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap">
-    <MudButton Variant="Variant.Outlined"
-               StartIcon="@Icons.Material.Filled.History"
-               OnClick="@(() => ViewModel.ResetToHistoricTeams())">
-      Original teams
-    </MudButton>
-    <MudButton Variant="Variant.Outlined"
-               StartIcon="@Icons.Material.Filled.Shuffle"
-               OnClick="@(() => ViewModel.FillRandomTeams())">
-      Random draw
-    </MudButton>
-  </MudStack>
+  @* Top row: 3 equal-height columns.
+     Left  = pickers above, lineup-mode buttons at bottom (so the column matches the right column's height).
+     Center = round Play FAB, vertically + horizontally centered (mirrors the FAB on /competitions).
+     Right = bulk panel. *@
+  <MudGrid Spacing="3" AlignItems="AlignItems.Stretch">
 
+    <MudItem xs="12" md="4">
+      <MudStack Spacing="2" Style="height:100%;">
+        <MudSelect T="CompetitionType"
+                   Label="Competition"
+                   Value="ViewModel.SelectedType"
+                   ValueChanged="@((CompetitionType v) => ViewModel.SelectedType = v)">
+          @foreach (var t in ViewModel.AvailableTypes)
+          {
+            <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
+          }
+        </MudSelect>
+        <MudSelect T="int"
+                   Label="Year"
+                   Value="ViewModel.SelectedYear"
+                   ValueChanged="@((int v) => ViewModel.SelectedYear = v)">
+          @foreach (var year in ViewModel.Years)
+          {
+            <MudSelectItem Value="@year">@year</MudSelectItem>
+          }
+        </MudSelect>
+
+        <MudSpacer />
+
+        <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap">
+          <MudButton Variant="@(ViewModel.CurrentLineup == FlatCompetitionSetupViewModel.LineupMode.Original ? Variant.Filled : Variant.Outlined)"
+                     Color="@(ViewModel.CurrentLineup == FlatCompetitionSetupViewModel.LineupMode.Original ? Color.Primary : Color.Default)"
+                     StartIcon="@Icons.Material.Filled.History"
+                     OnClick="ViewModel.ResetToOriginal"
+                     Disabled="ViewModel.IsRunning">
+            Original teams
+          </MudButton>
+          <MudButton Variant="@(ViewModel.CurrentLineup == FlatCompetitionSetupViewModel.LineupMode.Random ? Variant.Filled : Variant.Outlined)"
+                     Color="@(ViewModel.CurrentLineup == FlatCompetitionSetupViewModel.LineupMode.Random ? Color.Primary : Color.Default)"
+                     StartIcon="@Icons.Material.Filled.Shuffle"
+                     OnClick="ViewModel.RandomDraw"
+                     Disabled="ViewModel.IsRunning">
+            Random draw
+          </MudButton>
+        </MudStack>
+      </MudStack>
+    </MudItem>
+
+    <MudItem xs="12" md="4">
+      <div style="display:flex; align-items:center; justify-content:center; height:100%; min-height:12rem;">
+        <MudFab Color="Color.Primary"
+                Size="Size.Large"
+                StartIcon="@Icons.Material.Filled.PlayArrow"
+                OnClick="HandleCreateSingle"
+                Disabled="@(ViewModel.IsRunning || ViewModel.Groups.Count == 0)"
+                title="Start the competition for interactive play" />
+      </div>
+    </MudItem>
+
+    <MudItem xs="12" md="4">
+      <MudPaper Class="pa-3" Outlined="true" Style="background-color: transparent; height:100%;">
+        <MudStack Spacing="1" Style="height:100%;">
+          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+            <MudIcon Icon="@Icons.Material.Filled.AutoMode" Size="Size.Small" />
+            <MudText Typo="Typo.subtitle2">Bulk background simulation</MudText>
+          </MudStack>
+
+          @{
+            // Random sub-mode only meaningful when the lineup is a draw; otherwise both
+            // sub-modes collapse to "use the historical lineup for all N".
+            var randomDisabled = ViewModel.CurrentLineup != FlatCompetitionSetupViewModel.LineupMode.Random;
+          }
+          <MudRadioGroup T="FlatCompetitionSetupViewModel.BulkRandomness"
+                         Value="ViewModel.BulkMode"
+                         ValueChanged="@((FlatCompetitionSetupViewModel.BulkRandomness v) => ViewModel.BulkMode = v)"
+                         Dense="true">
+            <MudRadio T="FlatCompetitionSetupViewModel.BulkRandomness"
+                      Value="FlatCompetitionSetupViewModel.BulkRandomness.Fixed"
+                      Dense="true" Size="Size.Small" Disabled="randomDisabled">
+              <MudText Typo="Typo.caption">Same drawn lineup (only RNG varies)</MudText>
+            </MudRadio>
+            <MudRadio T="FlatCompetitionSetupViewModel.BulkRandomness"
+                      Value="FlatCompetitionSetupViewModel.BulkRandomness.AlwaysFresh"
+                      Dense="true" Size="Size.Small" Disabled="randomDisabled">
+              <MudText Typo="Typo.caption">Fresh draw per run</MudText>
+            </MudRadio>
+          </MudRadioGroup>
+
+          <MudText Typo="Typo.caption">Runs: @ViewModel.RunCount</MudText>
+          <MudSlider T="int" Value="ViewModel.RunCount"
+                     ValueChanged="@((int v) => ViewModel.RunCount = v)"
+                     Min="2" Max="100" Step="1"
+                     Disabled="ViewModel.IsRunning" />
+
+          <MudSpacer />
+
+          @if (!ViewModel.IsRunning)
+          {
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       Size="Size.Small"
+                       StartIcon="@Icons.Material.Filled.PlayArrow"
+                       OnClick="HandleRunBulk"
+                       Disabled="@(ViewModel.Groups.Count == 0)">
+              Run @ViewModel.RunCount sims
+            </MudButton>
+          }
+          else
+          {
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+              <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+              <MudText Typo="Typo.caption">@ViewModel.Progress / @ViewModel.RunCount</MudText>
+              <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small"
+                         OnClick="ViewModel.Cancel">
+                Cancel
+              </MudButton>
+            </MudStack>
+            <MudProgressLinear Value="@(100.0 * ViewModel.Progress / ViewModel.RunCount)"
+                               Color="Color.Secondary" Striped="true" Size="Size.Small" />
+          }
+        </MudStack>
+      </MudPaper>
+    </MudItem>
+
+  </MudGrid>
+
+  @* Lineup preview grid (flag + name + ELO per team) *@
   <MudGrid Spacing="2">
     @foreach (var group in ViewModel.Groups)
     {
@@ -74,31 +168,38 @@
     }
   </MudGrid>
 
-  <MudStack Row="true" Justify="Justify.Center" Spacing="2">
-    <MudButton Variant="Variant.Filled"
-               Color="Color.Primary"
-               Size="Size.Large"
-               StartIcon="@Icons.Material.Filled.PlayArrow"
-               OnClick="StartSim"
-               Disabled="@(ViewModel.IsBusy || ViewModel.Groups.Count == 0)">
-      Simulate
-    </MudButton>
-  </MudStack>
-
-  @* Manual per-team edit deferred — will land as a MudDialog opening a team
-     picker. Same for batch simulation ("simulate N of these"). *@
 </MudStack>
 
 @code {
   protected override void OnInitialized()
   {
     ViewModel.PropertyChanged += OnVmChanged;
-    // ViewModel is AddScoped (per-tab singleton); refresh from IDataService on
-    // each navigation so the picker reflects the currently-selected type/year.
     ViewModel.SyncFromDataService();
   }
 
-  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+  void OnVmChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    => InvokeAsync(StateHasChanged);
+
+  async Task HandleCreateSingle()
+  {
+    var id = await ViewModel.CreateSingleAsync();
+    Nav.NavigateTo($"competitions/{id}");
+  }
+
+  async Task HandleRunBulk()
+  {
+    await ViewModel.RunBulkAsync();
+    if (ViewModel.LastRunFirstId is { } id && ViewModel.RunCount == 1)
+    {
+      Nav.NavigateTo($"competitions/{id}");
+    }
+    else
+    {
+      Nav.NavigateTo("competitions");
+    }
+  }
+
+  public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
 
   static string DisplayName(CompetitionType t) => t switch
   {
@@ -106,12 +207,4 @@
     CompetitionType.EM => "European Championship",
     _ => t.ToString(),
   };
-
-  void StartSim()
-  {
-    var competition = ViewModel.Create();
-    Nav.NavigateTo($"competitions/{competition.Id}");
-  }
-
-  public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
 }

@@ -1,0 +1,204 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using FantasyFootball.Data;
+using FantasyFootball.Models;
+using FantasyFootball.Repositories;
+using FantasyFootball.Services;
+
+namespace FantasyFootball.UI.ViewModels;
+
+/// <summary>
+/// Backs the /competitions list page. Loads from
+/// <see cref="IFlatCompetitionRepository"/>, filters by
+/// <see cref="CompetitionType"/>, sorts newest-first.
+///
+/// Deferred from the old VM: active/finished tabs (status shown inline
+/// as a chip per row instead), TeamRecord aggregate (lands with the
+/// aggregator chunk), MessageBus integration (reload-on-mount covers
+/// the current navigation patterns).
+/// </summary>
+public partial class FlatCompetitionsViewModel : ObservableObject
+{
+	readonly IFlatCompetitionRepository _repo;
+	readonly IDataService _dataService;
+	readonly FlatCompetitionFactory _factory;
+
+	public FlatCompetitionsViewModel(
+		IFlatCompetitionRepository repo,
+		IDataService dataService,
+		FlatCompetitionFactory factory)
+	{
+		_repo = repo;
+		_dataService = dataService;
+		_factory = factory;
+
+		// Hydrate the filter from the shared type pref so the chip
+		// state survives navigation to / from the setup page.
+		SelectedType = dataService.SelectedCompetitionType;
+	}
+
+	partial void OnSelectedTypeChanged(CompetitionType? value)
+	{
+		// Persist non-null choices so the setup page (and any other consumer
+		// of IDataService.SelectedCompetitionType) inherits the user's last pick.
+		// Null = "All" filter — leave the prior persisted type alone.
+		if (value is { } t) { _dataService.SelectedCompetitionType = t; }
+	}
+
+	/// <summary>
+	/// Re-reads the shared <see cref="IDataService.SelectedCompetitionType"/>
+	/// preference into <see cref="SelectedType"/>. Pages call this in
+	/// OnInitialized so the chip state survives navigation — the VM itself
+	/// is registered <c>AddScoped</c>, so its constructor only runs once
+	/// per tab and can't re-seed.
+	/// </summary>
+	public void SyncFromDataService()
+	{
+		var preferred = _dataService.SelectedCompetitionType;
+		if (SelectedType != preferred) { SelectedType = preferred; }
+	}
+
+	public IReadOnlyList<CompetitionType?> AvailableTypeFilters { get; } =
+		[null, CompetitionType.WM, CompetitionType.EM];
+
+	[ObservableProperty]
+	[NotifyPropertyChangedFor(nameof(FilteredCompetitions))]
+	public partial CompetitionType? SelectedType { get; set; }
+
+	[ObservableProperty]
+	[NotifyPropertyChangedFor(nameof(FilteredCompetitions))]
+	public partial IReadOnlyList<FlatCompetition> AllCompetitions { get; set; } = [];
+
+	[ObservableProperty]
+	public partial bool IsBusy { get; set; }
+
+	public IReadOnlyList<FlatCompetition> FilteredCompetitions => SelectedType is { } t
+		? AllCompetitions.Where(c => c.Type == t).ToList()
+		: AllCompetitions;
+
+	/// <summary>
+	/// Team-level aggregate across every finished competition currently
+	/// visible (after the type filter). Played games are summed into a
+	/// single row per team. Sorted by points desc → GD desc → GF desc.
+	/// </summary>
+	public IReadOnlyList<FlatTeamRecord> OverallRecords
+	{
+		get
+		{
+			var teamLookup = _dataService.AllTeams.ToDictionary(t => t.ShortName, t => t);
+			var perTeam = new Dictionary<string, FlatTeamRecord.Mutable>();
+
+			foreach (var comp in FilteredCompetitions.Where(c => c.IsFinished()))
+			{
+				var champion = comp.WinnerTeamId();
+				foreach (var game in comp.Games)
+				{
+					if (game.Result is not { } r) { continue; }
+
+					var home = FlatCompetitionExtensions.HomeTeamIdOf(game);
+					var away = FlatCompetitionExtensions.AwayTeamIdOf(game);
+					if (home is null || away is null) { continue; }
+
+					Accumulate(perTeam, home, r.HomeScore, r.AwayScore);
+					Accumulate(perTeam, away, r.AwayScore, r.HomeScore);
+				}
+
+				if (champion is not null)
+				{
+					var entry = perTeam.GetValueOrDefault(champion);
+					perTeam[champion] = entry with { CompetitionWins = entry.CompetitionWins + 1 };
+				}
+			}
+
+			return perTeam
+				.Select(kv => new FlatTeamRecord(
+					teamLookup.TryGetValue(kv.Key, out var team) ? team : new Team { Name = kv.Key, ShortName = kv.Key },
+					kv.Value.Wins, kv.Value.Draws, kv.Value.Losses,
+					kv.Value.GoalsFor, kv.Value.GoalsAgainst,
+					kv.Value.CompetitionWins))
+				.OrderByDescending(r => r.Points)
+				.ThenByDescending(r => r.GoalDifference)
+				.ThenByDescending(r => r.GoalsFor)
+				.ThenBy(r => r.Team.ShortName, StringComparer.Ordinal)
+				.ToList();
+		}
+	}
+
+	static void Accumulate(Dictionary<string, FlatTeamRecord.Mutable> store, string teamId, int scored, int conceded)
+	{
+		var row = store.GetValueOrDefault(teamId);
+		store[teamId] = row with
+		{
+			GoalsFor = row.GoalsFor + scored,
+			GoalsAgainst = row.GoalsAgainst + conceded,
+			Wins = row.Wins + (scored > conceded ? 1 : 0),
+			Losses = row.Losses + (scored < conceded ? 1 : 0),
+			Draws = row.Draws + (scored == conceded ? 1 : 0),
+		};
+	}
+
+	public async Task ReloadAsync()
+	{
+		IsBusy = true;
+		try
+		{
+			var all = await _repo.GetAllAsync();
+			AllCompetitions = all.OrderByDescending(c => c.Id).ToList();
+		}
+		finally
+		{
+			IsBusy = false;
+		}
+	}
+
+	public async Task DeleteAsync(int id)
+	{
+		await _repo.DeleteAsync(id);
+		await ReloadAsync();
+	}
+
+	public async Task DeleteAllAsync()
+	{
+		await _repo.ResetAsync();
+		await ReloadAsync();
+	}
+
+	/// <summary>
+	/// Clones a finished competition's setup into a new scheduled one and persists.
+	/// Same Type+Year+lineup, no auto-sim. Returns the new id so the caller can navigate.
+	/// </summary>
+	public async Task<int?> ReplayAsync(int sourceId)
+	{
+		var source = await _repo.GetAsync(sourceId);
+		if (source is null) { return null; }
+
+		var spec = new CustomLineupSpec
+		{
+			DefinitionId = source.DefinitionId,
+			Groups = source.GroupAssignments.Select(g => (string[])g.Clone()).ToArray(),
+		};
+		var replay = _factory.Create(spec);
+		var id = await _repo.SaveAsync(replay);
+		await ReloadAsync();
+		return id;
+	}
+}
+
+/// <summary>
+/// All-time team aggregate row for the Overall Standings table. Built
+/// across every finished <see cref="FlatCompetition"/> the user can see.
+/// </summary>
+public sealed record FlatTeamRecord(
+	Team Team,
+	int Wins,
+	int Draws,
+	int Losses,
+	int GoalsFor,
+	int GoalsAgainst,
+	int CompetitionWins)
+{
+	public int Points => 3 * Wins + Draws;
+	public int GoalDifference => GoalsFor - GoalsAgainst;
+	public int MatchesPlayed => Wins + Draws + Losses;
+
+	internal record struct Mutable(int Wins, int Draws, int Losses, int GoalsFor, int GoalsAgainst, int CompetitionWins);
+}

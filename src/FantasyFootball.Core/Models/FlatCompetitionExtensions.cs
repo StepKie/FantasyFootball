@@ -91,6 +91,17 @@ public static class FlatCompetitionExtensions
 	};
 
 	/// <summary>
+	/// 1-based position of <paramref name="game"/> within its round
+	/// (chronological by <c>PlayedOn</c>). Used to build labels like
+	/// "R16 1" or "Winner of QF #2".
+	/// </summary>
+	public static int PositionInRound(this FlatCompetition c, FlatGame game) => c.Games
+		.Where(g => g.RoundId == game.RoundId)
+		.OrderBy(g => g.PlayedOn)
+		.Select((g, idx) => (g, idx))
+		.First(x => x.g.Id == game.Id).idx + 1;
+
+	/// <summary>
 	/// Standings table for a single group letter ("A", "B", …). Pure
 	/// function — no caching; cheap enough at our scale (4 teams ×
 	/// 3 games per group) to recompute on demand. Position is 1-based,

@@ -15,6 +15,17 @@ namespace FantasyFootball.Services;
 /// </summary>
 public static class FlatQualifierResolver
 {
+	/// <summary>
+	/// Best-effort resolution: returns the team ID if the qualifier chain
+	/// is fully resolvable (upstream games played, standings available);
+	/// returns null if any prerequisite isn't ready yet.
+	/// </summary>
+	public static string? TryResolve(FlatCompetition c, string qualifierDsl)
+	{
+		try { return Resolve(c, qualifierDsl); }
+		catch { return null; }
+	}
+
 	public static string Resolve(FlatCompetition c, string qualifierDsl)
 	{
 		var q = FlatQualifierParser.Parse(qualifierDsl);

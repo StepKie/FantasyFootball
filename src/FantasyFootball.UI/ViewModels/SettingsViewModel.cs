@@ -1,6 +1,7 @@
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FantasyFootball.Repositories;
 using FantasyFootball.Services;
 
 namespace FantasyFootball.UI.ViewModels;
@@ -17,11 +18,16 @@ public partial class SettingsViewModel : ObservableObject
 {
 	readonly ISettingsService _settings;
 	readonly IDataService _dataService;
+	readonly IFlatCompetitionRepository _flatRepo;
 
-	public SettingsViewModel(ISettingsService settings, IDataService dataService)
+	public SettingsViewModel(
+		ISettingsService settings,
+		IDataService dataService,
+		IFlatCompetitionRepository flatRepo)
 	{
 		_settings = settings;
 		_dataService = dataService;
+		_flatRepo = flatRepo;
 
 		SelectedLanguage = settings.LastUsedLanguage;
 		SelectedSimulationSpeed = SimulationSpeedExtensions.FromTimeSpan(settings.SimulationSpeed);
@@ -75,6 +81,7 @@ public partial class SettingsViewModel : ObservableObject
 		try
 		{
 			await Task.Run(_dataService.Reset).ConfigureAwait(false);
+			await _flatRepo.ResetAsync().ConfigureAwait(false);
 		}
 		finally
 		{

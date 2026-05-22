@@ -4,6 +4,7 @@
   font-variant-numeric: tabular-nums;
 }
 
+
 body {
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
@@ -74,10 +75,11 @@ body {
   cursor: pointer;
 }
 
-/* Hierarchical stage→round chip pickers with a dotted-timeline backdrop. Stage row larger, round row
-   smaller + indented to suggest "rounds belong to the selected stage". The ::before dashed line on each
-   .timeline-chips evokes temporal progression. Chips need an opaque background so the line doesn't
-   show through outlined chips on dark mode (--mud-palette-surface).  */
+/* Hierarchical stage→round chip pickers with a dashed-timeline backdrop. Each chip and
+   each inter-chip play-button lives inside a .timeline-cell wrapper whose opaque background
+   occludes the line behind it — so the line shows only in the gaps. This wrapper approach
+   replaced two rounds of !important chip-background overrides that kept losing the fight
+   with MudBlazor's own .mud-chip-outlined styling on framework upgrades. */
 .timeline-pickers {
   display: flex;
   flex-direction: column;
@@ -88,6 +90,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0; /* allow chip container to shrink so children can wrap */
 }
 
 .timeline-row-round {
@@ -111,6 +114,7 @@ body {
   align-items: center;
   position: relative;
   flex: 1;
+  min-width: 0; /* see .timeline-row — required for the wrap to actually engage */
 }
 
 .timeline-chips::before {
@@ -125,31 +129,16 @@ body {
   pointer-events: none;
 }
 
-.timeline-chips .mud-chip {
+/* Opaque per-chip occluder. The wrapper sits in front of the dashed line and
+   carries the page-background color, so the chip itself (transparent for the
+   outlined variant) doesn't have to win a specificity fight with MudBlazor. */
+.timeline-cell {
+  display: inline-flex;
+  background-color: var(--mud-palette-background);
+  border-radius: 999px;
   position: relative;
   z-index: 1;
-}
-
-/* Chip status — encoded redundantly via border style + opacity, not color alone.
-   chip-current: dashed border distinguishes the actively-played round from solid-bordered done/future.
-   chip-future:  dimmed to indicate "not reached yet" without changing chip shape.
-   chip-done:    no border/opacity override; default outlined+default reads as the "white" finished state.
-   All three status classes get an opaque background so the dashed timeline line doesn't pass visibly
-   through them. The filled selected chip has no status class → no override → keeps its primary green. */
-.mud-chip.chip-current,
-.mud-chip.chip-future,
-.mud-chip.chip-done {
-  /* `background` shorthand to also reset background-image; MudBlazor's outlined variant set
-     `background: transparent` which beat the property-level override. */
-  background: var(--mud-palette-background) !important;
-}
-
-/* Inter-chip sim button — sits between round chips on the timeline. Opaque backdrop so the dashed
-   timeline line doesn't pass through. */
-.round-sim-button {
-  background: var(--mud-palette-background) !important;
-  position: relative;
-  z-index: 1;
+  flex-shrink: 0;
 }
 
 .mud-chip.chip-current {

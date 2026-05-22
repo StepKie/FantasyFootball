@@ -32,12 +32,23 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<IRepository, LocalStorageRepository>();
 builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
 builder.Services.AddScoped<IDataService, CsvDataService>();
+
+// New flat-model services. Wired in alongside the old graph path; pages
+// migrate to these in subsequent phases of PR #2 (UI cutover).
+builder.Services.AddSingleton<ICompetitionDefinitionStore, EmbeddedCompetitionDefinitionStore>();
+builder.Services.AddScoped<IFlatTeamRegistry, DataServiceTeamRegistry>();
+builder.Services.AddScoped<IFlatCompetitionRepository, LocalStorageFlatCompetitionRepository>();
+builder.Services.AddScoped<FlatCompetitionFactory>();
+builder.Services.AddScoped<IScoreModel, EloScoreModel>();
+builder.Services.AddScoped<FlatCompetitionSimulator>();
+builder.Services.AddScoped<BulkSimRunner>();
+
 builder.Services.AddScoped<SettingsViewModel>();
 builder.Services.AddScoped<TeamsViewModel>();
 builder.Services.AddScoped<TeamDetailViewModel>();
-builder.Services.AddScoped<CompetitionsViewModel>();
-builder.Services.AddScoped<CompetitionSetupViewModel>();
-builder.Services.AddScoped<CompetitionDetailViewModel>();
+builder.Services.AddScoped<FlatCompetitionDetailViewModel>();
+builder.Services.AddScoped<FlatCompetitionSetupViewModel>();
+builder.Services.AddScoped<FlatCompetitionsViewModel>();
 
 var app = builder.Build();
 
