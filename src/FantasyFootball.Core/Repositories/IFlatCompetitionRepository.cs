@@ -41,4 +41,7 @@ public interface IFlatCompetitionRepository
 
 	/// <summary>Number of persisted competitions.</summary>
 	Task<int> CountAsync();
+
+	/// <summary>Removes every persisted competition. Used by Settings → Reset.</summary>
+	Task ResetAsync();
 }

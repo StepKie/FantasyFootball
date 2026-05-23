@@ -67,4 +67,11 @@ public sealed class InMemoryFlatCompetitionRepository : IFlatCompetitionReposito
 	}
 
 	public Task<int> CountAsync() => Task.FromResult(_storage.Count);
+
+	public Task ResetAsync()
+	{
+		_storage.Clear();
+		_nextId = 1;
+		return Task.CompletedTask;
+	}
 }

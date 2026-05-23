@@ -7,6 +7,7 @@ public class SettingsService : ISettingsService
 	public static readonly string idLanguage = "id_language";
 	public static readonly string idFlagStyle = "id_flagstyle";
 	public static readonly string idUseOfficialLogos = "id_useofficiallogos";
+	public static readonly string idShowFullStandings = "id_showfullstandings";
 
 	static readonly string _codeDefaultLanguage = (Resources.AppResources.Culture ?? Thread.CurrentThread.CurrentUICulture).TwoLetterISOLanguageName;
 
@@ -39,6 +40,12 @@ public class SettingsService : ISettingsService
 	{
 		get => GetValueOrDefault(idUseOfficialLogos, false);
 		set => AddOrUpdateValue(idUseOfficialLogos, value);
+	}
+
+	public bool ShowFullStandings
+	{
+		get => GetValueOrDefault(idShowFullStandings, false);
+		set => AddOrUpdateValue(idShowFullStandings, value);
 	}
 
 	#endregion

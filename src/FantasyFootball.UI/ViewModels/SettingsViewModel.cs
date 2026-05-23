@@ -1,6 +1,7 @@
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FantasyFootball.Repositories;
 using FantasyFootball.Services;
 
 namespace FantasyFootball.UI.ViewModels;
@@ -17,16 +18,22 @@ public partial class SettingsViewModel : ObservableObject
 {
 	readonly ISettingsService _settings;
 	readonly IDataService _dataService;
+	readonly IFlatCompetitionRepository _flatRepo;
 
-	public SettingsViewModel(ISettingsService settings, IDataService dataService)
+	public SettingsViewModel(
+		ISettingsService settings,
+		IDataService dataService,
+		IFlatCompetitionRepository flatRepo)
 	{
 		_settings = settings;
 		_dataService = dataService;
+		_flatRepo = flatRepo;
 
 		SelectedLanguage = settings.LastUsedLanguage;
 		SelectedSimulationSpeed = SimulationSpeedExtensions.FromTimeSpan(settings.SimulationSpeed);
 		SelectedFlagStyle = settings.FlagStyle;
 		UseOfficialCompetitionLogos = settings.UseOfficialCompetitionLogos;
+		ShowFullStandings = settings.ShowFullStandings;
 		SupportedLanguages = [new("en"), new("de")];
 	}
 
@@ -43,6 +50,9 @@ public partial class SettingsViewModel : ObservableObject
 
 	[ObservableProperty]
 	public partial bool UseOfficialCompetitionLogos { get; set; }
+
+	[ObservableProperty]
+	public partial bool ShowFullStandings { get; set; }
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
@@ -68,6 +78,9 @@ public partial class SettingsViewModel : ObservableObject
 	partial void OnUseOfficialCompetitionLogosChanged(bool value)
 		=> _settings.UseOfficialCompetitionLogos = value;
 
+	partial void OnShowFullStandingsChanged(bool value)
+		=> _settings.ShowFullStandings = value;
+
 	[RelayCommand]
 	async Task ResetDatabase()
 	{
@@ -75,6 +88,7 @@ public partial class SettingsViewModel : ObservableObject
 		try
 		{
 			await Task.Run(_dataService.Reset).ConfigureAwait(false);
+			await _flatRepo.ResetAsync().ConfigureAwait(false);
 		}
 		finally
 		{

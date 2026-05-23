@@ -3,12 +3,15 @@
 @using FantasyFootball.Services
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
-@inject CompetitionDetailViewModel ViewModel
+@using Microsoft.JSInterop
+@inject FlatCompetitionDetailViewModel ViewModel
+@inject IDataService DataService
+@inject ISettingsService Settings
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 @implements IAsyncDisposable
 
-<PageTitle>@(ViewModel.Competition?.ShortName ?? "Competition") — Fantasy Football</PageTitle>
+<PageTitle>@(ViewModel.Competition?.Title ?? "Competition") — Fantasy Football</PageTitle>
 
 <MudButton Href="competitions"
            StartIcon="@Icons.Material.Filled.ArrowBack"
@@ -19,60 +22,68 @@
 
 @if (ViewModel.Competition is null)
 {
-  <MudAlert Severity="Severity.Warning">
-    Competition not found. <MudLink Href="competitions">Return to the competitions list.</MudLink>
-  </MudAlert>
+  <MudAlert Severity="Severity.Warning">Competition not found.</MudAlert>
 }
 else
 {
   <MudStack Spacing="3">
+
+    @* Title + main sim controls *@
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
       <CompetitionTypeIcon Type="@ViewModel.Competition.Type" Size="36" />
       <MudText Typo="Typo.h5" HtmlTag="h1">
-        @ViewModel.Competition.ShortName <span style="opacity: 0.6;">#@ViewModel.Competition.Id</span>
+        @ViewModel.Competition.Title <span style="opacity:0.6;">#@ViewModel.Competition.Id</span>
       </MudText>
       @if (!ViewModel.IsFinished)
       {
         <MudIconButton Icon="@Icons.Material.Filled.DoubleArrow"
                        Size="Size.Small"
-                       OnClick="@(async () => await ViewModel.SimulateAll())"
+                       OnClick="ViewModel.SimulateAll"
                        Disabled="ViewModel.IsBusy"
                        title="Simulate tournament (T)" />
         <MudIconButton Icon="@Icons.Material.Filled.MyLocation"
                        Size="Size.Small"
                        OnClick="JumpToCurrent"
-                       Disabled="ViewModel.Competition?.CurrentGame is null || ViewModel.IsBusy"
+                       Disabled="ViewModel.IsBusy || ViewModel.Competition.CurrentGame() is null"
                        title="Jump to the current round" />
       }
       @if (ViewModel.IsBusy)
       {
         <MudProgressCircular Size="Size.Small" Indeterminate="true" />
       }
-      @if (ViewModel.IsFinished && ViewModel.Winner is not null)
+      @if (ViewModel.IsFinished && ViewModel.WinnerTeamId is { } winnerId)
       {
-        <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.EmojiEvents" Size="Size.Small">
-          Winner: @ViewModel.Winner.Name
-        </MudChip>
-        <MudButton Variant="Variant.Outlined"
-                   Color="Color.Primary"
-                   Size="Size.Small"
-                   StartIcon="@Icons.Material.Filled.Refresh"
-                   OnClick="ReplayCompetition"
-                   Disabled="ViewModel.IsBusy">
-          Simulate again
-        </MudButton>
+        var winnerTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId);
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+          <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.EmojiEvents" Size="Size.Small">
+            Winner: @(winnerTeam?.Name ?? winnerId)
+          </MudChip>
+          <FlagIcon Team="winnerTeam" Code="@winnerId" Size="28" />
+        </MudStack>
       }
       <MudSpacer />
       <MudIconButton Icon="@Icons.Material.Filled.Keyboard"
                      Size="Size.Small"
-                     OnClick="@(() => _helpOpen = true)"
-                     title="Quick settings &amp; keyboard shortcuts (H or ?)" />
+                     OnClick="@(() => { _showHelp = !_showHelp; })"
+                     title="Keyboard shortcuts (H or ?)" />
     </MudStack>
 
-    @* Hierarchical timeline pickers: Stage chips on top, Round chips below indented under the selected stage.
-       Each row has a dotted-line backdrop to evoke "timeline / temporal progression". Stage rows are slightly
-       larger and use Medium chips; round rows use Small chips. Status semantics shared between both:
-       Selected → filled primary; Done → outlined success + ✓; Current → outlined primary; Future → outlined default. *@
+    @if (ViewModel.IsFinished)
+    {
+      @* Big circular Replay button — mirrors the Play FAB on /competitions and /competitions/setup
+         so the click-through visually flows. Lands on the new (scheduled) competition's detail page. *@
+      <MudStack AlignItems="AlignItems.Center" Class="my-2">
+        <MudFab Color="Color.Primary"
+                Size="Size.Large"
+                StartIcon="@Icons.Material.Filled.Refresh"
+                OnClick="HandleReplay"
+                Disabled="ViewModel.IsBusy"
+                title="Replay (clone this competition with the same teams)" />
+      </MudStack>
+    }
+
+    @* Hierarchical timeline pickers: Stage chips on top, Round chips below.
+       Status semantics: Selected → filled primary; Done → outlined success ✓; Current → outlined primary; Future → outlined default. *@
     <div class="timeline-pickers">
       <div class="timeline-row timeline-row-stage">
         <span class="timeline-label">Stage</span>
@@ -80,19 +91,31 @@ else
           @foreach (var s in ViewModel.Stages)
           {
             var stageForChip = s;
-            var isSelected = ReferenceEquals(s, ViewModel.SelectedStage);
-            var isCurrent  = ReferenceEquals(s, ViewModel.Competition?.CurrentStage);
-            var isDone     = s.IsFinished;
-            <MudChip T="Stage"
-                     Value="@s"
-                     Variant="@(isSelected ? Variant.Filled : Variant.Outlined)"
-                     Color="@(isSelected ? Color.Primary : Color.Default)"
-                     Size="Size.Medium"
-                     Class="@ChipStatusClass(isSelected, isCurrent, isDone)"
-                     Disabled="ViewModel.IsBusy"
-                     OnClick="@(() => OnStageChipClick(stageForChip))">
-              @s.Name@(isDone ? " ✓" : "")
-            </MudChip>
+            var isSelected = s.Id == ViewModel.SelectedStageId;
+            var isCurrent  = s.Id == ViewModel.CurrentStageId;
+            var isDone     = ViewModel.IsStageDone(s);
+            <div class="timeline-cell">
+              <MudChip T="string"
+                       Variant="@(isSelected ? Variant.Filled : Variant.Outlined)"
+                       Color="@(isSelected ? Color.Primary : (isDone ? Color.Success : (isCurrent ? Color.Primary : Color.Default)))"
+                       Size="Size.Medium"
+                       Class="@ChipStatusClass(isSelected, isCurrent, isDone)"
+                       Disabled="ViewModel.IsBusy"
+                       OnClick="@(() => ViewModel.SelectedStageId = stageForChip.Id)">
+                @s.Name@(isDone ? " ✓" : "")
+              </MudChip>
+            </div>
+            @if (!isDone)
+            {
+              <div class="timeline-cell">
+                <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
+                               Size="Size.Small"
+                               Color="Color.Primary"
+                               OnClick="@(async () => await ViewModel.SimulateStage(stageForChip.Id))"
+                               Disabled="ViewModel.IsBusy"
+                               title="@($"Simulate up through {s.Name}")" />
+              </div>
+            }
           }
         </div>
       </div>
@@ -102,53 +125,52 @@ else
           @foreach (var r in ViewModel.Rounds)
           {
             var roundForChip = r;
-            var roundIdxForChip = ViewModel.Rounds.IndexOf(r);
-            var isSelected = ReferenceEquals(r, ViewModel.SelectedRound);
-            // "Current" = round of the tournament's CurrentGame, not SelectedStage.CurrentRound (latter mis-flagged KO rounds while group stage was still being simmed).
-            var isCurrent  = ReferenceEquals(r, ViewModel.Competition?.CurrentGame?.Round);
-            var isDone     = r.IsFinished;
-            <MudChip T="Round"
-                     Value="@r"
-                     Variant="@(isSelected ? Variant.Filled : Variant.Outlined)"
-                     Color="@(isSelected ? Color.Primary : Color.Default)"
-                     Size="Size.Small"
-                     Class="@ChipStatusClass(isSelected, isCurrent, isDone)"
-                     Disabled="ViewModel.IsBusy"
-                     OnClick="@(async () => await OnRoundChipClick(roundForChip, roundIdxForChip))">
-              @r.Name@(isDone ? " ✓" : "")
-            </MudChip>
-            @* Sim button only on the tournament-current round — ViewModel.SimulateRound always sims CurrentStage.CurrentRound, so rendering on future rounds would mismatch tooltip with behaviour. *@
-            @if (!r.IsFinished && ReferenceEquals(r, ViewModel.Competition?.CurrentGame?.Round))
+            var isSelected = r.Id == ViewModel.SelectedRoundId;
+            var isCurrent  = r.Id == ViewModel.CurrentRoundId;
+            var isDone     = ViewModel.IsRoundDone(r);
+            <div class="timeline-cell">
+              <MudChip T="string"
+                       Variant="@(isSelected ? Variant.Filled : Variant.Outlined)"
+                       Color="@(isSelected ? Color.Primary : (isDone ? Color.Success : (isCurrent ? Color.Primary : Color.Default)))"
+                       Size="Size.Small"
+                       Class="@ChipStatusClass(isSelected, isCurrent, isDone)"
+                       Disabled="ViewModel.IsBusy"
+                       OnClick="@(() => ViewModel.SelectedRoundId = roundForChip.Id)">
+                @r.Name@(isDone ? " ✓" : "")
+              </MudChip>
+            </div>
+            @if (!isDone)
             {
-              <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
-                             Size="Size.Small"
-                             Color="Color.Primary"
-                             OnClick="@(async () => await SimulateRoundChip(roundForChip))"
-                             Disabled="ViewModel.IsBusy"
-                             title="@($"Simulate {r.Name}")"
-                             Class="round-sim-button" />
+              <div class="timeline-cell">
+                <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
+                               Size="Size.Small"
+                               Color="Color.Primary"
+                               OnClick="@(async () => await ViewModel.SimulateRound(roundForChip.Id))"
+                               Disabled="ViewModel.IsBusy"
+                               title="@($"Simulate up through {r.Name}")" />
+              </div>
             }
           }
         </div>
       </div>
     </div>
 
+    @* Games + Standings two-column layout *@
     <MudGrid Spacing="3">
-      <MudItem xs="12" md="7">
+      <MudItem xs="12" md="6">
         <MudPaper Class="pa-3 bounded-scroll-card" Elevation="4">
           <MudText Typo="Typo.h6" Class="mb-2">Games</MudText>
-          @if (ViewModel.SelectedStage is not null)
+          @{
+            var currentGame = ViewModel.Competition.CurrentGame();
+            var lastFinishedGame = ViewModel.Competition.LastFinishedGame();
+          }
+          @if (ViewModel.SelectedStageId is { } selectedStageId)
           {
-            // Render all rounds in the selected stage; chip strip scrolls between them via round-{idx} anchors. Reference-compare since LocalStorage entities keep Id=0.
-            var currentGame = ViewModel.Competition?.CurrentGame;
-            var undoTargetGame = ViewModel.UndoTargetGame;
-            @foreach (var round in ViewModel.SelectedStage.Rounds)
+            @foreach (var round in ViewModel.Competition.Rounds.Where(r => r.StageId == selectedStageId).OrderBy(r => r.Order))
             {
-              var roundIdx = ViewModel.SelectedStage.Rounds.IndexOf(round);
-              var games = round.AllGames.OrderBy(g => g.PlayedOn).ToList();
+              var games = ViewModel.Competition.RoundGames(round.Id).OrderBy(g => g.PlayedOn).ToList();
               var multiDay = games.Select(g => g.PlayedOn.Date).Distinct().Count() > 1;
-              <section id="@($"round-{roundIdx}")"
-                       class="round-section @(ReferenceEquals(round, ViewModel.SelectedRound) ? "round-section-selected" : "")">
+              <section id="@($"round-{round.Id}")" class="round-section @(round.Id == ViewModel.SelectedRoundId ? "round-section-selected" : "")">
                 <div class="round-header">
                   <span class="round-header-name">@round.Name</span>
                 </div>
@@ -161,17 +183,17 @@ else
                     }
                     @foreach (var game in dayGroup)
                     {
-                      <GameViewRow @key="@game"
-                                   Game="game"
-                                   ShowSim="@(ReferenceEquals(game, currentGame))"
-                                   ShowUndo="@(ReferenceEquals(game, undoTargetGame))"
-                                   IsJustFinished="@(ReferenceEquals(game, ViewModel.RecentlyFinishedGame))"
-                                   Disabled="@ViewModel.IsBusy"
-                                   DetailsOpen="@(ReferenceEquals(game, _openDetailsGame))"
-                                   OnDetailsToggle="@(() => ToggleDetailsGame(game))"
-                                   OnSim="@(async () => await ViewModel.SimulateGame())"
-                                   OnUndo="@(() => ViewModel.Undo())"
-                                   OnRedo="@(async () => await ViewModel.RedoLastGame())" />
+                      <FlatGameViewRow Game="game"
+                                       Competition="ViewModel.Competition"
+                                       ShowSim="@(ReferenceEquals(game, currentGame))"
+                                       ShowUndo="@(ReferenceEquals(game, lastFinishedGame))"
+                                       IsJustFinished="@(ViewModel.RecentlyFinishedGameId == game.Id)"
+                                       DetailsOpen="@(_openDetailsGameId == game.Id)"
+                                       Disabled="@ViewModel.IsBusy"
+                                       OnSim="ViewModel.SimulateGame"
+                                       OnUndo="ViewModel.UndoLastGame"
+                                       OnRedo="ViewModel.RerollLastGame"
+                                       OnDetailsToggle="@(() => ToggleDetails(game.Id))" />
                     }
                   }
                 </div>
@@ -180,272 +202,266 @@ else
           }
         </MudPaper>
       </MudItem>
-      <MudItem xs="12" md="5">
+      <MudItem xs="12" md="6">
         <MudPaper Class="pa-3 bounded-scroll-card" Elevation="4">
           <MudText Typo="Typo.h6" GutterBottom="true">Standings</MudText>
-          @foreach (var group in ViewModel.Groups)
+          @* Standings: only group games have a per-round meaning. For KO rounds
+             we fall back to showing all groups' final standings (computed in the VM). *@
+          @if (ViewModel.GroupStandings.Count > 0)
           {
-            <GroupView Group="group" />
+            var qualMap = FlatGroupQualification.Compute(ViewModel.Competition);
+            var showWDL = Settings.ShowFullStandings;
+            @foreach (var (letter, standings) in ViewModel.GroupStandings)
+            {
+              var slots = qualMap.TryGetValue(letter, out var s) ? s : default;
+              <div class="group-block">
+                <div class="group-letter-heading">@letter</div>
+                <MudSimpleTable Dense="true" Hover="true" Bordered="false" Striped="false" Elevation="0" Class="group-standings">
+                  <thead>
+                    <tr>
+                      <th class="standings-pos"></th>
+                      <th class="standings-flag"></th>
+                      <th class="standings-team"></th>
+                      <th class="standings-num">P</th>
+                      @if (showWDL)
+                      {
+                        <th class="standings-num">W</th>
+                        <th class="standings-num">D</th>
+                        <th class="standings-num">L</th>
+                      }
+                      <th class="standings-num">GD</th>
+                      <th class="standings-num">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach (var row in standings)
+                    {
+                      var rowTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == row.TeamId);
+                      <tr>
+                        <td class="standings-pos">
+                          <span class="standings-qual-bar @QualBarClass(row.Position, slots)"></span>
+                          @row.Position
+                        </td>
+                        <td class="standings-flag"><FlagIcon Team="rowTeam" Code="@row.TeamId" Size="20" /></td>
+                        <td class="standings-team">@(rowTeam?.Name ?? row.TeamId)</td>
+                        <td class="standings-num">@row.Played</td>
+                        @if (showWDL)
+                        {
+                          <td class="standings-num">@row.Wins</td>
+                          <td class="standings-num">@row.Draws</td>
+                          <td class="standings-num">@row.Losses</td>
+                        }
+                        <td class="standings-num">@row.GoalDifference</td>
+                        <td class="standings-num standings-pts">@row.Points</td>
+                      </tr>
+                    }
+                  </tbody>
+                </MudSimpleTable>
+              </div>
+            }
+          }
+          else
+          {
+            <MudText Typo="Typo.body2" Style="opacity:0.6;">
+              (No groups in this competition format.)
+            </MudText>
           }
         </MudPaper>
       </MudItem>
     </MudGrid>
+
   </MudStack>
 }
 
-<!-- Click-outside-to-dismiss for the per-row game-details popover. Transparent overlay catches clicks
-     anywhere on the page; MudPopover sits at its default z-index ~1300 which is above the 1100 here. -->
-<MudOverlay Visible="@(_openDetailsGame is not null)"
-            DarkBackground="false"
-            ZIndex="1100"
-            @onclick="@(() => _openDetailsGame = null)" />
-
-<MudOverlay Visible="_helpOpen" DarkBackground="true" ZIndex="9999" @onclick="@(() => _helpOpen = false)">
-  <MudPaper Class="pa-4" Elevation="6" Style="max-width: 36rem;" @onclick:stopPropagation="true">
-    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-3">
-      <MudText Typo="Typo.h6">Quick settings &amp; shortcuts</MudText>
+<MudOverlay Visible="_showHelp" DarkBackground="true" ZIndex="9999" @onclick="@(() => { _showHelp = false; })">
+  <MudPaper Class="pa-4" Elevation="8" @onclick:stopPropagation="true">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="mb-2">
+      <MudIcon Icon="@Icons.Material.Filled.Keyboard" />
+      <MudText Typo="Typo.h6">Keyboard shortcuts</MudText>
       <MudSpacer />
-      <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" OnClick="@(() => _helpOpen = false)" />
+      <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" OnClick="@(() => { _showHelp = false; })" />
     </MudStack>
-
-    <MudText Typo="Typo.subtitle2" Class="mb-2">Simulation speed</MudText>
-    <MudToggleGroup T="SimulationSpeed"
-                    Value="ViewModel.Speed"
-                    ValueChanged="@((SimulationSpeed v) => ViewModel.Speed = v)"
-                    Size="Size.Small"
-                    Color="Color.Primary"
-                    CheckMark="false"
-                    SelectionMode="SelectionMode.SingleSelection"
-                    Disabled="ViewModel.IsBusy">
-      <MudToggleItem Value="SimulationSpeed.Slow" Text="🐢 Slow" />
-      <MudToggleItem Value="SimulationSpeed.Normal" Text="▶ Normal" />
-      <MudToggleItem Value="SimulationSpeed.Fast" Text="🐇 Fast" />
-      <MudToggleItem Value="SimulationSpeed.Instant" Text="⚡ Instant" />
-    </MudToggleGroup>
-    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mt-1 d-block">
-      Overrides the global Settings default for this session.
-    </MudText>
-
-    <MudDivider Class="my-3" />
-
-    <MudText Typo="Typo.subtitle2" Class="mb-2">Keyboard shortcuts</MudText>
     <KeyboardShortcuts />
   </MudPaper>
 </MudOverlay>
 
+
 @code {
   [Parameter] public int Id { get; set; }
-
-  int? _lastLoadedId;
-  bool _helpOpen;
-  Game? _openDetailsGame;
-  // Guard tracks Competition reference, not Id — survives the load-race window where Id swaps before Competition is reassigned.
-  Competition? _confettiFiredCompetition;
-  // Scroll target to flush after the next render — set when a state change (e.g. SelectedStage in JumpToCurrent) needs DOM that doesn't exist yet.
-  string? _pendingScrollId;
-  // Tracks last scrolled round during active sim; -1 = no scroll yet.
-  int _lastScrolledRoundIdx = -1;
   DotNetObjectReference<CompetitionDetail>? _selfRef;
+  bool _showHelp;
+  int? _openDetailsGameId;
 
-  void ToggleDetailsGame(Game game) => _openDetailsGame = ReferenceEquals(_openDetailsGame, game) ? null : game;
+  void ToggleDetails(int gameId) => _openDetailsGameId = _openDetailsGameId == gameId ? null : gameId;
 
-  // Mirror StepStage's scroll-queue behaviour so mouse and keyboard stage navigation feel consistent.
-  void OnStageChipClick(Stage stage)
+  // Advance = direct qualifier; 3rd = pool result (null until group stage done); else out.
+  static string QualBarClass(int position, FlatGroupQualification.GroupQualSlots slots)
   {
-    _openDetailsGame = null;
-    ViewModel.SelectedStage = stage;
-    if (ViewModel.SelectedRound is { } round)
+    if (slots.DirectSlots?.Contains(position) == true) { return "standings-qual-bar-advance"; }
+    if (position == 3 && slots.ThirdPlaceEligible)
     {
-      var idx = stage.Rounds.IndexOf(round);
-      if (idx >= 0) { _pendingScrollId = $"round-{idx}"; }
+      return slots.ThirdPlaceAdvanced switch
+      {
+        null => "",
+        true => "standings-qual-bar-advance",
+        false => "standings-qual-bar-out",
+      };
     }
+    return "standings-qual-bar-out";
   }
 
-  async Task OnRoundChipClick(Round round, int idx)
-  {
-    ViewModel.SelectedRound = round;
-    try { await JS.InvokeVoidAsync("ffScroll.toElement", $"round-{idx}"); }
-    catch (JSDisconnectedException) { /* page disposing */ }
-  }
-
-  async Task JumpToCurrent()
-  {
-    var cur = ViewModel.Competition?.CurrentGame?.Round;
-    if (cur is null) { return; }
-    // OnSelectedStageChanged snaps SelectedRound on stage change; only set explicitly when staying in the same stage.
-    if (!ReferenceEquals(cur.Stage, ViewModel.SelectedStage))
-    {
-      // Stage change queues a re-render — the new stage's #current-game element doesn't exist yet, so defer to OnAfterRenderAsync.
-      ViewModel.SelectedStage = cur.Stage;
-      _pendingScrollId = "current-game";
-      return;
-    }
-    ViewModel.SelectedRound = cur;
-    try { await JS.InvokeVoidAsync("ffScroll.toElement", "current-game"); }
-    catch (JSDisconnectedException) { /* page disposing */ }
-  }
-
-  // Switches to the round before simming so the panel follows (VM auto-advance also tracks it).
-  async Task SimulateRoundChip(Round round)
-  {
-    ViewModel.SelectedStage = round.Stage;
-    ViewModel.SelectedRound = round;
-    await ViewModel.SimulateRound();
-  }
-
-  // Chip status: selected=filled primary; current=dashed outline; future=50% opacity; done=solid outline.
-  static string ChipStatusClass(bool isSelected, bool isCurrent, bool isDone) =>
-    isSelected ? "" :
-    isCurrent ? "chip-current" :
-    isDone ? "chip-done" :
-    "chip-future";
-
-  async Task ReplayCompetition()
-  {
-    // Clear in-flight confetti particles from the previous finish — they'd otherwise keep falling on the
-    // new-comp page for 2-3 seconds and look like a fresh celebration. IsBusy + spinner-flush is the VM's job.
-    try { await JS.InvokeVoidAsync("ffConfetti.reset"); }
-    catch (JSDisconnectedException) { /* page disposing */ }
-    var replay = await ViewModel.Replay();
-    Nav.NavigateTo($"competitions/{replay.Id}");
-  }
+  int _lastLoadedId = -1;
 
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
 
-  protected override void OnParametersSet()
+  // Dedup: back/forward to the same /competitions/{id} must not re-LoadAsync and reset stage/round selection.
+  protected override async Task OnParametersSetAsync()
   {
     if (_lastLoadedId == Id) { return; }
     _lastLoadedId = Id;
-    ViewModel.Load(Id);
-    // Loading an already-finished comp from the list: suppress confetti so the user only sees it
-    // when their own sim crosses the finish line, not when they revisit an old result.
-    _confettiFiredCompetition = ViewModel.IsFinished ? ViewModel.Competition : null;
+    await ViewModel.LoadAsync(Id);
   }
+
+  int? _lastScrolledJustFinishedId;
+  int? _lastScrolledCurrentGameId;
+  string? _lastScrolledRoundId;
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    if (firstRender)
+    // JS bridge may be torn down between render and dispatch; swallow the disconnect cleanly so a queued render after navigate-away doesn't crash to blank.
+    try
     {
-      // Document-level keydown forwarder so Space + arrows work without clicking into the page first; JS skips when focus is on an input.
-      _selfRef = DotNetObjectReference.Create(this);
-      await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
+      if (firstRender)
+      {
+        _selfRef = DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
+        await JS.InvokeVoidAsync("ffPopover.registerOutsideClickHandler", _selfRef);
+      }
+
+      if (ViewModel.RecentlyFinishedGameId is { } rfid && rfid != _lastScrolledJustFinishedId)
+      {
+        _lastScrolledJustFinishedId = rfid;
+        // Bump so the post-pulse render doesn't re-scroll to current and yank the result out of view.
+        _lastScrolledCurrentGameId = ViewModel.Competition?.CurrentGame()?.Id;
+        await JS.InvokeVoidAsync("ffScroll.toElement", "just-finished-game");
+        return;
+      }
+
+      var currentGame = ViewModel.Competition?.CurrentGame();
+      if (currentGame is { Id: var cgid } && cgid != _lastScrolledCurrentGameId)
+      {
+        _lastScrolledCurrentGameId = cgid;
+        await JS.InvokeVoidAsync("ffScroll.toElement", "current-game");
+        return;
+      }
+
+      if (ViewModel.SelectedRoundId is { } rid && rid != _lastScrolledRoundId)
+      {
+        _lastScrolledRoundId = rid;
+        await JS.InvokeVoidAsync("ffScroll.toElement", $"round-{rid}");
+      }
     }
-    if (_pendingScrollId is { } id)
-    {
-      _pendingScrollId = null;
-      try { await JS.InvokeVoidAsync("ffScroll.toElement", id); }
-      catch (JSDisconnectedException) { /* page disposing */ }
-    }
+    catch (JSDisconnectedException) { }
   }
 
-  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(async () =>
-  {
-    // Reference comparison: survives the race where Load fires events before swapping Competition.
-    if (ViewModel.IsFinished
-        && ViewModel.Competition is not null
-        && !ReferenceEquals(_confettiFiredCompetition, ViewModel.Competition))
-    {
-      _confettiFiredCompetition = ViewModel.Competition;
-      try { await JS.InvokeVoidAsync("ffConfetti.celebrate"); }
-      catch (JSDisconnectedException) { /* Page navigated away while the call was in flight. */ }
-    }
-
-    // Follow round transitions during active sim; first IsBusy fire just records (don't scroll a single-game sim away from the user's viewport).
-    if (ViewModel.IsBusy)
-    {
-      var stage = ViewModel.SelectedStage;
-      var selectedIdx = (stage is not null && ViewModel.SelectedRound is not null)
-        ? stage.Rounds.IndexOf(ViewModel.SelectedRound)
-        : -1;
-      if (selectedIdx >= 0 && _lastScrolledRoundIdx < 0)
-      {
-        _lastScrolledRoundIdx = selectedIdx;
-      }
-      else if (selectedIdx >= 0 && selectedIdx != _lastScrolledRoundIdx)
-      {
-        _lastScrolledRoundIdx = selectedIdx;
-        try { await JS.InvokeVoidAsync("ffScroll.toElement", $"round-{selectedIdx}"); }
-        catch (JSDisconnectedException) { /* page disposing */ }
-      }
-    }
-    else
-    {
-      _lastScrolledRoundIdx = -1;
-    }
-
-    StateHasChanged();
-  });
-
-  // Invoked by the document-level JS keydown listener. Sim keys no-op once finished; nav keys remain.
+  /// <summary>
+  /// Called from js/keyboard.js's outside-click handler. Closes the open game-details
+  /// popover. Game-row clicks themselves never reach this — the JS handler ignores
+  /// clicks that land inside .scoreboard-row-wrapper / .game-details-popover.
+  /// </summary>
   [JSInvokable]
-  public async Task OnKeyDown(string key, bool ctrlKey, bool shiftKey)
+  public void OnOutsideClick()
   {
-    // Overlay keys ABOVE the IsBusy gate — user must always be able to open / close help, even while a sim runs.
-    // H or ? toggles. H works on every layout; ? is awkward on de-DE (Shift+ß).
-    if (key is "?" or "h" or "H") { _helpOpen = !_helpOpen; StateHasChanged(); return; }
-    if (_helpOpen)
+    if (_openDetailsGameId is not null)
     {
-      if (key == "Escape") { _helpOpen = false; StateHasChanged(); }
-      return;
-    }
-
-    if (ViewModel.IsBusy || ViewModel.Competition is null) { return; }
-
-    if (!ViewModel.IsFinished)
-    {
-      if (key == " " && shiftKey) { await ViewModel.SimulateRound(); return; }
-      if (key == " ") { await ViewModel.SimulateGame(); return; }
-      if (key is "r" or "R") { await ViewModel.SimulateRound(); return; }
-      if (key is "t" or "T") { await ViewModel.SimulateAll(); return; }
-    }
-
-    if ((ctrlKey && key is "z" or "Z") || (!ctrlKey && key is "u" or "U"))
-    {
-      ViewModel.Undo();
-      return;
-    }
-
-    if (ctrlKey && key is "y" or "Y")
-    {
-      await ViewModel.RedoLastGame();
-      return;
-    }
-
-    // Prev/next round wraps within the current stage; prev/next stage wraps within the competition.
-    switch (key)
-    {
-      case "ArrowLeft": StepRound(-1); break;
-      case "ArrowRight": StepRound(+1); break;
-      case "ArrowUp": StepStage(-1); break;
-      case "ArrowDown": StepStage(+1); break;
-      case "Escape": Nav.NavigateTo("competitions"); break;
+      _openDetailsGameId = null;
+      StateHasChanged();
     }
   }
 
+  void OnVmChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    => InvokeAsync(StateHasChanged);
+
+  async Task HandleReplay()
+  {
+    var newId = await ViewModel.ReplayAsync();
+    if (newId is { } id) { Nav.NavigateTo($"competitions/{id}"); }
+  }
+
+  void JumpToCurrent()
+  {
+    if (ViewModel.Competition?.CurrentGame() is { } cg)
+    {
+      var round = ViewModel.Competition.Rounds.FirstOrDefault(r => r.Id == cg.RoundId);
+      if (round is not null)
+      {
+        ViewModel.SelectedStageId = round.StageId;
+        ViewModel.SelectedRoundId = round.Id;
+      }
+    }
+  }
+
+  /// <summary>
+  /// Move the round selector by <paramref name="delta"/> within the current stage.
+  /// Returns silently at the ends; doesn't wrap into the next stage (that's what ↑/↓ are for).
+  /// </summary>
   void StepRound(int delta)
   {
-    var rounds = ViewModel.Rounds;
-    if (rounds.Count == 0 || ViewModel.SelectedRound is null) { return; }
-    var i = rounds.IndexOf(ViewModel.SelectedRound);
-    if (i < 0) { return; }
-    var newIdx = (i + delta + rounds.Count) % rounds.Count;
-    ViewModel.SelectedRound = rounds[newIdx];
-    _pendingScrollId = $"round-{newIdx}";
+    if (ViewModel.Competition is null || ViewModel.SelectedStageId is null) { return; }
+    var rounds = ViewModel.Competition.Rounds.Where(r => r.StageId == ViewModel.SelectedStageId).OrderBy(r => r.Order).ToList();
+    var idx = rounds.FindIndex(r => r.Id == ViewModel.SelectedRoundId);
+    var next = idx + delta;
+    if (next < 0 || next >= rounds.Count) { return; }
+    ViewModel.SelectedRoundId = rounds[next].Id;
   }
 
+  /// <summary>
+  /// Move the stage selector by <paramref name="delta"/>.
+  /// </summary>
   void StepStage(int delta)
   {
+    if (ViewModel.Competition is null) { return; }
     var stages = ViewModel.Stages;
-    if (stages.Count == 0 || ViewModel.SelectedStage is null) { return; }
-    var i = stages.IndexOf(ViewModel.SelectedStage);
-    if (i < 0) { return; }
-    ViewModel.SelectedStage = stages[(i + delta + stages.Count) % stages.Count];
-    // OnSelectedStageChanged snapped SelectedRound; queue scroll to that round's section (which re-renders next).
-    if (ViewModel.SelectedStage is { } stage && ViewModel.SelectedRound is { } round)
-    {
-      var idx = stage.Rounds.IndexOf(round);
-      if (idx >= 0) { _pendingScrollId = $"round-{idx}"; }
-    }
+    var idx = stages.ToList().FindIndex(s => s.Id == ViewModel.SelectedStageId);
+    var next = idx + delta;
+    if (next < 0 || next >= stages.Count) { return; }
+    ViewModel.SelectedStageId = stages[next].Id;
+  }
+
+  /// <summary>
+  /// Document-level keyboard dispatch. Wired from js/keyboard.js — fires regardless of focus
+  /// (but the JS layer skips input fields). Esc closes the help overlay if open, otherwise
+  /// navigates back to /competitions. H/? toggle the overlay. Letters are case-insensitive.
+  /// </summary>
+  [JSInvokable]
+  public async Task OnKeyDown(string key, bool ctrl, bool shift)
+  {
+    if (_showHelp && key == "Escape") { _showHelp = false; StateHasChanged(); return; }
+    if (key == "Escape") { Nav.NavigateTo("competitions"); return; }
+    if (key == "?" || key == "h" || key == "H") { _showHelp = !_showHelp; StateHasChanged(); return; }
+    // Suppress sim/nav shortcuts while help overlay is open — Esc + H/? above stay active to dismiss it.
+    if (_showHelp) { return; }
+
+    if (ctrl && (key == "z" || key == "Z")) { await ViewModel.UndoLastGame(); return; }
+    if (ctrl && (key == "y" || key == "Y")) { await ViewModel.RerollLastGame(); return; }
+    if (!ctrl && (key == "u" || key == "U")) { await ViewModel.UndoLastGame(); return; }
+
+    if (key == " ") { if (shift) { await ViewModel.SimulateRound(); } else { await ViewModel.SimulateGame(); } return; }
+    if (key == "r" || key == "R") { await ViewModel.SimulateRound(); return; }
+    if (key == "t" || key == "T") { await ViewModel.SimulateAll(); return; }
+    if (key == "ArrowLeft")  { StepRound(-1); return; }
+    if (key == "ArrowRight") { StepRound(+1); return; }
+    if (key == "ArrowUp")    { StepStage(-1); return; }
+    if (key == "ArrowDown")  { StepStage(+1); return; }
+  }
+
+  // Selected → ""; Done → chip-done; Current → chip-current; Future → chip-future.
+  static string ChipStatusClass(bool isSelected, bool isCurrent, bool isDone)
+  {
+    if (isSelected) { return ""; }
+    if (isDone) { return "chip-done"; }
+    if (isCurrent) { return "chip-current"; }
+    return "chip-future";
   }
 
   public async ValueTask DisposeAsync()
@@ -453,8 +469,12 @@ else
     ViewModel.PropertyChanged -= OnVmChanged;
     if (_selfRef is not null)
     {
-      try { await JS.InvokeVoidAsync("ffKeyboard.unregisterDocumentHandler"); }
-      catch (JSDisconnectedException) { /* Page navigated away; the listener's gone with it. */ }
+      try
+      {
+        await JS.InvokeVoidAsync("ffKeyboard.unregisterDocumentHandler");
+        await JS.InvokeVoidAsync("ffPopover.unregisterOutsideClickHandler");
+      }
+      catch (JSDisconnectedException) { /* nav teardown: JS bridge already gone */ }
       _selfRef.Dispose();
       _selfRef = null;
     }

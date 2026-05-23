@@ -1,3 +1,4 @@
+using System.Threading;
 using FantasyFootball.Repositories;
 
 namespace FantasyFootball.Tests;
@@ -91,10 +92,44 @@ public class BulkSimRunnerTests
 		await act.Should().ThrowAsync<ArgumentOutOfRangeException>();
 	}
 
+	[Fact]
+	public async Task Run_ReportsProgressEveryIteration()
+	{
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var reports = new List<int>();
+		var progress = new SyncProgress<int>(reports.Add);
+
+		await _runner.RunAsync(spec, count: 5, progress);
+
+		reports.Should().Equal(1, 2, 3, 4, 5);
+	}
+
+	[Fact]
+	public async Task Run_HonorsCancellation_StopsMidway()
+	{
+		// Pre-cancelled token: not even the first iteration should run.
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		using var cts = new CancellationTokenSource();
+		cts.Cancel();
+
+		Func<Task> act = () => _runner.RunAsync(spec, count: 10, cancellationToken: cts.Token);
+
+		await act.Should().ThrowAsync<OperationCanceledException>();
+		(await _repo.CountAsync()).Should().Be(0);
+	}
+
 	sealed class StubRegistry : IFlatTeamRegistry
 	{
 		public IReadOnlyList<string> AllTeamIds { get; }
 		public StubRegistry(IReadOnlyList<string> teams) { AllTeamIds = teams; }
 		public int EloOf(string teamId) => 1500;     // uniform ELO; bulk-sim runner doesn't use this directly
+	}
+
+	// Synchronous IProgress<T> so progress assertions don't race the sync-context drain.
+	sealed class SyncProgress<T> : IProgress<T>
+	{
+		readonly Action<T> _callback;
+		public SyncProgress(Action<T> callback) { _callback = callback; }
+		public void Report(T value) => _callback(value);
 	}
 }

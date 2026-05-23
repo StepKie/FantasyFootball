@@ -99,4 +99,25 @@ public class FlatCompetitionSimulatorTests
 		koGames.Should().HaveCount(32, "WC48 has R32+R16+QF+SF+3rd+Final = 16+8+4+2+1+1");
 		koGames.Should().OnlyContain(g => g.HomeTeamId != null && g.AwayTeamId != null);
 	}
+
+	[Fact]
+	public void Simulate_AnyFormat_NoTeamFillsTwoSlotsInSameRound()
+	{
+		// Asserts each team appears at most once per round — uniqueness, not just slot population.
+		foreach (var defId in new[] { "wm-2022", "em-2024", "wm-2026" })
+		{
+			var c = _definitions.Load(defId);
+			_simulator.Simulate(c);
+
+			foreach (var round in c.Rounds)
+			{
+				var teamsInRound = c.RoundGames(round.Id)
+					.OfType<FlatKoGame>()
+					.SelectMany(g => new[] { g.HomeTeamId!, g.AwayTeamId! })
+					.ToList();
+				teamsInRound.Should().OnlyHaveUniqueItems(
+					$"{defId} round '{round.Id}' must have each team in at most one slot");
+			}
+		}
+	}
 }

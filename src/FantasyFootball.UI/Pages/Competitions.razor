@@ -2,201 +2,247 @@
 @page "/competitions"
 @using FantasyFootball.Data
 @using FantasyFootball.Models
+@using FantasyFootball.Services
+@using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
-@inject CompetitionsViewModel ViewModel
+@inject FlatCompetitionsViewModel ViewModel
+@inject IDataService DataService
 @inject NavigationManager Nav
-@inject IDialogService DialogService
 @implements IDisposable
 
 <PageTitle>Competitions — Fantasy Football</PageTitle>
 
-<MudStack Spacing="3">
-  <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-    <MudSelect T="CompetitionType"
-               Label="Competition"
-               Value="ViewModel.SelectedCompetitionType"
-               ValueChanged="@(v => ViewModel.SelectedCompetitionType = v)"
-               Style="max-width: 20rem;">
-      @foreach (var t in ViewModel.CompetitionTypes)
-      {
-        <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
-      }
-    </MudSelect>
-    <MudButton Variant="Variant.Filled"
-               Color="Color.Primary"
-               StartIcon="@Icons.Material.Filled.Add"
-               OnClick="StartNew">
-      New
-    </MudButton>
-  </MudStack>
+<MudText Typo="Typo.h5" HtmlTag="h1" Class="mb-3">Competitions</MudText>
 
-  <MudTabs Elevation="0" Rounded="true" Border="false" ApplyEffectsToContainer="true" PanelClass="pa-0 pt-3"
-           ActivePanelIndex="ViewModel.ActiveTabIndex"
-           ActivePanelIndexChanged="@(i => ViewModel.ActiveTabIndex = i)">
-    <MudTabPanel Text="@($"Active ({ViewModel.ActiveCompetitions.Count})")">
-      <MudTable Items="ViewModel.ActiveCompetitions"
-                T="Competition"
-                Loading="ViewModel.IsBusy"
-                Hover="true"
-                Dense="true"
-                Breakpoint="Breakpoint.None"
-                OnRowClick="OnRowClick">
-        <NoRecordsContent>
-          <MudText Typo="Typo.body2" Color="Color.Secondary">
-            No active @DisplayName(ViewModel.SelectedCompetitionType) competitions. Press <strong>New</strong> to simulate one.
-          </MudText>
-        </NoRecordsContent>
-        <HeaderContent>
-          <MudTh Style="width: 4rem;">#</MudTh>
-          <MudTh>Name</MudTh>
-          <MudTh Style="width: 10rem;">Started</MudTh>
-          <MudTh>Status</MudTh>
-          <MudTh Style="width: 3rem;"></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-          <MudTd>@context.Id</MudTd>
-          <MudTd>
-            <div class="d-flex align-center" style="gap: 0.5rem;">
-              <CompetitionTypeIcon Type="@context.Type" Size="20" />
-              <span>@context.ShortName</span>
-            </div>
-          </MudTd>
-          <MudTd>@context.SimulationStart.ToString("g")</MudTd>
-          <MudTd>@context.CurrentStatus</MudTd>
-          <MudTd Style="text-align: right;" @onclick:stopPropagation="true">
-            <MudIconButton Icon="@Icons.Material.Filled.DeleteOutline"
-                           Size="Size.Small"
-                           Color="Color.Default"
-                           OnClick="@(() => ConfirmDelete(context))" />
-          </MudTd>
-        </RowTemplate>
-      </MudTable>
-    </MudTabPanel>
-
-    <MudTabPanel Text="@($"Finished ({ViewModel.FinishedCompetitions.Count})")">
-      <MudStack Spacing="4">
-        <MudTable Items="ViewModel.FinishedCompetitions"
-                  T="Competition"
-                  Loading="ViewModel.IsBusy"
-                  Hover="true"
-                  Dense="true"
-                  Breakpoint="Breakpoint.None"
-                  OnRowClick="OnRowClick">
-          <NoRecordsContent>
-            <MudText Typo="Typo.body2" Color="Color.Secondary">
-              No finished @DisplayName(ViewModel.SelectedCompetitionType) competitions yet.
-            </MudText>
-          </NoRecordsContent>
-          <HeaderContent>
-            <MudTh Style="width: 4rem;">#</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh Style="width: 10rem;">Started</MudTh>
-            <MudTh Style="width: 2.5rem;"></MudTh>
-            <MudTh>Winner</MudTh>
-            <MudTh Style="width: 3rem;"></MudTh>
-          </HeaderContent>
-          <RowTemplate>
-            <MudTd>@context.Id</MudTd>
-            <MudTd>
-              <div class="d-flex align-center" style="gap: 0.5rem;">
-                <CompetitionTypeIcon Type="@context.Type" Size="20" />
-                <span>@context.ShortName</span>
-              </div>
-            </MudTd>
-            <MudTd>@context.SimulationStart.ToString("g")</MudTd>
-            <MudTd><FlagIcon Team="context.Winner" Size="24" /></MudTd>
-            <MudTd>@context.Winner?.Name</MudTd>
-            <MudTd Style="text-align: right;" @onclick:stopPropagation="true">
-              <MudIconButton Icon="@Icons.Material.Filled.DeleteOutline"
-                             Size="Size.Small"
-                             Color="Color.Default"
-                             OnClick="@(() => ConfirmDelete(context))" />
-            </MudTd>
-          </RowTemplate>
-        </MudTable>
-
-        @if (ViewModel.OverallRecords.Count > 0)
-        {
-          <div>
-            <MudText Typo="Typo.subtitle1" Class="mb-2">All-time standings</MudText>
-            <MudTable Items="ViewModel.OverallRecords"
-                      T="TeamRecord"
-                      Hover="true"
-                      Dense="true"
-                      Breakpoint="Breakpoint.None">
-              <HeaderContent>
-                <MudTh Style="width: 2.5rem;">#</MudTh>
-                <MudTh Style="width: 2.5rem;"></MudTh>
-                <MudTh>Team</MudTh>
-                <MudTh Style="width: 3rem; text-align: right;">G</MudTh>
-                <MudTh Style="width: 4rem; text-align: right;">Goals</MudTh>
-                <MudTh Style="width: 3rem; text-align: right;">GD</MudTh>
-                <MudTh Style="width: 3rem; text-align: right;">Pts</MudTh>
-                <MudTh Style="width: 3rem; text-align: right;">PPG</MudTh>
-                <MudTh Style="width: 3rem; text-align: right;">W</MudTh>
-              </HeaderContent>
-              <RowTemplate>
-                <MudTd>@context.Position</MudTd>
-                <MudTd><FlagIcon Team="context.Team" Size="20" /></MudTd>
-                <MudTd>@context.Team.Name</MudTd>
-                <MudTd Style="text-align: right;">@context.MatchesPlayed</MudTd>
-                <MudTd Style="text-align: right;">@context.GoalsFor:@context.GoalsAgainst</MudTd>
-                <MudTd Style="text-align: right;">@context.GoalDifference</MudTd>
-                <MudTd Style="text-align: right; font-weight: bold;">@context.Points</MudTd>
-                <MudTd Style="text-align: right;">@context.AveragePointsPerGame.ToString("F2")</MudTd>
-                <MudTd Style="text-align: right; font-weight: bold;">@context.CompetitionWins</MudTd>
-              </RowTemplate>
-            </MudTable>
-          </div>
-        }
-      </MudStack>
-    </MudTabPanel>
-  </MudTabs>
+<MudStack AlignItems="AlignItems.Center" Class="mb-4">
+  <MudFab Color="Color.Primary"
+          Size="Size.Large"
+          StartIcon="@Icons.Material.Filled.PlayArrow"
+          Href="competitions/setup"
+          title="Set up a new competition" />
 </MudStack>
 
+<MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1" Wrap="Wrap.Wrap" Class="mb-3">
+  <MudText Typo="Typo.subtitle2" Class="mr-2">Type</MudText>
+  @foreach (var t in ViewModel.AvailableTypeFilters)
+  {
+    var label = t is null ? "All" : t.ToString();
+    var isSel = ViewModel.SelectedType == t;
+    <MudChip T="string" Size="Size.Small"
+             Variant="@(isSel ? Variant.Filled : Variant.Outlined)"
+             Color="@(isSel ? Color.Primary : Color.Default)"
+             OnClick="@(() => ViewModel.SelectedType = t)">
+      @label
+    </MudChip>
+  }
+  <MudSpacer />
+  @if (ViewModel.FilteredCompetitions.Count > 0)
+  {
+    @if (_confirmingDeleteAll)
+    {
+      <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small"
+                     OnClick="@(() => _confirmingDeleteAll = false)"
+                     title="Cancel" />
+      <MudIconButton Icon="@Icons.Material.Filled.DeleteForever" Size="Size.Small"
+                     Color="Color.Error" Variant="Variant.Filled"
+                     Disabled="ViewModel.IsBusy"
+                     OnClick="ConfirmDeleteAll"
+                     title="Confirm delete all" />
+    }
+    else
+    {
+      <MudIconButton Icon="@Icons.Material.Filled.DeleteSweep" Size="Size.Small"
+                     Color="Color.Error"
+                     OnClick="@(() => _confirmingDeleteAll = true)"
+                     title="Delete all competitions" />
+    }
+  }
+</MudStack>
+
+@if (ViewModel.IsBusy)
+{
+  <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+}
+else if (ViewModel.FilteredCompetitions.Count == 0)
+{
+  <MudAlert Severity="Severity.Info">
+    No competitions @(ViewModel.SelectedType is { } t ? $"of type {t} " : "")yet.
+    <MudLink Href="competitions/setup">Start one.</MudLink>
+  </MudAlert>
+}
+else
+{
+  @* Sortable competitions table *@
+  <MudTable Items="ViewModel.FilteredCompetitions" Dense="true" Hover="true"
+            OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<FlatCompetition>>(this, args => Nav.NavigateTo($"competitions/{args.Item!.Id}")))"
+            T="FlatCompetition">
+    <HeaderContent>
+      <MudTh style="width:1%;"><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => c.Id)" T="FlatCompetition">#</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => c.Title)" T="FlatCompetition">Title</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => c.SimulationStart ?? DateTime.MinValue)" T="FlatCompetition" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => StateOrder(c))" T="FlatCompetition">State</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => c.WinnerTeamId() ?? string.Empty)" T="FlatCompetition">Winner</MudTableSortLabel></MudTh>
+      <MudTh style="width:1%;"></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+      @{
+        var id = context.Id;
+        var isFinished = context.IsFinished();
+        var totalGames = context.Games.Length;
+        var playedGames = context.Games.Count(g => g.Result is not null);
+      }
+      <MudTd DataLabel="#">@context.Id</MudTd>
+      <MudTd DataLabel="Title">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+          <CompetitionTypeIcon Type="@context.Type" Size="20" />
+          <span>@context.Title</span>
+        </MudStack>
+      </MudTd>
+      <MudTd DataLabel="Started">
+        @if (context.SimulationStart is { } start)
+        {
+          <span title="@start.ToString("yyyy-MM-dd HH:mm 'UTC'")">@start.ToLocalTime().ToString("MMM d, HH:mm")</span>
+        }
+        else
+        {
+          <span style="opacity:0.5;">—</span>
+        }
+      </MudTd>
+      <MudTd DataLabel="State">
+        @if (isFinished)
+        {
+          <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success">finished</MudChip>
+        }
+        else if (playedGames > 0)
+        {
+          <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Warning">@playedGames / @totalGames</MudChip>
+        }
+        else
+        {
+          <span style="opacity:0.5;">scheduled</span>
+        }
+      </MudTd>
+      <MudTd DataLabel="Winner">
+        @if (isFinished && context.WinnerTeamId() is { } winnerId)
+        {
+          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId);
+          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <FlagIcon Team="winner" Code="@winnerId" Size="20" />
+            <span>@(winner?.Name ?? winnerId)</span>
+          </MudStack>
+        }
+      </MudTd>
+      <MudTd Style="text-align:right;">
+        <MudStack Row="true" Spacing="0" Justify="Justify.FlexEnd">
+          @if (isFinished)
+          {
+            <MudIconButton Icon="@Icons.Material.Filled.Refresh" Size="Size.Small"
+                           Color="Color.Default"
+                           Disabled="ViewModel.IsBusy"
+                           OnClick="@(() => Replay(id))"
+                           OnClickStopPropagation="true"
+                           title="Replay (clone and start fresh)" />
+          }
+          else
+          {
+            <MudIconButton Icon="@Icons.Material.Filled.DoubleArrow" Size="Size.Small"
+                           Color="Color.Default"
+                           Disabled="ViewModel.IsBusy"
+                           OnClick="@(() => FastForward(id))"
+                           OnClickStopPropagation="true"
+                           title="Fast-forward: simulate remaining games" />
+          }
+          <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small"
+                         Color="Color.Default"
+                         Disabled="ViewModel.IsBusy"
+                         OnClick="@(() => Delete(id))"
+                         OnClickStopPropagation="true"
+                         title="Delete" />
+        </MudStack>
+      </MudTd>
+    </RowTemplate>
+  </MudTable>
+
+  @* Overall standings — aggregate across every finished competition in the current filter.
+     OverallRecords getter walks all comps × games; capture once per render. *@
+  @{
+    var overallRecords = ViewModel.OverallRecords;
+  }
+  @if (overallRecords.Count > 0)
+  {
+    <MudExpansionPanels Class="mt-4">
+      <MudExpansionPanel Text="@($"Overall standings ({overallRecords.Count} teams)")">
+        <MudTable Items="overallRecords" Dense="true" Hover="true" T="FlatTeamRecord">
+          <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Team.Name)" T="FlatTeamRecord">Team</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.CompetitionWins)" T="FlatTeamRecord">Titles</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.MatchesPlayed)" T="FlatTeamRecord">P</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Wins)" T="FlatTeamRecord">W</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Draws)" T="FlatTeamRecord">D</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Losses)" T="FlatTeamRecord">L</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.GoalsFor)" T="FlatTeamRecord">GF</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.GoalsAgainst)" T="FlatTeamRecord">GA</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.GoalDifference)" T="FlatTeamRecord">GD</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Points)" T="FlatTeamRecord" InitialDirection="SortDirection.Descending">Pts</MudTableSortLabel></MudTh>
+          </HeaderContent>
+          <RowTemplate>
+            <MudTd DataLabel="Team">
+              <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <FlagIcon Team="context.Team" Size="20" />
+                <span>@context.Team.Name</span>
+              </MudStack>
+            </MudTd>
+            <MudTd DataLabel="Titles">@context.CompetitionWins</MudTd>
+            <MudTd DataLabel="P">@context.MatchesPlayed</MudTd>
+            <MudTd DataLabel="W">@context.Wins</MudTd>
+            <MudTd DataLabel="D">@context.Draws</MudTd>
+            <MudTd DataLabel="L">@context.Losses</MudTd>
+            <MudTd DataLabel="GF">@context.GoalsFor</MudTd>
+            <MudTd DataLabel="GA">@context.GoalsAgainst</MudTd>
+            <MudTd DataLabel="GD">@context.GoalDifference</MudTd>
+            <MudTd DataLabel="Pts"><strong>@context.Points</strong></MudTd>
+          </RowTemplate>
+        </MudTable>
+      </MudExpansionPanel>
+    </MudExpansionPanels>
+  }
+}
+
 @code {
-  protected override void OnInitialized()
+  bool _confirmingDeleteAll;
+
+  protected override async Task OnInitializedAsync()
   {
     ViewModel.PropertyChanged += OnVmChanged;
-    // VM is AddScoped (per-tab singleton). Refresh the type filter from
-    // IDataService and auto-pick the tab on every navigation so Back-to-Competitions
-    // lands on the same category we just left and on the tab with content.
     ViewModel.SyncFromDataService();
+    await ViewModel.ReloadAsync();
   }
 
-  void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+  void OnVmChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    => InvokeAsync(StateHasChanged);
 
-  // Hardcoded English. ExtensionMethods.Name() goes through Res.WorldCup / Res.European_Championship,
-  // which picks the de-DE satellite assembly on browsers where Blazor's culture resolution lands on de.
-  // Localization needs proper wiring via the i18n follow-up.
-  static string DisplayName(CompetitionType t) => t switch
-  {
-    CompetitionType.WM => "World Cup",
-    CompetitionType.EM => "European Championship",
-    CompetitionType.CHAMPIONS_LEAGUE => "Champions League",
-    CompetitionType.DOMESTIC_LEAGUE => "Domestic League",
-    _ => t.ToString(),
-  };
+  async Task Delete(int id) => await ViewModel.DeleteAsync(id);
 
-  void OnRowClick(TableRowClickEventArgs<Competition> args)
+  async Task Replay(int id)
   {
-    if (args.Item is null) { return; }
-    Nav.NavigateTo($"competitions/{args.Item.Id}");
+    var newId = await ViewModel.ReplayAsync(id);
+    if (newId is { } nid) { Nav.NavigateTo($"competitions/{nid}"); }
   }
 
-  void StartNew() => Nav.NavigateTo("competitions/setup");
+  async Task FastForward(int id) => await ViewModel.FastForwardAsync(id);
 
-  async Task ConfirmDelete(Competition competition)
+  async Task ConfirmDeleteAll()
   {
-    var options = new MessageBoxOptions
-    {
-      Title = "Delete competition?",
-      Message = $"Delete {competition.ShortName} #{competition.Id}? This cannot be undone.",
-      YesText = "Delete",
-      CancelText = "Cancel",
-    };
-    var confirmed = await DialogService.ShowMessageBoxAsync(options);
-    if (confirmed == true) { ViewModel.Delete(competition); }
+    _confirmingDeleteAll = false;
+    await ViewModel.DeleteAllAsync();
+  }
+
+  // Sort order for the State column: 0 = finished, 1 = in-progress, 2 = scheduled.
+  static int StateOrder(FlatCompetition c)
+  {
+    if (c.IsFinished()) { return 0; }
+    if (c.Games.Any(g => g.Result is not null)) { return 1; }
+    return 2;
   }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
