@@ -89,13 +89,13 @@ public static class FlatJson
 	}
 
 	/// <summary>
-	/// Serialize a FlatCompetition to its on-disk JSON shape. The C# model
+	/// Serialize a Competition to its on-disk JSON shape. The C# model
 	/// holds groups as <c>string[][]</c> (positional, indexed by letter − 'A')
 	/// but the JSON file shape is a dict <c>{ "A": [...], "B": [...] }</c> —
 	/// this method does the array → dict reshape. Used by the definition
 	/// generator and by the round-trip test.
 	/// </summary>
-	public static string Serialize(FlatCompetition c, bool compact = false)
+	public static string Serialize(Competition c, bool compact = false)
 	{
 		var dto = new
 		{

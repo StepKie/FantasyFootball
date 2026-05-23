@@ -1,128 +1,101 @@
-﻿using System.Text.Json.Serialization;
-using MathNet.Numerics.Distributions;
+using System.Text.Json.Serialization;
 
 namespace FantasyFootball.Models;
 
 /// <summary>
-/// TODO There is no good way to create a Game from a string, or create a Game with a result already set
+/// Sealed hierarchy on game KIND (Group vs KO). The two-state lifecycle
+/// (scheduled vs played) is orthogonal — captured by nullable
+/// <see cref="Result"/> on the base.
+///
+/// JSON polymorphism uses a "kind" discriminator: "group" or "ko".
+///
+/// <c>ToString()</c> stays as the record default (verbose, repr-like —
+/// useful in debugger / test failure output). For compact console output,
+/// call <see cref="Format"/> on the subclass.
+///
 /// </summary>
-[Table(nameof(Game))]
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "$kind")]
-[JsonDerivedType(typeof(Game), "game")]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "kind")]
+[JsonDerivedType(typeof(GroupGame), "group")]
 [JsonDerivedType(typeof(KoGame), "ko")]
-public class Game : NamedUniqueId
+public abstract record class Game
 {
-	[Ignore]
-	public override string Name => $"{Round.Name} {(Round.AllGames.Count > 1 ? Round.AllGames.IndexOf(this) + 1 : "")}";
+	/// <summary>
+	/// Explicit ID, set in the competition-definition JSON. Referenced by
+	/// qualifier strings (e.g. <c>W-49</c> = winner of the game with Id=49).
+	/// </summary>
+	public required int Id { get; init; }
 
-	public Game()
+	public required DateTime PlayedOn { get; init; }
+
+	/// <summary>FK into <see cref="Competition.Rounds"/>. Stage is implied via Round.StageId.</summary>
+	public required string RoundId { get; init; }
+
+	/// <summary>FK into the global Venue registry. Optional.</summary>
+	public string? VenueId { get; init; }
+
+	/// <summary>
+	/// null = scheduled (not yet played). Non-null = played.
+	/// </summary>
+	public Result? Result { get; set; }
+
+	/// <summary>
+	/// Compact console-friendly format (the str() equivalent). Subclasses
+	/// override; the default ToString stays as the auto-generated record
+	/// repr() form for debugger / test failure output.
+	/// </summary>
+	public abstract string Format();
+}
+
+/// <summary>
+/// Group-stage game. Teams are known at competition start (assigned to
+/// the group letter via Competition.GroupAssignments).
+/// </summary>
+public sealed record class GroupGame : Game
+{
+	public required string GroupLetter { get; init; }
+	public required string HomeTeamId { get; init; }
+	public required string AwayTeamId { get; init; }
+
+	public override string Format() =>
+		Result is { } r
+			? $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {HomeTeamId} {r.Format()} {AwayTeamId}  [Group {GroupLetter} / {RoundId}]"
+			: $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {HomeTeamId} v {AwayTeamId}  [Group {GroupLetter} / {RoundId}]";
+}
+
+/// <summary>
+/// Knockout-stage game. Teams come from a qualifier expression evaluated
+/// against earlier stage outcomes; the resolved team IDs are cached on
+/// <see cref="HomeTeamId"/> / <see cref="AwayTeamId"/> once the upstream
+/// qualifier resolves, so subsequent reads don't re-walk the qualifier
+/// chain.
+///
+/// Qualifier DSL: <c>A1</c> = group A's 1st place, <c>W-49</c> = winner
+/// of game 49, <c>L-61</c> = loser of game 61, <c>A/B/F3</c> = best
+/// 3rd-place finisher among the listed groups.
+/// </summary>
+public sealed record class KoGame : Game
+{
+	public required string HomeQual { get; init; }
+	public required string AwayQual { get; init; }
+
+	/// <summary>
+	/// Cached resolution of <see cref="HomeQual"/>. Null until the
+	/// upstream qualifier becomes computable; written when resolved.
+	/// </summary>
+	public string? HomeTeamId { get; set; }
+
+	/// <summary>
+	/// Cached resolution of <see cref="AwayQual"/>.
+	/// </summary>
+	public string? AwayTeamId { get; set; }
+
+	public override string Format()
 	{
-		// TODO Control access?
+		// Resolved IDs take priority; fall back to the qualifier expression for unresolved KO slots.
+		var home = HomeTeamId ?? HomeQual;
+		var away = AwayTeamId ?? AwayQual;
+		return Result is { } r
+			? $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {home} {r.Format()} {away}  [{RoundId}]"
+			: $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {home} v {away}  [{RoundId}]";
 	}
-
-	public DateTime PlayedOn { get; init; }
-
-	[ForeignKey(typeof(Team))]
-	public int HomeTeamId { get; init; }
-
-	[OneToOne(foreignKey: "HomeTeamId", CascadeOperations = CascadeOperation.CascadeRead)]
-	public virtual Team HomeTeam { get; init; }
-
-	[ForeignKey(typeof(Team))]
-	public int AwayTeamId { get; init; }
-
-	[OneToOne(foreignKey: "AwayTeamId", CascadeOperations = CascadeOperation.CascadeRead)]
-	public virtual Team AwayTeam { get; init; }
-
-	public int HomeScore { get; set; }
-	public int AwayScore { get; set; }
-
-	public GameState State { get; set; }
-
-	[Ignore] public bool IsFinished => State == GameState.FINISHED;
-	[Ignore] public bool IsNextInRound => Equals(Round?.CurrentGame);
-	[Ignore] public bool IsReadyToStart => HomeTeam.Type != TeamType.PLACEHOLDER && AwayTeam.Type != TeamType.PLACEHOLDER && State == GameState.SCHEDULED;
-
-	[Ignore]
-	public string Result => (State, Ending) switch
-	{
-		(GameState.SCHEDULED, _) => "-:-",
-		(GameState.FINISHED, GameEnd.NORMAL) => $"{HomeScore}-{AwayScore}",
-		(GameState.FINISHED, GameEnd.EXTRA_TIME) => $"{HomeScore}-{AwayScore} {Res.GameEnd_ExtraTime}",
-		(GameState.FINISHED, GameEnd.PENALTIES) => $"{HomeScore}-{AwayScore} {Res.GameEnd_Penalties}",
-		_ => $"{HomeScore}-{AwayScore}",
-	};
-
-	public GameEnd Ending { get; set; }
-
-	[ForeignKey(typeof(Round))]
-	public int RoundId { get; set; }
-
-	[ManyToOne]
-	public virtual Round Round { get; set; } = new Round { Name = "Not initialized" };
-
-	[Ignore]
-	public Team? Winner => (HomeScore > AwayScore) ? HomeTeam : (AwayScore > HomeScore) ? AwayTeam : null;
-
-	[Ignore]
-	public Team? Loser => (HomeScore > AwayScore) ? AwayTeam : (AwayScore > HomeScore) ? HomeTeam : null;
-
-	/// <summary> TODO Is it really be the responsibility of Game to "simulate itself"? However, otherwise there would be "feature envy" </summary>
-	public virtual void Simulate()
-	{
-		if (!IsReadyToStart)
-		{
-			Log.Warning($"Attempted to play uninitialized match -- {this}");
-			return;
-		}
-
-		State = GameState.IN_PROGRESS;
-		Ending = GameEnd.NORMAL;
-		HomeScore = 0;
-		AwayScore = 0;
-
-		var eloDiff = HomeTeam!.Elo - AwayTeam!.Elo;
-		var eloScaleFactor = 0.001 * eloDiff;
-
-		var dist = new Poisson(2.5 + eloScaleFactor);
-		var totalGoalsExpected = dist.Sample();
-
-		var expectedScoreElo = 1 / (1 + Math.Pow(10, (HomeTeam.Elo - AwayTeam.Elo) / 400.0));
-
-		while (totalGoalsExpected > 0)
-		{
-			var rd = new Random().NextDouble();
-			if (rd > expectedScoreElo)
-			{
-				HomeScore++;
-			}
-			else
-			{
-				AwayScore++;
-			}
-			totalGoalsExpected--;
-		}
-
-		State = GameState.FINISHED;
-	}
-
-	/// <summary> TODO Never used, refactor to use constructor </summary>
-	public void SetResult(int homeGoals, int awayGoals, GameEnd end)
-	{
-		HomeScore = homeGoals;
-		AwayScore = awayGoals;
-		Ending = end;
-		State = GameState.FINISHED;
-	}
-
-	/// <summary> Inverse of <see cref="Simulate"/> for the undo flow: returns the game to its pre-sim, scheduled state. </summary>
-	public void ClearResult()
-	{
-		HomeScore = 0;
-		AwayScore = 0;
-		Ending = GameEnd.NORMAL;
-		State = GameState.SCHEDULED;
-	}
-
-	public override string ToString() => $"{PlayedOn,-5:g}, {HomeTeam?.ShortName,-2}-{AwayTeam?.ShortName,2} {Result}";
 }

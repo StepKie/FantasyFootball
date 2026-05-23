@@ -4,7 +4,7 @@
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
 @using Microsoft.JSInterop
-@inject FlatCompetitionDetailViewModel ViewModel
+@inject CompetitionDetailViewModel ViewModel
 @inject IDataService DataService
 @inject ISettingsService Settings
 @inject NavigationManager Nav
@@ -183,7 +183,7 @@ else
                     }
                     @foreach (var game in dayGroup)
                     {
-                      <FlatGameViewRow Game="game"
+                      <GameViewRow Game="game"
                                        Competition="ViewModel.Competition"
                                        ShowSim="@(ReferenceEquals(game, currentGame))"
                                        ShowUndo="@(ReferenceEquals(game, lastFinishedGame))"
@@ -209,7 +209,7 @@ else
              we fall back to showing all groups' final standings (computed in the VM). *@
           @if (ViewModel.GroupStandings.Count > 0)
           {
-            var qualMap = FlatGroupQualification.Compute(ViewModel.Competition);
+            var qualMap = GroupQualification.Compute(ViewModel.Competition);
             var showWDL = Settings.ShowFullStandings;
             @foreach (var (letter, standings) in ViewModel.GroupStandings)
             {
@@ -295,7 +295,7 @@ else
   void ToggleDetails(int gameId) => _openDetailsGameId = _openDetailsGameId == gameId ? null : gameId;
 
   // Advance = direct qualifier; 3rd = pool result (null until group stage done); else out.
-  static string QualBarClass(int position, FlatGroupQualification.GroupQualSlots slots)
+  static string QualBarClass(int position, GroupQualification.GroupQualSlots slots)
   {
     if (slots.DirectSlots?.Contains(position) == true) { return "standings-qual-bar-advance"; }
     if (position == 3 && slots.ThirdPlaceEligible)

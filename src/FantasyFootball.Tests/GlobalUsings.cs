@@ -9,8 +9,6 @@ global using Res = FantasyFootball.Resources.AppResources;
 global using AwesomeAssertions;
 
 global using FantasyFootball.Data;
-global using FantasyFootball.Data.CompetitionFactories;
-global using FantasyFootball.Data.Formats;
 global using FantasyFootball.Models;
 global using FantasyFootball.Services;
 

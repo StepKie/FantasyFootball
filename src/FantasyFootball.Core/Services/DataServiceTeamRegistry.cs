@@ -10,7 +10,7 @@ namespace FantasyFootball.Services;
 /// Caches the team lookup table after the first read so repeated
 /// <c>EloOf</c> calls during simulation are O(1).
 /// </summary>
-public sealed class DataServiceTeamRegistry : IFlatTeamRegistry
+public sealed class DataServiceTeamRegistry : ITeamRegistry
 {
 	readonly IDataService _data;
 	Dictionary<string, int>? _eloByShortName;

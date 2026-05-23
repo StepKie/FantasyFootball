@@ -21,14 +21,14 @@ public sealed class EmbeddedCompetitionDefinitionStore : ICompetitionDefinitionS
 
 	public IReadOnlyCollection<string> AvailableIds => CachedIds;
 
-	public FlatCompetition Load(string definitionId)
+	public Competition Load(string definitionId)
 	{
 		var resourceName = $"{ResourcePrefix}{definitionId}{ResourceSuffix}";
 		using var stream = DefinitionAssembly.GetManifestResourceStream(resourceName)
 			?? throw new FileNotFoundException(
 				$"No embedded competition definition for '{definitionId}'. " +
 				$"Available: {string.Join(", ", CachedIds)}.");
-		return FlatCompetitionDefinitionLoader.LoadFromStream(stream);
+		return CompetitionDefinitionLoader.LoadFromStream(stream);
 	}
 
 	static IReadOnlyCollection<string> DiscoverIds() => DefinitionAssembly

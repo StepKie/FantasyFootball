@@ -24,35 +24,35 @@ namespace FantasyFootball.Services;
 /// </summary>
 public sealed class EloScoreModel : IScoreModel
 {
-	readonly IFlatTeamRegistry _registry;
+	readonly ITeamRegistry _registry;
 	readonly Random _rng;
 
-	public EloScoreModel(IFlatTeamRegistry registry, Random? rng = null)
+	public EloScoreModel(ITeamRegistry registry, Random? rng = null)
 	{
 		_registry = registry;
 		_rng = rng ?? Random.Shared;
 	}
 
-	public FlatResult ScoreGroupGame(string homeTeamId, string awayTeamId)
+	public Result ScoreGroupGame(string homeTeamId, string awayTeamId)
 	{
 		var (h, a) = SamplePoissonScore(homeTeamId, awayTeamId, lambdaFactor: 1.0);
-		return new FlatResult(h, a, GameEnd.NORMAL);
+		return new Result(h, a, GameEnd.NORMAL);
 	}
 
-	public FlatResult ScoreKoGame(string homeTeamId, string awayTeamId)
+	public Result ScoreKoGame(string homeTeamId, string awayTeamId)
 	{
 		var (h, a) = SamplePoissonScore(homeTeamId, awayTeamId, lambdaFactor: 1.0);
-		if (h != a) { return new FlatResult(h, a, GameEnd.NORMAL); }
+		if (h != a) { return new Result(h, a, GameEnd.NORMAL); }
 
 		// Extra time: 30 minutes at 1/3 the base lambda.
 		var (eh, ea) = SamplePoissonScore(homeTeamId, awayTeamId, lambdaFactor: 1.0 / 3.0);
 		h += eh; a += ea;
-		if (h != a) { return new FlatResult(h, a, GameEnd.EXTRA_TIME); }
+		if (h != a) { return new Result(h, a, GameEnd.EXTRA_TIME); }
 
 		// Penalties: one extra goal goes to home with same per-goal probability.
 		var pHome = HomeGoalProbability(homeTeamId, awayTeamId);
 		if (_rng.NextDouble() < pHome) { h++; } else { a++; }
-		return new FlatResult(h, a, GameEnd.PENALTIES);
+		return new Result(h, a, GameEnd.PENALTIES);
 	}
 
 	(int Home, int Away) SamplePoissonScore(string homeTeamId, string awayTeamId, double lambdaFactor)

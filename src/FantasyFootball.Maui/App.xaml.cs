@@ -13,11 +13,6 @@ public partial class App : Application
 
 		ServiceHelper.GetService<IDataService>()!.Initialize();
 
-		Routing.RegisterRoute(nameof(CompetitionsPage), typeof(CompetitionsPage));
-		Routing.RegisterRoute(nameof(CompetitionSetupPage), typeof(CompetitionSetupPage));
-		Routing.RegisterRoute(nameof(GamesPage), typeof(GamesPage));
-		Routing.RegisterRoute(nameof(StandingsPage), typeof(StandingsPage));
-		Routing.RegisterRoute(nameof(CompetitionStatisticsPage), typeof(CompetitionStatisticsPage));
 		Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
 		Routing.RegisterRoute(nameof(TeamsPage), typeof(TeamsPage));
 		Routing.RegisterRoute(nameof(TeamDetailPage), typeof(TeamDetailPage));

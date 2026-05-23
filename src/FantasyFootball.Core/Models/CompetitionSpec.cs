@@ -1,7 +1,7 @@
 namespace FantasyFootball.Models;
 
 /// <summary>
-/// Recipe for instantiating a fresh, unsimulated <see cref="FlatCompetition"/>.
+/// Recipe for instantiating a fresh, unsimulated <see cref="Competition"/>.
 /// The three subtypes correspond to the bulk-simulation modes:
 ///
 /// <list type="table">
@@ -30,7 +30,7 @@ namespace FantasyFootball.Models;
 /// </list>
 ///
 /// Specs are short-lived: the user picks one, the runner materializes
-/// it N times into FlatCompetitions, and the spec itself is discarded.
+/// it N times into Competitions, and the spec itself is discarded.
 /// </summary>
 public abstract record class CompetitionSpec
 {
@@ -50,7 +50,7 @@ public sealed record class HistoricalSpec : CompetitionSpec;
 /// but can also be a hand-picked what-if lineup.
 ///
 /// <para><c>Groups[i]</c> holds the team IDs in group letter
-/// <c>(char)('A' + i)</c>, matching <see cref="FlatCompetition.GroupAssignments"/>.</para>
+/// <c>(char)('A' + i)</c>, matching <see cref="Competition.GroupAssignments"/>.</para>
 /// </summary>
 public sealed record class CustomLineupSpec : CompetitionSpec
 {

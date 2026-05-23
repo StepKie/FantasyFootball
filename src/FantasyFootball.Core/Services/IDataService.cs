@@ -10,7 +10,6 @@ public interface IDataService
 	List<Team> AllTeams { get; }
 
 	CompetitionType SelectedCompetitionType { get; set; }
-	int SelectedCompetitionYear { get; set; }
 
 	List<Team> CreateTeams();
 

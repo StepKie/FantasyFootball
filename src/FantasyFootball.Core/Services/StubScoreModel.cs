@@ -15,13 +15,13 @@ namespace FantasyFootball.Services;
 /// </summary>
 public sealed class StubScoreModel : IScoreModel
 {
-	public FlatResult ScoreGroupGame(string homeTeamId, string awayTeamId)
+	public Result ScoreGroupGame(string homeTeamId, string awayTeamId)
 	{
 		var (home, away) = StableScore(homeTeamId, awayTeamId);
-		return new FlatResult(home, away, GameEnd.NORMAL);
+		return new Result(home, away, GameEnd.NORMAL);
 	}
 
-	public FlatResult ScoreKoGame(string homeTeamId, string awayTeamId)
+	public Result ScoreKoGame(string homeTeamId, string awayTeamId)
 	{
 		var (home, away) = StableScore(homeTeamId, awayTeamId);
 		if (home == away)
@@ -29,9 +29,9 @@ public sealed class StubScoreModel : IScoreModel
 			// Force a decision — modelled here as "home wins on penalties".
 			// A realistic model would simulate ET first, then penalties only
 			// if still tied.
-			return new FlatResult(home + 1, away, GameEnd.PENALTIES);
+			return new Result(home + 1, away, GameEnd.PENALTIES);
 		}
-		return new FlatResult(home, away, GameEnd.NORMAL);
+		return new Result(home, away, GameEnd.NORMAL);
 	}
 
 	static (int Home, int Away) StableScore(string home, string away)
