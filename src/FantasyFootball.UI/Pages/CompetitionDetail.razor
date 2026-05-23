@@ -294,12 +294,10 @@ else
 
   void ToggleDetails(int gameId) => _openDetailsGameId = _openDetailsGameId == gameId ? null : gameId;
 
-  // Position is referenced directly by a KO qualifier → advance (green).
-  // Position 3 of a 3rd-place-eligible group: undetermined until the group stage finishes;
-  // once resolved → advance/out per the actual pool result. All other positions → out (red).
+  // Advance = direct qualifier; 3rd = pool result (null until group stage done); else out.
   static string QualBarClass(int position, FlatGroupQualification.GroupQualSlots slots)
   {
-    if (slots.DirectSlots.Contains(position)) { return "standings-qual-bar-advance"; }
+    if (slots.DirectSlots?.Contains(position) == true) { return "standings-qual-bar-advance"; }
     if (position == 3 && slots.ThirdPlaceEligible)
     {
       return slots.ThirdPlaceAdvanced switch
@@ -312,9 +310,15 @@ else
     return "standings-qual-bar-out";
   }
 
+  int _lastLoadedId = -1;
+
+  protected override void OnInitialized() => ViewModel.PropertyChanged += OnVmChanged;
+
+  // Dedup: back/forward to the same /competitions/{id} must not re-LoadAsync and reset stage/round selection.
   protected override async Task OnParametersSetAsync()
   {
-    ViewModel.PropertyChanged += OnVmChanged;
+    if (_lastLoadedId == Id) { return; }
+    _lastLoadedId = Id;
     await ViewModel.LoadAsync(Id);
   }
 
@@ -324,46 +328,40 @@ else
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    if (firstRender)
+    // JS bridge may be torn down between render and dispatch; swallow the disconnect cleanly so a queued render after navigate-away doesn't crash to blank.
+    try
     {
-      _selfRef = DotNetObjectReference.Create(this);
-      await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
-      await JS.InvokeVoidAsync("ffPopover.registerOutsideClickHandler", _selfRef);
-    }
+      if (firstRender)
+      {
+        _selfRef = DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
+        await JS.InvokeVoidAsync("ffPopover.registerOutsideClickHandler", _selfRef);
+      }
 
-    // Auto-scroll priorities (highest first). On each render at most one fires.
-    // Tracking ids dedupes across renders — we only scroll on change, never on
-    // every parameter pass.
-    //
-    // 1) Just-finished pulse — keep the result visible while the user reads it.
-    //    Also bumps _lastScrolledCurrentGameId so the next render doesn't
-    //    immediately re-scroll to the new current game (which would yank the
-    //    just-played result out of view).
-    if (ViewModel.RecentlyFinishedGameId is { } rfid && rfid != _lastScrolledJustFinishedId)
-    {
-      _lastScrolledJustFinishedId = rfid;
-      _lastScrolledCurrentGameId = ViewModel.Competition?.CurrentGame()?.Id;
-      await JS.InvokeVoidAsync("ffScroll.toElement", "just-finished-game");
-      return;
-    }
+      if (ViewModel.RecentlyFinishedGameId is { } rfid && rfid != _lastScrolledJustFinishedId)
+      {
+        _lastScrolledJustFinishedId = rfid;
+        // Bump so the post-pulse render doesn't re-scroll to current and yank the result out of view.
+        _lastScrolledCurrentGameId = ViewModel.Competition?.CurrentGame()?.Id;
+        await JS.InvokeVoidAsync("ffScroll.toElement", "just-finished-game");
+        return;
+      }
 
-    // 2) Current-game shift — initial load, bulk sim end, or any other
-    //    state change where there's no pulse to defer to.
-    var currentGame = ViewModel.Competition?.CurrentGame();
-    if (currentGame is { Id: var cgid } && cgid != _lastScrolledCurrentGameId)
-    {
-      _lastScrolledCurrentGameId = cgid;
-      await JS.InvokeVoidAsync("ffScroll.toElement", "current-game");
-      return;
-    }
+      var currentGame = ViewModel.Competition?.CurrentGame();
+      if (currentGame is { Id: var cgid } && cgid != _lastScrolledCurrentGameId)
+      {
+        _lastScrolledCurrentGameId = cgid;
+        await JS.InvokeVoidAsync("ffScroll.toElement", "current-game");
+        return;
+      }
 
-    // 3) User clicked a round/stage chip — semantic of "selected round" is that
-    //    its games should be visible.
-    if (ViewModel.SelectedRoundId is { } rid && rid != _lastScrolledRoundId)
-    {
-      _lastScrolledRoundId = rid;
-      await JS.InvokeVoidAsync("ffScroll.toElement", $"round-{rid}");
+      if (ViewModel.SelectedRoundId is { } rid && rid != _lastScrolledRoundId)
+      {
+        _lastScrolledRoundId = rid;
+        await JS.InvokeVoidAsync("ffScroll.toElement", $"round-{rid}");
+      }
     }
+    catch (JSDisconnectedException) { }
   }
 
   /// <summary>
@@ -441,8 +439,10 @@ else
     if (_showHelp && key == "Escape") { _showHelp = false; StateHasChanged(); return; }
     if (key == "Escape") { Nav.NavigateTo("competitions"); return; }
     if (key == "?" || key == "h" || key == "H") { _showHelp = !_showHelp; StateHasChanged(); return; }
+    // Suppress sim/nav shortcuts while help overlay is open — Esc + H/? above stay active to dismiss it.
+    if (_showHelp) { return; }
 
-    if (ctrl && (key == "z" || key == "Z" || key == "u" || key == "U")) { await ViewModel.UndoLastGame(); return; }
+    if (ctrl && (key == "z" || key == "Z")) { await ViewModel.UndoLastGame(); return; }
     if (ctrl && (key == "y" || key == "Y")) { await ViewModel.RerollLastGame(); return; }
     if (!ctrl && (key == "u" || key == "U")) { await ViewModel.UndoLastGame(); return; }
 
@@ -455,8 +455,7 @@ else
     if (key == "ArrowDown")  { StepStage(+1); return; }
   }
 
-  // Selected → no status class (let the filled primary show through).
-  // Done → chip-done.  Current → chip-current.  Future → chip-future.
+  // Selected → ""; Done → chip-done; Current → chip-current; Future → chip-future.
   static string ChipStatusClass(bool isSelected, bool isCurrent, bool isDone)
   {
     if (isSelected) { return ""; }

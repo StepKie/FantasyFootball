@@ -63,10 +63,7 @@ public partial class FlatCompetitionSetupViewModel : ObservableObject
 
 		AvailableTypes = _catalog.Select(x => x.Type).Distinct().ToList();
 
-		// Inherit the type the user picked on the list page (or anywhere
-		// else that touches IDataService.SelectedCompetitionType). Falls
-		// back to the catalog's first entry if the persisted type isn't
-		// in the catalog.
+		// Inherit IDataService.SelectedCompetitionType; fall back to catalog's first entry.
 		var preferredType = _dataService.SelectedCompetitionType;
 		var seed = AvailableTypes.Contains(preferredType)
 			? _catalog.First(x => x.Type == preferredType)
@@ -226,8 +223,7 @@ public partial class FlatCompetitionSetupViewModel : ObservableObject
 
 	CompetitionSpec BuildBulkSpec()
 	{
-		// "Always Fresh" → RandomLineupSpec (new draw per run).
-		// "Fixed" → CustomLineupSpec if there's a current draw, else HistoricalSpec (Original lineup).
+		// AlwaysFresh → RandomLineupSpec; Fixed → CustomLineupSpec (drawn) or HistoricalSpec (original).
 		if (BulkMode == BulkRandomness.AlwaysFresh)
 		{
 			return new RandomLineupSpec
@@ -264,8 +260,7 @@ public partial class FlatCompetitionSetupViewModel : ObservableObject
 		return result;
 	}
 
-	// Placeholder Team for IDs that don't appear in the local registry (e.g.
-	// synthetic test IDs from a random draw that pulled from an extended pool).
+	// Placeholder Team for IDs not in the local registry (e.g. synthetic test IDs from an extended-pool draw).
 	static Team Placeholder(string shortName) => new() { Name = shortName, ShortName = shortName, Elo = 0 };
 
 	public sealed record LineupGroup(string Name, IReadOnlyList<Team> Teams);

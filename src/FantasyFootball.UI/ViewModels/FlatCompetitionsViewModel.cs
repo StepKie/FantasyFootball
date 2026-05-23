@@ -34,16 +34,13 @@ public partial class FlatCompetitionsViewModel : ObservableObject
 		_factory = factory;
 		_simulator = simulator;
 
-		// Hydrate the filter from the shared type pref so the chip
-		// state survives navigation to / from the setup page.
+		// Hydrate from the shared type pref so the chip state survives navigation between list and setup pages.
 		SelectedType = dataService.SelectedCompetitionType;
 	}
 
 	partial void OnSelectedTypeChanged(CompetitionType? value)
 	{
-		// Persist non-null choices so the setup page (and any other consumer
-		// of IDataService.SelectedCompetitionType) inherits the user's last pick.
-		// Null = "All" filter — leave the prior persisted type alone.
+		// Persist non-null choices so other consumers inherit the pick; null = "All" filter, leave the prior pref alone.
 		if (value is { } t) { _dataService.SelectedCompetitionType = t; }
 	}
 
@@ -178,9 +175,7 @@ public partial class FlatCompetitionsViewModel : ObservableObject
 		IsBusy = true;
 		try
 		{
-			// Yield once so the IsBusy spinner flushes before the WASM thread
-			// is hogged by the sim. Sim itself is fast (35x old) but a full
-			// WC2026 still warrants a render gap for the spinner to appear.
+			// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
 			await Task.Yield();
 			_simulator.Simulate(comp);
 			await _repo.SaveAsync(comp);

@@ -520,19 +520,6 @@ body {
   object-fit: contain;
 }
 
-/* Qualification-zone left-edge bar in standings rows. Slim, muted column inset from row edges. */
-.standings-qual-bar {
-  position: absolute;
-  left: 0;
-  top: 6px;
-  bottom: 6px;
-  width: 3px;
-  border-radius: 2px;
-}
-
-.standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
-.standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
-
 /* Elo numbers tone down so they don't compete with team names. */
 .elo-muted {
   color: var(--mud-palette-text-secondary, #9CA3AF);

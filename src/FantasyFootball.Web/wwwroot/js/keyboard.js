@@ -43,9 +43,6 @@ window.ffKeyboard = {
 };
 
 // Document-level outside-click detection for the game-details popover.
-// Fires OnOutsideClick when a click lands outside any .scoreboard-row-wrapper
-// and outside the floating .game-details-popover. Game-row clicks still
-// reach Blazor's @onclick handler normally — we don't preventDefault.
 window.ffPopover = {
   _dotNetRef: null,
   _handler: null,
@@ -60,9 +57,7 @@ window.ffPopover = {
       this._dotNetRef.invokeMethodAsync('OnOutsideClick')
         .catch(err => { if (!String(err).includes('disposed')) { console.warn('[ffPopover]', err); } });
     };
-    // Mousedown (capture) fires before the popover MudLink's click navigation —
-    // matters when the click is INSIDE the popover (we leave it alone) but the
-    // capture-phase timing means we see the event before bubble-phase teardown.
+    // capture-phase so we see the event before popover MudLink click navigation.
     document.addEventListener('mousedown', this._handler, true);
   },
 

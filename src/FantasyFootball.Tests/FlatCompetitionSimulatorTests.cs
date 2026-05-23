@@ -103,15 +103,7 @@ public class FlatCompetitionSimulatorTests
 	[Fact]
 	public void Simulate_AnyFormat_NoTeamFillsTwoSlotsInSameRound()
 	{
-		// Regression test for the 3rd-place pool resolver bug where each pool slot
-		// independently picked "best 3rd-place from its eligible groups" — when
-		// pools overlapped, the same team got assigned to multiple R32 slots
-		// (e.g. Japan filling 5 of the 8 third-place slots in WC2026).
-		//
-		// Invariant: within any single round of a finished competition, every
-		// team appears at most once across the (HomeTeamId, AwayTeamId) slots.
-		// Existing tests asserted slot population (non-null ids); this one
-		// asserts slot UNIQUENESS — the semantic property the bug violated.
+		// Asserts each team appears at most once per round — uniqueness, not just slot population.
 		foreach (var defId in new[] { "wm-2022", "em-2024", "wm-2026" })
 		{
 			var c = _definitions.Load(defId);

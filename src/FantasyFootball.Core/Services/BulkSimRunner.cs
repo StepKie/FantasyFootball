@@ -58,9 +58,7 @@ public sealed class BulkSimRunner
 			var id = await _repo.SaveAsync(competition);
 			ids.Add(id);
 			progress?.Report(i + 1);
-			// Yield back to the scheduler so a Blazor render loop can paint
-			// the progress update + cancel button between runs (in-memory repo
-			// returns Task.FromResult, otherwise await wouldn't yield).
+			// Yield so the render loop can paint the progress bar between runs.
 			await Task.Yield();
 		}
 

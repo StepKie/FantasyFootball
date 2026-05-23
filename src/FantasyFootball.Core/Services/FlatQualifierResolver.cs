@@ -22,8 +22,9 @@ public static class FlatQualifierResolver
 	/// </summary>
 	public static string? TryResolve(FlatCompetition c, string qualifierDsl)
 	{
+		// InvalidOperationException = prerequisite not yet played; FormatException/ArgumentException = bad DSL and stay loud.
 		try { return Resolve(c, qualifierDsl); }
-		catch { return null; }
+		catch (InvalidOperationException) { return null; }
 	}
 
 	public static string Resolve(FlatCompetition c, string qualifierDsl)

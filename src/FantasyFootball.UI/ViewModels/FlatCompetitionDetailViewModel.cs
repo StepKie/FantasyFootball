@@ -64,8 +64,8 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		: Competition.RoundGames(SelectedRoundId).OrderBy(g => g.PlayedOn);
 
 	/// <summary>
-	/// Group standings for every group that has at least one game in the
-	/// selected round. Empty when the selected round is in a KO stage.
+	/// Group standings for the selected round. For KO rounds (or when no round is selected),
+	/// falls back to all groups so the panel stays populated.
 	/// </summary>
 	public IReadOnlyList<(string Letter, IReadOnlyList<FlatGroupStanding> Standings)> GroupStandings
 	{
@@ -73,9 +73,7 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		{
 			if (Competition is null) { return []; }
 
-			// Group-stage round: show only the groups whose games are in this round.
-			// KO round (or anything else): fall back to ALL groups' final standings so
-			// the standings panel stays useful instead of going blank.
+			// Group-stage round → only that round's groups; KO round / no round → all groups (panel stays useful).
 			var roundLetters = SelectedRoundId is null
 				? []
 				: Competition.RoundGames(SelectedRoundId)
@@ -114,7 +112,6 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 
 	public async Task LoadAsync(int competitionId)
 	{
-		IsBusy = false;
 		Competition = await _repo.GetAsync(competitionId);
 		if (Competition is null) { return; }
 
@@ -154,18 +151,23 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		IsBusy = true;
 		try
 		{
-			_simulator.SimulateGame(Competition, game);
-			await _repo.SaveAsync(Competition);
+			try
+			{
+				_simulator.SimulateGame(Competition, game);
+				await _repo.SaveAsync(Competition);
+			}
+			catch
+			{
+				// Roll back any in-memory mutation so UI + persistence stay consistent on simulator or save failure.
+				game.Result = null;
+				throw;
+			}
+			RecentlyFinishedGameId = game.Id;
+			_ = ClearPulseAfterDelay(game.Id);
 		}
 		finally
 		{
-			// Set the pulse marker BEFORE the refresh so the next render sees both
-			// the new competition state AND the recently-finished id together —
-			// the page's auto-scroll prioritises just-finished over current-game,
-			// which prevents a visible jump-to-next-then-jump-back sequence.
-			RecentlyFinishedGameId = game.Id;
 			RefreshAfterSim();
-			_ = ClearPulseAfterDelay(game.Id);
 		}
 	}
 
@@ -193,13 +195,23 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		var lastPlayed = Competition.LastFinishedGame();
 		if (lastPlayed is null) { return; }
 
+		var originalResult = lastPlayed.Result;
 		IsBusy = true;
 		try
 		{
-			lastPlayed.Result = null;
-			ClearUnplayedKoResolutions(Competition);
-			FlatCompetitionSimulator.ResolveAvailableKoTeams(Competition);
-			await _repo.SaveAsync(Competition);
+			try
+			{
+				lastPlayed.Result = null;
+				ClearUnplayedKoResolutions(Competition);
+				FlatCompetitionSimulator.ResolveAvailableKoTeams(Competition);
+				await _repo.SaveAsync(Competition);
+			}
+			catch
+			{
+				// Restore the result; RefreshAfterSim → ResolveAvailableKoTeams re-fills the KO slots from the restored state.
+				lastPlayed.Result = originalResult;
+				throw;
+			}
 		}
 		finally
 		{
@@ -219,20 +231,29 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		var lastPlayed = Competition.LastFinishedGame();
 		if (lastPlayed is null) { return; }
 
+		var originalResult = lastPlayed.Result;
 		IsBusy = true;
 		try
 		{
-			lastPlayed.Result = null;
-			ClearUnplayedKoResolutions(Competition);
-			_simulator.SimulateGame(Competition, lastPlayed);
-			FlatCompetitionSimulator.ResolveAvailableKoTeams(Competition);
-			await _repo.SaveAsync(Competition);
+			try
+			{
+				lastPlayed.Result = null;
+				ClearUnplayedKoResolutions(Competition);
+				_simulator.SimulateGame(Competition, lastPlayed);
+				FlatCompetitionSimulator.ResolveAvailableKoTeams(Competition);
+				await _repo.SaveAsync(Competition);
+			}
+			catch
+			{
+				lastPlayed.Result = originalResult;
+				throw;
+			}
+			RecentlyFinishedGameId = lastPlayed.Id;
+			_ = ClearPulseAfterDelay(lastPlayed.Id);
 		}
 		finally
 		{
-			RecentlyFinishedGameId = lastPlayed.Id;
 			RefreshAfterSim(advanceSelection: false);
-			_ = ClearPulseAfterDelay(lastPlayed.Id);
 		}
 	}
 
@@ -254,7 +275,7 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 	/// </summary>
 	public async Task SimulateRound(string? roundId)
 	{
-		if (Competition is null || roundId is null || IsBusy) { return; }
+		if (Competition is null || roundId is null || IsFinished || IsBusy) { return; }
 		var targetRound = Competition.Rounds.FirstOrDefault(r => r.Id == roundId);
 		if (targetRound is null) { return; }
 
@@ -263,16 +284,27 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		var cutoff = roundGames.Max(g => g.PlayedOn);
 
 		IsBusy = true;
+		var played = new List<FlatGame>();
 		try
 		{
-			foreach (var game in Competition.Games
-				.Where(g => g.Result is null && g.PlayedOn <= cutoff)
-				.OrderBy(g => g.PlayedOn))
+			try
 			{
-				_simulator.SimulateGame(Competition, game);
+				foreach (var game in Competition.Games
+					.Where(g => g.Result is null && g.PlayedOn <= cutoff)
+					.OrderBy(g => g.PlayedOn))
+				{
+					_simulator.SimulateGame(Competition, game);
+					played.Add(game);
+				}
+				await _repo.SaveAsync(Competition);
 			}
-
-			await _repo.SaveAsync(Competition);
+			catch
+			{
+				// Also clear KO ??= stamps from the failed run; otherwise stale upstream-resolver IDs survive into the retry.
+				foreach (var g in played) { g.Result = null; }
+				ClearUnplayedKoResolutions(Competition);
+				throw;
+			}
 		}
 		finally
 		{
@@ -287,7 +319,7 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 	/// </summary>
 	public async Task SimulateStage(string stageId)
 	{
-		if (Competition is null || IsBusy) { return; }
+		if (Competition is null || IsFinished || IsBusy) { return; }
 		var stageRounds = Competition.Rounds.Where(r => r.StageId == stageId).ToList();
 		if (stageRounds.Count == 0) { return; }
 
@@ -296,16 +328,27 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		var cutoff = Competition.Games.Where(g => stageGameIds.Contains(g.Id)).Max(g => g.PlayedOn);
 
 		IsBusy = true;
+		var played = new List<FlatGame>();
 		try
 		{
-			foreach (var game in Competition.Games
-				.Where(g => g.Result is null && g.PlayedOn <= cutoff)
-				.OrderBy(g => g.PlayedOn))
+			try
 			{
-				_simulator.SimulateGame(Competition, game);
+				foreach (var game in Competition.Games
+					.Where(g => g.Result is null && g.PlayedOn <= cutoff)
+					.OrderBy(g => g.PlayedOn))
+				{
+					_simulator.SimulateGame(Competition, game);
+					played.Add(game);
+				}
+				await _repo.SaveAsync(Competition);
 			}
-
-			await _repo.SaveAsync(Competition);
+			catch
+			{
+				// Also clear KO ??= stamps from the failed run; otherwise stale upstream-resolver IDs survive into the retry.
+				foreach (var g in played) { g.Result = null; }
+				ClearUnplayedKoResolutions(Competition);
+				throw;
+			}
 		}
 		finally
 		{
@@ -337,9 +380,7 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 		IsBusy = true;
 		try
 		{
-			// Yield so the IsBusy spinner flushes to the DOM before the
-			// sim hogs the WASM thread. Sim itself is fast (35x old) but a
-			// full WC2026 still warrants a render gap for the user feedback.
+			// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
 			await Task.Yield();
 			_simulator.Simulate(Competition);
 			await _repo.SaveAsync(Competition);
@@ -352,9 +393,7 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 
 	void RefreshAfterSim(bool advanceSelection = true)
 	{
-		// Pull resolved team IDs into future KO games as soon as their
-		// upstream prerequisites land — so the display fills in real teams
-		// + flags without waiting for the user to click those KO games.
+		// Fill in resolved KO team ids so flags + names appear without waiting for the user to open those games.
 		if (Competition is not null)
 		{
 			FlatCompetitionSimulator.ResolveAvailableKoTeams(Competition);
@@ -374,8 +413,7 @@ public partial class FlatCompetitionDetailViewModel : ObservableObject
 			}
 		}
 
-		// Re-publish Competition so all derived properties recompute
-		// (Standings, GroupStandings, RoundGames, IsFinished, WinnerTeamId).
+		// Re-publish Competition so all derived properties (Standings, GroupStandings, RoundGames, IsFinished, WinnerTeamId) recompute.
 		OnPropertyChanged(nameof(Competition));
 		OnPropertyChanged(nameof(RoundGames));
 		OnPropertyChanged(nameof(GroupStandings));

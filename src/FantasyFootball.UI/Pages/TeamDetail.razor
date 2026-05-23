@@ -7,7 +7,7 @@
 
 <PageTitle>@(ViewModel.Team?.Name ?? "Team") — Fantasy Football</PageTitle>
 
-<MudButton Href="@(string.IsNullOrEmpty(From) ? "teams" : From)"
+<MudButton Href="@(IsSafeFrom(From) ? From! : "teams")"
            StartIcon="@Icons.Material.Filled.ArrowBack"
            Variant="Variant.Text"
            Class="mb-3">
@@ -78,6 +78,12 @@ else
     _lastLoadedId = Id;
     ViewModel.Load(Id);
   }
+
+  // Reject non-relative-path ?from= values so a crafted `javascript:` URL can't fire on Back.
+  static bool IsSafeFrom(string? from) =>
+    !string.IsNullOrEmpty(from)
+    && !from.StartsWith("//")
+    && !from.Contains(':');
 
   void OnVmChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
 

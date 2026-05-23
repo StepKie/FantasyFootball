@@ -52,11 +52,7 @@ public static class FlatGroupQualification
 			AddQualifier(ko.AwayQual, directByGroup, thirdEligible);
 		}
 
-		// 3rd-place pool resolution: the pool can't resolve until EVERY group's games finish
-		// (cross-group rank comparison). Once it does, ResolveAvailableKoTeams fills the KO
-		// slot's HomeTeamId/AwayTeamId. If that resolved id matches THIS group's 3rd-place
-		// team → advanced. If the pool has resolved and our 3rd-placer isn't in any of those
-		// slots → out. Until then → undetermined (null).
+		// Pool can't resolve until all group games finish; once resolved, the KO slot's team id tells us if this group's 3rd-placer advanced.
 		var allGroupGamesPlayed = c.Games.OfType<FlatGroupGame>().All(g => g.Result is not null);
 		var groupLetters = directByGroup.Keys.Concat(thirdEligible).Distinct();
 		foreach (var letter in groupLetters)

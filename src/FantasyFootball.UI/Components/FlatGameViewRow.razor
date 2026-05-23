@@ -124,17 +124,14 @@
     _homeTeam = homeId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == homeId);
     _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId);
 
-    // Resolved team → its Name; unresolved KO slot → human-readable qualifier
-    // ("Winner of Round of 16 game 1" instead of "W-49"); group game with an
-    // unknown team-id (placeholder) → fall back to the id itself.
+    // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id.
     _homeLabel = _homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?";
     _awayLabel = _awayTeam?.Name ?? LabelForUnresolved(Game, isHome: false) ?? awayId ?? "?";
 
     _groupLetter = Game switch
     {
       FlatGroupGame gg => gg.GroupLetter,
-      // For KO games, show the short round code + position-in-round
-      // (e.g. "R16 1", "QF 2"). Single-game rounds (3rd, F) drop the number.
+      // KO: short round code + position; single-game rounds (3rd, F) drop the position.
       FlatKoGame => Competition is null
         ? FlatRoundShortNames.Of(Game.RoundId)
         : Competition.Games.Count(g => g.RoundId == Game.RoundId) == 1
@@ -144,15 +141,18 @@
     };
     _resultText = Game.Result is { } r ? r.Format() : "v";
 
-    // Compute popover data only on the open-transition. Recomputing every render
-    // would re-walk GetAllAsync()'s LocalStorage scan on every parent re-render
-    // (sim, busy flag, selection change, ...) while a popover stays open.
-    if (DetailsOpen && !_prevDetailsOpen && _homeTeam is not null && _awayTeam is not null)
+    // _prevDetailsOpen tracks "fetch already fired this session with teams resolved". Set before the await to block re-entrant fetches; reset when conditions stop holding (popover closed OR teams unresolved) so the fetch retriggers once they're ready.
+    var canFetch = DetailsOpen && _homeTeam is not null && _awayTeam is not null;
+    if (canFetch && !_prevDetailsOpen)
     {
-      _prob = MatchProbability.WinDrawLoss(_homeTeam.Elo, _awayTeam.Elo);
+      _prevDetailsOpen = true;
+      _prob = MatchProbability.WinDrawLoss(_homeTeam!.Elo, _awayTeam!.Elo);
       _h2h = await FlatHeadToHeadLookup.AcrossAsync(Repo, _homeTeam.ShortName, _awayTeam.ShortName);
     }
-    _prevDetailsOpen = DetailsOpen;
+    else if (!canFetch)
+    {
+      _prevDetailsOpen = false;
+    }
   }
 
   Task HandleRowClick() => OnDetailsToggle.InvokeAsync();

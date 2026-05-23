@@ -25,6 +25,9 @@ public sealed class LocalStorageFlatCompetitionRepository : IFlatCompetitionRepo
 
 	readonly ILocalStorageService _storage;
 
+	// Monotonic id counter incremented synchronously before any await so two concurrent SaveAsync calls (bulk sim + user click) can't allocate the same id.
+	int _nextId;
+
 	public LocalStorageFlatCompetitionRepository(ILocalStorageService storage)
 	{
 		_storage = storage;
@@ -32,18 +35,25 @@ public sealed class LocalStorageFlatCompetitionRepository : IFlatCompetitionRepo
 
 	public async Task<int> SaveAsync(FlatCompetition competition)
 	{
-		var index = await ReadIndex();
+		if (_nextId == 0)
+		{
+			var initIndex = await ReadIndex();
+			if (initIndex.Count > 0) { _nextId = initIndex.Max(); }
+		}
 		if (competition.Id == 0)
 		{
-			competition.Id = (index.Count == 0 ? 0 : index.Max()) + 1;
+			competition.Id = ++_nextId;
 		}
 
-		await _storage.SetItemAsStringAsync(KeyFor(competition.Id), FlatJson.Serialize(competition, compact: true));
+		// Index-first, payload-second: re-read before WriteIndex to avoid clobbering a concurrent save; orphan index is recoverable, missing payload isn't.
+		var index = await ReadIndex();
 		if (!index.Contains(competition.Id))
 		{
 			index.Add(competition.Id);
 			await WriteIndex(index);
 		}
+
+		await _storage.SetItemAsStringAsync(KeyFor(competition.Id), FlatJson.Serialize(competition, compact: true));
 
 		return competition.Id;
 	}
@@ -91,6 +101,7 @@ public sealed class LocalStorageFlatCompetitionRepository : IFlatCompetitionRepo
 		}
 
 		await _storage.RemoveItemAsync(IndexKey);
+		_nextId = 0;
 	}
 
 	async Task<List<int>> ReadIndex()

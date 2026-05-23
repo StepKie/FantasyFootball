@@ -44,6 +44,12 @@ public sealed class FlatCompetitionSimulator
 				ko.Result = _scoreModel.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
 				break;
 		}
+
+		// Stamp SimulationFinished here so manually-completed comps don't leave it null (bulk Simulate stamps post-loop).
+		if (c.Games.All(g => g.Result is not null))
+		{
+			c.SimulationFinished ??= DateTime.UtcNow;
+		}
 	}
 
 	/// <summary>
@@ -64,8 +70,7 @@ public sealed class FlatCompetitionSimulator
 	{
 		c.SimulationStart ??= DateTime.UtcNow;
 
-		// Defensive sort: relying on upstream order would foot-gun on a
-		// hand-edited out-of-order definition. Cheap at our scale.
+		// Defensive sort: a hand-edited out-of-order definition file would foot-gun without this.
 		foreach (var game in c.Games.OrderBy(g => g.PlayedOn))
 		{
 			SimulateGame(c, game);
@@ -76,9 +81,7 @@ public sealed class FlatCompetitionSimulator
 
 	static void ResolveKoTeams(FlatCompetition c, FlatKoGame ko)
 	{
-		// 3rd-place pool slots are resolved as a coherent batch (one team per slot,
-		// no double-picks). Forcing a refresh of ResolveAvailableKoTeams before each
-		// KO game guarantees pool slots are populated before per-slot Resolve runs.
+		// Pool slots resolve as a batch; refresh before per-slot Resolve to guarantee they're populated.
 		if (ko.HomeTeamId is null || ko.AwayTeamId is null) { ResolveAvailableKoTeams(c); }
 		ko.HomeTeamId ??= FlatQualifierResolver.Resolve(c, ko.HomeQual);
 		ko.AwayTeamId ??= FlatQualifierResolver.Resolve(c, ko.AwayQual);
@@ -94,9 +97,7 @@ public sealed class FlatCompetitionSimulator
 	/// </summary>
 	public static void ResolveAvailableKoTeams(FlatCompetition c)
 	{
-		// Hot-path skip: if every KO game already has both team-ids assigned,
-		// no work to do. Avoids per-Space-press parsing + per-slot try-resolve
-		// + pool-batch passes once the bracket is fully resolved.
+		// Hot-path skip: all KO slots already assigned → nothing to do.
 		var anyUnresolved = false;
 		foreach (var ko in c.Games.OfType<FlatKoGame>())
 		{
@@ -120,9 +121,6 @@ public sealed class FlatCompetitionSimulator
 
 	static bool IsNonPool(string dsl) =>
 		FlatQualifierParser.TryParse(dsl, out var q) && q is not FlatThirdPlacePool;
-
-	static bool IsPool(string dsl) =>
-		FlatQualifierParser.TryParse(dsl, out var q) && q is FlatThirdPlacePool;
 
 	/// <summary>
 	/// Batch-assign 3rd-place pool slots. Globally ranks 3rd-placers across all groups
@@ -162,25 +160,22 @@ public sealed class FlatCompetitionSimulator
 			if (c.GroupGames(letter).Any(g => g.Result is null)) { return; }
 		}
 
-		// Global ranking of 3rd-placers — same tiebreaker cascade as within a group.
+		// Global ranking of 3rd-placers, same tiebreaker cascade as within a group; ElementAtOrDefault guards groups with < 3 teams (matches sibling resolvers).
 		var thirdPlacers = groupsNeeded
-			.Select(g => (Letter: g, Standing: c.Standings(g)[2]))
+			.Select(g => (Letter: g, Standing: c.Standings(g).ElementAtOrDefault(2)))
+			.Where(x => x.Standing is not null)
+			.Select(x => (x.Letter, Standing: x.Standing!))
 			.OrderByDescending(x => x.Standing.Points)
 			.ThenByDescending(x => x.Standing.GoalDifference)
 			.ThenByDescending(x => x.Standing.GoalsFor)
 			.ThenBy(x => x.Standing.TeamId, StringComparer.Ordinal)
-			.Take(poolSlots.Count)
 			.ToList();
 
-		// Greedy assignment: process the strongest team first; for each, find the first
-		// remaining slot whose EligibleGroups accepts the team's group letter.
-		// To minimise the risk of greedy failing on the last few teams, slots with
-		// FEWEST options (smallest EligibleGroups overlap with remaining teams) would
-		// ideally be filled first — but the WC2026 definitions overlap loosely enough
-		// that simple best-team-first works. Revisit if a future format breaks this.
+		// Greedy best-team-first; if a team's letter isn't in any remaining slot's eligibles we skip it and try the next, until `remaining` is empty.
 		var remaining = new List<(FlatKoGame Game, bool IsHome, FlatThirdPlacePool Pool)>(poolSlots);
 		foreach (var (letter, standing) in thirdPlacers)
 		{
+			if (remaining.Count == 0) { break; }
 			var idx = remaining.FindIndex(s => s.Pool.EligibleGroups.Contains(letter));
 			if (idx < 0) { continue; }
 			var slot = remaining[idx];

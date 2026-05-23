@@ -13,7 +13,7 @@ namespace FantasyFootball.Models;
 /// <see cref="Format"/> is the compact console form (<c>"2-1"</c>,
 /// <c>"2-1 e.t."</c>).
 ///
-/// Future expansion (not in this PR): Attendance, Goal[], Card[], etc.
+/// Future expansion: Attendance, Goal[], Card[], etc.
 /// New fields are additive — older serialized competitions deserialize
 /// fine with default values.
 ///

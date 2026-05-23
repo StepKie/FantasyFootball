@@ -231,7 +231,7 @@ public class FlatCompetitionExtensionsTests
 			HomeTeamId = "FRA", AwayTeamId = "ESP",
 			Result = new FlatResult(2, 1, GameEnd.EXTRA_TIME),
 		};
-		et.Format().Should().Be("[60] 01.07.2026 20:00 FRA 2-1 a.e.t. ESP  [final]");
+		et.Format().Should().Be("[60] 01.07.2026 20:00 FRA 2-1 e.t. ESP  [final]");
 	}
 
 	[Fact]

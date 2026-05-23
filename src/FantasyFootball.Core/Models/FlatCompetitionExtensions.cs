@@ -47,9 +47,13 @@ public static class FlatCompetitionExtensions
 			? c.GroupGames(gg.GroupLetter).Where(x => x.Id != g.Id)
 			: Enumerable.Empty<FlatGroupGame>();
 
-	/// <summary>Latest finished game by PlayedOn, or null if none played yet.</summary>
+	/// <summary>
+	/// Latest finished game by PlayedOn, or null if none played yet.
+	/// Id is the tiebreaker for same-timestamp games (every MD3 group ties)
+	/// so Undo/Reroll on simultaneous games hits the JSON-order-latest one.
+	/// </summary>
 	public static FlatGame? LastFinishedGame(this FlatCompetition c) =>
-		c.Games.Where(g => g.Result is not null).MaxBy(g => g.PlayedOn);
+		c.Games.Where(g => g.Result is not null).MaxBy(g => (g.PlayedOn, g.Id));
 
 	/// <summary>First scheduled (not yet played) game by PlayedOn, or null if competition is finished.</summary>
 	public static FlatGame? CurrentGame(this FlatCompetition c) =>
@@ -95,11 +99,16 @@ public static class FlatCompetitionExtensions
 	/// (chronological by <c>PlayedOn</c>). Used to build labels like
 	/// "R16 1" or "Winner of QF #2".
 	/// </summary>
-	public static int PositionInRound(this FlatCompetition c, FlatGame game) => c.Games
-		.Where(g => g.RoundId == game.RoundId)
-		.OrderBy(g => g.PlayedOn)
-		.Select((g, idx) => (g, idx))
-		.First(x => x.g.Id == game.Id).idx + 1;
+	public static int PositionInRound(this FlatCompetition c, FlatGame game)
+	{
+		var match = c.Games
+			.Where(g => g.RoundId == game.RoundId)
+			.OrderBy(g => (g.PlayedOn, g.Id))
+			.Select((g, idx) => (g, idx))
+			.FirstOrDefault(x => x.g.Id == game.Id);
+		// Sentinel 0 for not-found so a stale game-vs-competition mismatch renders as "QF 0" — visible without crashing.
+		return match.g is null ? 0 : match.idx + 1;
+	}
 
 	/// <summary>
 	/// Standings table for a single group letter ("A", "B", …). Pure

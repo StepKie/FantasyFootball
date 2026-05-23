@@ -97,12 +97,10 @@ public class BulkSimRunnerTests
 	{
 		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
 		var reports = new List<int>();
-		var progress = new Progress<int>(reports.Add);
+		var progress = new SyncProgress<int>(reports.Add);
 
 		await _runner.RunAsync(spec, count: 5, progress);
 
-		// Progress<T> dispatches asynchronously via the sync context; give it a tick to drain.
-		await Task.Delay(50);
 		reports.Should().Equal(1, 2, 3, 4, 5);
 	}
 
@@ -125,5 +123,13 @@ public class BulkSimRunnerTests
 		public IReadOnlyList<string> AllTeamIds { get; }
 		public StubRegistry(IReadOnlyList<string> teams) { AllTeamIds = teams; }
 		public int EloOf(string teamId) => 1500;     // uniform ELO; bulk-sim runner doesn't use this directly
+	}
+
+	// Synchronous IProgress<T> so progress assertions don't race the sync-context drain.
+	sealed class SyncProgress<T> : IProgress<T>
+	{
+		readonly Action<T> _callback;
+		public SyncProgress(Action<T> callback) { _callback = callback; }
+		public void Report(T value) => _callback(value);
 	}
 }

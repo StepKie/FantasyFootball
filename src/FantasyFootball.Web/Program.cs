@@ -33,8 +33,7 @@ builder.Services.AddScoped<IRepository, LocalStorageRepository>();
 builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
 builder.Services.AddScoped<IDataService, CsvDataService>();
 
-// New flat-model services. Wired in alongside the old graph path; pages
-// migrate to these in subsequent phases of PR #2 (UI cutover).
+// Flat-model service stack.
 builder.Services.AddSingleton<ICompetitionDefinitionStore, EmbeddedCompetitionDefinitionStore>();
 builder.Services.AddScoped<IFlatTeamRegistry, DataServiceTeamRegistry>();
 builder.Services.AddScoped<IFlatCompetitionRepository, LocalStorageFlatCompetitionRepository>();

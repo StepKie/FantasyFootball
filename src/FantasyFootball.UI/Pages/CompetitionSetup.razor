@@ -86,8 +86,7 @@
           </MudStack>
 
           @{
-            // Random sub-mode only meaningful when the lineup is a draw; otherwise both
-            // sub-modes collapse to "use the historical lineup for all N".
+            // Random sub-mode only meaningful when lineup is a draw; otherwise both collapse to "historical lineup for all N".
             var randomDisabled = ViewModel.CurrentLineup != FlatCompetitionSetupViewModel.LineupMode.Random;
           }
           <MudRadioGroup T="FlatCompetitionSetupViewModel.BulkRandomness"
@@ -189,14 +188,7 @@
   async Task HandleRunBulk()
   {
     await ViewModel.RunBulkAsync();
-    if (ViewModel.LastRunFirstId is { } id && ViewModel.RunCount == 1)
-    {
-      Nav.NavigateTo($"competitions/{id}");
-    }
-    else
-    {
-      Nav.NavigateTo("competitions");
-    }
+    Nav.NavigateTo("competitions");
   }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnVmChanged;
