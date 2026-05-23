@@ -31,9 +31,6 @@ public class CsvDataService : IDataService
 	/// <summary> Global selected competition type to sync across all relevant pages </summary>
 	public CompetitionType SelectedCompetitionType { get; set; } = CompetitionType.WM;
 
-	/// <summary> Global selected competition year to sync across all relevant pages </summary>
-	public int SelectedCompetitionYear { get; set; } = CompetitionType.WM.AvailableYears().Last();
-
 	public List<Team> AllTeams => _teamCache ??= ReloadTeams();
 
 	List<Country> CreateCountries()
@@ -80,7 +77,6 @@ public class CsvDataService : IDataService
 		_repo.SaveAll(CreateTeams());
 
 		SelectedCompetitionType = CompetitionType.WM;
-		SelectedCompetitionYear = SelectedCompetitionType.AvailableYears().Last();
 
 		MessageBus.Send(new DataResetMessage());
 	}

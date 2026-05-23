@@ -163,12 +163,8 @@ else
     </RowTemplate>
   </MudTable>
 
-  @* Overall standings — aggregate across every finished competition in the current filter.
-     OverallRecords getter walks all comps × games; capture once per render. *@
-  @{
-    var overallRecords = ViewModel.OverallRecords;
-  }
-  @if (overallRecords.Count > 0)
+  @* Overall standings — aggregate across every finished competition in the current filter; capture once so the OverallRecords getter only walks comps × games once per render. *@
+  @if (ViewModel.OverallRecords is var overallRecords && overallRecords.Count > 0)
   {
     <MudExpansionPanels Class="mt-4">
       <MudExpansionPanel Text="@($"Overall standings ({overallRecords.Count} teams)")">

@@ -5,7 +5,6 @@ global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
 global using CommunityToolkit.Mvvm.Messaging;
 global using FantasyFootball.Data;
-global using FantasyFootball.Data.CompetitionFactories;
 global using FantasyFootball.Helpers;
 global using FantasyFootball.Models;
 global using FantasyFootball.Repositories;
