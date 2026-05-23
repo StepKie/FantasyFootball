@@ -50,18 +50,13 @@ public partial class TeamsViewModel : GeneralViewModel
 	{
 		if (value is null) { return; }
 
-		var route = (SelectionType)SelectionMode switch
-		{
-			SelectionType.SHOW_DETAILS => $"{nameof(TeamDetailPage)}?{nameof(TeamViewModel.TeamId)}={value.TeamId}&{nameof(TeamViewModel.Rank)}={value.Rank}",
-			SelectionType.RETURN_ID => $"//{nameof(CompetitionsPage)}/{nameof(CompetitionSetupPage)}?{nameof(CompetitionSetupViewModel.NewTeamIdSelected)}={value.Team.Id}",
-			_ => throw new ArgumentOutOfRangeException($"Unexpected SelectionType {SelectionMode}"),
-		};
+		// RETURN_ID flow (used to pick a team during competition setup) is gone with
+		// the deleted setup page — always navigate to TeamDetail.
+		var route = $"{nameof(TeamDetailPage)}?{nameof(TeamViewModel.TeamId)}={value.TeamId}&{nameof(TeamViewModel.Rank)}={value.Rank}";
 
-		// Clear selection, reset selection mode and navigate away
 		SelectedTeam = null;
 		SelectionMode = (int)SelectionType.SHOW_DETAILS;
 		await Shell.Current.GoToAsync(route);
-
 	}
 
 	void UpdateSelectedTeams()

@@ -6,31 +6,13 @@
   xmlns:views="clr-namespace:FantasyFootball.Views"
   xmlns:translate="clr-namespace:FantasyFootball.Markup">
 
+  <!-- MAUI port pending: the competition/games/standings surface was removed during the
+       graph-model → flat-model cleanup. Teams + Settings remain functional. A future PR
+       will rebuild the competition tabs against the new model. -->
   <TabBar>
-
-    <Tab Title="{translate:Translate Simulate}" Icon="{x:StaticResource SoccerIcon}" Route="PlayTab">
-      <ShellContent
-        Title="{translate:Translate Competitions}"
-        ContentTemplate="{DataTemplate views:CompetitionsPage}"
-        Icon="cup"
-        Route="CompetitionsPage" />
-      <ShellContent
-        Title="{translate:Translate Games}"
-        ContentTemplate="{DataTemplate views:GamesPage}"
-        IsVisible="{Binding GamesVisible}"
-        Route="GamesPage" />
-      <ShellContent
-        Title="{translate:Translate Standings}"
-        ContentTemplate="{DataTemplate views:StandingsPage}"
-        IsVisible="{Binding GamesVisible}"
-        Route="StandingsPage" />
-    </Tab>
     <Tab Title="{translate:Translate Stats}" Icon="{x:StaticResource StatsIcon}" Route="StatsTab">
       <ShellContent Title="{translate:Translate Teams}" ContentTemplate="{DataTemplate views:TeamsPage}" Route="TeamsPage" />
-      <ShellContent Title="{translate:Translate Stats}" ContentTemplate="{DataTemplate views:CompetitionStatisticsPage}" Route="CompetitionStatisticsPage" />
     </Tab>
-
     <ShellContent Title="{translate:Translate Settings}" ContentTemplate="{DataTemplate views:SettingsPage}" Icon="{x:StaticResource SettingsIcon}" />
-    <!--<ShellContent Title="{translate:Translate Database}" ContentTemplate="{DataTemplate views:DatabasePage}" Icon="{x:StaticResource DatabaseIcon}" />-->
   </TabBar>
 </Shell>
