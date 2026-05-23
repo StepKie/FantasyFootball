@@ -6,6 +6,18 @@ namespace FantasyFootball.Tests;
 /// ranks across the eligible groups. Drives off the embedded
 /// definitions plus scripted results — no full sim needed.
 /// </summary>
+/// <remarks>
+/// TryResolve semantics pinned by the tests below: GameWinner / GameLoser
+/// fail-closed (return null when the referenced game is unplayed);
+/// GroupPlacement and ThirdPlacePool fail-open (return the
+/// alphabetical-default team because <c>Standings()</c> doesn't gate on
+/// completion). The fail-open paths are a known limitation — they let
+/// ResolveAvailableKoTeams prematurely fill KO slots with the
+/// alphabetical first team during the group stage. A future fix should
+/// gate <c>Standings()</c> on group-stage completion; the tests below
+/// would then need their <c>NotBeNull</c> expectations flipped to
+/// <c>BeNull</c>.
+/// </remarks>
 public class QualifierResolverTests
 {
 	readonly EmbeddedCompetitionDefinitionStore _definitions = new();
@@ -108,6 +120,62 @@ public class QualifierResolverTests
 	{
 		var c = _definitions.Load("wm-2022");
 		Action act = () => QualifierResolver.Resolve(c, "garbage");
+		act.Should().Throw<FormatException>();
+	}
+
+	[Fact]
+	public void TryResolve_GameWinner_UnplayedGame_ReturnsNull()
+	{
+		var c = _definitions.Load("wm-2022");
+		QualifierResolver.TryResolve(c, "W-1").Should().BeNull();
+	}
+
+	[Fact]
+	public void TryResolve_GameLoser_UnplayedGame_ReturnsNull()
+	{
+		var c = _definitions.Load("wm-2022");
+		QualifierResolver.TryResolve(c, "L-1").Should().BeNull();
+	}
+
+	[Fact]
+	public void TryResolve_GameWinner_PlayedGame_ReturnsWinner()
+	{
+		var c = _definitions.Load("wm-2022");
+		var game1 = c.Games.First(g => g.Id == 1);
+		((GroupGame)game1).Result = new Result(3, 1, GameEnd.NORMAL);
+		QualifierResolver.TryResolve(c, "W-1").Should().Be("QAT");
+	}
+
+	[Fact]
+	public void TryResolve_GroupPlacement_BeforeGroupStageFinishes_FailsOpen()
+	{
+		// Fail-open: returns the alphabetical-default 1st-place team (all 0-pt). See class remarks.
+		var c = _definitions.Load("wm-2022");
+		QualifierResolver.TryResolve(c, "A1").Should().NotBeNull();
+	}
+
+	[Fact]
+	public void TryResolve_GroupPlacement_AfterGroupFinishes_ReturnsActualWinner()
+	{
+		var c = _definitions.Load("wm-2022");
+		ScriptGroupA(c);
+		QualifierResolver.TryResolve(c, "A1").Should().Be("NED");
+	}
+
+	[Fact]
+	public void TryResolve_ThirdPlacePool_BeforeAnyGroupFinishes_FailsOpen()
+	{
+		// Same fail-open shape as GroupPlacement — returns the alphabetical best 3rd-placer (all 0-pt).
+		var c = _definitions.Load("wm-2022");
+		QualifierResolver.TryResolve(c, "A/B3").Should().NotBeNull();
+	}
+
+	[Fact]
+	public void TryResolve_BadDsl_StaysLoud_Throws()
+	{
+		// FormatException (bad DSL) is NOT swallowed by TryResolve — it signals a definition-file bug.
+		var c = _definitions.Load("wm-2022");
+		Action act = () => QualifierResolver.TryResolve(c, "garbage");
 		act.Should().Throw<FormatException>();
 	}
 

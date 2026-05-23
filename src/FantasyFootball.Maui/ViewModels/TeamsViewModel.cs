@@ -50,8 +50,7 @@ public partial class TeamsViewModel : GeneralViewModel
 	{
 		if (value is null) { return; }
 
-		// RETURN_ID flow (used to pick a team during competition setup) is gone with
-		// the deleted setup page — always navigate to TeamDetail.
+		// RETURN_ID path gone with the deleted setup page.
 		var route = $"{nameof(TeamDetailPage)}?{nameof(TeamViewModel.TeamId)}={value.TeamId}&{nameof(TeamViewModel.Rank)}={value.Rank}";
 
 		SelectedTeam = null;

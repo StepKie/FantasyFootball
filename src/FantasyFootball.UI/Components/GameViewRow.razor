@@ -4,9 +4,6 @@
 @inject IDataService DataService
 @inject ICompetitionRepository Repo
 
-@* new-model game-row. Mirrors the DOM structure of GameViewRow so the
-   existing scoreboard-* CSS classes apply identically. *@
-
 <div class="scoreboard-row-wrapper" id="@(ShowSim ? "current-game" : ShowUndo ? "just-finished-game" : null)">
 <div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "") @(DetailsOpen ? "scoreboard-row-open" : "")"
      @onclick="HandleRowClick"
@@ -157,7 +154,8 @@
 
   Task HandleRowClick() => OnDetailsToggle.InvokeAsync();
 
-  static string FormatPct(double p) => $"{p * 100:0}%";
+  // Floor at "<1%": "0%" reads as impossible for a heavy underdog who could still win.
+  static string FormatPct(double p) => p > 0 && p < 0.005 ? "<1%" : $"{p * 100:0}%";
 
   static string PctClass(bool isActualOutcome) => isActualOutcome ? "game-details-pct-actual" : "";
 
@@ -171,6 +169,6 @@
   bool AwayIsWinner => Game.Result is { } r && r.AwayScore > r.HomeScore;
 
   string TeamClass(bool isWinner) => HasResult
-    ? (isWinner ? "scoreboard-team-winner" : IsDraw ? "" : "scoreboard-team-loser")
+    ? (isWinner ? "scoreboard-winner" : IsDraw ? "" : "scoreboard-loser")
     : "";
 }

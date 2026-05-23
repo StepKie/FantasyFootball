@@ -276,40 +276,12 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	public async Task SimulateRound(string? roundId)
 	{
 		if (Competition is null || roundId is null || IsFinished || IsBusy) { return; }
-		var targetRound = Competition.Rounds.FirstOrDefault(r => r.Id == roundId);
-		if (targetRound is null) { return; }
+		if (Competition.Rounds.All(r => r.Id != roundId)) { return; }
 
 		var roundGames = Competition.RoundGames(roundId).ToList();
 		if (roundGames.Count == 0) { return; }
-		var cutoff = roundGames.Max(g => g.PlayedOn);
 
-		IsBusy = true;
-		var played = new List<Game>();
-		try
-		{
-			try
-			{
-				foreach (var game in Competition.Games
-					.Where(g => g.Result is null && g.PlayedOn <= cutoff)
-					.OrderBy(g => g.PlayedOn))
-				{
-					_simulator.SimulateGame(Competition, game);
-					played.Add(game);
-				}
-				await _repo.SaveAsync(Competition);
-			}
-			catch
-			{
-				// Also clear KO ??= stamps from the failed run; otherwise stale upstream-resolver IDs survive into the retry.
-				foreach (var g in played) { g.Result = null; }
-				ClearUnplayedKoResolutions(Competition);
-				throw;
-			}
-		}
-		finally
-		{
-			RefreshAfterSim(advanceSelection: false);
-		}
+		await SimulateUntil(roundGames.Max(g => g.PlayedOn));
 	}
 
 	/// <summary>
@@ -325,15 +297,22 @@ public partial class CompetitionDetailViewModel : ObservableObject
 
 		var stageGameIds = stageRounds.SelectMany(r => Competition.RoundGames(r.Id)).Select(g => g.Id).ToHashSet();
 		if (stageGameIds.Count == 0) { return; }
-		var cutoff = Competition.Games.Where(g => stageGameIds.Contains(g.Id)).Max(g => g.PlayedOn);
 
+		await SimulateUntil(Competition.Games.Where(g => stageGameIds.Contains(g.Id)).Max(g => g.PlayedOn));
+	}
+
+	// Shared helper: chronologically sims unplayed games with PlayedOn ≤ cutoff, saves once, rolls back on failure.
+	async Task SimulateUntil(DateTime cutoff)
+	{
 		IsBusy = true;
 		var played = new List<Game>();
 		try
 		{
 			try
 			{
-				foreach (var game in Competition.Games
+				// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
+				await Task.Yield();
+				foreach (var game in Competition!.Games
 					.Where(g => g.Result is null && g.PlayedOn <= cutoff)
 					.OrderBy(g => g.PlayedOn))
 				{
@@ -346,7 +325,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			{
 				// Also clear KO ??= stamps from the failed run; otherwise stale upstream-resolver IDs survive into the retry.
 				foreach (var g in played) { g.Result = null; }
-				ClearUnplayedKoResolutions(Competition);
+				ClearUnplayedKoResolutions(Competition!);
 				throw;
 			}
 		}

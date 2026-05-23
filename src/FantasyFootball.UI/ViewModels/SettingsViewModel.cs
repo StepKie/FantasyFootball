@@ -18,16 +18,16 @@ public partial class SettingsViewModel : ObservableObject
 {
 	readonly ISettingsService _settings;
 	readonly IDataService _dataService;
-	readonly ICompetitionRepository _flatRepo;
+	readonly ICompetitionRepository _repo;
 
 	public SettingsViewModel(
 		ISettingsService settings,
 		IDataService dataService,
-		ICompetitionRepository flatRepo)
+		ICompetitionRepository repo)
 	{
 		_settings = settings;
 		_dataService = dataService;
-		_flatRepo = flatRepo;
+		_repo = repo;
 
 		SelectedLanguage = settings.LastUsedLanguage;
 		SelectedSimulationSpeed = SimulationSpeedExtensions.FromTimeSpan(settings.SimulationSpeed);
@@ -88,7 +88,7 @@ public partial class SettingsViewModel : ObservableObject
 		try
 		{
 			await Task.Run(_dataService.Reset).ConfigureAwait(false);
-			await _flatRepo.ResetAsync().ConfigureAwait(false);
+			await _repo.ResetAsync().ConfigureAwait(false);
 		}
 		finally
 		{

@@ -68,8 +68,8 @@ public static class CompetitionExtensions
 	/// </summary>
 	public static string? WinnerTeamId(this Competition c)
 	{
-		// The "final" is the game in the round with the highest Order that
-		// has a Result.
+		if (c.Rounds.Length == 0) { return null; }
+		// The "final" is the game in the round with the highest Order that has a Result.
 		var maxOrder = c.Rounds.Max(r => r.Order);
 		var finalRoundIds = c.Rounds.Where(r => r.Order == maxOrder).Select(r => r.Id).ToHashSet();
 		var finalGame = c.Games.LastOrDefault(g => finalRoundIds.Contains(g.RoundId) && g.Result is not null);

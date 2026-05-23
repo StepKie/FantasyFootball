@@ -1,4 +1,6 @@
-﻿namespace FantasyFootball.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace FantasyFootball.Models;
 
 [Table(nameof(Country))]
 public class Country : NamedUniqueId
@@ -15,12 +17,14 @@ public class Country : NamedUniqueId
 	[ManyToOne(CascadeOperations = CascadeOperation.CascadeRead)]
 	public Confederation Confederation { get; set; }
 
-	[OneToMany]
+	// SQLite back-pointer (inverse of Team.Country). Not part of the persisted shape.
+	[OneToMany, JsonIgnore]
 	public List<Team> Clubs { get; set; }
 
 	[ForeignKey(typeof(Team))]
 	public int NationalTeamId { get; set; }
 
-	[OneToOne]
+	// Computed projection — fabricates a Team whose .Country = this. Excluded from JSON to avoid the resulting cycle.
+	[OneToOne, JsonIgnore]
 	public Team NationalTeam => new() { Country = this, Type = TeamType.NATIONAL_MEN, Name = Name, ShortName = Code3, Elo = Elo };
 }

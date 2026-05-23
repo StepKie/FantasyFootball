@@ -1,4 +1,6 @@
-﻿namespace FantasyFootball.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace FantasyFootball.Models;
 
 [Table(nameof(Confederation))]
 public class Confederation : NamedUniqueId
@@ -26,7 +28,8 @@ public class Confederation : NamedUniqueId
 
 	public string Continent { get; init; }
 
-	[OneToMany(CascadeOperations = CascadeOperation.CascadeRead)]
+	// SQLite back-pointer (inverse of Country.Confederation). Not part of the persisted shape.
+	[OneToMany(CascadeOperations = CascadeOperation.CascadeRead), JsonIgnore]
 	public virtual List<Country> Countries { get; init; } = [];
 
 	public string Logo => IconStrings.GetConfederationLogo(this);

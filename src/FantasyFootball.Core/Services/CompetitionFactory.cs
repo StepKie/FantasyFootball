@@ -10,8 +10,6 @@ namespace FantasyFootball.Services;
 ///
 /// Each call yields an independent Competition — no shared mutable
 /// state. The factory is safe to reuse across many specs.
-///
-/// whole new model, leaving this as plain <c>CompetitionFactory</c>.
 /// </summary>
 public sealed class CompetitionFactory
 {

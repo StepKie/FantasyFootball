@@ -21,7 +21,7 @@ public abstract record class Game
 {
 	/// <summary>
 	/// Explicit ID, set in the competition-definition JSON. Referenced by
-	/// qualifier strings (e.g. <c>W49</c> = winner of the game with Id=49).
+	/// qualifier strings (e.g. <c>W-49</c> = winner of the game with Id=49).
 	/// </summary>
 	public required int Id { get; init; }
 
@@ -69,8 +69,8 @@ public sealed record class GroupGame : Game
 /// qualifier resolves, so subsequent reads don't re-walk the qualifier
 /// chain.
 ///
-/// Qualifier DSL: <c>A1</c> = group A's 1st place, <c>W49</c> = winner
-/// of game 49, <c>L61</c> = loser of game 61, <c>A/B/F3</c> = best
+/// Qualifier DSL: <c>A1</c> = group A's 1st place, <c>W-49</c> = winner
+/// of game 49, <c>L-61</c> = loser of game 61, <c>A/B/F3</c> = best
 /// 3rd-place finisher among the listed groups.
 /// </summary>
 public sealed record class KoGame : Game
@@ -91,9 +91,7 @@ public sealed record class KoGame : Game
 
 	public override string Format()
 	{
-		// Show resolved team IDs once we have them; fall back to the
-		// qualifier expression so the line is still meaningful for an
-		// unresolved KO slot (e.g. before the group stage finishes).
+		// Resolved IDs take priority; fall back to the qualifier expression for unresolved KO slots.
 		var home = HomeTeamId ?? HomeQual;
 		var away = AwayTeamId ?? AwayQual;
 		return Result is { } r

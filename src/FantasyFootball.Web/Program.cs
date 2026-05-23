@@ -33,7 +33,6 @@ builder.Services.AddScoped<IRepository, LocalStorageRepository>();
 builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
 builder.Services.AddScoped<IDataService, CsvDataService>();
 
-// new-model service stack.
 builder.Services.AddSingleton<ICompetitionDefinitionStore, EmbeddedCompetitionDefinitionStore>();
 builder.Services.AddScoped<ITeamRegistry, DataServiceTeamRegistry>();
 builder.Services.AddScoped<ICompetitionRepository, LocalStorageCompetitionRepository>();
