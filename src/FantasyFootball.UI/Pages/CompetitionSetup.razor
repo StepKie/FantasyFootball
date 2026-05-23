@@ -3,7 +3,7 @@
 @using FantasyFootball.Models
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
-@inject FlatCompetitionSetupViewModel ViewModel
+@inject CompetitionSetupViewModel ViewModel
 @inject NavigationManager Nav
 @implements IDisposable
 
@@ -48,15 +48,15 @@
         <MudSpacer />
 
         <MudStack Row="true" Spacing="2" Wrap="Wrap.Wrap">
-          <MudButton Variant="@(ViewModel.CurrentLineup == FlatCompetitionSetupViewModel.LineupMode.Original ? Variant.Filled : Variant.Outlined)"
-                     Color="@(ViewModel.CurrentLineup == FlatCompetitionSetupViewModel.LineupMode.Original ? Color.Primary : Color.Default)"
+          <MudButton Variant="@(ViewModel.CurrentLineup == CompetitionSetupViewModel.LineupMode.Original ? Variant.Filled : Variant.Outlined)"
+                     Color="@(ViewModel.CurrentLineup == CompetitionSetupViewModel.LineupMode.Original ? Color.Primary : Color.Default)"
                      StartIcon="@Icons.Material.Filled.History"
                      OnClick="ViewModel.ResetToOriginal"
                      Disabled="ViewModel.IsRunning">
             Original teams
           </MudButton>
-          <MudButton Variant="@(ViewModel.CurrentLineup == FlatCompetitionSetupViewModel.LineupMode.Random ? Variant.Filled : Variant.Outlined)"
-                     Color="@(ViewModel.CurrentLineup == FlatCompetitionSetupViewModel.LineupMode.Random ? Color.Primary : Color.Default)"
+          <MudButton Variant="@(ViewModel.CurrentLineup == CompetitionSetupViewModel.LineupMode.Random ? Variant.Filled : Variant.Outlined)"
+                     Color="@(ViewModel.CurrentLineup == CompetitionSetupViewModel.LineupMode.Random ? Color.Primary : Color.Default)"
                      StartIcon="@Icons.Material.Filled.Shuffle"
                      OnClick="ViewModel.RandomDraw"
                      Disabled="ViewModel.IsRunning">
@@ -87,19 +87,19 @@
 
           @{
             // Random sub-mode only meaningful when lineup is a draw; otherwise both collapse to "historical lineup for all N".
-            var randomDisabled = ViewModel.CurrentLineup != FlatCompetitionSetupViewModel.LineupMode.Random;
+            var randomDisabled = ViewModel.CurrentLineup != CompetitionSetupViewModel.LineupMode.Random;
           }
-          <MudRadioGroup T="FlatCompetitionSetupViewModel.BulkRandomness"
+          <MudRadioGroup T="CompetitionSetupViewModel.BulkRandomness"
                          Value="ViewModel.BulkMode"
-                         ValueChanged="@((FlatCompetitionSetupViewModel.BulkRandomness v) => ViewModel.BulkMode = v)"
+                         ValueChanged="@((CompetitionSetupViewModel.BulkRandomness v) => ViewModel.BulkMode = v)"
                          Dense="true">
-            <MudRadio T="FlatCompetitionSetupViewModel.BulkRandomness"
-                      Value="FlatCompetitionSetupViewModel.BulkRandomness.Fixed"
+            <MudRadio T="CompetitionSetupViewModel.BulkRandomness"
+                      Value="CompetitionSetupViewModel.BulkRandomness.Fixed"
                       Dense="true" Size="Size.Small" Disabled="randomDisabled">
               <MudText Typo="Typo.caption">Same drawn lineup (only RNG varies)</MudText>
             </MudRadio>
-            <MudRadio T="FlatCompetitionSetupViewModel.BulkRandomness"
-                      Value="FlatCompetitionSetupViewModel.BulkRandomness.AlwaysFresh"
+            <MudRadio T="CompetitionSetupViewModel.BulkRandomness"
+                      Value="CompetitionSetupViewModel.BulkRandomness.AlwaysFresh"
                       Dense="true" Size="Size.Small" Disabled="randomDisabled">
               <MudText Typo="Typo.caption">Fresh draw per run</MudText>
             </MudRadio>

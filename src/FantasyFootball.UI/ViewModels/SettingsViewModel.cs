@@ -18,12 +18,12 @@ public partial class SettingsViewModel : ObservableObject
 {
 	readonly ISettingsService _settings;
 	readonly IDataService _dataService;
-	readonly IFlatCompetitionRepository _flatRepo;
+	readonly ICompetitionRepository _flatRepo;
 
 	public SettingsViewModel(
 		ISettingsService settings,
 		IDataService dataService,
-		IFlatCompetitionRepository flatRepo)
+		ICompetitionRepository flatRepo)
 	{
 		_settings = settings;
 		_dataService = dataService;

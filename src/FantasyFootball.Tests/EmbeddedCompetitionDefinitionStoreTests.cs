@@ -5,7 +5,7 @@ namespace FantasyFootball.Tests;
 /// <summary>
 /// Tests for the embedded-resource definition store: confirms the
 /// committed JSON files land at the right manifest names, load cleanly
-/// via the JSON loader, and produce FlatCompetitions with the expected
+/// via the JSON loader, and produce Competitions with the expected
 /// shape (group / team / game counts) for each historical format.
 /// </summary>
 public class EmbeddedCompetitionDefinitionStoreTests
@@ -48,17 +48,17 @@ public class EmbeddedCompetitionDefinitionStoreTests
 	public void Load_KoQualifiers_AllParseable()
 	{
 		// Spot-check: every KO qualifier on every loaded competition
-		// parses via FlatQualifierParser. This catches DSL drift between
+		// parses via QualifierParser. This catches DSL drift between
 		// the generator and the parser if either side changes.
 		foreach (var id in _store.AvailableIds)
 		{
 			var c = _store.Load(id);
-			var koGames = c.Games.OfType<FlatKoGame>().ToList();
+			var koGames = c.Games.OfType<KoGame>().ToList();
 			foreach (var ko in koGames)
 			{
-				FlatQualifierParser.TryParse(ko.HomeQual, out _).Should().BeTrue(
+				QualifierParser.TryParse(ko.HomeQual, out _).Should().BeTrue(
 					$"{id} game {ko.Id} home qual '{ko.HomeQual}' should parse");
-				FlatQualifierParser.TryParse(ko.AwayQual, out _).Should().BeTrue(
+				QualifierParser.TryParse(ko.AwayQual, out _).Should().BeTrue(
 					$"{id} game {ko.Id} away qual '{ko.AwayQual}' should parse");
 			}
 		}

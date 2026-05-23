@@ -9,7 +9,7 @@ namespace FantasyFootball.Tests;
 /// </summary>
 public class EloScoreModelTests
 {
-	sealed class FixedRegistry : IFlatTeamRegistry
+	sealed class FixedRegistry : ITeamRegistry
 	{
 		readonly Dictionary<string, int> _elo;
 		public FixedRegistry(params (string id, int elo)[] entries)

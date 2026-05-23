@@ -11,9 +11,9 @@ namespace FantasyFootball.Tests;
 public class BulkSimRunnerTests
 {
 	readonly EmbeddedCompetitionDefinitionStore _definitions = new();
-	readonly FlatCompetitionFactory _factory;
-	readonly FlatCompetitionSimulator _simulator = new(new StubScoreModel());
-	readonly InMemoryFlatCompetitionRepository _repo = new();
+	readonly CompetitionFactory _factory;
+	readonly CompetitionSimulator _simulator = new(new StubScoreModel());
+	readonly InMemoryCompetitionRepository _repo = new();
 	readonly BulkSimRunner _runner;
 
 	public BulkSimRunnerTests()
@@ -75,7 +75,7 @@ public class BulkSimRunnerTests
 
 		var ids = await _runner.RunAsync(spec, count: 3);
 
-		var competitions = new List<FlatCompetition>();
+		var competitions = new List<Competition>();
 		foreach (var id in ids) { competitions.Add((await _repo.GetAsync(id))!); }
 		var distinctLineups = competitions
 			.Select(c => string.Join(",", c.GroupAssignments[0]))
@@ -118,7 +118,7 @@ public class BulkSimRunnerTests
 		(await _repo.CountAsync()).Should().Be(0);
 	}
 
-	sealed class StubRegistry : IFlatTeamRegistry
+	sealed class StubRegistry : ITeamRegistry
 	{
 		public IReadOnlyList<string> AllTeamIds { get; }
 		public StubRegistry(IReadOnlyList<string> teams) { AllTeamIds = teams; }

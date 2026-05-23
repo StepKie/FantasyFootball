@@ -3,7 +3,7 @@ using FantasyFootball.Models;
 namespace FantasyFootball.Services;
 
 /// <summary>
-/// Generates a <see cref="FlatResult"/> for one game given the two
+/// Generates a <see cref="Result"/> for one game given the two
 /// participating team IDs. Decoupled from the simulator so we can swap
 /// scoring strategies without touching simulation orchestration —
 /// today a deterministic stub for tests, soon ELO-derived Poisson
@@ -17,12 +17,12 @@ public interface IScoreModel
 	/// <summary>
 	/// Score a group-stage game. Draws are allowed.
 	/// </summary>
-	FlatResult ScoreGroupGame(string homeTeamId, string awayTeamId);
+	Result ScoreGroupGame(string homeTeamId, string awayTeamId);
 
 	/// <summary>
 	/// Score a KO-stage game. Must return a decisive result (no draw)
 	/// — implementations can model extra time / penalties internally
-	/// and set <see cref="FlatResult.Ending"/> accordingly.
+	/// and set <see cref="Result.Ending"/> accordingly.
 	/// </summary>
-	FlatResult ScoreKoGame(string homeTeamId, string awayTeamId);
+	Result ScoreKoGame(string homeTeamId, string awayTeamId);
 }

@@ -5,17 +5,17 @@ namespace FantasyFootball.Services;
 
 /// <summary>
 /// Runs the bulk-simulation flow: a <see cref="CompetitionSpec"/> in,
-/// N persisted, fully-simulated <see cref="FlatCompetition"/>s out.
+/// N persisted, fully-simulated <see cref="Competition"/>s out.
 ///
 /// One loop iteration per requested run:
 /// <list type="number">
-///   <item><see cref="FlatCompetitionFactory"/> turns the spec into a
+///   <item><see cref="CompetitionFactory"/> turns the spec into a
 ///         fresh competition (Historical = same lineup each run;
 ///         CustomLineup = same fixed lineup; RandomLineup = fresh
 ///         draw per iteration).</item>
-///   <item><see cref="FlatCompetitionSimulator"/> walks the games and
+///   <item><see cref="CompetitionSimulator"/> walks the games and
 ///         fills in Results.</item>
-///   <item><see cref="IFlatCompetitionRepository.SaveAsync"/> persists
+///   <item><see cref="ICompetitionRepository.SaveAsync"/> persists
 ///         it under a fresh ID.</item>
 /// </list>
 ///
@@ -24,14 +24,14 @@ namespace FantasyFootball.Services;
 /// </summary>
 public sealed class BulkSimRunner
 {
-	readonly FlatCompetitionFactory _factory;
-	readonly FlatCompetitionSimulator _simulator;
-	readonly IFlatCompetitionRepository _repo;
+	readonly CompetitionFactory _factory;
+	readonly CompetitionSimulator _simulator;
+	readonly ICompetitionRepository _repo;
 
 	public BulkSimRunner(
-		FlatCompetitionFactory factory,
-		FlatCompetitionSimulator simulator,
-		IFlatCompetitionRepository repo)
+		CompetitionFactory factory,
+		CompetitionSimulator simulator,
+		ICompetitionRepository repo)
 	{
 		_factory = factory;
 		_simulator = simulator;

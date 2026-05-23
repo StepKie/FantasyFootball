@@ -33,21 +33,21 @@ builder.Services.AddScoped<IRepository, LocalStorageRepository>();
 builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
 builder.Services.AddScoped<IDataService, CsvDataService>();
 
-// Flat-model service stack.
+// new-model service stack.
 builder.Services.AddSingleton<ICompetitionDefinitionStore, EmbeddedCompetitionDefinitionStore>();
-builder.Services.AddScoped<IFlatTeamRegistry, DataServiceTeamRegistry>();
-builder.Services.AddScoped<IFlatCompetitionRepository, LocalStorageFlatCompetitionRepository>();
-builder.Services.AddScoped<FlatCompetitionFactory>();
+builder.Services.AddScoped<ITeamRegistry, DataServiceTeamRegistry>();
+builder.Services.AddScoped<ICompetitionRepository, LocalStorageCompetitionRepository>();
+builder.Services.AddScoped<CompetitionFactory>();
 builder.Services.AddScoped<IScoreModel, EloScoreModel>();
-builder.Services.AddScoped<FlatCompetitionSimulator>();
+builder.Services.AddScoped<CompetitionSimulator>();
 builder.Services.AddScoped<BulkSimRunner>();
 
 builder.Services.AddScoped<SettingsViewModel>();
 builder.Services.AddScoped<TeamsViewModel>();
 builder.Services.AddScoped<TeamDetailViewModel>();
-builder.Services.AddScoped<FlatCompetitionDetailViewModel>();
-builder.Services.AddScoped<FlatCompetitionSetupViewModel>();
-builder.Services.AddScoped<FlatCompetitionsViewModel>();
+builder.Services.AddScoped<CompetitionDetailViewModel>();
+builder.Services.AddScoped<CompetitionSetupViewModel>();
+builder.Services.AddScoped<CompetitionsViewModel>();
 
 var app = builder.Build();
 

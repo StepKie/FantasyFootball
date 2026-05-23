@@ -5,7 +5,7 @@
 @using FantasyFootball.Services
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
-@inject FlatCompetitionsViewModel ViewModel
+@inject CompetitionsViewModel ViewModel
 @inject IDataService DataService
 @inject NavigationManager Nav
 @implements IDisposable
@@ -74,14 +74,14 @@ else
 {
   @* Sortable competitions table *@
   <MudTable Items="ViewModel.FilteredCompetitions" Dense="true" Hover="true"
-            OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<FlatCompetition>>(this, args => Nav.NavigateTo($"competitions/{args.Item!.Id}")))"
-            T="FlatCompetition">
+            OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<Competition>>(this, args => Nav.NavigateTo($"competitions/{args.Item!.Id}")))"
+            T="Competition">
     <HeaderContent>
-      <MudTh style="width:1%;"><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => c.Id)" T="FlatCompetition">#</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => c.Title)" T="FlatCompetition">Title</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => c.SimulationStart ?? DateTime.MinValue)" T="FlatCompetition" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => StateOrder(c))" T="FlatCompetition">State</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<FlatCompetition, object>(c => c.WinnerTeamId() ?? string.Empty)" T="FlatCompetition">Winner</MudTableSortLabel></MudTh>
+      <MudTh style="width:1%;"><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.Id)" T="Competition">#</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.Title)" T="Competition">Title</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.SimulationStart ?? DateTime.MinValue)" T="Competition" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => StateOrder(c))" T="Competition">State</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.WinnerTeamId() ?? string.Empty)" T="Competition">Winner</MudTableSortLabel></MudTh>
       <MudTh style="width:1%;"></MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -168,18 +168,18 @@ else
   {
     <MudExpansionPanels Class="mt-4">
       <MudExpansionPanel Text="@($"Overall standings ({overallRecords.Count} teams)")">
-        <MudTable Items="overallRecords" Dense="true" Hover="true" T="FlatTeamRecord">
+        <MudTable Items="overallRecords" Dense="true" Hover="true" T="TeamRecord">
           <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Team.Name)" T="FlatTeamRecord">Team</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.CompetitionWins)" T="FlatTeamRecord">Titles</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.MatchesPlayed)" T="FlatTeamRecord">P</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Wins)" T="FlatTeamRecord">W</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Draws)" T="FlatTeamRecord">D</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Losses)" T="FlatTeamRecord">L</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.GoalsFor)" T="FlatTeamRecord">GF</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.GoalsAgainst)" T="FlatTeamRecord">GA</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.GoalDifference)" T="FlatTeamRecord">GD</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<FlatTeamRecord, object>(r => r.Points)" T="FlatTeamRecord" InitialDirection="SortDirection.Descending">Pts</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Team.Name)" T="TeamRecord">Team</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.CompetitionWins)" T="TeamRecord">Titles</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.MatchesPlayed)" T="TeamRecord">P</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Wins)" T="TeamRecord">W</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Draws)" T="TeamRecord">D</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Losses)" T="TeamRecord">L</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalsFor)" T="TeamRecord">GF</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalsAgainst)" T="TeamRecord">GA</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalDifference)" T="TeamRecord">GD</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Points)" T="TeamRecord" InitialDirection="SortDirection.Descending">Pts</MudTableSortLabel></MudTh>
           </HeaderContent>
           <RowTemplate>
             <MudTd DataLabel="Team">
@@ -234,7 +234,7 @@ else
   }
 
   // Sort order for the State column: 0 = finished, 1 = in-progress, 2 = scheduled.
-  static int StateOrder(FlatCompetition c)
+  static int StateOrder(Competition c)
   {
     if (c.IsFinished()) { return 0; }
     if (c.Games.Any(g => g.Result is not null)) { return 1; }

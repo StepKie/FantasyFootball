@@ -7,7 +7,7 @@ namespace FantasyFootball.Tests;
 /// </summary>
 public class UniformDrawFromRegistryTests
 {
-	sealed class StubRegistry : IFlatTeamRegistry
+	sealed class StubRegistry : ITeamRegistry
 	{
 		public required IReadOnlyList<string> AllTeamIds { get; init; }
 		public int EloOf(string teamId) => 1500;     // draw algorithm doesn't read ELO

@@ -13,18 +13,18 @@ namespace FantasyFootball.Services;
 /// Conceptually: <c>AvailableIds</c> is the list of canonical short
 /// codes (<c>"wm-2022"</c>, <c>"em-2024"</c>, ...) the user can pick
 /// from; <c>Load(id)</c> turns the chosen one into a fresh,
-/// unsimulated <see cref="FlatCompetition"/>.
+/// unsimulated <see cref="Competition"/>.
 /// </summary>
 public interface ICompetitionDefinitionStore
 {
 	IReadOnlyCollection<string> AvailableIds { get; }
 
 	/// <summary>
-	/// Returns a fresh <see cref="FlatCompetition"/> instance on every
+	/// Returns a fresh <see cref="Competition"/> instance on every
 	/// call — implementations must not share mutable state across
-	/// returned values. Callers (notably <see cref="FlatCompetitionFactory"/>)
+	/// returned values. Callers (notably <see cref="CompetitionFactory"/>)
 	/// rely on this to mutate the result in place without corrupting
 	/// other consumers.
 	/// </summary>
-	FlatCompetition Load(string definitionId);
+	Competition Load(string definitionId);
 }

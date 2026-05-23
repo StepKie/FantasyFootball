@@ -1,17 +1,17 @@
 namespace FantasyFootball.Services;
 
 /// <summary>
-/// Picks teams uniformly at random from an <see cref="IFlatTeamRegistry"/>
+/// Picks teams uniformly at random from an <see cref="ITeamRegistry"/>
 /// without replacement. No seeding pots, no confederation constraints —
 /// the simplest possible draw. Real-world FIFA rules (pots,
 /// confederation exclusions) belong in a separate implementation.
 /// </summary>
 public sealed class UniformDrawFromRegistry : IDrawAlgorithm
 {
-	readonly IFlatTeamRegistry _registry;
+	readonly ITeamRegistry _registry;
 	readonly Random _rng;
 
-	public UniformDrawFromRegistry(IFlatTeamRegistry registry, Random? rng = null)
+	public UniformDrawFromRegistry(ITeamRegistry registry, Random? rng = null)
 	{
 		_registry = registry;
 		_rng = rng ?? Random.Shared;
