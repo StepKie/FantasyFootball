@@ -74,7 +74,7 @@ public static class CompetitionExtensions
 		var finalRoundIds = c.Rounds.Where(r => r.Order == maxOrder).Select(r => r.Id).ToHashSet();
 		var finalGame = c.Games.LastOrDefault(g => finalRoundIds.Contains(g.RoundId) && g.Result is not null);
 		if (finalGame is null || finalGame.Result is not { } r) { return null; }
-		return r.HomeScore > r.AwayScore ? HomeTeamIdOf(finalGame) : AwayTeamIdOf(finalGame);
+		return r.HomeWon ? HomeTeamIdOf(finalGame) : AwayTeamIdOf(finalGame);
 	}
 
 	/// <summary>Resolved home team id, or null if a KO qualifier hasn't resolved yet.</summary>
@@ -138,8 +138,8 @@ public static class CompetitionExtensions
 			home.Played++; away.Played++;
 			home.GoalsFor += r.HomeScore; home.GoalsAgainst += r.AwayScore;
 			away.GoalsFor += r.AwayScore; away.GoalsAgainst += r.HomeScore;
-			if (r.HomeScore > r.AwayScore) { home.Wins++; away.Losses++; }
-			else if (r.HomeScore < r.AwayScore) { away.Wins++; home.Losses++; }
+			if (r.HomeWon) { home.Wins++; away.Losses++; }
+			else if (r.AwayWon) { away.Wins++; home.Losses++; }
 			else { home.Draws++; away.Draws++; }
 		}
 

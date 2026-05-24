@@ -30,14 +30,12 @@ public class EloScoreModelTests
 		for (int i = 0; i < 1000; i++)
 		{
 			var r = model.ScoreGroupGame("A", "B");
-			if (r.HomeScore > r.AwayScore) { aWins++; }
-			else if (r.HomeScore < r.AwayScore) { bWins++; }
+			if (r.HomeWon) { aWins++; }
+			else if (r.AwayWon) { bWins++; }
 			else { draws++; }
 		}
 
-		// Equal ELOs → win shares within a tight band around 35–40%, draws ~25%.
-		// The exact split depends on Poisson(2.5) and the 50/50 per-goal flip;
-		// here we just check no extreme skew.
+		// Equal ELOs → win shares within a tight band around 35–40%, draws ~25%. The exact split depends on Poisson(2.65) and the 50/50 per-goal flip; here we just check no extreme skew.
 		var aWinRate = aWins / 1000.0;
 		var bWinRate = bWins / 1000.0;
 		Math.Abs(aWinRate - bWinRate).Should().BeLessThan(0.08, "equal ELOs should produce roughly symmetric win rates");
@@ -57,7 +55,7 @@ public class EloScoreModelTests
 		for (int i = 0; i < 500; i++)
 		{
 			var r = model.ScoreGroupGame("STRONG", "WEAK");
-			if (r.HomeScore > r.AwayScore) { strongWins++; }
+			if (r.HomeWon) { strongWins++; }
 			totalStrongGoals += r.HomeScore;
 			totalWeakGoals += r.AwayScore;
 		}
@@ -77,7 +75,7 @@ public class EloScoreModelTests
 		for (int i = 0; i < 200; i++)
 		{
 			var r = model.ScoreKoGame("A", "B");
-			r.HomeScore.Should().NotBe(r.AwayScore, $"iteration {i} returned a tied KO result");
+			(r.HomeWon || r.AwayWon).Should().BeTrue($"iteration {i} returned a KO result without a winner");
 		}
 	}
 

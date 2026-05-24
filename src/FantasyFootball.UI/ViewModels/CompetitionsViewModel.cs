@@ -98,8 +98,8 @@ public partial class CompetitionsViewModel : ObservableObject
 					var away = CompetitionExtensions.AwayTeamIdOf(game);
 					if (home is null || away is null) { continue; }
 
-					Accumulate(perTeam, home, r.HomeScore, r.AwayScore);
-					Accumulate(perTeam, away, r.AwayScore, r.HomeScore);
+					Accumulate(perTeam, home, r, isHomeTeam: true);
+					Accumulate(perTeam, away, r, isHomeTeam: false);
 				}
 
 				if (champion is not null)
@@ -123,16 +123,20 @@ public partial class CompetitionsViewModel : ObservableObject
 		}
 	}
 
-	static void Accumulate(Dictionary<string, TeamRecord.Mutable> store, string teamId, int scored, int conceded)
+	static void Accumulate(Dictionary<string, TeamRecord.Mutable> store, string teamId, Result r, bool isHomeTeam)
 	{
+		var scored = isHomeTeam ? r.HomeScore : r.AwayScore;
+		var conceded = isHomeTeam ? r.AwayScore : r.HomeScore;
+		var won = isHomeTeam ? r.HomeWon : r.AwayWon;
+		var lost = isHomeTeam ? r.AwayWon : r.HomeWon;
 		var row = store.GetValueOrDefault(teamId);
 		store[teamId] = row with
 		{
 			GoalsFor = row.GoalsFor + scored,
 			GoalsAgainst = row.GoalsAgainst + conceded,
-			Wins = row.Wins + (scored > conceded ? 1 : 0),
-			Losses = row.Losses + (scored < conceded ? 1 : 0),
-			Draws = row.Draws + (scored == conceded ? 1 : 0),
+			Wins = row.Wins + (won ? 1 : 0),
+			Losses = row.Losses + (lost ? 1 : 0),
+			Draws = row.Draws + (!won && !lost ? 1 : 0),
 		};
 	}
 

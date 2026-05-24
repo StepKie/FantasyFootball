@@ -65,16 +65,13 @@ public static class QualifierResolver
 		var away = CompetitionExtensions.AwayTeamIdOf(game)
 			?? throw new InvalidOperationException($"Game {gameId} has no resolved away team — qualifier chain broken upstream.");
 
-		var homeWon = r.HomeScore > r.AwayScore;
-		// Ties shouldn't reach this code path for KO games (the simulator
-		// guarantees a winner via ET/penalties). If we ever see a tied
-		// regular game here, the qualifier DSL is being misused.
-		if (r.HomeScore == r.AwayScore)
+		// IsDraw covers regulation ties; the simulator guarantees ET/PENALTIES for KO games. A draw here means the DSL is misused on a group game.
+		if (r.IsDraw)
 		{
 			throw new InvalidOperationException(
 				$"Game {gameId} ended in a tie ({r.HomeScore}-{r.AwayScore}); winner/loser qualifiers only apply to games with a decisive result.");
 		}
-		return (winner == homeWon) ? home : away;
+		return (winner == r.HomeWon) ? home : away;
 	}
 
 	static string ResolveThirdPlacePool(Competition c, ThirdPlacePool pool)

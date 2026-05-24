@@ -1,3 +1,4 @@
+@using FantasyFootball.Data
 @using FantasyFootball.Models
 @using FantasyFootball.Repositories
 @using FantasyFootball.Services
@@ -16,7 +17,24 @@
     <span class="scoreboard-team-name">@_homeLabel</span>
     @if (_homeTeam is not null) { <FlagIcon Team="_homeTeam" Size="24" /> }
   </div>
-  <div class="scoreboard-score @(HasResult ? "" : "scoreboard-pending")">@_resultText</div>
+  <div class="scoreboard-score @(HasResult ? "" : "scoreboard-pending")">
+    @if (Game.Result is { } r)
+    {
+      <div>@r.HomeScore-@r.AwayScore</div>
+      @if (r.Ending == GameEnd.EXTRA_TIME)
+      {
+        <div class="scoreboard-score-ext">e.t.</div>
+      }
+      else if (r.Ending == GameEnd.PENALTIES)
+      {
+        <div class="scoreboard-score-ext">@r.PenaltyHome-@r.PenaltyAway pen.</div>
+      }
+    }
+    else
+    {
+      <span>v</span>
+    }
+  </div>
   <div class="scoreboard-team scoreboard-team-away @TeamClass(AwayIsWinner)">
     @if (_awayTeam is not null) { <FlagIcon Team="_awayTeam" Size="24" /> }
     <span class="scoreboard-team-name">@_awayLabel</span>
@@ -62,7 +80,19 @@
     {
       <div class="game-details-row">
         <span class="game-details-label">Elo</span>
-        <span class="game-details-value">@_homeTeam.Elo <span class="game-details-sep">—</span> @_awayTeam.Elo</span>
+        <span class="game-details-value game-details-value-pair">
+          <span>@_homeTeam.Elo</span>
+          <span class="game-details-sep">—</span>
+          <span>@_awayTeam.Elo</span>
+        </span>
+      </div>
+      <div class="game-details-row">
+        <span class="game-details-label">Expected goals</span>
+        <span class="game-details-value game-details-value-pair">
+          <span>@_prob.XgHome.ToString("0.0")</span>
+          <span class="game-details-sep">—</span>
+          <span>@_prob.XgAway.ToString("0.0")</span>
+        </span>
       </div>
       <div class="game-details-row">
         <span class="game-details-label">Win / Draw / Loss</span>
@@ -109,9 +139,10 @@
   string _homeLabel = "";
   string _awayLabel = "";
   string _groupLetter = "";
-  string _resultText = "";
   bool _prevDetailsOpen;
-  MatchProbability.WinDrawLossResult _prob;
+  string? _lastFetchedHomeId;
+  string? _lastFetchedAwayId;
+  MatchProbability.Prediction _prob;
   HeadToHeadLookup.Result _h2h;
 
   protected override async Task OnParametersSetAsync()
@@ -136,15 +167,20 @@
           : $"{RoundShortNames.Of(Game.RoundId)} {Competition.PositionInRound(Game)}",
       _ => "",
     };
-    _resultText = Game.Result is { } r ? r.Format() : "v";
-
-    // _prevDetailsOpen tracks "fetch already fired this session with teams resolved". Set before the await to block re-entrant fetches; reset when conditions stop holding (popover closed OR teams unresolved) so the fetch retriggers once they're ready.
+    // Fetch when the popover is open with resolved teams AND we haven't already fetched for this exact (home, away) pair. Pair tracking guards against Blazor reusing this component for a different game (list reorder after sim) without re-running the fetch.
     var canFetch = DetailsOpen && _homeTeam is not null && _awayTeam is not null;
-    if (canFetch && !_prevDetailsOpen)
+    var pairChanged = _homeTeam?.ShortName != _lastFetchedHomeId || _awayTeam?.ShortName != _lastFetchedAwayId;
+    if (canFetch && (!_prevDetailsOpen || pairChanged))
     {
       _prevDetailsOpen = true;
-      _prob = MatchProbability.WinDrawLoss(_homeTeam!.Elo, _awayTeam!.Elo);
-      _h2h = await HeadToHeadLookup.AcrossAsync(Repo, _homeTeam.ShortName, _awayTeam.ShortName);
+      var fetchHomeId = _homeTeam!.ShortName;
+      var fetchAwayId = _awayTeam!.ShortName;
+      _lastFetchedHomeId = fetchHomeId;
+      _lastFetchedAwayId = fetchAwayId;
+      _prob = MatchProbability.Predict(_homeTeam.Elo, _awayTeam.Elo);
+      // Force a real yield so the popover renders W/D/L + xG immediately while the O(N comps) H2H walk runs. Capture team ids into locals above — they're stable across the suspension; _homeTeam / _awayTeam could be reset by a concurrent OnParametersSetAsync.
+      await Task.Yield();
+      _h2h = await HeadToHeadLookup.AcrossAsync(Repo, fetchHomeId, fetchAwayId);
     }
     else if (!canFetch)
     {
@@ -164,9 +200,9 @@
     : null;
 
   bool HasResult => Game.Result is not null;
-  bool IsDraw => Game.Result is { } r && r.HomeScore == r.AwayScore;
-  bool HomeIsWinner => Game.Result is { } r && r.HomeScore > r.AwayScore;
-  bool AwayIsWinner => Game.Result is { } r && r.AwayScore > r.HomeScore;
+  bool IsDraw => Game.Result is { } r && r.IsDraw;
+  bool HomeIsWinner => Game.Result is { } r && r.HomeWon;
+  bool AwayIsWinner => Game.Result is { } r && r.AwayWon;
 
   string TeamClass(bool isWinner) => HasResult
     ? (isWinner ? "scoreboard-winner" : IsDraw ? "" : "scoreboard-loser")

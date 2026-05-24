@@ -36,7 +36,7 @@ public class CompetitionSimulatorTests
 		_simulator.Simulate(c);
 
 		var koGames = c.Games.OfType<KoGame>().ToList();
-		koGames.Should().OnlyContain(g => g.Result!.Value.HomeScore != g.Result.Value.AwayScore,
+		koGames.Should().OnlyContain(g => g.Result!.Value.HomeWon || g.Result.Value.AwayWon,
 			"every KO game must have a winner — IScoreModel.ScoreKoGame contract");
 	}
 

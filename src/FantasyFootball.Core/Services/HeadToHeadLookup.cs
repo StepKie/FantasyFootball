@@ -34,11 +34,10 @@ public static class HeadToHeadLookup
 				bool isBA = home == teamBId && away == teamAId;
 				if (!isAB && !isBA) { continue; }
 
-				if (r.HomeScore == r.AwayScore) { draws++; }
+				if (r.IsDraw) { draws++; }
 				else
 				{
-					var homeWon = r.HomeScore > r.AwayScore;
-					var aWon = (isAB && homeWon) || (isBA && !homeWon);
+					var aWon = (isAB && r.HomeWon) || (isBA && r.AwayWon);
 					if (aWon) { aWins++; } else { bWins++; }
 				}
 			}
