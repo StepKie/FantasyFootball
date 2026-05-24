@@ -24,6 +24,8 @@ public class SimulationRealismTests
 	[Fact]
 	public void Report_GoalsPerGame_AcrossEloGaps()
 	{
+		// Sanity bounds — assert each case stays in a plausible football range so a broken sampler trips this test.
+		double minGoals = double.MaxValue, maxGoals = double.MinValue;
 		const int N = 10_000;
 		// Calibrated to current FIFA Elo bands (post-2026 refresh).
 		var cases = new (string label, int homeElo, int awayElo)[]
@@ -47,12 +49,17 @@ public class SimulationRealismTests
 			{
 				var r = model.ScoreGroupGame("H", "A");
 				tg += r.HomeScore + r.AwayScore; hg += r.HomeScore; ag += r.AwayScore;
-				if (r.HomeScore > r.AwayScore) { hw++; }
-				else if (r.HomeScore < r.AwayScore) { aw++; }
+				if (r.HomeWon) { hw++; }
+				else if (r.AwayWon) { aw++; }
 				else { d++; }
 			}
-			_out.WriteLine($"  {label,-40}  {tg / (double)N,5:F2}  {hg / (double)N,5:F2}  {ag / (double)N,5:F2}  {100.0 * hw / N,8:F1}%  {100.0 * d / N,5:F1}%  {100.0 * aw / N,8:F1}%");
+			var avg = tg / (double)N;
+			minGoals = Math.Min(minGoals, avg);
+			maxGoals = Math.Max(maxGoals, avg);
+			_out.WriteLine($"  {label,-40}  {avg,5:F2}  {hg / (double)N,5:F2}  {ag / (double)N,5:F2}  {100.0 * hw / N,8:F1}%  {100.0 * d / N,5:F1}%  {100.0 * aw / N,8:F1}%");
 		}
+		minGoals.Should().BeGreaterThan(1.5, "no realistic case should drop below 1.5 goals/game");
+		maxGoals.Should().BeLessThan(4.0, "even +800 Elo gaps shouldn't exceed ~3.5 goals/game in this model");
 		_out.WriteLine("");
 		_out.WriteLine("  REAL-WORLD REFERENCE:");
 		_out.WriteLine("    WC 2018: 2.64 goals/game across 64 games");
@@ -67,7 +74,7 @@ public class SimulationRealismTests
 		var registry = new FixedRegistry(("H", 1700), ("A", 1700));
 		var model = new EloScoreModel(registry, new Random(42));
 		var counts = new Dictionary<string, int>();
-		foreach (var k in new[] { "0-0", "1-0", "0-1", "1-1", "2-0", "0-2", "2-1", "1-2", "2-2", "3-0", "0-3", "3+/0-2", "3+/3+" })
+		foreach (var k in new[] { "0-0", "1-0", "0-1", "1-1", "2-0", "0-2", "2-1", "1-2", "2-2", "3-0", "0-3", "3+/≤2 (H)", "≤2/3+ (A)", "3+/3+" })
 		{
 			counts[k] = 0;
 		}
@@ -88,8 +95,8 @@ public class SimulationRealismTests
 				(2, 2) => "2-2",
 				(3, 0) => "3-0",
 				(0, 3) => "0-3",
-				(>= 3, _) when a <= 2 => "3+/0-2",
-				(_, >= 3) when h <= 2 => "3+/0-2",
+				(>= 3, _) when a <= 2 => "3+/≤2 (H)",
+				(_, >= 3) when h <= 2 => "≤2/3+ (A)",
 				_ => "3+/3+",
 			};
 			counts[key]++;
@@ -99,6 +106,9 @@ public class SimulationRealismTests
 		{
 			_out.WriteLine($"  {k,-7}  {100.0 * v / N,5:F1}%  ({v})");
 		}
+		// Sanity bounds against real top-flight football frequencies.
+		(counts["0-0"] / (double)N).Should().BeInRange(0.04, 0.12, "0-0 rate should be in the real-world 4-12% band");
+		(counts["1-1"] / (double)N).Should().BeInRange(0.07, 0.18, "1-1 rate should be in the real-world 7-18% band");
 		_out.WriteLine("");
 		_out.WriteLine("  REAL-WORLD REFERENCE (top-flight football, all matches):");
 		_out.WriteLine("    1-1: ~11%   1-0: ~10%   0-1: ~9%   2-1: ~9%   2-0: ~7%   0-0: ~7-8%");
@@ -116,6 +126,7 @@ public class SimulationRealismTests
 			("Slight edge (+200)     ", 1700, 1500),
 			("Big edge (+500)        ", 1700, 1200),
 		};
+		var equalNormalRate = -1.0;
 		foreach (var (label, eH, eA) in cases)
 		{
 			var registry = new FixedRegistry(("H", eH), ("A", eA));
@@ -127,7 +138,9 @@ public class SimulationRealismTests
 				switch (r.Ending) { case GameEnd.NORMAL: normal++; break; case GameEnd.EXTRA_TIME: et++; break; case GameEnd.PENALTIES: pen++; break; }
 			}
 			_out.WriteLine($"  {label,-30} {100.0 * normal / N,6:F1}% {100.0 * et / N,5:F1}% {100.0 * pen / N,6:F1}%");
+			if (eH == eA) { equalNormalRate = normal / (double)N; }
 		}
+		equalNormalRate.Should().BeInRange(0.50, 0.85, "equal-Elo KO games should mostly finish in regular time but with a meaningful tiebreaker fraction");
 		_out.WriteLine("");
 		_out.WriteLine("  REAL-WORLD REFERENCE:");
 		_out.WriteLine("    Recent WC KO rounds: ~22% go to ET, ~10-12% to penalties.");

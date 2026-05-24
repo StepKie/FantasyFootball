@@ -5,7 +5,7 @@ namespace FantasyFootball.Services;
 
 /// <summary>
 /// Production score model: samples each match from a Poisson on
-/// <c>λ = max(0.5, 2.65 + 0.001 · |eloHome - eloAway|)</c> goals total,
+/// <c>λ = 2.65 + 0.001 · |eloHome - eloAway|</c> goals total,
 /// each goal assigned to home with probability
 /// <c>1 - 1/(1 + 10^(eloDiff/400))</c>. Ports the math the old per-game
 /// simulator uses, with two fixes: a single seeded <see cref="Random"/>
@@ -17,8 +17,12 @@ namespace FantasyFootball.Services;
 ///   <item>30 minutes of extra time at one-third the base lambda
 ///         (30/90 = ⅓). If a goal lands, that decides.
 ///         <c>Ending</c> set to <see cref="GameEnd.EXTRA_TIME"/>.</item>
-///   <item>Penalty shootout — one extra goal goes to home with the
-///         same per-goal probability as regular time.
+///   <item>Penalty shootout — each side takes 5 pens (stops early when
+///         mathematically decided), each penalty independently converts
+///         at <see cref="PenaltyConversionRate"/> (≈ global average).
+///         Sudden death continues 1 round at a time after 5-5.
+///         Shootout score lands in <c>Result.PenaltyHome / .PenaltyAway</c>;
+///         <c>HomeScore / AwayScore</c> stay equal at the 90+30 result.
 ///         <c>Ending</c> set to <see cref="GameEnd.PENALTIES"/>.</item>
 /// </list>
 /// </summary>
@@ -29,6 +33,9 @@ namespace FantasyFootball.Services;
 /// </remarks>
 public sealed class EloScoreModel : IScoreModel
 {
+	// Empirical penalty shootout conversion rate across major tournaments (WC ~71%, EM ~75%).
+	const double PenaltyConversionRate = 0.75;
+
 	readonly ITeamRegistry _registry;
 	readonly Random _rng;
 
@@ -54,17 +61,14 @@ public sealed class EloScoreModel : IScoreModel
 		h += eh; a += ea;
 		if (h != a) { return new Result(h, a, GameEnd.EXTRA_TIME); }
 
-		// Penalties: one extra goal goes to home with same per-goal probability.
-		var pHome = HomeGoalProbability(homeTeamId, awayTeamId);
-		if (_rng.NextDouble() < pHome) { h++; } else { a++; }
-		return new Result(h, a, GameEnd.PENALTIES);
+		var (ph, pa) = SimulatePenaltyShootout();
+		return new Result(h, a, GameEnd.PENALTIES, ph, pa);
 	}
 
 	(int Home, int Away) SamplePoissonScore(string homeTeamId, string awayTeamId, double lambdaFactor)
 	{
 		var eloDiff = _registry.EloOf(homeTeamId) - _registry.EloOf(awayTeamId);
-		// Floor applies to the 90-min rate; ET scales it down (less time, same per-minute rate).
-		var lambda = Math.Max(0.5, 2.65 + 0.001 * Math.Abs(eloDiff)) * lambdaFactor;
+		var lambda = (2.65 + 0.001 * Math.Abs(eloDiff)) * lambdaFactor;
 		var totalGoals = new Poisson(lambda, _rng).Sample();
 
 		var pHome = HomeGoalProbabilityFromDiff(eloDiff);
@@ -76,8 +80,29 @@ public sealed class EloScoreModel : IScoreModel
 		return (home, away);
 	}
 
-	double HomeGoalProbability(string homeTeamId, string awayTeamId) =>
-		HomeGoalProbabilityFromDiff(_registry.EloOf(homeTeamId) - _registry.EloOf(awayTeamId));
+	// Shootout: each side takes up to 5 pens (stops early when result is mathematically out of reach), then sudden death.
+	(int Home, int Away) SimulatePenaltyShootout()
+	{
+		int ph = 0, pa = 0;
+		const int Standard = 5;
+		for (int round = 1; round <= Standard; round++)
+		{
+			if (_rng.NextDouble() < PenaltyConversionRate) { ph++; }
+			// After home's pen this round: away still has (Standard - round + 1) pens left, home (Standard - round) more.
+			if (ph - pa > Standard - round + 1) { return (ph, pa); }
+			if (pa - ph > Standard - round) { return (ph, pa); }
+
+			if (_rng.NextDouble() < PenaltyConversionRate) { pa++; }
+			// After both pens this round: each has (Standard - round) future pens. If the gap exceeds that, decided.
+			if (Math.Abs(ph - pa) > Standard - round) { return (ph, pa); }
+		}
+		while (ph == pa)
+		{
+			if (_rng.NextDouble() < PenaltyConversionRate) { ph++; }
+			if (_rng.NextDouble() < PenaltyConversionRate) { pa++; }
+		}
+		return (ph, pa);
+	}
 
 	static double HomeGoalProbabilityFromDiff(int eloDiff) =>
 		1.0 - 1.0 / (1 + Math.Pow(10, eloDiff / 400.0));

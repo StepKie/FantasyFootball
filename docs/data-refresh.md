@@ -34,7 +34,7 @@ for the refresh.
 
 ## Eloratings code map → our CSV's `country_code_2`
 
-Eight cases where eloratings' 2-letter code differs from ours:
+Nine cases where eloratings' 2-letter code differs from ours:
 
 | Eloratings | Ours (`country_code_2`) | Team |
 |---|---|---|
@@ -114,6 +114,6 @@ Same procedure, swap `World.tsv` for `{year}.tsv`. The schema is
 identical. Update the `new_date` in `tools/refresh-elo.awk` to
 `31.12.{year}` to reflect that it's a year-end snapshot.
 
-Once a per-competition Elo snapshot lands (#19), historical data would
+Once a per-competition Elo snapshot lands, historical data would
 be loaded per-competition instead of overwriting the bundled CSV; for
 now historical refreshes overwrite globally.

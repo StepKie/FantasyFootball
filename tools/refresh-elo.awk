@@ -1,5 +1,5 @@
 BEGIN {
-  FS_ELO = "\t"; FS_CSV = ","
+  FS = "\t"
   m["EN"]="GB-ENG"; m["SQ"]="GB-SCT"; m["WA"]="GB-WLS"; m["EI"]="GB-NIR"
   m["NM"]="MK"; m["KO"]="XK"
   m["SW"]="SZ"; m["TI"]="PF"; m["VG"]="IO"
@@ -20,7 +20,7 @@ NR == FNR {
   k = F[4]
   if (k in new_elo) {
     # rank, name, code3, code2, elo_old (KEEP), elo_new (UPDATE), conf, date (UPDATE), de
-    printf "%d.0,%s,%s,%s,%s,%s,%s,%s,%s\n", \
+    printf "%s,%s,%s,%s,%s,%s,%s,%s,%s\n", \
       new_rank[k], F[2], F[3], F[4], F[5], new_elo[k], F[7], new_date, F[9]
     matched_count++
   } else {

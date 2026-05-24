@@ -24,8 +24,8 @@ public static class MatchProbability
 	public static Prediction Predict(int eloHome, int eloAway)
 	{
 		var diff = eloHome - eloAway;
-		// Keep the λ floor + slope aligned with EloScoreModel.SamplePoissonScore.
-		var lambdaTotal = System.Math.Max(0.5, 2.65 + 0.001 * System.Math.Abs(diff));
+		// Keep the λ formula aligned with EloScoreModel.SamplePoissonScore.
+		var lambdaTotal = 2.65 + 0.001 * System.Math.Abs(diff);
 		var pAwayGoal = 1.0 / (1 + System.Math.Pow(10, diff / 400.0));
 		var lambdaHome = (1 - pAwayGoal) * lambdaTotal;
 		var lambdaAway = pAwayGoal * lambdaTotal;
@@ -43,7 +43,7 @@ public static class MatchProbability
 			}
 		}
 
-		// Renormalize: truncating at MaxGoals=10 loses a negligible fraction of mass for near-equal Elos but rises to ~0.1% at extreme spreads; the renorm makes the H/D/A split exact regardless.
+		// Renormalize: truncating at MaxGoals=10 loses a tiny fraction of probability mass — near zero for equal Elos, up to ~1% at real-world extremes (|diff|≈1700 puts λ ≈4.4); the renorm makes the H/D/A split exact regardless.
 		var sum = pH + pD + pA;
 
 		return new Prediction(pH / sum, pD / sum, pA / sum, lambdaHome, lambdaAway);
