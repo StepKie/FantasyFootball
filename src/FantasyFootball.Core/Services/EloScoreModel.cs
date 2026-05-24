@@ -5,7 +5,7 @@ namespace FantasyFootball.Services;
 
 /// <summary>
 /// Production score model: samples each match from a Poisson on
-/// <c>λ = max(0.5, 2.5 + 0.001 · (eloHome - eloAway))</c> goals total,
+/// <c>λ = max(0.5, 2.65 + 0.001 · |eloHome - eloAway|)</c> goals total,
 /// each goal assigned to home with probability
 /// <c>1 - 1/(1 + 10^(eloDiff/400))</c>. Ports the math the old per-game
 /// simulator uses, with two fixes: a single seeded <see cref="Random"/>
@@ -22,6 +22,11 @@ namespace FantasyFootball.Services;
 ///         <c>Ending</c> set to <see cref="GameEnd.PENALTIES"/>.</item>
 /// </list>
 /// </summary>
+/// <remarks>
+/// Assumes a neutral venue — no home advantage. Correct for the international
+/// tournaments currently simulated. Domestic leagues and two-leg KO formats will
+/// need a home-advantage Elo bonus threaded through (eloratings.net standard is +100).
+/// </remarks>
 public sealed class EloScoreModel : IScoreModel
 {
 	readonly ITeamRegistry _registry;
@@ -59,7 +64,7 @@ public sealed class EloScoreModel : IScoreModel
 	{
 		var eloDiff = _registry.EloOf(homeTeamId) - _registry.EloOf(awayTeamId);
 		// Floor applies to the 90-min rate; ET scales it down (less time, same per-minute rate).
-		var lambda = Math.Max(0.5, 2.5 + 0.001 * eloDiff) * lambdaFactor;
+		var lambda = Math.Max(0.5, 2.65 + 0.001 * Math.Abs(eloDiff)) * lambdaFactor;
 		var totalGoals = new Poisson(lambda, _rng).Sample();
 
 		var pHome = HomeGoalProbabilityFromDiff(eloDiff);
