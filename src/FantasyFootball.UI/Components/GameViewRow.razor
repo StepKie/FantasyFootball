@@ -75,6 +75,14 @@
         </span>
       </div>
       <div class="game-details-row">
+        <span class="game-details-label">Expected goals</span>
+        <span class="game-details-value">
+          <span>@_prob.XgHome.ToString("0.0")</span>
+          <span class="game-details-sep">—</span>
+          <span>@_prob.XgAway.ToString("0.0")</span>
+        </span>
+      </div>
+      <div class="game-details-row">
         <span class="game-details-label">H2H (all sims)</span>
         <span class="game-details-value">
           @if (_h2h.Total == 0) { <em>none</em> }
@@ -111,7 +119,7 @@
   string _groupLetter = "";
   string _resultText = "";
   bool _prevDetailsOpen;
-  MatchProbability.WinDrawLossResult _prob;
+  MatchProbability.Prediction _prob;
   HeadToHeadLookup.Result _h2h;
 
   protected override async Task OnParametersSetAsync()
@@ -143,7 +151,7 @@
     if (canFetch && !_prevDetailsOpen)
     {
       _prevDetailsOpen = true;
-      _prob = MatchProbability.WinDrawLoss(_homeTeam!.Elo, _awayTeam!.Elo);
+      _prob = MatchProbability.Predict(_homeTeam!.Elo, _awayTeam!.Elo);
       _h2h = await HeadToHeadLookup.AcrossAsync(Repo, _homeTeam.ShortName, _awayTeam.ShortName);
     }
     else if (!canFetch)
