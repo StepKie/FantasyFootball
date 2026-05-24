@@ -101,12 +101,6 @@ The full pre-deployment plan plus several follow-ups landed across PRs
 These are concrete, scoped, and still worth doing. Sorted roughly by
 leverage:
 
-- [ ] **Bulk simulate ×N from setup (#37).** A "Sim count" input on
-  the setup page; runs N tournaments in memory (no per-comp
-  persistence — store only the aggregate result); shows a
-  winner-frequency table / distribution chart. Turns the app from
-  "watch one tournament" into "explore probabilities." Highest
-  user-visible leverage left.
 - [ ] **Settings as overlay** (from `docs/ideas.md`). Replace the
   `/settings` page with a slide-over from the app bar so flag-style /
   sim-speed changes apply live to the page underneath. Mirrors the
@@ -114,10 +108,8 @@ leverage:
 - [ ] **Confederation + competition logos on pickers** (from
   `docs/ideas.md`). FIFA WC + UEFA Euros marks next to the
   competition-type picker; confederation logos next to confed-scoped
-  filters. Blocked on licensing: the sortitoutsi.net FM24 pack
-  available locally is community-aggregated and not safe to
-  redistribute on a public GitHub Pages deploy — needs SVG
-  equivalents or a separate static origin.
+  filters. Assets from the sortitoutsi.net FM24 pack available
+  locally.
 - [ ] **Pluggable simulation models** (from `docs/ideas.md`). A
   `SimulationModel` setting (Elo / Elo+outliers / Tweakable
   parameters), radio + per-model param panel for power users.
@@ -151,26 +143,22 @@ leverage:
 
 ## Open — backend correctness / perf with secondary UI visibility
 
-- [ ] **WC 2026 third-place fallback (#12, narrowed).** Backtracking
-  is correct given a top-8, but doesn't fall back to alternative
-  8-subsets if the natural top-8 is mathematically unmatchable. Rare
-  but visible as a TBD placeholder if it ever fires. Acceptance
-  starts with a 10,000-sim empirical measurement.
+- [ ] **WC48 third-place pool slot duplication (#46).** Greedy
+  "first eligible slot" resolution can leave singleton-slot groups
+  (K, L) stranded; the per-slot fallback then resolves overlapping
+  pools to the same team, putting that team in two R32 games. Fix is
+  backtracking restoration or constrained-slot-first ordering.
 - [ ] **Per-competition Elo snapshot (#19).** Replay currently uses
   today's Elo on each Team instance, not a snapshot from the finished
   comp. Removes a latent correctness wart in the replay flow.
-- [ ] **Cache KoGame qualifier resolution (#42).** WC48 per-game sim
-  cost is ~3× WC32/EM24 because `KoGame.HomeTeam` recomputes
-  `Group.GetStandings()` on every access. Once the group stage is
-  finished, the standings are immutable and cacheable. Visible as
-  smoother KO-phase sim at Fast / Normal speed.
-- [ ] **Retire `sqlite-net-pcl` (#44).** Tests are the only
-  consumer; deployed app already uses LocalStorage. Replacing with
-  an in-memory JSON repo collapses ~200 lines of workaround in
-  `Repository.cs` and resolves #43. Test suite drops from 8+ min to
-  seconds. No direct UI impact, but unlocks iteration loop velocity.
-- [ ] **Update bundled FIFA Elo CSV (#30).** Small data refresh;
-  affects every Elo number users see.
+- [ ] **Retire `sqlite-net-pcl` (#44).** Only the (now paused) MAUI
+  host still touches SQLite; web + tests run on the flat-model JSON
+  repo. Lower priority while MAUI is on hold; revisit alongside
+  Phase 5 (#9) when that resumes.
+- [ ] **Current FIFA Elo data, refreshable (#30).** Pull recent
+  national-team ratings via a free public API instead of the bundled
+  CSV. Affects every Elo number users see. Part of the active web-app
+  extension focus.
 
 ## Mobile
 

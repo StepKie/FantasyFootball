@@ -49,19 +49,51 @@ Unsorted feature/UX ideas that aren't yet committed to a PR plan. Promote to
 - **FIFA WC + UEFA Euros marks** next to the competition-type picker on
   `/competitions` (and on the start-new dialog), so the visual identity of
   the tournament is immediately recognisable.
-- Asset source: user has the sortitoutsi.net FM24 graphics pack locally —
+- Asset source: sortitoutsi.net FM24 graphics pack —
   `logos/confeds/normal/{1..7}.png` (7 PNGs) and selected entries from
-  `logos/comps/normal/` (5975 PNGs total; need to pick out WC + Euros IDs
-  via `config.xml`).
-- **Caveats**:
-  - FM IDs are numeric, not ISO/UEFA-style codes. Need a small hand-
-    maintained mapping table: `Confederation` enum → file ID, comp-type
-    enum → file ID.
-  - Licensing — sortitoutsi.net assets are community-aggregated, often cut
-    from real broadcast/marketing material. Public GitHub Pages deploy
-    means thinking about redistribution risk before bundling. Possible
-    mitigations: serve from a separate static origin, or replace with
-    permissively-licensed equivalents (Wikipedia SVGs, simpleicons.org).
+  `logos/comps/normal/` (5975 PNGs total; pick out WC + Euros IDs via
+  `config.xml`). FM IDs are numeric, not ISO/UEFA-style codes — small
+  hand-maintained mapping table: `Confederation` enum → file ID,
+  comp-type enum → file ID.
+
+## Active focus (2026-05-24) — web-app extensions
+
+Replaces the previously-planned MAUI Phase 5 (#9, paused).
+
+### Current Elo data
+- Pull recent FIFA / national-team ratings via a free public API (rather
+  than the bundled CSV which is whatever-snapshot-was-handy). Refreshable
+  from the app on demand, or via a build-time fetch.
+- Historical national-team Elo lower priority — feasible options:
+  scrape eloratings.net, recompute from `martj42/international_results`
+  match history, or surface as a separate dataset later.
+- See #30 for the current-Elo bundled-CSV refresh ticket; the live-pull
+  is a step beyond that.
+
+### Venues data model + UI surface
+- `Venue` entity: city, stadium name, country, capacity, optional coords.
+- Wire onto game cards (configurable visibility).
+- Richer venue surface — popover from the game-details click, or
+  dedicated Venues tab on the competition page, or venue page from
+  game-details.
+
+### Players (data model first)
+- `Player` entity: rating, position, club / national team.
+- No gameplay attribution yet — model is the unblocker for the later
+  match-event work (scorer attribution, minute, card/sub data).
+- Reference shape: BasketBall-GM-Rosters
+  (`alexnoob/BasketBall-GM-Rosters`) ships custom JSON roster files;
+  worth studying for how they keyed players to clubs and seasons.
+
+### More leagues
+- `CompetitionType.CHAMPIONS_LEAGUE` and `DOMESTIC_LEAGUE` enum values
+  already exist; `HistoricalData.AvailableYears` throws
+  `NotImplementedException` for both.
+- Needs: round-robin season factories, club roster data
+  (ClubElo's public CSV API: http://clubelo.com/Data), league-table UX
+  distinct from cup standings.
+- Club logos: bundle real logos from the same FM24 pack (or
+  transfermarkt / similar).
 
 ## Manual competition setup — drawing-ceremony UX
 
