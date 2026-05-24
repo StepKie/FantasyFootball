@@ -32,7 +32,7 @@ public class Confederation : NamedUniqueId
 	[OneToMany(CascadeOperations = CascadeOperation.CascadeRead), JsonIgnore]
 	public virtual List<Country> Countries { get; init; } = [];
 
-	public string Logo => IconStrings.GetConfederationLogo(this);
+	[JsonIgnore] public string Logo => IconStrings.GetConfederationLogo(this);
 	public int NoOfWmParticipants { get; init; }
 
 	public override bool Equals(object? obj) => GetType() == obj?.GetType() && Name == (obj as Confederation)?.Name;

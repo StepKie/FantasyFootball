@@ -1,13 +1,15 @@
-﻿namespace FantasyFootball.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace FantasyFootball.Models;
 
 [Table(nameof(Team))]
 public class Team : NamedUniqueId
 {
 	public TeamType Type { get; init; }
-	[Ignore] public bool IsNationalTeam => Type is TeamType.NATIONAL_MEN or TeamType.NATIONAL_WOMEN;
+	[Ignore, JsonIgnore] public bool IsNationalTeam => Type is TeamType.NATIONAL_MEN or TeamType.NATIONAL_WOMEN;
 	public virtual string ShortName { get; init; }
 	public int Elo { get; set; }
-	public virtual string Logo => IconStrings.GetTeamLogo(this);
+	[JsonIgnore] public virtual string Logo => IconStrings.GetTeamLogo(this);
 
 	[ForeignKey(typeof(Country))]
 	public int CountryId { get; set; }
