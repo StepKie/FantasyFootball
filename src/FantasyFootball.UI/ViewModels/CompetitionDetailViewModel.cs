@@ -1,353 +1,401 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using FantasyFootball.Data;
-using FantasyFootball.Data.CompetitionFactories;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
-using static FantasyFootball.Messaging;
 
 namespace FantasyFootball.UI.ViewModels;
 
 /// <summary>
-/// Backs /competitions/{id}, the merged Games + Standings page. Loads a
-/// Competition by Id, owns the Stage / Round selection + the simulator,
-/// and re-publishes change notifications when the simulator fires
-/// GameFinishedMessage so the page (which shows games for the current
-/// round side-by-side with the standings table) updates as games resolve.
-///
-/// MAUI splits this into <c>CompetitionDetailViewModel</c> +
-/// <c>GamesViewModel</c> + <c>StandingsViewModel</c>; the web port
-/// collapses them since both halves render together on one page.
+/// Backs the /competitions/{id} page. Loads a Competition by repo Id,
+/// owns stage/round selection by Id (strings — Stage/Round are
+/// records), and drives the per-game / per-round / full sim through
+/// CompetitionSimulator.
 /// </summary>
 public partial class CompetitionDetailViewModel : ObservableObject
 {
-	readonly IRepository _repo;
-	readonly ISettingsService _settings;
-	readonly IDataService _dataService;
+	readonly ICompetitionRepository _repo;
+	readonly CompetitionSimulator _simulator;
+	readonly CompetitionFactory _factory;
 
-	CompetitionSimulator? _simulator;
-
-	// True during SimulateAll only; SimulateRound leaves it false to keep the user on the round they just simmed.
-	bool _liveTracking;
-
-	// In-memory undo stack of *just-simmed games*. Undo = pop, call game.ClearResult().
-	// No snapshots / serialization needed: a simmed game is fully reversible by clearing its score
-	// and state back to SCHEDULED. Downstream state (standings, qualifiers, KO bracket) recomputes
-	// on the fly from finished games, so nothing else needs to be rewound.
-	// Cap at 50: a per-game WC48 run (80 group + KO games) will exceed this and evict the oldest
-	// entries beyond the 50 most recent. Acceptable: users rarely undo across many games.
-	const int UndoCap = 50;
-	readonly Stack<Game> _undoStack = new();
-
-	public CompetitionDetailViewModel(IRepository repo, ISettingsService settings, IDataService dataService)
+	public CompetitionDetailViewModel(
+		ICompetitionRepository repo,
+		CompetitionSimulator simulator,
+		CompetitionFactory factory)
 	{
 		_repo = repo;
-		_settings = settings;
-		_dataService = dataService;
-
-		MessageBus.Register<GameFinishedMessage>(this, (_, msg) => OnGameFinished(msg.FinishedGame));
-		MessageBus.Register<DataResetMessage>(this, (_, _) => ClearUndo());
+		_simulator = simulator;
+		_factory = factory;
 	}
+
+	/// <summary>
+	/// Game id whose row should play the "just finished" pulse animation.
+	/// Set on each single-game sim, cleared 1.5s later (CSS animation length).
+	/// Not set by bulk sims (round/stage/all) — pulsing every row would be noisy.
+	/// </summary>
+	[ObservableProperty]
+	public partial int? RecentlyFinishedGameId { get; set; }
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(Stages))]
-	[NotifyPropertyChangedFor(nameof(Groups))]
-	[NotifyPropertyChangedFor(nameof(Winner))]
 	[NotifyPropertyChangedFor(nameof(IsFinished))]
+	[NotifyPropertyChangedFor(nameof(WinnerTeamId))]
 	public partial Competition? Competition { get; set; }
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(Rounds))]
-	public partial Stage? SelectedStage { get; set; }
+	public partial string? SelectedStageId { get; set; }
 
 	[ObservableProperty]
-	public partial Round? SelectedRound { get; set; }
+	[NotifyPropertyChangedFor(nameof(RoundGames))]
+	[NotifyPropertyChangedFor(nameof(GroupStandings))]
+	public partial string? SelectedRoundId { get; set; }
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
 
-	/// <summary>
-	/// The game whose result was most recently established (or replaced) via a single-game sim.
-	/// Set immediately after Simulate / Redo, cleared automatically after ~1.5s so the row's pulse
-	/// animation only fires once per action. Multi-game sims (round / stage / tournament) don't pulse.
-	/// </summary>
-	[ObservableProperty]
-	public partial Game? RecentlyFinishedGame { get; set; }
+	public IReadOnlyList<Stage> Stages => Competition?.Stages ?? [];
+
+	public IEnumerable<Round> Rounds => Competition is null
+		? []
+		: Competition.Rounds.Where(r => r.StageId == SelectedStageId).OrderBy(r => r.Order);
+
+	public IEnumerable<Game> RoundGames => Competition is null || SelectedRoundId is null
+		? []
+		: Competition.RoundGames(SelectedRoundId).OrderBy(g => g.PlayedOn);
 
 	/// <summary>
-	/// Per-session speed override for sim actions. Defaults to the Settings value
-	/// on Load; the page's speed control mutates it for the current visit only.
-	/// `Instant` short-circuits the inter-game delay and suppresses per-game
-	/// re-render messages — a 72-game group stage renders once, not 72 times.
+	/// Group standings for the selected round. For KO rounds (or when no round is selected),
+	/// falls back to all groups so the panel stays populated.
 	/// </summary>
-	[ObservableProperty]
-	public partial SimulationSpeed Speed { get; set; } = SimulationSpeed.Normal;
-
-	public IList<Stage> Stages => Competition?.Stages ?? [];
-	public IList<Round> Rounds => SelectedStage?.Rounds ?? [];
-	public IList<Group> Groups => Competition?.Groups ?? [];
-	public Team? Winner => Competition?.Winner;
-	public bool IsFinished => Competition?.IsFinished ?? false;
-
-	public bool CanUndo => _undoStack.Count > 0;
-
-	// The most recently simmed game (top of stack). Drives per-row undo button placement —
-	// the button lives on the row of the game it would un-do.
-	public Game? UndoTargetGame => _undoStack.TryPeek(out var top) ? top : null;
-
-	public void Load(int competitionId)
+	public IReadOnlyList<(string Letter, IReadOnlyList<GroupStanding> Standings)> GroupStandings
 	{
-		ClearUndo();
-		// Clear any in-flight pulse target — a FlashRecentlyFinished from a previous
-		// competition would otherwise eventually fire StateHasChanged on this page for nothing.
-		RecentlyFinishedGame = null;
-		// Replay flow sets IsBusy=true before navigating; clear here so the new comp's view starts idle.
-		IsBusy = false;
-		Competition = _repo.Get<Competition>(competitionId);
+		get
+		{
+			if (Competition is null) { return []; }
+
+			// Group-stage round → only that round's groups; KO round / no round → all groups (panel stays useful).
+			var roundLetters = SelectedRoundId is null
+				? []
+				: Competition.RoundGames(SelectedRoundId)
+					.OfType<GroupGame>()
+					.Select(g => g.GroupLetter)
+					.Distinct()
+					.ToList();
+
+			IEnumerable<string> letters = roundLetters.Count > 0
+				? roundLetters
+				: Enumerable.Range(0, Competition.GroupAssignments.Length).Select(i => ((char)('A' + i)).ToString());
+
+			return letters
+				.OrderBy(l => l, StringComparer.Ordinal)
+				.Select(l => (Letter: l, Standings: Competition.Standings(l)))
+				.ToList();
+		}
+	}
+
+	public bool IsFinished => Competition?.IsFinished() ?? false;
+	public string? WinnerTeamId => Competition?.WinnerTeamId();
+
+	public string? CurrentStageId => CurrentRoundIdInternal() is { } rid
+		? Competition?.Rounds.FirstOrDefault(r => r.Id == rid)?.StageId
+		: null;
+
+	public string? CurrentRoundId => CurrentRoundIdInternal();
+
+	string? CurrentRoundIdInternal() => Competition?.CurrentGame()?.RoundId;
+
+	public bool IsStageDone(Stage stage) => Competition is not null
+		&& Competition.Rounds.Where(r => r.StageId == stage.Id).All(IsRoundDone);
+
+	public bool IsRoundDone(Round round) => Competition is not null
+		&& Competition.RoundGames(round.Id).All(g => g.Result is not null);
+
+	public async Task LoadAsync(int competitionId)
+	{
+		Competition = await _repo.GetAsync(competitionId);
 		if (Competition is null) { return; }
 
-		// Sync global type so Back-to-Competitions lands on the same category.
-		_dataService.SelectedCompetitionType = Competition.Type;
-
-		SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
-		SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
-
-		// ApplySpeedToSimulator below sets the actual GameDelay from Speed.ToDelay().
-		Speed = SimulationSpeedExtensions.FromTimeSpan(_settings.SimulationSpeed);
-		_simulator = new CompetitionSimulator(Competition, _repo);
-		ApplySpeedToSimulator();
+		var currentGame = Competition.CurrentGame();
+		var currentRoundId = currentGame?.RoundId
+			?? Competition.Rounds.OrderByDescending(r => r.Order).FirstOrDefault()?.Id;
+		var currentRound = Competition.Rounds.FirstOrDefault(r => r.Id == currentRoundId);
+		SelectedStageId = currentRound?.StageId ?? Competition.Stages.LastOrDefault()?.Id;
+		SelectedRoundId = currentRoundId;
 	}
 
-	partial void OnSpeedChanged(SimulationSpeed value) => ApplySpeedToSimulator();
-
-	/// <summary>
-	/// When the user picks a new stage (e.g. clicks the K.O. Phase chip while viewing the Group Stage),
-	/// snap <see cref="SelectedRound"/> to a sensible round inside that stage instead of leaving it
-	/// pointing at the previous stage's round (which the round chip strip would then render as nothing
-	/// matching the highlight state). Prefer the tournament's current round if it's in this stage;
-	/// otherwise fall back to the stage's first round.
-	/// </summary>
-	partial void OnSelectedStageChanged(Stage? value)
+	partial void OnSelectedStageIdChanged(string? value)
 	{
-		if (value is null) { SelectedRound = null; return; }
-		var currentRound = Competition?.CurrentGame?.Round;
-		SelectedRound = currentRound is not null && value.Rounds.Contains(currentRound)
-			? currentRound
-			: value.Rounds.FirstOrDefault();
-	}
-
-	void ApplySpeedToSimulator()
-	{
-		if (_simulator is null) { return; }
-		_simulator.GameDelay = Speed.ToDelay();
-		_simulator.Quiet = Speed == SimulationSpeed.Instant;
+		if (value is null || Competition is null) { SelectedRoundId = null; return; }
+		var currentGame = Competition.CurrentGame();
+		var currentRound = currentGame is null
+			? null
+			: Competition.Rounds.FirstOrDefault(r => r.Id == currentGame.RoundId);
+		if (currentRound is not null && currentRound.StageId == value)
+		{
+			SelectedRoundId = currentRound.Id;
+		}
+		else
+		{
+			SelectedRoundId = Competition.Rounds
+				.Where(r => r.StageId == value)
+				.OrderBy(r => r.Order)
+				.FirstOrDefault()?.Id;
+		}
 	}
 
 	public async Task SimulateGame()
 	{
-		if (_simulator is null || Competition?.CurrentGame is null || IsBusy) { return; }
-		var gameBeingSimmed = Competition.CurrentGame;
-		PushUndoEntry(gameBeingSimmed);
+		if (Competition is null || IsBusy) { return; }
+		var game = Competition.CurrentGame();
+		if (game is null) { return; }
 		IsBusy = true;
 		try
 		{
-			// Single-game user click — no inter-game pacing needed; tell the simulator to skip
-			// the post-sim Task.Delay so the busy spinner clears immediately after the result.
-			await _simulator.SimulateGame(gameBeingSimmed, delayAfter: false);
-			_repo.Save(Competition);
-			// Pulse marker AFTER the sim so the class transition + final score land in one render (Space path needs this; click batches via EventCallback).
-			_ = FlashRecentlyFinished(gameBeingSimmed);
+			try
+			{
+				_simulator.SimulateGame(Competition, game);
+				await _repo.SaveAsync(Competition);
+			}
+			catch
+			{
+				// Roll back any in-memory mutation so UI + persistence stay consistent on simulator or save failure.
+				game.Result = null;
+				throw;
+			}
+			RecentlyFinishedGameId = game.Id;
+			_ = ClearPulseAfterDelay(game.Id);
 		}
 		finally
 		{
-			// In finally, not try, so an exception inside SimulateGame can't leave a stale entry
-			// pointing at a still-SCHEDULED game (Undo icon would otherwise appear on an unplayed row).
-			if (!gameBeingSimmed.IsFinished) { _undoStack.TryPop(out _); }
-			OnSimBatchComplete();
+			RefreshAfterSim();
 		}
 	}
 
-	// Round / Tournament sims do NOT push undo snapshots — undo is scoped to single games.
-	// If the user opts into a bigger sim and isn't happy, the recovery path is to re-sim the tournament,
-	// not to rewind mass amounts of state. Any prior single-game undo entries are cleared too,
-	// since they belong to a graph that's now been simmed past.
-	public async Task SimulateRound()
+	/// <summary>
+	/// Clear the just-finished pulse marker after the CSS animation duration.
+	/// The id-check before clearing avoids racing a later sim — if the user
+	/// sims again within 1.5s, the newer id wins.
+	/// </summary>
+	async Task ClearPulseAfterDelay(int gameId)
 	{
-		if (_simulator is null || Competition?.CurrentStage?.CurrentRound is null || IsBusy) { return; }
-		ClearUndo();
+		await Task.Delay(1500);
+		if (RecentlyFinishedGameId == gameId) { RecentlyFinishedGameId = null; }
+	}
+
+	/// <summary>
+	/// Undo the most recently played game: clear its Result, clear any KO
+	/// auto-fills downstream of it, save. The Undo affordance only ever
+	/// targets the chronologically-latest played game, so there's no
+	/// played-game-cascade to worry about — but unplayed KO slots that
+	/// were auto-resolved on the now-undone result need re-resolving.
+	/// </summary>
+	public async Task UndoLastGame()
+	{
+		if (Competition is null || IsBusy) { return; }
+		var lastPlayed = Competition.LastFinishedGame();
+		if (lastPlayed is null) { return; }
+
+		var originalResult = lastPlayed.Result;
 		IsBusy = true;
 		try
 		{
-			await _simulator.SimulateRound(Competition.CurrentStage.CurrentRound);
-			_repo.Save(Competition);
+			try
+			{
+				lastPlayed.Result = null;
+				ClearUnplayedKoResolutions(Competition);
+				CompetitionSimulator.ResolveAvailableKoTeams(Competition);
+				await _repo.SaveAsync(Competition);
+			}
+			catch
+			{
+				// Restore the result; RefreshAfterSim → ResolveAvailableKoTeams re-fills the KO slots from the restored state.
+				lastPlayed.Result = originalResult;
+				throw;
+			}
 		}
-		// Keep the user on the round they just simmed — auto-advancing to the next round hides the results they wanted to see.
-		finally { OnSimBatchComplete(advanceSelection: false); }
+		finally
+		{
+			RecentlyFinishedGameId = null;
+			RefreshAfterSim(advanceSelection: false);
+		}
+	}
+
+	/// <summary>
+	/// Re-roll the most recently played game: clear its Result, re-score it
+	/// with the score model (fresh random outcome), save. Different from Undo
+	/// in that the game stays played — just with a new result.
+	/// </summary>
+	public async Task RerollLastGame()
+	{
+		if (Competition is null || IsBusy) { return; }
+		var lastPlayed = Competition.LastFinishedGame();
+		if (lastPlayed is null) { return; }
+
+		var originalResult = lastPlayed.Result;
+		IsBusy = true;
+		try
+		{
+			try
+			{
+				lastPlayed.Result = null;
+				ClearUnplayedKoResolutions(Competition);
+				_simulator.SimulateGame(Competition, lastPlayed);
+				CompetitionSimulator.ResolveAvailableKoTeams(Competition);
+				await _repo.SaveAsync(Competition);
+			}
+			catch
+			{
+				lastPlayed.Result = originalResult;
+				throw;
+			}
+			RecentlyFinishedGameId = lastPlayed.Id;
+			_ = ClearPulseAfterDelay(lastPlayed.Id);
+		}
+		finally
+		{
+			RefreshAfterSim(advanceSelection: false);
+		}
+	}
+
+	static void ClearUnplayedKoResolutions(Competition c)
+	{
+		foreach (var ko in c.Games.OfType<KoGame>().Where(g => g.Result is null))
+		{
+			ko.HomeTeamId = null;
+			ko.AwayTeamId = null;
+		}
+	}
+
+	public async Task SimulateRound() => await SimulateRound(SelectedRoundId);
+
+	/// <summary>
+	/// Sim every unplayed game chronologically up to and including the
+	/// requested round's last game. Honors the "fast-forward to here"
+	/// UX of inline play buttons on round chips.
+	/// </summary>
+	public async Task SimulateRound(string? roundId)
+	{
+		if (Competition is null || roundId is null || IsFinished || IsBusy) { return; }
+		if (Competition.Rounds.All(r => r.Id != roundId)) { return; }
+
+		var roundGames = Competition.RoundGames(roundId).ToList();
+		if (roundGames.Count == 0) { return; }
+
+		await SimulateUntil(roundGames.Max(g => g.PlayedOn));
+	}
+
+	/// <summary>
+	/// Sim every unplayed game chronologically up to and including the
+	/// stage's last game. Companion to <see cref="SimulateRound(string?)"/>
+	/// for the stage-chip play button.
+	/// </summary>
+	public async Task SimulateStage(string stageId)
+	{
+		if (Competition is null || IsFinished || IsBusy) { return; }
+		var stageRounds = Competition.Rounds.Where(r => r.StageId == stageId).ToList();
+		if (stageRounds.Count == 0) { return; }
+
+		var stageGameIds = stageRounds.SelectMany(r => Competition.RoundGames(r.Id)).Select(g => g.Id).ToHashSet();
+		if (stageGameIds.Count == 0) { return; }
+
+		await SimulateUntil(Competition.Games.Where(g => stageGameIds.Contains(g.Id)).Max(g => g.PlayedOn));
+	}
+
+	// Shared helper: chronologically sims unplayed games with PlayedOn ≤ cutoff, saves once, rolls back on failure.
+	async Task SimulateUntil(DateTime cutoff)
+	{
+		IsBusy = true;
+		var played = new List<Game>();
+		try
+		{
+			try
+			{
+				// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
+				await Task.Yield();
+				foreach (var game in Competition!.Games
+					.Where(g => g.Result is null && g.PlayedOn <= cutoff)
+					.OrderBy(g => g.PlayedOn))
+				{
+					_simulator.SimulateGame(Competition, game);
+					played.Add(game);
+				}
+				await _repo.SaveAsync(Competition);
+			}
+			catch
+			{
+				// Also clear KO ??= stamps from the failed run; otherwise stale upstream-resolver IDs survive into the retry.
+				foreach (var g in played) { g.Result = null; }
+				ClearUnplayedKoResolutions(Competition!);
+				throw;
+			}
+		}
+		finally
+		{
+			RefreshAfterSim(advanceSelection: false);
+		}
+	}
+
+	/// <summary>
+	/// Clones the loaded competition's lineup into a new scheduled competition.
+	/// Returns the new id so the page can navigate. Same Type+Year+teams,
+	/// no auto-sim — the new one lands on the detail page ready for play.
+	/// </summary>
+	public async Task<int?> ReplayAsync()
+	{
+		if (Competition is null) { return null; }
+
+		var spec = new CustomLineupSpec
+		{
+			DefinitionId = Competition.DefinitionId,
+			Groups = Competition.GroupAssignments.Select(g => (string[])g.Clone()).ToArray(),
+		};
+		var replay = _factory.Create(spec);
+		return await _repo.SaveAsync(replay);
 	}
 
 	public async Task SimulateAll()
 	{
-		if (_simulator is null || Competition is null || Competition.IsFinished || IsBusy) { return; }
-		ClearUndo();
-		IsBusy = true;
-		_liveTracking = true;
-		try
-		{
-			await _simulator.Simulate();
-			_repo.Save(Competition);
-		}
-		finally { _liveTracking = false; OnSimBatchComplete(); }
-	}
-
-	public void Undo()
-	{
-		if (Competition is null || IsBusy) { return; }
-		if (!_undoStack.TryPop(out var game)) { return; }
-
-		game.ClearResult();
-		_repo.Save(Competition);
-		// OnSimBatchComplete owns the CanUndo / UndoTargetGame notifications.
-		OnSimBatchComplete();
-	}
-
-	/// <summary>
-	/// Replaces the most recently simmed game's result with a fresh draw. Equivalent to Undo + SimulateGame
-	/// on the same game, but in one click. The undo stack is unchanged so the user can still revert this
-	/// new result.
-	/// </summary>
-	public async Task RedoLastGame()
-	{
-		if (_simulator is null || Competition is null || IsBusy) { return; }
-		if (!_undoStack.TryPeek(out var game)) { return; }
-
+		if (Competition is null || IsFinished || IsBusy) { return; }
 		IsBusy = true;
 		try
 		{
-			game.ClearResult();
-			// Same as SimulateGame: single-game user click, no inter-game pacing.
-			await _simulator.SimulateGame(game, delayAfter: false);
-			_repo.Save(Competition);
-			// FlashRecentlyFinished AFTER the sim — same render-batching reason as SimulateGame.
-			_ = FlashRecentlyFinished(game);
+			// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
+			await Task.Yield();
+			_simulator.Simulate(Competition);
+			await _repo.SaveAsync(Competition);
 		}
 		finally
 		{
-			// Exception-safe pop — if the sim throws after ClearResult, we still leave the stack honest.
-			if (!game.IsFinished) { _undoStack.TryPop(out _); }
-			OnSimBatchComplete();
+			RefreshAfterSim();
 		}
 	}
 
-	async Task FlashRecentlyFinished(Game game)
+	void RefreshAfterSim(bool advanceSelection = true)
 	{
-		RecentlyFinishedGame = game;
-		await Task.Delay(1500);
-		// Only clear if no later sim has overwritten us — otherwise the next pulse races with ours.
-		if (ReferenceEquals(RecentlyFinishedGame, game)) { RecentlyFinishedGame = null; }
-	}
-
-	void PushUndoEntry(Game simmedGame)
-	{
-		_undoStack.Push(simmedGame);
-		// Cap. Stack<T> has no Dequeue, so drop the oldest (bottom-of-stack) by rebuilding from the top.
-		// .Take(UndoCap) takes the newest UndoCap entries (Stack enumerates top→bottom), .Reverse()
-		// puts them in bottom→top order so pushing back replays the original ordering.
-		if (_undoStack.Count > UndoCap)
-		{
-			var keep = _undoStack.Take(UndoCap).Reverse().ToArray();
-			_undoStack.Clear();
-			foreach (var g in keep) { _undoStack.Push(g); }
-		}
-		OnPropertyChanged(nameof(CanUndo));
-		OnPropertyChanged(nameof(UndoTargetGame));
-	}
-
-	void ClearUndo()
-	{
-		if (_undoStack.Count == 0) { return; }
-		_undoStack.Clear();
-		OnPropertyChanged(nameof(CanUndo));
-		OnPropertyChanged(nameof(UndoTargetGame));
-	}
-
-	/// <summary>
-	/// Post-sim-batch hook called from every <c>SimulateX</c> finally. Optionally advances
-	/// Stage/Round to the current non-finished entry, re-publishes Competition so the page
-	/// rebinds, and clears <see cref="IsBusy"/>. SimulateRound passes <c>advanceSelection: false</c>
-	/// so the user stays on the round they just simmed; SimulateGame and SimulateAll let the
-	/// default advance fire (next-game flow and trophy-landing respectively).
-	/// </summary>
-	void OnSimBatchComplete(bool advanceSelection = true)
-	{
+		// Fill in resolved KO team ids so flags + names appear without waiting for the user to open those games.
 		if (Competition is not null)
 		{
-			if (advanceSelection)
+			CompetitionSimulator.ResolveAvailableKoTeams(Competition);
+		}
+
+		if (Competition is not null && advanceSelection)
+		{
+			var currentGame = Competition.CurrentGame();
+			if (currentGame is not null)
 			{
-				SelectedStage = Competition.CurrentStage ?? Competition.Stages.LastOrDefault();
-				SelectedRound = SelectedStage?.CurrentRound ?? SelectedStage?.Rounds.LastOrDefault();
-			}
-			OnPropertyChanged(nameof(Competition));
-			// Finished competitions are immutable in the UX — the user can't go back to before the trophy.
-			if (Competition.IsFinished) { ClearUndo(); }
-		}
-		IsBusy = false;
-		OnPropertyChanged(nameof(CanUndo));
-		OnPropertyChanged(nameof(UndoTargetGame));
-	}
-
-	/// <summary>
-	/// Clones the current competition's team lineup into a fresh competition with the same Type + Year
-	/// and saves it. Returns the new Id so the page can navigate to it. Uses today's Elo on each Team
-	/// instance, not a snapshot from the finished comp — issue #19 will tighten this once the per-comp
-	/// Elo snapshot lands. Group.ShallowClone strips Stage / Games / Id; the factory wires everything else fresh.
-	/// Async so the IsBusy spinner can flush to the DOM before the synchronous LocalStorage save blocks;
-	/// IsBusy is left true on return — Load() on the new comp's mount resets it.
-	/// </summary>
-	public async Task<Competition> Replay()
-	{
-		if (Competition is null) { throw new InvalidOperationException("No competition loaded to replay."); }
-		IsBusy = true;
-		await Task.Yield();
-
-		try
-		{
-			var year = Competition.Start?.Year ?? DateTime.Now.Year;
-			var clonedGroups = Competition.Groups.Select(g => g.ShallowClone()).ToList();
-			// CompetitionFactory.For raises NotImplementedException for CHAMPIONS_LEAGUE / DOMESTIC_LEAGUE and ArgumentException for unknown types; clear IsBusy on the exception path so the spinner doesn't lock the page until reload.
-			var factory = CompetitionFactory.For(Competition.Type, year, clonedGroups);
-			var replay = factory.Create();
-			_repo.Save(replay);
-			MessageBus.Send(new CompetitionCreatedMessage(replay));
-
-			return replay;
-		}
-		catch
-		{
-			IsBusy = false;
-			throw;
-		}
-	}
-
-	void OnGameFinished(Game finished)
-	{
-		// Bail if the message is for a different competition.
-		if (Competition is null || finished.Round?.Stage?.Competition is null) { return; }
-		if (finished.Round.Stage.Competition.Id != Competition.Id) { return; }
-
-		// Live multi-round sims (SimulateAll) follow the playing round; SimulateRound stays put.
-		if (_liveTracking)
-		{
-			var currentRound = Competition.CurrentGame?.Round;
-			if (currentRound is not null && !ReferenceEquals(currentRound, SelectedRound))
-			{
-				// Setting SelectedStage triggers OnSelectedStageChanged which snaps SelectedRound; avoid the double-fire.
-				if (!ReferenceEquals(currentRound.Stage, SelectedStage)) { SelectedStage = currentRound.Stage; }
-				else { SelectedRound = currentRound; }
+				var currentRound = Competition.Rounds.FirstOrDefault(r => r.Id == currentGame.RoundId);
+				if (currentRound is not null)
+				{
+					if (currentRound.StageId != SelectedStageId) { SelectedStageId = currentRound.StageId; }
+					else { SelectedRoundId = currentRound.Id; }
+				}
 			}
 		}
 
-		// Re-publish Competition change so groupings + standings + winner re-evaluate.
+		// Re-publish Competition so all derived properties (Standings, GroupStandings, RoundGames, IsFinished, WinnerTeamId) recompute.
 		OnPropertyChanged(nameof(Competition));
+		OnPropertyChanged(nameof(RoundGames));
+		OnPropertyChanged(nameof(GroupStandings));
+		IsBusy = false;
 	}
 }

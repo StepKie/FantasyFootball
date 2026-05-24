@@ -16,6 +16,7 @@ public sealed class LocalStorageSettingsService : ISettingsService
   const string LastCompetitionKey = "id_token";
   const string FlagStyleKey = "id_flagstyle";
   const string UseOfficialLogosKey = "id_useofficiallogos";
+  const string ShowFullStandingsKey = "id_showfullstandings";
 
   readonly ISyncLocalStorageService _localStorage;
 
@@ -54,6 +55,13 @@ public sealed class LocalStorageSettingsService : ISettingsService
   {
     get => GetValueOrDefault(UseOfficialLogosKey, false);
     set => AddOrUpdateValue(UseOfficialLogosKey, value);
+  }
+
+  // Off by default — compact 6-column standings (# / flag / name / P / GD / Pts). On → full 9-col view with W/D/L.
+  public bool ShowFullStandings
+  {
+    get => GetValueOrDefault(ShowFullStandingsKey, false);
+    set => AddOrUpdateValue(ShowFullStandingsKey, value);
   }
 
   public bool GetValueOrDefault(string key, bool defaultValue)

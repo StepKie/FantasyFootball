@@ -41,3 +41,31 @@ window.ffKeyboard = {
     this._dotNetRef = null;
   }
 };
+
+// Document-level outside-click detection for the game-details popover.
+window.ffPopover = {
+  _dotNetRef: null,
+  _handler: null,
+
+  registerOutsideClickHandler(dotNetRef) {
+    this.unregisterOutsideClickHandler();
+    this._dotNetRef = dotNetRef;
+    this._handler = (e) => {
+      const t = e.target;
+      if (!t || !t.closest) { return; }
+      if (t.closest('.scoreboard-row-wrapper') || t.closest('.game-details-popover')) { return; }
+      this._dotNetRef.invokeMethodAsync('OnOutsideClick')
+        .catch(err => { if (!String(err).includes('disposed')) { console.warn('[ffPopover]', err); } });
+    };
+    // capture-phase so we see the event before popover MudLink click navigation.
+    document.addEventListener('mousedown', this._handler, true);
+  },
+
+  unregisterOutsideClickHandler() {
+    if (this._handler) {
+      document.removeEventListener('mousedown', this._handler, true);
+      this._handler = null;
+    }
+    this._dotNetRef = null;
+  }
+};

@@ -1,10 +1,13 @@
+using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 
 namespace FantasyFootball.Services;
 
 /// <summary>
-/// Cross-competition head-to-head tally. Walks every stored Competition's finished games once;
-/// callers should treat this as a one-shot lookup (no caching).
+/// Cross-competition head-to-head tally for the Competition store.
+/// Walks every stored Competition's finished games once. Matches teams
+/// by their ShortName id — works regardless of whether games are KO (with
+/// resolved <c>HomeTeamId</c> / <c>AwayTeamId</c>) or group (with init-only ids).
 /// </summary>
 public static class HeadToHeadLookup
 {
@@ -13,33 +16,30 @@ public static class HeadToHeadLookup
 		public int Total => TeamAWins + Draws + TeamBWins;
 	}
 
-	public static Result Across(IRepository repo, Team teamA, Team teamB)
+	public static async Task<Result> AcrossAsync(ICompetitionRepository repo, string teamAId, string teamBId)
 	{
-		// Cross-competition: each competition deserializes its own Team instances. ReferenceEquals
-		// (via NamedUniqueId.Equals on Id=0 entities) would never match across the graph boundary;
-		// fall back to Name, which is stable. SQLite path with Id>0 would also match Name.
-		var nameA = teamA.Name;
-		var nameB = teamB.Name;
-		var aWins = 0;
-		var bWins = 0;
-		var draws = 0;
+		var all = await repo.GetAllAsync();
+		int aWins = 0, bWins = 0, draws = 0;
 
-		foreach (var comp in repo.GetAll<Competition>())
+		foreach (var comp in all)
 		{
-			foreach (var game in comp.GamesByDate)
+			foreach (var game in comp.Games)
 			{
-				if (!game.IsFinished) { continue; }
+				if (game.Result is not { } r) { continue; }
+				var home = CompetitionExtensions.HomeTeamIdOf(game);
+				var away = CompetitionExtensions.AwayTeamIdOf(game);
+				if (home is null || away is null) { continue; }
 
-				var home = game.HomeTeam?.Name;
-				var away = game.AwayTeam?.Name;
-				var isMatchup = (home == nameA && away == nameB) || (home == nameB && away == nameA);
-				if (!isMatchup) { continue; }
+				bool isAB = home == teamAId && away == teamBId;
+				bool isBA = home == teamBId && away == teamAId;
+				if (!isAB && !isBA) { continue; }
 
-				var winnerName = game.Winner?.Name;
-				if (winnerName is null) { draws++; }
-				else if (winnerName == nameA) { aWins++; }
-				else if (winnerName == nameB) { bWins++; }
-				// else: winner is neither — unreachable today (isMatchup above guarantees it), but the explicit branch keeps the intent legible if Game ever gains a separate winner-track entity.
+				if (r.IsDraw) { draws++; }
+				else
+				{
+					var aWon = (isAB && r.HomeWon) || (isBA && r.AwayWon);
+					if (aWon) { aWins++; } else { bWins++; }
+				}
 			}
 		}
 

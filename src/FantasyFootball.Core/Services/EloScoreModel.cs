@@ -1,0 +1,109 @@
+using FantasyFootball.Models;
+using MathNet.Numerics.Distributions;
+
+namespace FantasyFootball.Services;
+
+/// <summary>
+/// Production score model: samples each match from a Poisson on
+/// <c>λ = 2.65 + 0.001 · |eloHome - eloAway|</c> goals total,
+/// each goal assigned to home with probability
+/// <c>1 - 1/(1 + 10^(eloDiff/400))</c>. Ports the math the old per-game
+/// simulator uses, with two fixes: a single seeded <see cref="Random"/>
+/// instance instead of <c>new Random()</c> per goal, and an actual
+/// extra-time / penalties branch for KO ties.
+///
+/// KO tie handling:
+/// <list type="number">
+///   <item>30 minutes of extra time at one-third the base lambda
+///         (30/90 = ⅓). If a goal lands, that decides.
+///         <c>Ending</c> set to <see cref="GameEnd.EXTRA_TIME"/>.</item>
+///   <item>Penalty shootout — each side takes 5 pens (stops early when
+///         mathematically decided), each penalty independently converts
+///         at <see cref="PenaltyConversionRate"/> (≈ global average).
+///         Sudden death continues 1 round at a time after 5-5.
+///         Shootout score lands in <c>Result.PenaltyHome / .PenaltyAway</c>;
+///         <c>HomeScore / AwayScore</c> stay equal at the 90+30 result.
+///         <c>Ending</c> set to <see cref="GameEnd.PENALTIES"/>.</item>
+/// </list>
+/// </summary>
+/// <remarks>
+/// Assumes a neutral venue — no home advantage. Correct for the international
+/// tournaments currently simulated. Domestic leagues and two-leg KO formats will
+/// need a home-advantage Elo bonus threaded through (eloratings.net standard is +100).
+/// </remarks>
+public sealed class EloScoreModel : IScoreModel
+{
+	// Empirical penalty shootout conversion rate across major tournaments (WC ~71%, EM ~75%).
+	const double PenaltyConversionRate = 0.75;
+
+	readonly ITeamRegistry _registry;
+	readonly Random _rng;
+
+	public EloScoreModel(ITeamRegistry registry, Random? rng = null)
+	{
+		_registry = registry;
+		_rng = rng ?? Random.Shared;
+	}
+
+	public Result ScoreGroupGame(string homeTeamId, string awayTeamId)
+	{
+		var (h, a) = SamplePoissonScore(homeTeamId, awayTeamId, lambdaFactor: 1.0);
+		return new Result(h, a, GameEnd.NORMAL);
+	}
+
+	public Result ScoreKoGame(string homeTeamId, string awayTeamId)
+	{
+		var (h, a) = SamplePoissonScore(homeTeamId, awayTeamId, lambdaFactor: 1.0);
+		if (h != a) { return new Result(h, a, GameEnd.NORMAL); }
+
+		// Extra time: 30 minutes at 1/3 the base lambda.
+		var (eh, ea) = SamplePoissonScore(homeTeamId, awayTeamId, lambdaFactor: 1.0 / 3.0);
+		h += eh; a += ea;
+		if (h != a) { return new Result(h, a, GameEnd.EXTRA_TIME); }
+
+		var (ph, pa) = SimulatePenaltyShootout();
+		return new Result(h, a, GameEnd.PENALTIES, ph, pa);
+	}
+
+	(int Home, int Away) SamplePoissonScore(string homeTeamId, string awayTeamId, double lambdaFactor)
+	{
+		var eloDiff = _registry.EloOf(homeTeamId) - _registry.EloOf(awayTeamId);
+		var lambda = (2.65 + 0.001 * Math.Abs(eloDiff)) * lambdaFactor;
+		var totalGoals = new Poisson(lambda, _rng).Sample();
+
+		var pHome = HomeGoalProbabilityFromDiff(eloDiff);
+		int home = 0, away = 0;
+		for (int i = 0; i < totalGoals; i++)
+		{
+			if (_rng.NextDouble() < pHome) { home++; } else { away++; }
+		}
+		return (home, away);
+	}
+
+	// Shootout: each side takes up to 5 pens (stops early when result is mathematically out of reach), then sudden death.
+	(int Home, int Away) SimulatePenaltyShootout()
+	{
+		int ph = 0, pa = 0;
+		const int Standard = 5;
+		for (int round = 1; round <= Standard; round++)
+		{
+			if (_rng.NextDouble() < PenaltyConversionRate) { ph++; }
+			// After home's pen this round: away still has (Standard - round + 1) pens left, home (Standard - round) more.
+			if (ph - pa > Standard - round + 1) { return (ph, pa); }
+			if (pa - ph > Standard - round) { return (ph, pa); }
+
+			if (_rng.NextDouble() < PenaltyConversionRate) { pa++; }
+			// After both pens this round: each has (Standard - round) future pens. If the gap exceeds that, decided.
+			if (Math.Abs(ph - pa) > Standard - round) { return (ph, pa); }
+		}
+		while (ph == pa)
+		{
+			if (_rng.NextDouble() < PenaltyConversionRate) { ph++; }
+			if (_rng.NextDouble() < PenaltyConversionRate) { pa++; }
+		}
+		return (ph, pa);
+	}
+
+	static double HomeGoalProbabilityFromDiff(int eloDiff) =>
+		1.0 - 1.0 / (1 + Math.Pow(10, eloDiff / 400.0));
+}

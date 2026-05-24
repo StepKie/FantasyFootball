@@ -3,7 +3,6 @@
 global using System.Globalization;
 global using CommunityToolkit.Mvvm.Messaging;
 global using FantasyFootball.Data;
-global using FantasyFootball.Data.Formats;
 global using FantasyFootball.Models;
 global using FantasyFootball.Repositories;
 global using FantasyFootball.Services;

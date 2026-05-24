@@ -2,23 +2,16 @@ using System.Text.Json;
 using Blazored.LocalStorage;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
-using FantasyFootball.Services;
 using Serilog;
 
 namespace FantasyFootball.Web.Services;
 
 /// <summary>
 /// IRepository implementation that persists each aggregate-root type as a JSON list
-/// under its own browser LocalStorage key. Non-root nested types (Stage, Round, Game,
-/// Qualifier, …) live inside their containing Competition's JSON; saving a Game walks
-/// up to the Competition and re-persists the aggregate.
-///
-/// Differs from the SQLite Repository in two intentional ways:
-///   1. No background table for nested types — GetAll&lt;Round&gt; / GetAll&lt;Game&gt; will throw.
-///      Callers should navigate through Competition.Stages / Rounds / AllGames instead.
-///   2. Save is synchronous: in-memory dictionary mutation followed by a synchronous
-///      JSON serialize + SetItem call. Acceptable in WASM because LocalStorage I/O is
-///      already main-thread; under our data volume (low hundreds of KB) latency is sub-ms.
+/// under its own browser LocalStorage key. After the graph-model cleanup the remaining
+/// roots are Team, Confederation, Country — TeamDetailViewModel uses this for Elo edit
+/// persistence. The flat competition model has its own repository
+/// (<see cref="LocalStorageCompetitionRepository"/>).
 /// </summary>
 public sealed class LocalStorageRepository : IRepository
 {
@@ -26,13 +19,12 @@ public sealed class LocalStorageRepository : IRepository
 
   static readonly HashSet<Type> AggregateRoots =
   [
-    typeof(Competition),
     typeof(Team),
     typeof(Confederation),
     typeof(Country),
   ];
 
-  static readonly JsonSerializerOptions JsonOptions = CompetitionSnapshot.JsonOptions;
+  static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { WriteIndented = false };
 
   readonly ISyncLocalStorageService _localStorage;
   readonly Dictionary<Type, Dictionary<int, NamedUniqueId>> _buckets = [];
@@ -64,17 +56,6 @@ public sealed class LocalStorageRepository : IRepository
 
   public void Save<T>(T item) where T : NamedUniqueId, new()
   {
-    // Non-root types defer to the containing Competition. CompetitionSimulator
-    // calls Repo.Save(game) mid-simulation; we treat that as a Competition update.
-    if (item is Game game)
-    {
-      var competition = game.Round?.Stage?.Competition
-        ?? throw new InvalidOperationException(
-          $"Cannot save Game {game.Id}: missing Round.Stage.Competition back-reference.");
-      Save(competition);
-      return;
-    }
-
     ThrowIfNotAggregateRoot(typeof(T));
     var bucket = LoadBucket<T>();
     if (item.Id == 0)
@@ -144,7 +125,6 @@ public sealed class LocalStorageRepository : IRepository
       }
       catch (Exception quarantineEx)
       {
-        // SetItemAsString can throw QuotaExceededError when storage is full; best-effort cleanup.
         Log.Warning("[LocalStorageRepository] Quarantine write for {Bucket} failed: {Error}. Removing corrupt key and continuing with empty bucket.", typeof(T).Name, quarantineEx.Message);
         try { _localStorage.RemoveItem(KeyFor<T>()); }
         catch (Exception removeEx) { Log.Warning("[LocalStorageRepository] Could not remove corrupt {Bucket} key: {Error}. Corrupt data may persist on next load.", typeof(T).Name, removeEx.Message); }
@@ -170,8 +150,7 @@ public sealed class LocalStorageRepository : IRepository
     if (!AggregateRoots.Contains(t))
     {
       throw new NotSupportedException(
-        $"{t.Name} is not an aggregate root in LocalStorageRepository. " +
-        $"Access nested types through Competition (e.g. competition.Rounds[i].AllGames[j]).");
+        $"{t.Name} is not an aggregate root in LocalStorageRepository. Aggregate roots: {string.Join(", ", AggregateRoots.Select(x => x.Name))}.");
     }
   }
 }

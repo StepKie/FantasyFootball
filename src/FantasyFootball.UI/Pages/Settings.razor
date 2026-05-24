@@ -61,6 +61,19 @@
     </div>
 
     <div>
+      <MudText Typo="Typo.body2" Class="mb-2"><strong>Standings detail</strong></MudText>
+      <MudSwitch T="bool"
+                 Value="ViewModel.ShowFullStandings"
+                 ValueChanged="@(v => ViewModel.ShowFullStandings = v)"
+                 Color="Color.Primary"
+                 Label="Show W / D / L columns" />
+      <MudText Typo="Typo.caption" Color="Color.Secondary" Class="d-block mt-1">
+        Off (default): compact 6-column view — flag · team · P · GD · Pts.
+        On: full 9-column view also showing Wins / Draws / Losses.
+      </MudText>
+    </div>
+
+    <div>
       <MudText Typo="Typo.body2" Class="mb-2"><strong>Competition logos</strong></MudText>
       <MudSwitch T="bool"
                  Value="ViewModel.UseOfficialCompetitionLogos"

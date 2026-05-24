@@ -22,19 +22,8 @@ public static class MauiProgram
 			.AddSingleton<IRepository>(new Repository(inMemory: false))
 			.AddLogging(lb => lb.AddSerilog());
 
-		// Register pages and viewmodels
-
+		// Competition pages removed; Teams + Settings still registered below.
 		builder.Services
-			.AddSingleton<CompetitionsPage>()
-			.AddSingleton<CompetitionsViewModel>()
-
-			.AddSingleton<CompetitionSetupPage>()
-			.AddSingleton<CompetitionSetupViewModel>()
-
-			.AddSingleton<CompetitionStatisticsPage>()
-			.AddSingleton<StandingsPage>()
-			.AddSingleton<StandingsViewModel>()
-
 			.AddSingleton<SettingsPage>()
 			.AddSingleton<SettingsViewModel>()
 
@@ -42,12 +31,7 @@ public static class MauiProgram
 			.AddSingleton<TeamsViewModel>()
 
 			.AddTransient<TeamDetailPage>()
-			.AddTransient<TeamViewModel>()
-
-			.AddTransient<CompetitionDetailViewModel>()
-
-			.AddSingleton<GamesPage>()
-			.AddSingleton<GamesViewModel>();
+			.AddTransient<TeamViewModel>();
 
 		return builder.Build();
 	}

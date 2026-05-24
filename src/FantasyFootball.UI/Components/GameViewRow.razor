@@ -1,24 +1,43 @@
-@using FantasyFootball.Models
 @using FantasyFootball.Data
-@using FantasyFootball.Services
+@using FantasyFootball.Models
 @using FantasyFootball.Repositories
-@inject IRepository Repo
+@using FantasyFootball.Services
+@inject IDataService DataService
+@inject ICompetitionRepository Repo
 
-<div class="scoreboard-row-wrapper" id="@(ShowSim ? "current-game" : null)">
+<div class="scoreboard-row-wrapper" id="@(ShowSim ? "current-game" : ShowUndo ? "just-finished-game" : null)">
 <div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "") @(DetailsOpen ? "scoreboard-row-open" : "")"
-     @onclick="OnDetailsToggle">
+     @onclick="HandleRowClick"
+     style="cursor: pointer;">
   <div class="scoreboard-group-tag">
     <span class="scoreboard-group-tag-letter">@_groupLetter</span>
     <span class="scoreboard-group-tag-time">@Game.PlayedOn.ToString("HH:mm")</span>
   </div>
   <div class="scoreboard-team scoreboard-team-home @TeamClass(HomeIsWinner)">
-    <span class="scoreboard-team-name">@Game.HomeTeam.Name</span>
-    <FlagIcon Team="Game.HomeTeam" Size="24" />
+    <span class="scoreboard-team-name">@_homeLabel</span>
+    @if (_homeTeam is not null) { <FlagIcon Team="_homeTeam" Size="24" /> }
   </div>
-  <div class="scoreboard-score @(HasResult ? "" : "scoreboard-pending")">@Game.Result</div>
+  <div class="scoreboard-score @(HasResult ? "" : "scoreboard-pending")">
+    @if (Game.Result is { } r)
+    {
+      <div>@r.HomeScore-@r.AwayScore</div>
+      @if (r.Ending == GameEnd.EXTRA_TIME)
+      {
+        <div class="scoreboard-score-ext">e.t.</div>
+      }
+      else if (r.Ending == GameEnd.PENALTIES)
+      {
+        <div class="scoreboard-score-ext">@r.PenaltyHome-@r.PenaltyAway pen.</div>
+      }
+    }
+    else
+    {
+      <span>v</span>
+    }
+  </div>
   <div class="scoreboard-team scoreboard-team-away @TeamClass(AwayIsWinner)">
-    <FlagIcon Team="Game.AwayTeam" Size="24" />
-    <span class="scoreboard-team-name">@Game.AwayTeam.Name</span>
+    @if (_awayTeam is not null) { <FlagIcon Team="_awayTeam" Size="24" /> }
+    <span class="scoreboard-team-name">@_awayLabel</span>
   </div>
   <div class="scoreboard-action" @onclick:stopPropagation="true">
     @if (ShowSim)
@@ -53,7 +72,7 @@
             Class="game-details-popover">
   @if (DetailsOpen)
   {
-    @if (Game.HomeTeam.Type == TeamType.PLACEHOLDER || Game.AwayTeam.Type == TeamType.PLACEHOLDER)
+    @if (_homeTeam is null || _awayTeam is null)
     {
       <MudText Typo="Typo.body2">Teams not yet decided.</MudText>
     }
@@ -61,7 +80,19 @@
     {
       <div class="game-details-row">
         <span class="game-details-label">Elo</span>
-        <span class="game-details-value">@Game.HomeTeam.Elo <span class="game-details-sep">—</span> @Game.AwayTeam.Elo</span>
+        <span class="game-details-value game-details-value-pair">
+          <span>@_homeTeam.Elo</span>
+          <span class="game-details-sep">—</span>
+          <span>@_awayTeam.Elo</span>
+        </span>
+      </div>
+      <div class="game-details-row">
+        <span class="game-details-label">Expected goals</span>
+        <span class="game-details-value game-details-value-pair">
+          <span>@_prob.XgHome.ToString("0.0")</span>
+          <span class="game-details-sep">—</span>
+          <span>@_prob.XgAway.ToString("0.0")</span>
+        </span>
       </div>
       <div class="game-details-row">
         <span class="game-details-label">Win / Draw / Loss</span>
@@ -82,8 +113,8 @@
       </div>
       <MudDivider Class="my-2" />
       <div class="game-details-links">
-        <MudLink Href="@($"/teams/{Game.HomeTeam.Id}")" Typo="Typo.body2">@Game.HomeTeam.Name</MudLink>
-        <MudLink Href="@($"/teams/{Game.AwayTeam.Id}")" Typo="Typo.body2">@Game.AwayTeam.Name</MudLink>
+        <MudLink Href="@($"teams/{_homeTeam.Id}?from=competitions/{Competition?.Id}")" Typo="Typo.body2">@_homeTeam.Name</MudLink>
+        <MudLink Href="@($"teams/{_awayTeam.Id}?from=competitions/{Competition?.Id}")" Typo="Typo.body2">@_awayTeam.Name</MudLink>
       </div>
     }
   }
@@ -92,56 +123,88 @@
 
 @code {
   [Parameter] public Game Game { get; set; } = null!;
+  [Parameter] public Competition Competition { get; set; } = null!;
   [Parameter] public bool ShowSim { get; set; }
   [Parameter] public bool ShowUndo { get; set; }
   [Parameter] public bool IsJustFinished { get; set; }
-  [Parameter] public bool Disabled { get; set; }
   [Parameter] public bool DetailsOpen { get; set; }
-  [Parameter] public EventCallback OnDetailsToggle { get; set; }
+  [Parameter] public bool Disabled { get; set; }
   [Parameter] public EventCallback OnSim { get; set; }
   [Parameter] public EventCallback OnUndo { get; set; }
   [Parameter] public EventCallback OnRedo { get; set; }
+  [Parameter] public EventCallback OnDetailsToggle { get; set; }
 
-  bool HasResult => Game.IsFinished;
-  bool IsDraw => HasResult && Game.Winner is null;
-  // Id compare instead of reference: NamedUniqueId overrides Equals but not operator==, and Winner from a deserialized graph could be a different instance.
-  bool HomeIsWinner => HasResult && Game.Winner?.Id == Game.HomeTeam.Id;
-  bool AwayIsWinner => HasResult && Game.Winner?.Id == Game.AwayTeam.Id;
-
-  // Winner: bolded. Loser: dimmed. Draw: both teams render at normal weight. Pre-game (no result): normal weight too.
-  string TeamClass(bool isThisSideWinner) =>
-    isThisSideWinner ? "scoreboard-winner" :
-    HasResult && !IsDraw ? "scoreboard-loser" :
-    "";
-
-  // Group letter when both teams sit in the same group of the parent stage (group-stage games). KO games span groups → blank.
+  Team? _homeTeam;
+  Team? _awayTeam;
+  string _homeLabel = "";
+  string _awayLabel = "";
   string _groupLetter = "";
-
   bool _prevDetailsOpen;
-  MatchProbability.WinDrawLossResult _prob;
+  string? _lastFetchedHomeId;
+  string? _lastFetchedAwayId;
+  MatchProbability.Prediction _prob;
   HeadToHeadLookup.Result _h2h;
 
-  protected override void OnParametersSet()
+  protected override async Task OnParametersSetAsync()
   {
-    var stage = Game.Round?.Stage;
-    var group = stage?.Groups.FirstOrDefault(g => g.Teams.Contains(Game.HomeTeam) && g.Teams.Contains(Game.AwayTeam));
-    _groupLetter = group?.Name?.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault()?.ToUpperInvariant() ?? "";
+    var homeId = CompetitionExtensions.HomeTeamIdOf(Game);
+    var awayId = CompetitionExtensions.AwayTeamIdOf(Game);
+    _homeTeam = homeId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == homeId);
+    _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId);
 
-    // Compute popover data only on open-transition. Recomputing every render would re-walk GetAll<Competition>()
-    // on every keypress / VM property change while a popover stays open.
-    if (DetailsOpen
-        && !_prevDetailsOpen
-        && Game.HomeTeam.Type != TeamType.PLACEHOLDER
-        && Game.AwayTeam.Type != TeamType.PLACEHOLDER)
+    // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id.
+    _homeLabel = _homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?";
+    _awayLabel = _awayTeam?.Name ?? LabelForUnresolved(Game, isHome: false) ?? awayId ?? "?";
+
+    _groupLetter = Game switch
     {
-      _prob = MatchProbability.WinDrawLoss(Game.HomeTeam.Elo, Game.AwayTeam.Elo);
-      _h2h = HeadToHeadLookup.Across(Repo, Game.HomeTeam, Game.AwayTeam);
+      GroupGame gg => gg.GroupLetter,
+      // KO: short round code + position; single-game rounds (3rd, F) drop the position.
+      KoGame => Competition is null
+        ? RoundShortNames.Of(Game.RoundId)
+        : Competition.Games.Count(g => g.RoundId == Game.RoundId) == 1
+          ? RoundShortNames.Of(Game.RoundId)
+          : $"{RoundShortNames.Of(Game.RoundId)} {Competition.PositionInRound(Game)}",
+      _ => "",
+    };
+    // Fetch when the popover is open with resolved teams AND we haven't already fetched for this exact (home, away) pair. Pair tracking guards against Blazor reusing this component for a different game (list reorder after sim) without re-running the fetch.
+    var canFetch = DetailsOpen && _homeTeam is not null && _awayTeam is not null;
+    var pairChanged = _homeTeam?.ShortName != _lastFetchedHomeId || _awayTeam?.ShortName != _lastFetchedAwayId;
+    if (canFetch && (!_prevDetailsOpen || pairChanged))
+    {
+      _prevDetailsOpen = true;
+      var fetchHomeId = _homeTeam!.ShortName;
+      var fetchAwayId = _awayTeam!.ShortName;
+      _lastFetchedHomeId = fetchHomeId;
+      _lastFetchedAwayId = fetchAwayId;
+      _prob = MatchProbability.Predict(_homeTeam.Elo, _awayTeam.Elo);
+      // Force a real yield so the popover renders W/D/L + xG immediately while the O(N comps) H2H walk runs. Capture team ids into locals above — they're stable across the suspension; _homeTeam / _awayTeam could be reset by a concurrent OnParametersSetAsync.
+      await Task.Yield();
+      _h2h = await HeadToHeadLookup.AcrossAsync(Repo, fetchHomeId, fetchAwayId);
     }
-    _prevDetailsOpen = DetailsOpen;
+    else if (!canFetch)
+    {
+      _prevDetailsOpen = false;
+    }
   }
+
+  Task HandleRowClick() => OnDetailsToggle.InvokeAsync();
 
   // Floor at "<1%": "0%" reads as impossible for a heavy underdog who could still win.
   static string FormatPct(double p) => p > 0 && p < 0.005 ? "<1%" : $"{p * 100:0}%";
 
   static string PctClass(bool isActualOutcome) => isActualOutcome ? "game-details-pct-actual" : "";
+
+  string? LabelForUnresolved(Game g, bool isHome) => g is KoGame ko
+    ? QualifierDescriber.Describe(Competition, isHome ? ko.HomeQual : ko.AwayQual)
+    : null;
+
+  bool HasResult => Game.Result is not null;
+  bool IsDraw => Game.Result is { } r && r.IsDraw;
+  bool HomeIsWinner => Game.Result is { } r && r.HomeWon;
+  bool AwayIsWinner => Game.Result is { } r && r.AwayWon;
+
+  string TeamClass(bool isWinner) => HasResult
+    ? (isWinner ? "scoreboard-winner" : IsDraw ? "" : "scoreboard-loser")
+    : "";
 }

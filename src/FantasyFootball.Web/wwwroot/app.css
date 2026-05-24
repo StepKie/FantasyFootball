@@ -4,6 +4,7 @@
   font-variant-numeric: tabular-nums;
 }
 
+
 body {
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
@@ -74,10 +75,11 @@ body {
   cursor: pointer;
 }
 
-/* Hierarchical stage→round chip pickers with a dotted-timeline backdrop. Stage row larger, round row
-   smaller + indented to suggest "rounds belong to the selected stage". The ::before dashed line on each
-   .timeline-chips evokes temporal progression. Chips need an opaque background so the line doesn't
-   show through outlined chips on dark mode (--mud-palette-surface).  */
+/* Hierarchical stage→round chip pickers with a dashed-timeline backdrop. Each chip and
+   each inter-chip play-button lives inside a .timeline-cell wrapper whose opaque background
+   occludes the line behind it — so the line shows only in the gaps. This wrapper approach
+   replaced two rounds of !important chip-background overrides that kept losing the fight
+   with MudBlazor's own .mud-chip-outlined styling on framework upgrades. */
 .timeline-pickers {
   display: flex;
   flex-direction: column;
@@ -88,6 +90,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0; /* allow chip container to shrink so children can wrap */
 }
 
 .timeline-row-round {
@@ -111,6 +114,7 @@ body {
   align-items: center;
   position: relative;
   flex: 1;
+  min-width: 0; /* see .timeline-row — required for the wrap to actually engage */
 }
 
 .timeline-chips::before {
@@ -125,31 +129,16 @@ body {
   pointer-events: none;
 }
 
-.timeline-chips .mud-chip {
+/* Opaque per-chip occluder. The wrapper sits in front of the dashed line and
+   carries the page-background color, so the chip itself (transparent for the
+   outlined variant) doesn't have to win a specificity fight with MudBlazor. */
+.timeline-cell {
+  display: inline-flex;
+  background-color: var(--mud-palette-background);
+  border-radius: 999px;
   position: relative;
   z-index: 1;
-}
-
-/* Chip status — encoded redundantly via border style + opacity, not color alone.
-   chip-current: dashed border distinguishes the actively-played round from solid-bordered done/future.
-   chip-future:  dimmed to indicate "not reached yet" without changing chip shape.
-   chip-done:    no border/opacity override; default outlined+default reads as the "white" finished state.
-   All three status classes get an opaque background so the dashed timeline line doesn't pass visibly
-   through them. The filled selected chip has no status class → no override → keeps its primary green. */
-.mud-chip.chip-current,
-.mud-chip.chip-future,
-.mud-chip.chip-done {
-  /* `background` shorthand to also reset background-image; MudBlazor's outlined variant set
-     `background: transparent` which beat the property-level override. */
-  background: var(--mud-palette-background) !important;
-}
-
-/* Inter-chip sim button — sits between round chips on the timeline. Opaque backdrop so the dashed
-   timeline line doesn't pass through. */
-.round-sim-button {
-  background: var(--mud-palette-background) !important;
-  position: relative;
-  z-index: 1;
+  flex-shrink: 0;
 }
 
 .mud-chip.chip-current {
@@ -239,10 +228,14 @@ body {
   text-align: left;
 }
 
+/* Team name: never truncate with ellipsis. Long names (e.g. "Bosnia and
+   Herzegovina") wrap to two lines inside the cell — row grows taller for
+   that game, but the team stays fully readable. Most names fit on one line. */
 .scoreboard-team-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.2;
 }
 
 .scoreboard-score {
@@ -253,6 +246,19 @@ body {
   min-width: 5rem;
   text-align: center;
   font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.05;
+}
+
+/* Secondary line under the regulation score: "e.t." or "5-4 pen." — smaller, dimmer, no bold. */
+.scoreboard-score-ext {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  color: var(--mud-palette-text-secondary);
+  margin-top: 0.1rem;
 }
 
 .scoreboard-winner { font-weight: 600; }
@@ -280,40 +286,6 @@ body {
 .scoreboard-row-just-finished .scoreboard-score {
   animation: scoreboard-score-reveal 0.45s ease-out;
   display: inline-block; /* required for transform to apply on inline content */
-}
-
-/* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
-.scoreboard-action {
-  min-width: 5rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.1rem;
-  flex-shrink: 0;
-}
-
-/* Group letter + kickoff time at the start of each scoreboard row. Letter is blank for KO games (teams span groups); kickoff stays. */
-.scoreboard-group-tag {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Barlow Condensed', 'Inter', sans-serif;
-  color: var(--mud-palette-text-secondary);
-  min-width: 2.5rem;
-  line-height: 1.1;
-  flex-shrink: 0;
-}
-
-.scoreboard-group-tag-letter {
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.5px;
-}
-
-.scoreboard-group-tag-time {
-  font-size: 0.7rem;
-  font-variant-numeric: tabular-nums;
 }
 
 /* Click-for-game-details popover. Anchored under the row via .scoreboard-row-wrapper (position: relative). */
@@ -356,7 +328,17 @@ body {
   margin: 0 0.15rem;
 }
 
-/* The percentage that matches the actual outcome (only set when Game.IsFinished). */
+/* Paired numeric value (Elo, xG): grid with the dash in the centre column so dashes align vertically across rows. */
+.game-details-value-pair {
+  display: inline-grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;
+  min-width: 11ch;
+}
+.game-details-value-pair > :nth-child(1) { justify-self: end; }
+.game-details-value-pair > :nth-child(3) { justify-self: start; }
+
+/* The percentage that matches the actual outcome (only set when the game has a Result). */
 .game-details-pct-actual {
   color: var(--mud-palette-primary);
   font-weight: 700;
@@ -366,6 +348,120 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
+}
+
+.game-details-team {
+  color: var(--mud-palette-primary);
+  font-weight: 500;
+}
+
+/* Group standings: big letter heading + compact 6-column table. */
+.group-block {
+  margin-top: 1.75rem;
+}
+
+.group-block:first-of-type {
+  margin-top: 0;
+}
+
+.group-letter-heading {
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: var(--mud-palette-primary);
+  line-height: 1;
+  margin: 0;
+  padding-left: 0.5rem;
+}
+
+/* Kill any horizontal scrollbar that MudBlazor's table wrapper imposes. The
+   broad selector list catches whichever element the framework drops the
+   overflow-x:auto on across versions — table root, table container, and the
+   MudPaper that wraps Outlined/Elevated variants. !important beats the
+   framework's normal-specificity rule. */
+.group-standings,
+.mud-table.group-standings,
+.mud-simple-table.group-standings,
+.group-standings .mud-table-container,
+.bounded-scroll-card .mud-paper {
+  overflow-x: visible !important;
+}
+
+/* Column sizing — numeric cols stay narrow; team col gets nowrap but no
+   min-width (panel is now md=6, ~half the page, plenty of room). */
+.group-standings .standings-pos {
+  width: 1.5rem;
+  padding-left: 0.6rem;
+  padding-right: 0.15rem;
+  position: relative;
+}
+.group-standings .standings-flag {
+  width: 1.75rem;
+  padding-left: 0.15rem;
+  padding-right: 0.15rem;
+}
+.group-standings .standings-team {
+  white-space: nowrap;
+  padding-left: 0.25rem;
+  padding-right: 0.5rem;
+}
+.group-standings .standings-num {
+  width: 1.6rem;
+  padding-left: 0.15rem;
+  padding-right: 0.35rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.group-standings .standings-pts {
+  font-weight: bold;
+}
+
+/* Qualification-zone left-edge bar in standings rows. Slim, muted column inset from row edges. */
+.standings-qual-bar {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+}
+
+.standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
+.standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
+
+/* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
+.scoreboard-action {
+  min-width: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.1rem;
+  flex-shrink: 0;
+}
+
+/* Group letter + kickoff time at the start of each scoreboard row. Letter is blank for KO games (teams span groups); kickoff stays. */
+.scoreboard-group-tag {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  color: var(--mud-palette-text-secondary);
+  min-width: 2.5rem;
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+
+.scoreboard-group-tag-letter {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.scoreboard-group-tag-time {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */
@@ -393,46 +489,6 @@ body {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-
-/* Qualification-zone left-edge bar in standings rows. Slim, muted column inset from row edges. */
-.standings-qual-bar {
-  position: absolute;
-  left: 0;
-  top: 6px;
-  bottom: 6px;
-  width: 3px;
-  border-radius: 2px;
-}
-
-.standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
-.standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
-
-/* Group block wraps heading + table. Big gap between blocks, zero between letter and its own table.
-   .group-letter-heading has no margin; .group-standings has negative top margin to pull the MudTable
-   header (P GD Pts) tight against the letter, then a quiet divider afterwards via mb. */
-.group-block {
-  margin-top: 1.75rem;
-}
-
-.group-block:first-of-type {
-  margin-top: 0;
-}
-
-.group-letter-heading {
-  font-family: 'Barlow Condensed', 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 1.4rem;
-  letter-spacing: 1px;
-  color: var(--mud-palette-primary);
-  line-height: 1;
-  margin: 0;
-  padding-left: 0.5rem;
-}
-
-.group-standings .mud-table-head .mud-table-cell {
-  padding-top: 4px;
-  padding-bottom: 4px;
 }
 
 /* Elo numbers tone down so they don't compete with team names. */
