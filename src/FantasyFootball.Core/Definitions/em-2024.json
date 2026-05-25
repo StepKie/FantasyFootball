@@ -93,7 +93,7 @@
     ],
     "F": [
       "TUR",
-      "GRE",
+      "GEO",
       "POR",
       "CZE"
     ]
@@ -105,8 +105,10 @@
       "homeTeamId": "GER",
       "awayTeamId": "SCO",
       "id": 1,
-      "playedOn": "2016-06-10T21:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-14T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "allianz-arena",
+      "attendance": 65052
     },
     {
       "kind": "group",
@@ -114,8 +116,10 @@
       "homeTeamId": "HUN",
       "awayTeamId": "SUI",
       "id": 2,
-      "playedOn": "2016-06-11T15:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-15T13:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "rheinenergie-stadion",
+      "attendance": 41676
     },
     {
       "kind": "group",
@@ -123,8 +127,10 @@
       "homeTeamId": "ESP",
       "awayTeamId": "CRO",
       "id": 3,
-      "playedOn": "2016-06-11T18:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-15T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "olympiastadion-berlin",
+      "attendance": 68844
     },
     {
       "kind": "group",
@@ -132,8 +138,10 @@
       "homeTeamId": "ITA",
       "awayTeamId": "ALB",
       "id": 4,
-      "playedOn": "2016-06-11T21:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-15T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "westfalenstadion",
+      "attendance": 60512
     },
     {
       "kind": "group",
@@ -141,8 +149,10 @@
       "homeTeamId": "POL",
       "awayTeamId": "NED",
       "id": 5,
-      "playedOn": "2016-06-12T15:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-16T13:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "volksparkstadion",
+      "attendance": 48117
     },
     {
       "kind": "group",
@@ -150,8 +160,10 @@
       "homeTeamId": "SVN",
       "awayTeamId": "DEN",
       "id": 6,
-      "playedOn": "2016-06-12T18:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-16T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "mhparena",
+      "attendance": 54000
     },
     {
       "kind": "group",
@@ -159,8 +171,10 @@
       "homeTeamId": "SRB",
       "awayTeamId": "ENG",
       "id": 7,
-      "playedOn": "2016-06-12T21:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-16T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "arena-aufschalke",
+      "attendance": 48953
     },
     {
       "kind": "group",
@@ -168,8 +182,10 @@
       "homeTeamId": "BEL",
       "awayTeamId": "SVK",
       "id": 8,
-      "playedOn": "2016-06-13T15:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-17T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "waldstadion",
+      "attendance": 45181
     },
     {
       "kind": "group",
@@ -177,8 +193,10 @@
       "homeTeamId": "ROU",
       "awayTeamId": "UKR",
       "id": 9,
-      "playedOn": "2016-06-13T18:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-17T13:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "allianz-arena",
+      "attendance": 61591
     },
     {
       "kind": "group",
@@ -186,17 +204,21 @@
       "homeTeamId": "AUT",
       "awayTeamId": "FRA",
       "id": 10,
-      "playedOn": "2016-06-13T21:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-17T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "merkur-spiel-arena",
+      "attendance": 46425
     },
     {
       "kind": "group",
       "groupLetter": "F",
       "homeTeamId": "TUR",
-      "awayTeamId": "GRE",
+      "awayTeamId": "GEO",
       "id": 11,
-      "playedOn": "2016-06-14T18:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-18T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "westfalenstadion",
+      "attendance": 59127
     },
     {
       "kind": "group",
@@ -204,8 +226,10 @@
       "homeTeamId": "POR",
       "awayTeamId": "CZE",
       "id": 12,
-      "playedOn": "2016-06-14T21:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2024-06-18T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "red-bull-arena",
+      "attendance": 38421
     },
     {
       "kind": "group",
@@ -213,8 +237,10 @@
       "homeTeamId": "CRO",
       "awayTeamId": "ALB",
       "id": 13,
-      "playedOn": "2016-06-15T15:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-19T13:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "volksparkstadion",
+      "attendance": 46784
     },
     {
       "kind": "group",
@@ -222,8 +248,10 @@
       "homeTeamId": "GER",
       "awayTeamId": "HUN",
       "id": 14,
-      "playedOn": "2016-06-15T18:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-19T16:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "mhparena",
+      "attendance": 54000
     },
     {
       "kind": "group",
@@ -231,8 +259,10 @@
       "homeTeamId": "SCO",
       "awayTeamId": "SUI",
       "id": 15,
-      "playedOn": "2016-06-15T21:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-19T19:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "rheinenergie-stadion",
+      "attendance": 42711
     },
     {
       "kind": "group",
@@ -240,8 +270,10 @@
       "homeTeamId": "SVN",
       "awayTeamId": "SRB",
       "id": 16,
-      "playedOn": "2016-06-16T15:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-20T13:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "allianz-arena",
+      "attendance": 63028
     },
     {
       "kind": "group",
@@ -249,8 +281,10 @@
       "homeTeamId": "DEN",
       "awayTeamId": "ENG",
       "id": 17,
-      "playedOn": "2016-06-16T18:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-20T16:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "waldstadion",
+      "attendance": 46177
     },
     {
       "kind": "group",
@@ -258,8 +292,10 @@
       "homeTeamId": "ESP",
       "awayTeamId": "ITA",
       "id": 18,
-      "playedOn": "2016-06-16T21:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-20T19:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "arena-aufschalke",
+      "attendance": 49528
     },
     {
       "kind": "group",
@@ -267,8 +303,10 @@
       "homeTeamId": "SVK",
       "awayTeamId": "UKR",
       "id": 19,
-      "playedOn": "2016-06-17T15:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-21T13:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "merkur-spiel-arena",
+      "attendance": 43910
     },
     {
       "kind": "group",
@@ -276,8 +314,10 @@
       "homeTeamId": "POL",
       "awayTeamId": "AUT",
       "id": 20,
-      "playedOn": "2016-06-17T18:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-21T16:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "olympiastadion-berlin",
+      "attendance": 69455
     },
     {
       "kind": "group",
@@ -285,17 +325,21 @@
       "homeTeamId": "NED",
       "awayTeamId": "FRA",
       "id": 21,
-      "playedOn": "2016-06-17T21:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-21T19:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "red-bull-arena",
+      "attendance": 38531
     },
     {
       "kind": "group",
       "groupLetter": "F",
-      "homeTeamId": "GRE",
+      "homeTeamId": "GEO",
       "awayTeamId": "CZE",
       "id": 22,
-      "playedOn": "2016-06-18T15:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-22T13:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "volksparkstadion",
+      "attendance": 46524
     },
     {
       "kind": "group",
@@ -303,8 +347,10 @@
       "homeTeamId": "TUR",
       "awayTeamId": "POR",
       "id": 23,
-      "playedOn": "2016-06-18T18:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-22T16:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "westfalenstadion",
+      "attendance": 61047
     },
     {
       "kind": "group",
@@ -312,8 +358,10 @@
       "homeTeamId": "BEL",
       "awayTeamId": "ROU",
       "id": 24,
-      "playedOn": "2016-06-18T21:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2024-06-22T19:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "rheinenergie-stadion",
+      "attendance": 42535
     },
     {
       "kind": "group",
@@ -321,8 +369,10 @@
       "homeTeamId": "SUI",
       "awayTeamId": "GER",
       "id": 25,
-      "playedOn": "2016-06-19T21:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-23T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "waldstadion",
+      "attendance": 46685
     },
     {
       "kind": "group",
@@ -330,8 +380,10 @@
       "homeTeamId": "SCO",
       "awayTeamId": "HUN",
       "id": 26,
-      "playedOn": "2016-06-19T21:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-23T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "mhparena",
+      "attendance": 54000
     },
     {
       "kind": "group",
@@ -339,8 +391,10 @@
       "homeTeamId": "ALB",
       "awayTeamId": "ESP",
       "id": 27,
-      "playedOn": "2016-06-20T21:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-24T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "merkur-spiel-arena",
+      "attendance": 46586
     },
     {
       "kind": "group",
@@ -348,8 +402,10 @@
       "homeTeamId": "CRO",
       "awayTeamId": "ITA",
       "id": 28,
-      "playedOn": "2016-06-20T21:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-24T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "red-bull-arena",
+      "attendance": 38322
     },
     {
       "kind": "group",
@@ -357,8 +413,10 @@
       "homeTeamId": "FRA",
       "awayTeamId": "POL",
       "id": 29,
-      "playedOn": "2016-06-21T18:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-25T16:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "westfalenstadion",
+      "attendance": 59728
     },
     {
       "kind": "group",
@@ -366,8 +424,10 @@
       "homeTeamId": "NED",
       "awayTeamId": "AUT",
       "id": 30,
-      "playedOn": "2016-06-21T18:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-25T16:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "olympiastadion-berlin",
+      "attendance": 68363
     },
     {
       "kind": "group",
@@ -375,8 +435,10 @@
       "homeTeamId": "ENG",
       "awayTeamId": "SVN",
       "id": 31,
-      "playedOn": "2016-06-21T21:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-25T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "rheinenergie-stadion",
+      "attendance": 41536
     },
     {
       "kind": "group",
@@ -384,8 +446,10 @@
       "homeTeamId": "DEN",
       "awayTeamId": "SRB",
       "id": 32,
-      "playedOn": "2016-06-21T21:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-25T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "allianz-arena",
+      "attendance": 64288
     },
     {
       "kind": "group",
@@ -393,8 +457,10 @@
       "homeTeamId": "UKR",
       "awayTeamId": "BEL",
       "id": 33,
-      "playedOn": "2016-06-22T18:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-26T16:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "mhparena",
+      "attendance": 54000
     },
     {
       "kind": "group",
@@ -402,8 +468,10 @@
       "homeTeamId": "SVK",
       "awayTeamId": "ROU",
       "id": 34,
-      "playedOn": "2016-06-22T18:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-26T16:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "waldstadion",
+      "attendance": 45033
     },
     {
       "kind": "group",
@@ -411,137 +479,171 @@
       "homeTeamId": "CZE",
       "awayTeamId": "TUR",
       "id": 35,
-      "playedOn": "2016-06-22T21:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-26T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "volksparkstadion",
+      "attendance": 47683
     },
     {
       "kind": "group",
       "groupLetter": "F",
-      "homeTeamId": "GRE",
+      "homeTeamId": "GEO",
       "awayTeamId": "POR",
       "id": 36,
-      "playedOn": "2016-06-22T21:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2024-06-26T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "arena-aufschalke",
+      "attendance": 49616
     },
     {
       "kind": "ko",
       "homeQual": "A2",
       "awayQual": "B2",
       "id": 37,
-      "playedOn": "2020-06-26T18:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2024-06-29T16:00:00Z",
+      "roundId": "r16",
+      "venueId": "olympiastadion-berlin",
+      "attendance": 68172
     },
     {
       "kind": "ko",
       "homeQual": "A1",
       "awayQual": "C2",
       "id": 38,
-      "playedOn": "2020-06-26T21:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2024-06-29T19:00:00Z",
+      "roundId": "r16",
+      "venueId": "westfalenstadion",
+      "attendance": 61612
     },
     {
       "kind": "ko",
       "homeQual": "C1",
       "awayQual": "D/E/F3",
       "id": 39,
-      "playedOn": "2020-06-27T18:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2024-06-30T16:00:00Z",
+      "roundId": "r16",
+      "venueId": "arena-aufschalke",
+      "attendance": 47244
     },
     {
       "kind": "ko",
       "homeQual": "B1",
       "awayQual": "A/D/E/F3",
       "id": 40,
-      "playedOn": "2020-06-27T21:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2024-06-30T19:00:00Z",
+      "roundId": "r16",
+      "venueId": "rheinenergie-stadion",
+      "attendance": 42233
     },
     {
       "kind": "ko",
       "homeQual": "D2",
       "awayQual": "E2",
       "id": 41,
-      "playedOn": "2020-06-28T18:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2024-07-01T16:00:00Z",
+      "roundId": "r16",
+      "venueId": "merkur-spiel-arena",
+      "attendance": 46810
     },
     {
       "kind": "ko",
       "homeQual": "F1",
       "awayQual": "A/B/C3",
       "id": 42,
-      "playedOn": "2020-06-28T21:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2024-07-01T19:00:00Z",
+      "roundId": "r16",
+      "venueId": "waldstadion",
+      "attendance": 46576
     },
     {
       "kind": "ko",
       "homeQual": "D1",
       "awayQual": "F2",
       "id": 43,
-      "playedOn": "2020-06-29T18:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2024-07-02T16:00:00Z",
+      "roundId": "r16",
+      "venueId": "allianz-arena",
+      "attendance": 65012
     },
     {
       "kind": "ko",
       "homeQual": "E1",
       "awayQual": "A/B/C/D3",
       "id": 44,
-      "playedOn": "2020-06-29T21:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2024-07-02T19:00:00Z",
+      "roundId": "r16",
+      "venueId": "red-bull-arena",
+      "attendance": 38305
     },
     {
       "kind": "ko",
       "homeQual": "W-41",
       "awayQual": "W-42",
       "id": 45,
-      "playedOn": "2020-07-02T18:00:00Z",
-      "roundId": "qf"
+      "playedOn": "2024-07-05T16:00:00Z",
+      "roundId": "qf",
+      "venueId": "mhparena",
+      "attendance": 54000
     },
     {
       "kind": "ko",
       "homeQual": "W-39",
       "awayQual": "W-37",
       "id": 46,
-      "playedOn": "2020-07-02T21:00:00Z",
-      "roundId": "qf"
+      "playedOn": "2024-07-05T19:00:00Z",
+      "roundId": "qf",
+      "venueId": "volksparkstadion",
+      "attendance": 47789
     },
     {
       "kind": "ko",
       "homeQual": "W-40",
       "awayQual": "W-38",
       "id": 47,
-      "playedOn": "2020-07-03T18:00:00Z",
-      "roundId": "qf"
+      "playedOn": "2024-07-06T16:00:00Z",
+      "roundId": "qf",
+      "venueId": "merkur-spiel-arena",
+      "attendance": 46907
     },
     {
       "kind": "ko",
       "homeQual": "W-43",
       "awayQual": "W-44",
       "id": 48,
-      "playedOn": "2020-07-03T21:00:00Z",
-      "roundId": "qf"
+      "playedOn": "2024-07-06T19:00:00Z",
+      "roundId": "qf",
+      "venueId": "olympiastadion-berlin",
+      "attendance": 70091
     },
     {
       "kind": "ko",
       "homeQual": "W-46",
       "awayQual": "W-45",
       "id": 49,
-      "playedOn": "2020-07-06T21:00:00Z",
-      "roundId": "sf"
+      "playedOn": "2024-07-09T19:00:00Z",
+      "roundId": "sf",
+      "venueId": "allianz-arena",
+      "attendance": 62042
     },
     {
       "kind": "ko",
       "homeQual": "W-48",
       "awayQual": "W-47",
       "id": 50,
-      "playedOn": "2020-07-07T21:00:00Z",
-      "roundId": "sf"
+      "playedOn": "2024-07-10T19:00:00Z",
+      "roundId": "sf",
+      "venueId": "westfalenstadion",
+      "attendance": 60926
     },
     {
       "kind": "ko",
       "homeQual": "W-49",
       "awayQual": "W-50",
       "id": 51,
-      "playedOn": "2020-07-11T21:00:00Z",
-      "roundId": "final"
+      "playedOn": "2024-07-14T19:00:00Z",
+      "roundId": "final",
+      "venueId": "olympiastadion-berlin",
+      "attendance": 65600
     }
   ]
 }
