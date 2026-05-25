@@ -32,7 +32,7 @@ fetch() {
     return 1
   fi
   # Sanity: must look like an SVG.
-  if ! head -c 6 "$tmp_file" | grep -qE '<\?xml|<svg'; then
+  if ! head -c 9 "$tmp_file" | grep -qE '<\?xml|<svg'; then
     rm -f "$tmp_file"
     echo "    ! $out doesn't look like SVG"
     return 1
