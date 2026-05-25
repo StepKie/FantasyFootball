@@ -15,16 +15,18 @@ $UA = 'FantasyFootball-VenueFetch/0.1 (https://github.com/StepKie/FantasyFootbal
 $OutPath = 'src/FantasyFootball.Core/Resources/Data/venues.json'
 $MinCapacity = 20000
 
-# Football stadiums (Q483110 and subclasses) with a known capacity, optional city,
-# country (via ISO-3166-1 alpha-3 code), and tenant club. Multi-tenant venues
-# return multiple rows we coalesce in post-processing.
+# Football stadiums with known capacity. Multi-tenant venues coalesce in post-process. Walks P131* from P276 to a Q515 ancestor — see commit message for the borough-vs-city handling.
 $Query = @"
 SELECT ?stadium ?stadiumLabel ?cityLabel ?countryCode ?capacity ?clubLabel WHERE {
   ?stadium wdt:P31/wdt:P279* wd:Q483110 .
   ?stadium wdt:P1083 ?capacity .
   FILTER(?capacity >= $MinCapacity)
   FILTER NOT EXISTS { ?stadium wdt:P576 ?dissolved . }   # exclude demolished / dissolved stadiums
-  OPTIONAL { ?stadium wdt:P276 ?city. }
+  OPTIONAL {
+    ?stadium wdt:P276 ?location .
+    ?location wdt:P131* ?city .
+    ?city wdt:P31/wdt:P279* wd:Q515 .
+  }
   OPTIONAL { ?stadium wdt:P17 ?country. ?country wdt:P298 ?countryCode. }
   OPTIONAL { ?stadium wdt:P466 ?club. }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
@@ -60,10 +62,16 @@ function Slugify($name) {
 $venues = $rows | Group-Object { $_.stadium.value } | ForEach-Object {
     $stadium = $_.Group[0]
     $stadiumName = $stadium.stadiumLabel.value
+    # Wikidata's label service falls back to the raw QID when no English label exists. Slugify would happily turn "Q11836159" into a valid-looking "q11836159" slug, so check the raw label first.
+    if ($stadiumName -match '^Q\d+$') { return }
     $stadiumId = Slugify $stadiumName
     if (-not $stadiumId) { return }
 
-    $cityName = $stadium.cityLabel.value
+    # Picks one of potentially multiple Q515 ancestors for a stadium; in practice the SPARQL chain returns a single city for our 34 competition venues. Ordering across endpoint upgrades isn't speced — if a future run flips between candidates, key the venue in $CityOverrides.
+    $cityName = $_.Group |
+        Where-Object { $_.cityLabel -and -not [string]::IsNullOrWhiteSpace($_.cityLabel.value) -and $_.cityLabel.value -notmatch '^Q\d+$' } |
+        Select-Object -First 1 -ExpandProperty cityLabel |
+        Select-Object -ExpandProperty value
     if ([string]::IsNullOrWhiteSpace($cityName)) { $cityName = $null }
 
     $countryCode = $stadium.countryCode.value
@@ -112,6 +120,60 @@ foreach ($v in $venues) {
 }
 
 Write-Host "  $($final.Count) unique stadiums after dedup."
+
+# Wikidata-gap overrides — keys are post-dedup IDs (relies on the higher-capacity venue keeping the base slug when names collide); see commit message for criteria.
+$CityOverrides = @{
+    'westfalenstadion'             = 'Dortmund'
+    'rheinenergie-stadion'         = 'Cologne'
+    'red-bull-arena'               = 'Leipzig'
+    'al-bayt-stadium'              = 'Al Khor'
+    'khalifa-international-stadium' = 'Al Rayyan'
+    'ahmad-bin-ali-stadium'        = 'Al Rayyan'
+    'lusail-stadium'               = 'Lusail'
+    'education-city-stadium'       = 'Al Rayyan'
+    'stadium-974'                  = 'Doha'
+    'banorte-stadium'              = 'Mexico City'
+    'estadio-akron'                = 'Guadalajara'
+    'estadio-monterrey'            = 'Monterrey'
+    'metlife-stadium'              = 'East Rutherford'
+    'gillette-stadium'             = 'Foxborough'
+    'lincoln-financial-field'      = 'Philadelphia'
+    'hard-rock-stadium'            = 'Miami Gardens'
+    'lumen-field'                  = 'Seattle'
+    'ataturk-olympic-stadium'      = 'Istanbul'
+    'melbourne-cricket-ground'     = 'Melbourne'
+    'estadio-monumental-u'         = 'Lima'
+}
+$overrideHits = 0
+foreach ($v in $final) {
+    if ($CityOverrides.ContainsKey($v.id)) {
+        $v.city = $CityOverrides[$v.id]
+        $overrideHits++
+    }
+}
+Write-Host "  Applied $overrideHits city overrides for Wikidata-gap venues."
+if ($overrideHits -ne $CityOverrides.Count) {
+    Write-Warning "  Expected $($CityOverrides.Count) override hits but got $overrideHits — a dedup rename may have suffixed an override target's slug."
+}
+
+# Berlin Olympiastadion: not returned by the SPARQL query (Wikidata classifies it multi-purpose / Olympic, not Q483110); hand-add.
+$berlinId = 'olympiastadion-berlin'
+if (-not ($final | Where-Object { $_.id -eq $berlinId })) {
+    $berlin = [PSCustomObject]@{
+        id           = $berlinId
+        name         = 'Olympiastadion'
+        city         = 'Berlin'
+        countryCode  = 'DEU'
+        capacity     = 74475
+        tenantClubs  = @('hertha-bsc')
+    }
+    $final.Add($berlin)
+    # Re-sort capacity-desc with the new entry in place.
+    $sorted = $final | Sort-Object capacity -Descending
+    $final = New-Object System.Collections.Generic.List[Object]
+    foreach ($v in $sorted) { $final.Add($v) }
+    Write-Host "  Hand-added Berlin Olympiastadion."
+}
 
 $json = $final | ConvertTo-Json -Depth 4
 Set-Content -Path $OutPath -Value $json -Encoding UTF8
