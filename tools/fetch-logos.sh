@@ -23,20 +23,34 @@ fetch() {
   fi
   local out="$outdir/$slug.svg"
   echo "  $slug ← $host:$file"
-  curl -fsSLo "$out" -A "$UA" "$url"
+  # Download to a tmp file and mv on success — `curl -o` truncates the target before transfer, which would wipe a previously-committed SVG on a partial failure.
+  local tmp_file
+  tmp_file=$(mktemp "${out}.XXXXXX")
+  if ! curl -fsSL -A "$UA" -o "$tmp_file" "$url"; then
+    rm -f "$tmp_file"
+    echo "    ! curl failed for $slug"
+    return 1
+  fi
   # Sanity: must look like an SVG.
-  head -c 6 "$out" | grep -qE '<\?xml|<svg' || { echo "    ! $out doesn't look like SVG"; exit 1; }
+  if ! head -c 6 "$tmp_file" | grep -qE '<\?xml|<svg'; then
+    rm -f "$tmp_file"
+    echo "    ! $out doesn't look like SVG"
+    return 1
+  fi
+  mv "$tmp_file" "$out"
   sleep 1   # be polite to Wikimedia
 }
 
+# Best-effort across all logos: one broken URL shouldn't skip the rest. Accumulate and report at the end.
+failed=0
 # --- Confederations (7) ---
-fetch fifa     commons "FIFA_logo_without_slogan.svg"                         "$CONF_DIR"
-fetch uefa     en      "UEFA_full_logo.svg"                                   "$CONF_DIR"
-fetch conmebol en      "CONMEBOL_logo_(2017).svg"                             "$CONF_DIR"
-fetch concacaf commons "Concacaf_logo.svg"                                    "$CONF_DIR"
-fetch caf      en      "Confederation_of_African_Football_logo.svg"           "$CONF_DIR"
-fetch afc      commons "Asian_Football_Confederation_emblem.svg"              "$CONF_DIR"
-fetch ofc      commons "Oceania_Football_Confederation_logo.svg"              "$CONF_DIR"
+fetch fifa     commons "FIFA_logo_without_slogan.svg"                         "$CONF_DIR" || failed=1
+fetch uefa     en      "UEFA_full_logo.svg"                                   "$CONF_DIR" || failed=1
+fetch conmebol en      "CONMEBOL_logo_(2017).svg"                             "$CONF_DIR" || failed=1
+fetch concacaf commons "Concacaf_logo.svg"                                    "$CONF_DIR" || failed=1
+fetch caf      en      "Confederation_of_African_Football_logo.svg"           "$CONF_DIR" || failed=1
+fetch afc      commons "Asian_Football_Confederation_emblem.svg"              "$CONF_DIR" || failed=1
+fetch ofc      commons "Oceania_Football_Confederation_logo.svg"              "$CONF_DIR" || failed=1
 
 # --- Competition marks: clean, un-branded canonical versions from football-logos.cc ---
 # Wikipedia's infobox files carry sponsor branding (EA Sports, McDonald's, ENILIVE etc.) and
@@ -45,4 +59,9 @@ fetch ofc      commons "Oceania_Football_Confederation_logo.svg"              "$
 # for the scraper that walks data-svg-hash attributes on each logo page.
 echo "  (run tools/fetch-flogos.sh for the competition + league marks — they come from football-logos.cc)"
 
-echo "  done: $(find "$CONF_DIR" "$COMP_DIR" -name '*.svg' | wc -l) SVGs"
+if [ "$failed" -eq 0 ]; then
+  echo "  done: $(find "$CONF_DIR" "$COMP_DIR" -name '*.svg' | wc -l) SVGs"
+else
+  echo "  done (with failures above): $(find "$CONF_DIR" "$COMP_DIR" -name '*.svg' | wc -l) SVGs"
+  exit 1
+fi
