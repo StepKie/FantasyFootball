@@ -29,7 +29,8 @@ fetch_svg() {
   local out_file="$COMP_DIR/$out_slug.svg"
   curl -fsSL -A "$UA" -H "Referer: $page_url" -H "Accept: image/svg+xml,*/*" -o "$out_file" "$svg_url"
   if head -c 6 "$out_file" | grep -qE '<\?xml|<svg'; then
-    local size=$(wc -c < "$out_file")
+    local size
+    size=$(wc -c < "$out_file")
     echo "  $out_slug ← $page_path  [$size bytes]"
   else
     echo "  $out_slug ← $page_path  (downloaded but not valid SVG)"

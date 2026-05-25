@@ -45,4 +45,4 @@ fetch ofc      commons "Oceania_Football_Confederation_logo.svg"              "$
 # for the scraper that walks data-svg-hash attributes on each logo page.
 echo "  (run tools/fetch-flogos.sh for the competition + league marks — they come from football-logos.cc)"
 
-echo "  done: $(find $CONF_DIR $COMP_DIR -name '*.svg' | wc -l) SVGs"
+echo "  done: $(find "$CONF_DIR" "$COMP_DIR" -name '*.svg' | wc -l) SVGs"
