@@ -32,7 +32,12 @@
                    ValueChanged="@((CompetitionType v) => ViewModel.SelectedType = v)">
           @foreach (var t in ViewModel.AvailableTypes)
           {
-            <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
+            <MudSelectItem Value="@t">
+              <div class="d-flex align-center gap-2">
+                <CompetitionTypeIcon Type="@t" Size="22" />
+                <span>@DisplayName(t)</span>
+              </div>
+            </MudSelectItem>
           }
         </MudSelect>
         <MudSelect T="int"
@@ -197,6 +202,7 @@
   {
     CompetitionType.WM => "World Cup",
     CompetitionType.EM => "European Championship",
+    CompetitionType.CHAMPIONS_LEAGUE => "Champions League",
     _ => t.ToString(),
   };
 }
