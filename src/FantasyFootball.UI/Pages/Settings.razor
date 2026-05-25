@@ -79,16 +79,15 @@
                  Value="ViewModel.UseOfficialCompetitionLogos"
                  ValueChanged="@(v => ViewModel.UseOfficialCompetitionLogos = v)"
                  Color="Color.Primary"
-                 Label="Use official logos (if locally placed)" />
+                 Label="Use official logos" />
       <MudText Typo="Typo.caption" Color="Color.Secondary" Class="d-block mt-1">
-        Off: built-in Material Icons. On: app loads from
-        <code>wwwroot/competition-icons/official/{type}.svg</code>. Files
-        not placed there yet fall back to the Material Icon automatically
-        (no broken-image placeholders).
+        On: official logos. Off: generic icons.
       </MudText>
-      <div class="d-flex align-center mt-3" style="gap: 1.5rem;">
+      @* @key flips when the toggle changes → Blazor recreates the components so the new Settings value is read immediately. The preview is intentionally responsive even though other consumers (list, detail page) only refresh on navigation. *@
+      <div class="d-flex align-center mt-3" style="gap: 1.5rem;" @key="@($"comp-preview-{ViewModel.UseOfficialCompetitionLogos}")">
         <CompetitionTypeIcon Type="@CompetitionType.WM" Size="40" />
         <CompetitionTypeIcon Type="@CompetitionType.EM" Size="40" />
+        <CompetitionTypeIcon Type="@CompetitionType.CHAMPIONS_LEAGUE" Size="40" />
       </div>
     </div>
 

@@ -50,7 +50,7 @@ public sealed class LocalStorageSettingsService : ISettingsService
     set => AddOrUpdateValue(FlagStyleKey, value.ToString());
   }
 
-  // Off by default — generic icons ship with the repo; user drops official assets in wwwroot/competition-icons/official/ locally and flips this.
+  // Off by default — the bundled SVGs (Wikipedia + football-logos.cc) carry brand cutouts that don't read well on a uniform UI surface; we're keeping them around for later experimentation but ship with Material Icons as the default.
   public bool UseOfficialCompetitionLogos
   {
     get => GetValueOrDefault(UseOfficialLogosKey, false);

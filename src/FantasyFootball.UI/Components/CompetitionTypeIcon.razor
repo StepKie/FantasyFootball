@@ -27,14 +27,16 @@
   {
     CompetitionType.WM => Icons.Material.Filled.EmojiEvents,
     CompetitionType.EM => Icons.Material.Filled.Stars,
+    CompetitionType.CHAMPIONS_LEAGUE => Icons.Material.Filled.Stars,
     _ => Icons.Material.Filled.SportsSoccer,
   };
 
-  // User drops their own assets under wwwroot/competition-icons/official/ (gitignored).
+  // Bundled SVGs ship in the UI Razor class library; consumed via the RCL `_content/{lib}/...` prefix. See tools/fetch-logos.sh + tools/fetch-flogos.sh for the refresh pipelines.
   string? OfficialPath => Type switch
   {
-    CompetitionType.WM => "competition-icons/official/wm.svg",
-    CompetitionType.EM => "competition-icons/official/em.svg",
+    CompetitionType.WM => "_content/FantasyFootball.UI/img/competitions/wm.svg",
+    CompetitionType.EM => "_content/FantasyFootball.UI/img/competitions/em.svg",
+    CompetitionType.CHAMPIONS_LEAGUE => "_content/FantasyFootball.UI/img/competitions/ucl.svg",
     _ => null,
   };
 
@@ -43,6 +45,7 @@
   {
     CompetitionType.WM => "FIFA World Cup",
     CompetitionType.EM => "UEFA European Championship",
+    CompetitionType.CHAMPIONS_LEAGUE => "UEFA Champions League",
     _ => Type.ToString(),
   };
 
