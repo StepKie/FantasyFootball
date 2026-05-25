@@ -13,7 +13,10 @@ fetch_svg() {
   local out_slug="$1"; local page_path="$2"
   local page_url="https://football-logos.cc$page_path"
   local page_html
-  page_html=$(curl -sL -A "$UA" "$page_url")
+  if ! page_html=$(curl -sL -A "$UA" "$page_url"); then
+    echo "  $out_slug ← $page_path  (curl failed fetching logo page)"
+    return 1
+  fi
 
   local category_id logo_id svg_hash
   category_id=$(printf '%s' "$page_html" | grep -oE 'data-category-id="[^"]+"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
@@ -22,6 +25,11 @@ fetch_svg() {
 
   if [ -z "$category_id" ] || [ -z "$logo_id" ] || [ -z "$svg_hash" ]; then
     echo "  $out_slug ← $page_path  (couldn't extract: cat='$category_id' id='$logo_id' hash='$svg_hash')"
+    return 1
+  fi
+  # Constrain extracted IDs to a safe path-segment charset before interpolating into the CDN URL — `[^"]+` accepts `@`, which is the URL userinfo separator and could redirect curl to an arbitrary host.
+  if ! [[ "$category_id" =~ ^[a-zA-Z0-9_-]+$ ]] || ! [[ "$logo_id" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+    echo "  $out_slug ← $page_path  (unexpected chars in extracted IDs)"
     return 1
   fi
 

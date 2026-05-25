@@ -50,7 +50,7 @@ public sealed class LocalStorageSettingsService : ISettingsService
     set => AddOrUpdateValue(FlagStyleKey, value.ToString());
   }
 
-  // Off by default — the bundled SVGs (Wikipedia + football-logos.cc) carry brand cutouts that don't read well on a uniform UI surface; we're keeping them around for later experimentation but ship with Material Icons as the default.
+  // Off by default — bundled SVGs carry brand cutouts that don't read well at picker sizes against a uniform UI surface.
   public bool UseOfficialCompetitionLogos
   {
     get => GetValueOrDefault(UseOfficialLogosKey, false);

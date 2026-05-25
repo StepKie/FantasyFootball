@@ -9,7 +9,7 @@
     @* Both layers render. img sits on top via CSS; if its src 404s, onerror hides it and the MudIcon underneath shows through — no broken-image placeholder. *@
     <span class="comp-type-icon-stack" style="@StackStyle">
       <MudIcon Icon="@icon" Style="@($"font-size: {Size}px;")" Color="Color.Inherit" Title="@AltText" />
-      <img src="@src" alt="@AltText" class="comp-type-icon-overlay" onerror="this.style.display='none';" />
+      <img src="@src" alt="@AltText" class="comp-type-icon-overlay" onerror="this.style.display='none';" onload="this.style.display='';" />
     </span>
   }
   else

@@ -60,8 +60,8 @@ fetch ofc      commons "Oceania_Football_Confederation_logo.svg"              "$
 echo "  (run tools/fetch-flogos.sh for the competition + league marks — they come from football-logos.cc)"
 
 if [ "$failed" -eq 0 ]; then
-  echo "  done: $(find "$CONF_DIR" "$COMP_DIR" -name '*.svg' | wc -l) SVGs"
+  echo "  done: $(find "$CONF_DIR" -name '*.svg' | wc -l) confederation SVGs"
 else
-  echo "  done (with failures above): $(find "$CONF_DIR" "$COMP_DIR" -name '*.svg' | wc -l) SVGs"
+  echo "  done (with failures above): $(find "$CONF_DIR" -name '*.svg' | wc -l) confederation SVGs"
   exit 1
 fi
