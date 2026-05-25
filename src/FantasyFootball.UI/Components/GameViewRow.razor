@@ -4,6 +4,7 @@
 @using FantasyFootball.Services
 @inject IDataService DataService
 @inject ICompetitionRepository Repo
+@inject IVenueRegistry VenueRegistry
 
 <div class="scoreboard-row-wrapper" id="@(ShowSim ? "current-game" : ShowUndo ? "just-finished-game" : null)">
 <div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "") @(DetailsOpen ? "scoreboard-row-open" : "")"
@@ -72,6 +73,20 @@
             Class="game-details-popover">
   @if (DetailsOpen)
   {
+    @if (_venue is not null)
+    {
+      <div class="game-details-row">
+        <span class="game-details-label">Venue</span>
+        <span class="game-details-value game-details-value-text">@_venue.Name@(_venue.City is { } c ? $" · {c}" : "") · cap. @_venue.Capacity.ToString("N0")</span>
+      </div>
+    }
+    @if (Game.Attendance is { } att)
+    {
+      <div class="game-details-row">
+        <span class="game-details-label">Attendance</span>
+        <span class="game-details-value">@att.ToString("N0")</span>
+      </div>
+    }
     @if (_homeTeam is null || _awayTeam is null)
     {
       <MudText Typo="Typo.body2">Teams not yet decided.</MudText>
@@ -136,6 +151,7 @@
 
   Team? _homeTeam;
   Team? _awayTeam;
+  Venue? _venue;
   string _homeLabel = "";
   string _awayLabel = "";
   string _groupLetter = "";
@@ -151,6 +167,7 @@
     var awayId = CompetitionExtensions.AwayTeamIdOf(Game);
     _homeTeam = homeId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == homeId);
     _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId);
+    _venue = Game.VenueId is { } vid ? VenueRegistry.Get(vid) : null;
 
     // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id.
     _homeLabel = _homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?";

@@ -300,17 +300,27 @@ body {
 
 .game-details-popover {
   padding: 0.75rem 1rem;
-  min-width: 18rem;
-  max-width: 22rem;
+  min-width: 20rem;
+  max-width: 28rem;
 }
 
 .game-details-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  gap: 1rem;
   font-size: 0.85rem;
   padding: 0.15rem 0;
   font-variant-numeric: tabular-nums;
+}
+
+/* Long-text value (e.g. Venue) — allow wrap to a second line from the right edge rather than running into the label. */
+.game-details-value-text {
+  text-align: right;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .game-details-label {
