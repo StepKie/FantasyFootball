@@ -34,6 +34,7 @@ builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
 builder.Services.AddScoped<IDataService, CsvDataService>();
 
 builder.Services.AddSingleton<ICompetitionDefinitionStore, EmbeddedCompetitionDefinitionStore>();
+builder.Services.AddSingleton<IVenueRegistry, EmbeddedVenueRegistry>();
 builder.Services.AddScoped<ITeamRegistry, DataServiceTeamRegistry>();
 builder.Services.AddScoped<ICompetitionRepository, LocalStorageCompetitionRepository>();
 builder.Services.AddScoped<CompetitionFactory>();

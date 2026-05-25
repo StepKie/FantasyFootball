@@ -21,11 +21,13 @@
 
   <ItemGroup>
     <None Remove="Resources\Data\fifa_elo_new.csv" />
+    <None Remove="Resources\Data\venues.json" />
     <None Remove="Definitions\*.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Data\fifa_elo_new.csv" />
+    <EmbeddedResource Include="Resources\Data\venues.json" />
     <!-- Competition definition JSON files. Manifest names are derived from
          RootNamespace (FantasyFootball), so `Definitions/wm-2022.json` is
          loadable as `FantasyFootball.Definitions.wm-2022.json` via

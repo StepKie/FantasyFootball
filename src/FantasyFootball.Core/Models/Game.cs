@@ -33,6 +33,9 @@ public abstract record class Game
 	/// <summary>FK into the global Venue registry. Optional.</summary>
 	public string? VenueId { get; init; }
 
+	/// <summary>Official spectator count for completed real-world games. Null for simulated or unplayed matches.</summary>
+	public int? Attendance { get; init; }
+
 	/// <summary>
 	/// null = scheduled (not yet played). Non-null = played.
 	/// </summary>
