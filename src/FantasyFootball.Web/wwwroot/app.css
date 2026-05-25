@@ -474,23 +474,6 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Competition-type icon stack: MudIcon underneath, img overlay on top. If img 404s, onerror hides it and the MudIcon shows through. */
-.comp-type-icon-stack {
-  display: inline-flex;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-}
-
-.comp-type-icon-overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
 /* Elo numbers tone down so they don't compete with team names. */
 .elo-muted {
   color: var(--mud-palette-text-secondary, #9CA3AF);

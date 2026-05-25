@@ -18,7 +18,7 @@ fetch_svg() {
   local category_id logo_id svg_hash
   category_id=$(printf '%s' "$page_html" | grep -oE 'data-category-id="[^"]+"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
   logo_id=$(printf '%s' "$page_html" | grep -oE 'data-logo-id="[^"]+"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
-  svg_hash=$(printf '%s' "$page_html" | grep -oE 'data-svg-hash="[a-f0-9]+"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+  svg_hash=$(printf '%s' "$page_html" | grep -oE 'data-svg-hash="[a-fA-F0-9]+"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
 
   if [ -z "$category_id" ] || [ -z "$logo_id" ] || [ -z "$svg_hash" ]; then
     echo "  $out_slug ← $page_path  (couldn't extract: cat='$category_id' id='$logo_id' hash='$svg_hash')"
@@ -38,17 +38,23 @@ fetch_svg() {
   sleep 1
 }
 
+# Best-effort across all logos: one broken page shouldn't skip the rest. Accumulate and report at the end.
+failed=0
 # Tournaments
-fetch_svg wm  "/tournaments/fifa-world-cup-2026/"
-fetch_svg em  "/tournaments/uefa-euro-2024/"
-fetch_svg ucl "/tournaments/uefa-champions-league/"
-
+fetch_svg wm  "/tournaments/fifa-world-cup-2026/"   || failed=1
+fetch_svg em  "/tournaments/uefa-euro-2024/"        || failed=1
+fetch_svg ucl "/tournaments/uefa-champions-league/" || failed=1
 # Leagues
-fetch_svg pl         "/england/english-premier-league/"
-fetch_svg laliga     "/spain/la-liga/"
-fetch_svg bundesliga "/germany/bundesliga/"
-fetch_svg seriea     "/italy/serie-a/"
-fetch_svg ligue1     "/france/ligue-1/"
-fetch_svg mls        "/usa/mls/"
+fetch_svg pl         "/england/english-premier-league/" || failed=1
+fetch_svg laliga     "/spain/la-liga/"                  || failed=1
+fetch_svg bundesliga "/germany/bundesliga/"             || failed=1
+fetch_svg seriea     "/italy/serie-a/"                  || failed=1
+fetch_svg ligue1     "/france/ligue-1/"                 || failed=1
+fetch_svg mls        "/usa/mls/"                        || failed=1
 
-echo "done"
+if [ "$failed" -eq 0 ]; then
+  echo "done"
+else
+  echo "done (with failures above)"
+  exit 1
+fi
