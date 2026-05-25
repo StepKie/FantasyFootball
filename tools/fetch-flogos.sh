@@ -35,7 +35,7 @@ fetch_svg() {
     echo "  $out_slug ← $page_path  (curl failed)"
     return 1
   fi
-  if head -c 6 "$tmp_file" | grep -qE '<\?xml|<svg'; then
+  if head -c 9 "$tmp_file" | grep -qE '<\?xml|<svg'; then
     mv "$tmp_file" "$out_file"
     local size
     size=$(wc -c < "$out_file")
