@@ -154,7 +154,8 @@
       "awayTeamId": "RSA",
       "id": 1,
       "playedOn": "2026-06-11T15:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "banorte-stadium"
     },
     {
       "kind": "group",
@@ -163,7 +164,8 @@
       "awayTeamId": "CZE",
       "id": 2,
       "playedOn": "2026-06-11T22:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "estadio-akron"
     },
     {
       "kind": "group",
@@ -172,7 +174,8 @@
       "awayTeamId": "BIH",
       "id": 3,
       "playedOn": "2026-06-12T15:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "bmo-field"
     },
     {
       "kind": "group",
@@ -181,7 +184,8 @@
       "awayTeamId": "PAR",
       "id": 4,
       "playedOn": "2026-06-12T21:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "sofi-stadium"
     },
     {
       "kind": "group",
@@ -190,7 +194,8 @@
       "awayTeamId": "SUI",
       "id": 5,
       "playedOn": "2026-06-13T15:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "levi-s-stadium"
     },
     {
       "kind": "group",
@@ -199,7 +204,8 @@
       "awayTeamId": "MAR",
       "id": 6,
       "playedOn": "2026-06-13T18:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "metlife-stadium"
     },
     {
       "kind": "group",
@@ -208,7 +214,8 @@
       "awayTeamId": "SCO",
       "id": 7,
       "playedOn": "2026-06-13T21:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "gillette-stadium"
     },
     {
       "kind": "group",
@@ -217,7 +224,8 @@
       "awayTeamId": "TUR",
       "id": 8,
       "playedOn": "2026-06-14T00:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "bc-place"
     },
     {
       "kind": "group",
@@ -226,7 +234,8 @@
       "awayTeamId": "CUW",
       "id": 9,
       "playedOn": "2026-06-14T13:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "nrg-stadium"
     },
     {
       "kind": "group",
@@ -235,7 +244,8 @@
       "awayTeamId": "JPN",
       "id": 10,
       "playedOn": "2026-06-14T16:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "group",
@@ -244,7 +254,8 @@
       "awayTeamId": "ECU",
       "id": 11,
       "playedOn": "2026-06-14T19:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "lincoln-financial-field"
     },
     {
       "kind": "group",
@@ -253,7 +264,8 @@
       "awayTeamId": "TUN",
       "id": 12,
       "playedOn": "2026-06-14T22:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "estadio-monterrey"
     },
     {
       "kind": "group",
@@ -262,7 +274,8 @@
       "awayTeamId": "CPV",
       "id": 13,
       "playedOn": "2026-06-15T12:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "mercedes-benz-stadium"
     },
     {
       "kind": "group",
@@ -271,7 +284,8 @@
       "awayTeamId": "EGY",
       "id": 14,
       "playedOn": "2026-06-15T15:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "lumen-field"
     },
     {
       "kind": "group",
@@ -280,7 +294,8 @@
       "awayTeamId": "URU",
       "id": 15,
       "playedOn": "2026-06-15T18:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "hard-rock-stadium"
     },
     {
       "kind": "group",
@@ -289,7 +304,8 @@
       "awayTeamId": "NZL",
       "id": 16,
       "playedOn": "2026-06-15T21:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "sofi-stadium"
     },
     {
       "kind": "group",
@@ -298,7 +314,8 @@
       "awayTeamId": "SEN",
       "id": 17,
       "playedOn": "2026-06-16T15:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "metlife-stadium"
     },
     {
       "kind": "group",
@@ -307,7 +324,8 @@
       "awayTeamId": "NOR",
       "id": 18,
       "playedOn": "2026-06-16T18:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "gillette-stadium"
     },
     {
       "kind": "group",
@@ -316,7 +334,8 @@
       "awayTeamId": "ALG",
       "id": 19,
       "playedOn": "2026-06-16T21:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "arrowhead-stadium"
     },
     {
       "kind": "group",
@@ -325,7 +344,8 @@
       "awayTeamId": "JOR",
       "id": 20,
       "playedOn": "2026-06-17T00:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "levi-s-stadium"
     },
     {
       "kind": "group",
@@ -334,7 +354,8 @@
       "awayTeamId": "COD",
       "id": 21,
       "playedOn": "2026-06-17T13:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "nrg-stadium"
     },
     {
       "kind": "group",
@@ -343,7 +364,8 @@
       "awayTeamId": "CRO",
       "id": 22,
       "playedOn": "2026-06-17T16:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "group",
@@ -352,7 +374,8 @@
       "awayTeamId": "PAN",
       "id": 23,
       "playedOn": "2026-06-17T19:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "bmo-field"
     },
     {
       "kind": "group",
@@ -361,7 +384,8 @@
       "awayTeamId": "COL",
       "id": 24,
       "playedOn": "2026-06-17T22:00:00Z",
-      "roundId": "group-r1"
+      "roundId": "group-r1",
+      "venueId": "banorte-stadium"
     },
     {
       "kind": "group",
@@ -370,7 +394,8 @@
       "awayTeamId": "RSA",
       "id": 25,
       "playedOn": "2026-06-18T12:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "mercedes-benz-stadium"
     },
     {
       "kind": "group",
@@ -379,7 +404,8 @@
       "awayTeamId": "BIH",
       "id": 26,
       "playedOn": "2026-06-18T15:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "sofi-stadium"
     },
     {
       "kind": "group",
@@ -388,7 +414,8 @@
       "awayTeamId": "QAT",
       "id": 27,
       "playedOn": "2026-06-18T18:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "bc-place"
     },
     {
       "kind": "group",
@@ -397,7 +424,8 @@
       "awayTeamId": "KOR",
       "id": 28,
       "playedOn": "2026-06-18T21:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "estadio-akron"
     },
     {
       "kind": "group",
@@ -406,7 +434,8 @@
       "awayTeamId": "AUS",
       "id": 29,
       "playedOn": "2026-06-19T15:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "lumen-field"
     },
     {
       "kind": "group",
@@ -415,7 +444,8 @@
       "awayTeamId": "MAR",
       "id": 30,
       "playedOn": "2026-06-19T18:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "gillette-stadium"
     },
     {
       "kind": "group",
@@ -424,7 +454,8 @@
       "awayTeamId": "HAI",
       "id": 31,
       "playedOn": "2026-06-19T20:30:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "lincoln-financial-field"
     },
     {
       "kind": "group",
@@ -433,7 +464,8 @@
       "awayTeamId": "PAR",
       "id": 32,
       "playedOn": "2026-06-19T23:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "levi-s-stadium"
     },
     {
       "kind": "group",
@@ -442,7 +474,8 @@
       "awayTeamId": "SWE",
       "id": 33,
       "playedOn": "2026-06-20T13:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "nrg-stadium"
     },
     {
       "kind": "group",
@@ -451,7 +484,8 @@
       "awayTeamId": "CIV",
       "id": 34,
       "playedOn": "2026-06-20T16:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "bmo-field"
     },
     {
       "kind": "group",
@@ -460,7 +494,8 @@
       "awayTeamId": "CUW",
       "id": 35,
       "playedOn": "2026-06-20T20:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "arrowhead-stadium"
     },
     {
       "kind": "group",
@@ -469,7 +504,8 @@
       "awayTeamId": "JPN",
       "id": 36,
       "playedOn": "2026-06-21T00:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "estadio-monterrey"
     },
     {
       "kind": "group",
@@ -478,7 +514,8 @@
       "awayTeamId": "KSA",
       "id": 37,
       "playedOn": "2026-06-21T12:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "mercedes-benz-stadium"
     },
     {
       "kind": "group",
@@ -487,7 +524,8 @@
       "awayTeamId": "IRN",
       "id": 38,
       "playedOn": "2026-06-21T15:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "sofi-stadium"
     },
     {
       "kind": "group",
@@ -496,7 +534,8 @@
       "awayTeamId": "CPV",
       "id": 39,
       "playedOn": "2026-06-21T18:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "hard-rock-stadium"
     },
     {
       "kind": "group",
@@ -505,7 +544,8 @@
       "awayTeamId": "EGY",
       "id": 40,
       "playedOn": "2026-06-21T21:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "bc-place"
     },
     {
       "kind": "group",
@@ -514,7 +554,8 @@
       "awayTeamId": "AUT",
       "id": 41,
       "playedOn": "2026-06-22T13:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "group",
@@ -523,7 +564,8 @@
       "awayTeamId": "IRQ",
       "id": 42,
       "playedOn": "2026-06-22T17:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "lincoln-financial-field"
     },
     {
       "kind": "group",
@@ -532,7 +574,8 @@
       "awayTeamId": "SEN",
       "id": 43,
       "playedOn": "2026-06-22T20:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "metlife-stadium"
     },
     {
       "kind": "group",
@@ -541,7 +584,8 @@
       "awayTeamId": "ALG",
       "id": 44,
       "playedOn": "2026-06-22T23:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "levi-s-stadium"
     },
     {
       "kind": "group",
@@ -550,7 +594,8 @@
       "awayTeamId": "UZB",
       "id": 45,
       "playedOn": "2026-06-23T13:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "nrg-stadium"
     },
     {
       "kind": "group",
@@ -559,7 +604,8 @@
       "awayTeamId": "GHA",
       "id": 46,
       "playedOn": "2026-06-23T16:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "gillette-stadium"
     },
     {
       "kind": "group",
@@ -568,7 +614,8 @@
       "awayTeamId": "CRO",
       "id": 47,
       "playedOn": "2026-06-23T19:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "bmo-field"
     },
     {
       "kind": "group",
@@ -577,7 +624,8 @@
       "awayTeamId": "COD",
       "id": 48,
       "playedOn": "2026-06-23T22:00:00Z",
-      "roundId": "group-r2"
+      "roundId": "group-r2",
+      "venueId": "estadio-akron"
     },
     {
       "kind": "group",
@@ -586,7 +634,8 @@
       "awayTeamId": "CAN",
       "id": 49,
       "playedOn": "2026-06-24T15:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "bc-place"
     },
     {
       "kind": "group",
@@ -595,7 +644,8 @@
       "awayTeamId": "QAT",
       "id": 50,
       "playedOn": "2026-06-24T15:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "lumen-field"
     },
     {
       "kind": "group",
@@ -604,7 +654,8 @@
       "awayTeamId": "HAI",
       "id": 51,
       "playedOn": "2026-06-24T18:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "hard-rock-stadium"
     },
     {
       "kind": "group",
@@ -613,7 +664,8 @@
       "awayTeamId": "BRA",
       "id": 52,
       "playedOn": "2026-06-24T18:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "mercedes-benz-stadium"
     },
     {
       "kind": "group",
@@ -622,7 +674,8 @@
       "awayTeamId": "KOR",
       "id": 53,
       "playedOn": "2026-06-24T21:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "banorte-stadium"
     },
     {
       "kind": "group",
@@ -631,7 +684,8 @@
       "awayTeamId": "MEX",
       "id": 54,
       "playedOn": "2026-06-24T21:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "estadio-monterrey"
     },
     {
       "kind": "group",
@@ -640,7 +694,8 @@
       "awayTeamId": "CIV",
       "id": 55,
       "playedOn": "2026-06-25T16:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "lincoln-financial-field"
     },
     {
       "kind": "group",
@@ -649,7 +704,8 @@
       "awayTeamId": "GER",
       "id": 56,
       "playedOn": "2026-06-25T16:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "metlife-stadium"
     },
     {
       "kind": "group",
@@ -658,7 +714,8 @@
       "awayTeamId": "NED",
       "id": 57,
       "playedOn": "2026-06-25T19:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "group",
@@ -667,7 +724,8 @@
       "awayTeamId": "SWE",
       "id": 58,
       "playedOn": "2026-06-25T19:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "arrowhead-stadium"
     },
     {
       "kind": "group",
@@ -676,7 +734,8 @@
       "awayTeamId": "USA",
       "id": 59,
       "playedOn": "2026-06-25T22:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "sofi-stadium"
     },
     {
       "kind": "group",
@@ -685,7 +744,8 @@
       "awayTeamId": "AUS",
       "id": 60,
       "playedOn": "2026-06-25T22:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "levi-s-stadium"
     },
     {
       "kind": "group",
@@ -694,7 +754,8 @@
       "awayTeamId": "FRA",
       "id": 61,
       "playedOn": "2026-06-26T15:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "gillette-stadium"
     },
     {
       "kind": "group",
@@ -703,7 +764,8 @@
       "awayTeamId": "IRQ",
       "id": 62,
       "playedOn": "2026-06-26T15:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "bmo-field"
     },
     {
       "kind": "group",
@@ -712,7 +774,8 @@
       "awayTeamId": "KSA",
       "id": 63,
       "playedOn": "2026-06-26T20:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "nrg-stadium"
     },
     {
       "kind": "group",
@@ -721,7 +784,8 @@
       "awayTeamId": "ESP",
       "id": 64,
       "playedOn": "2026-06-26T20:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "estadio-akron"
     },
     {
       "kind": "group",
@@ -730,7 +794,8 @@
       "awayTeamId": "BEL",
       "id": 65,
       "playedOn": "2026-06-26T23:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "lumen-field"
     },
     {
       "kind": "group",
@@ -739,7 +804,8 @@
       "awayTeamId": "IRN",
       "id": 66,
       "playedOn": "2026-06-26T23:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "bc-place"
     },
     {
       "kind": "group",
@@ -748,7 +814,8 @@
       "awayTeamId": "ENG",
       "id": 67,
       "playedOn": "2026-06-27T17:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "metlife-stadium"
     },
     {
       "kind": "group",
@@ -757,7 +824,8 @@
       "awayTeamId": "GHA",
       "id": 68,
       "playedOn": "2026-06-27T17:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "lincoln-financial-field"
     },
     {
       "kind": "group",
@@ -766,7 +834,8 @@
       "awayTeamId": "POR",
       "id": 69,
       "playedOn": "2026-06-27T19:30:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "hard-rock-stadium"
     },
     {
       "kind": "group",
@@ -775,7 +844,8 @@
       "awayTeamId": "UZB",
       "id": 70,
       "playedOn": "2026-06-27T19:30:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "mercedes-benz-stadium"
     },
     {
       "kind": "group",
@@ -784,7 +854,8 @@
       "awayTeamId": "AUT",
       "id": 71,
       "playedOn": "2026-06-27T22:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "arrowhead-stadium"
     },
     {
       "kind": "group",
@@ -793,7 +864,8 @@
       "awayTeamId": "ARG",
       "id": 72,
       "playedOn": "2026-06-27T22:00:00Z",
-      "roundId": "group-r3"
+      "roundId": "group-r3",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "ko",
@@ -801,7 +873,8 @@
       "awayQual": "B2",
       "id": 73,
       "playedOn": "2026-06-28T15:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "sofi-stadium"
     },
     {
       "kind": "ko",
@@ -809,7 +882,8 @@
       "awayQual": "F2",
       "id": 74,
       "playedOn": "2026-06-29T13:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "nrg-stadium"
     },
     {
       "kind": "ko",
@@ -817,7 +891,8 @@
       "awayQual": "A/B/C/D/F3",
       "id": 75,
       "playedOn": "2026-06-29T16:30:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "gillette-stadium"
     },
     {
       "kind": "ko",
@@ -825,7 +900,8 @@
       "awayQual": "C2",
       "id": 76,
       "playedOn": "2026-06-29T21:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "estadio-monterrey"
     },
     {
       "kind": "ko",
@@ -833,7 +909,8 @@
       "awayQual": "I2",
       "id": 77,
       "playedOn": "2026-06-30T13:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "ko",
@@ -841,7 +918,8 @@
       "awayQual": "C/D/F/G/H3",
       "id": 78,
       "playedOn": "2026-06-30T17:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "metlife-stadium"
     },
     {
       "kind": "ko",
@@ -849,7 +927,8 @@
       "awayQual": "C/E/F/H/I3",
       "id": 79,
       "playedOn": "2026-06-30T21:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "banorte-stadium"
     },
     {
       "kind": "ko",
@@ -857,7 +936,8 @@
       "awayQual": "E/H/I/J/K3",
       "id": 80,
       "playedOn": "2026-07-01T12:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "mercedes-benz-stadium"
     },
     {
       "kind": "ko",
@@ -865,7 +945,8 @@
       "awayQual": "A/E/H/I/J3",
       "id": 81,
       "playedOn": "2026-07-01T16:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "lumen-field"
     },
     {
       "kind": "ko",
@@ -873,7 +954,8 @@
       "awayQual": "B/E/F/I/J3",
       "id": 82,
       "playedOn": "2026-07-01T20:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "levi-s-stadium"
     },
     {
       "kind": "ko",
@@ -881,7 +963,8 @@
       "awayQual": "J2",
       "id": 83,
       "playedOn": "2026-07-02T15:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "sofi-stadium"
     },
     {
       "kind": "ko",
@@ -889,7 +972,8 @@
       "awayQual": "L2",
       "id": 84,
       "playedOn": "2026-07-02T19:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "bmo-field"
     },
     {
       "kind": "ko",
@@ -897,7 +981,8 @@
       "awayQual": "E/F/G/I/J3",
       "id": 85,
       "playedOn": "2026-07-02T23:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "bc-place"
     },
     {
       "kind": "ko",
@@ -905,7 +990,8 @@
       "awayQual": "G2",
       "id": 86,
       "playedOn": "2026-07-03T14:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "ko",
@@ -913,7 +999,8 @@
       "awayQual": "H2",
       "id": 87,
       "playedOn": "2026-07-03T18:00:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "hard-rock-stadium"
     },
     {
       "kind": "ko",
@@ -921,7 +1008,8 @@
       "awayQual": "D/E/I/J/L3",
       "id": 88,
       "playedOn": "2026-07-03T21:30:00Z",
-      "roundId": "r32"
+      "roundId": "r32",
+      "venueId": "arrowhead-stadium"
     },
     {
       "kind": "ko",
@@ -929,7 +1017,8 @@
       "awayQual": "W-75",
       "id": 89,
       "playedOn": "2026-07-04T13:00:00Z",
-      "roundId": "r16"
+      "roundId": "r16",
+      "venueId": "nrg-stadium"
     },
     {
       "kind": "ko",
@@ -937,7 +1026,8 @@
       "awayQual": "W-77",
       "id": 90,
       "playedOn": "2026-07-04T17:00:00Z",
-      "roundId": "r16"
+      "roundId": "r16",
+      "venueId": "lincoln-financial-field"
     },
     {
       "kind": "ko",
@@ -945,7 +1035,8 @@
       "awayQual": "W-78",
       "id": 91,
       "playedOn": "2026-07-05T16:00:00Z",
-      "roundId": "r16"
+      "roundId": "r16",
+      "venueId": "metlife-stadium"
     },
     {
       "kind": "ko",
@@ -953,7 +1044,8 @@
       "awayQual": "W-80",
       "id": 92,
       "playedOn": "2026-07-05T20:00:00Z",
-      "roundId": "r16"
+      "roundId": "r16",
+      "venueId": "banorte-stadium"
     },
     {
       "kind": "ko",
@@ -961,7 +1053,8 @@
       "awayQual": "W-84",
       "id": 93,
       "playedOn": "2026-07-06T15:00:00Z",
-      "roundId": "r16"
+      "roundId": "r16",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "ko",
@@ -969,7 +1062,8 @@
       "awayQual": "W-82",
       "id": 94,
       "playedOn": "2026-07-06T20:00:00Z",
-      "roundId": "r16"
+      "roundId": "r16",
+      "venueId": "lumen-field"
     },
     {
       "kind": "ko",
@@ -977,7 +1071,8 @@
       "awayQual": "W-88",
       "id": 95,
       "playedOn": "2026-07-07T12:00:00Z",
-      "roundId": "r16"
+      "roundId": "r16",
+      "venueId": "mercedes-benz-stadium"
     },
     {
       "kind": "ko",
@@ -985,7 +1080,8 @@
       "awayQual": "W-87",
       "id": 96,
       "playedOn": "2026-07-07T16:00:00Z",
-      "roundId": "r16"
+      "roundId": "r16",
+      "venueId": "bc-place"
     },
     {
       "kind": "ko",
@@ -993,7 +1089,8 @@
       "awayQual": "W-90",
       "id": 97,
       "playedOn": "2026-07-09T16:00:00Z",
-      "roundId": "qf"
+      "roundId": "qf",
+      "venueId": "gillette-stadium"
     },
     {
       "kind": "ko",
@@ -1001,7 +1098,8 @@
       "awayQual": "W-94",
       "id": 98,
       "playedOn": "2026-07-10T15:00:00Z",
-      "roundId": "qf"
+      "roundId": "qf",
+      "venueId": "sofi-stadium"
     },
     {
       "kind": "ko",
@@ -1009,7 +1107,8 @@
       "awayQual": "W-92",
       "id": 99,
       "playedOn": "2026-07-11T17:00:00Z",
-      "roundId": "qf"
+      "roundId": "qf",
+      "venueId": "hard-rock-stadium"
     },
     {
       "kind": "ko",
@@ -1017,7 +1116,8 @@
       "awayQual": "W-96",
       "id": 100,
       "playedOn": "2026-07-11T21:00:00Z",
-      "roundId": "qf"
+      "roundId": "qf",
+      "venueId": "arrowhead-stadium"
     },
     {
       "kind": "ko",
@@ -1025,7 +1125,8 @@
       "awayQual": "W-98",
       "id": 101,
       "playedOn": "2026-07-14T15:00:00Z",
-      "roundId": "sf"
+      "roundId": "sf",
+      "venueId": "at-t-stadium"
     },
     {
       "kind": "ko",
@@ -1033,7 +1134,8 @@
       "awayQual": "W-100",
       "id": 102,
       "playedOn": "2026-07-15T15:00:00Z",
-      "roundId": "sf"
+      "roundId": "sf",
+      "venueId": "mercedes-benz-stadium"
     },
     {
       "kind": "ko",
@@ -1041,7 +1143,8 @@
       "awayQual": "L-102",
       "id": 103,
       "playedOn": "2026-07-18T17:00:00Z",
-      "roundId": "third"
+      "roundId": "third",
+      "venueId": "hard-rock-stadium"
     },
     {
       "kind": "ko",
@@ -1049,7 +1152,8 @@
       "awayQual": "W-102",
       "id": 104,
       "playedOn": "2026-07-19T15:00:00Z",
-      "roundId": "final"
+      "roundId": "final",
+      "venueId": "metlife-stadium"
     }
   ]
 }
