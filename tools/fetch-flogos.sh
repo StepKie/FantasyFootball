@@ -27,12 +27,21 @@ fetch_svg() {
 
   local svg_url="https://images.football-logos.cc/$category_id/$logo_id.$svg_hash.svg"
   local out_file="$COMP_DIR/$out_slug.svg"
-  curl -fsSL -A "$UA" -H "Referer: $page_url" -H "Accept: image/svg+xml,*/*" -o "$out_file" "$svg_url"
-  if head -c 6 "$out_file" | grep -qE '<\?xml|<svg'; then
+  # Download to a tmp file and mv on success — `curl -o` truncates the target before transfer, which would wipe a previously-committed SVG on a partial failure.
+  local tmp_file
+  tmp_file=$(mktemp "${out_file}.XXXXXX")
+  if ! curl -fsSL -A "$UA" -H "Referer: $page_url" -H "Accept: image/svg+xml,*/*" -o "$tmp_file" "$svg_url"; then
+    rm -f "$tmp_file"
+    echo "  $out_slug ← $page_path  (curl failed)"
+    return 1
+  fi
+  if head -c 6 "$tmp_file" | grep -qE '<\?xml|<svg'; then
+    mv "$tmp_file" "$out_file"
     local size
     size=$(wc -c < "$out_file")
     echo "  $out_slug ← $page_path  [$size bytes]"
   else
+    rm -f "$tmp_file"
     echo "  $out_slug ← $page_path  (downloaded but not valid SVG)"
     return 1
   fi
