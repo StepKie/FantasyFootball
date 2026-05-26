@@ -5,7 +5,7 @@
 
 @if (Resolved is { } code)
 {
-  <img src="@FlagHelper.Url(code)"
+  <img src="@FlagHelper.UrlFor(code, Team?.Country?.Code3)"
        alt="@ResolvedAlt"
        class="@CssClass"
        style="@InlineStyle"

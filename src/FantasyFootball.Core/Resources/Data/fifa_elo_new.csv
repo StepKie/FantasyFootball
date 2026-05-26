@@ -210,3 +210,10 @@ rank,country_full_en,country_code_3,country_code_2,elo_old,elo_new,confederation
 162.0,Yemen,YEM,YE,1112.00,1151,AFC,24.05.2026,Jemen
 113.0,Zambia,ZAM,ZM,1308.00,1370,CAF,24.05.2026,Sambia
 112.0,Zimbabwe,ZIM,ZW,1191.00,1371,CAF,24.05.2026,Zimbabwe
+,West Germany,FRG,DE,,2076,UEFA,,Westdeutschland
+,East Germany,GDR,DD,,1791,UEFA,,DDR
+,Soviet Union,URS,SU,,1924,UEFA,,Sowjetunion
+,Yugoslavia,YUG,YU,,1935,UEFA,,Jugoslawien
+,Czechoslovakia,TCH,CZ,,1846,UEFA,,Tschechoslowakei
+,Serbia and Montenegro,SCG,CS,,1717,UEFA,,Serbien und Montenegro
+,Zaire,ZAI,ZR,,1508,CAF,,Zaire
