@@ -33,15 +33,20 @@ public sealed class CompetitionFactory
 
 		switch (spec)
 		{
+			case HistoricalSpec { Played: true }:
+				// Definition's own lineup, keep the baked results — browse the real outcome.
+				break;
+
 			case HistoricalSpec:
-				// Definition file already carries the historical lineup; nothing to do.
-				return competition;
+				// Definition's own lineup, but re-simulate from scratch.
+				ResetPlayState(competition);
+				break;
 
 			case CustomLineupSpec custom:
 				ValidateLineupShape(custom.Groups, competition);
 				ApplyLineup(competition, custom.Groups);
 				ResetPlayState(competition);
-				return competition;
+				break;
 
 			case RandomLineupSpec random:
 				var drawn = random.DrawAlgorithm.Draw(
@@ -50,14 +55,16 @@ public sealed class CompetitionFactory
 				ValidateLineupShape(drawn, competition);
 				ApplyLineup(competition, drawn);
 				ResetPlayState(competition);
-				return competition;
+				break;
 
 			default:
 				throw new ArgumentException($"Unknown spec type {spec.GetType().Name}.", nameof(spec));
 		}
+
+		return competition;
 	}
 
-	// A fresh-lineup spec (custom draw or replay) always yields a scheduled competition: any results baked into the definition (historical tournaments now ship with them) are cleared, KO slots reset to re-resolve from qualifiers, and the sim stamps wiped. HistoricalSpec skips this — it keeps the baked results so the competition browses as the real outcome.
+	// Clears the definition's baked results: every game's Result, the KO slots (so they re-resolve from qualifiers), and the sim stamps. Yields a scheduled competition ready to simulate from scratch.
 	static void ResetPlayState(Competition competition)
 	{
 		foreach (var game in competition.Games)

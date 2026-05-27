@@ -33,11 +33,11 @@ public class HistoricEuro1980Test
 	public void Euro1980_Replay_ResetsToScheduled()
 	{
 		// The replay path clones the same lineup via CustomLineupSpec — which must clear the baked results so the user re-simulates from scratch.
-		var lineup = new[]
-		{
-			new[] { "FRG", "NED", "TCH", "GRE" },
-			new[] { "ITA", "ENG", "ESP", "BEL" },
-		};
+		string[][] lineup =
+		[
+			[ "FRG", "NED", "TCH", "GRE"],
+			[ "ITA", "ENG", "ESP", "BEL" ],
+		];
 		var c = _factory.Create(new CustomLineupSpec { DefinitionId = "em-1980", Groups = lineup });
 
 		c.Games.Should().OnlyContain(g => g.Result == null);
