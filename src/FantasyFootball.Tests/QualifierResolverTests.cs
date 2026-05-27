@@ -49,7 +49,8 @@ public class QualifierResolverTests
 	[Fact]
 	public void Resolve_GameWinner_UnplayedGame_Throws()
 	{
-		var c = _definitions.Load("wm-2022");
+		// wm-2026 is the future tournament — genuinely unplayed (wm-2022 now ships baked results).
+		var c = _definitions.Load("wm-2026");
 		Action act = () => QualifierResolver.Resolve(c, "W-1");
 		act.Should().Throw<InvalidOperationException>()
 			.WithMessage("*game 1*hasn't been played*");
@@ -126,14 +127,14 @@ public class QualifierResolverTests
 	[Fact]
 	public void TryResolve_GameWinner_UnplayedGame_ReturnsNull()
 	{
-		var c = _definitions.Load("wm-2022");
+		var c = _definitions.Load("wm-2026");
 		QualifierResolver.TryResolve(c, "W-1").Should().BeNull();
 	}
 
 	[Fact]
 	public void TryResolve_GameLoser_UnplayedGame_ReturnsNull()
 	{
-		var c = _definitions.Load("wm-2022");
+		var c = _definitions.Load("wm-2026");
 		QualifierResolver.TryResolve(c, "L-1").Should().BeNull();
 	}
 

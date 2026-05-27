@@ -26,6 +26,7 @@ public class HistoricEuroLoadTest
 	[InlineData("em-2012", 31, "ESP")]
 	[InlineData("em-2016", 51, "POR")]
 	[InlineData("em-2020", 51, "ITA")]
+	[InlineData("em-2024", 51, "ESP")]
 	public void HistoricEuro_LoadsFinishedWithRealChampion(string definitionId, int gameCount, string champion)
 	{
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = definitionId });

@@ -27,6 +27,7 @@ public class HistoricWorldCupLoadTest
 	[InlineData("wm-2010", 64, "ESP")]
 	[InlineData("wm-2014", 64, "GER")]
 	[InlineData("wm-2018", 64, "FRA")]
+	[InlineData("wm-2022", 64, "ARG")]
 	public void HistoricWorldCup_LoadsFinishedWithRealChampion(string definitionId, int gameCount, string champion)
 	{
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = definitionId });

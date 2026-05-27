@@ -34,8 +34,9 @@ public class CompetitionFactoryTests
 	public void Historical_TwoCreations_AreIndependentInstances()
 	{
 		// The factory must not share mutable state across calls — bulk
-		// sim relies on this to run N independent competitions.
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		// sim relies on this to run N independent competitions. Uses the
+		// unplayed wm-2026 so Result starts null (wm-2022 now ships baked).
+		var spec = new HistoricalSpec { DefinitionId = "wm-2026" };
 		var a = _factory.Create(spec);
 		var b = _factory.Create(spec);
 
