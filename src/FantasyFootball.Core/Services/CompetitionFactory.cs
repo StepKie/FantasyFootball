@@ -40,6 +40,7 @@ public sealed class CompetitionFactory
 			case CustomLineupSpec custom:
 				ValidateLineupShape(custom.Groups, competition);
 				ApplyLineup(competition, custom.Groups);
+				ResetPlayState(competition);
 				return competition;
 
 			case RandomLineupSpec random:
@@ -48,11 +49,29 @@ public sealed class CompetitionFactory
 					competition.GroupAssignments[0].Length);
 				ValidateLineupShape(drawn, competition);
 				ApplyLineup(competition, drawn);
+				ResetPlayState(competition);
 				return competition;
 
 			default:
 				throw new ArgumentException($"Unknown spec type {spec.GetType().Name}.", nameof(spec));
 		}
+	}
+
+	// A fresh-lineup spec (custom draw or replay) always yields a scheduled competition: any results baked into the definition (historical tournaments now ship with them) are cleared, KO slots reset to re-resolve from qualifiers, and the sim stamps wiped. HistoricalSpec skips this — it keeps the baked results so the competition browses as the real outcome.
+	static void ResetPlayState(Competition competition)
+	{
+		foreach (var game in competition.Games)
+		{
+			game.Result = null;
+			if (game is KoGame ko)
+			{
+				ko.HomeTeamId = null;
+				ko.AwayTeamId = null;
+			}
+		}
+
+		competition.SimulationStart = null;
+		competition.SimulationFinished = null;
 	}
 
 	static void ValidateLineupShape(string[][] lineup, Competition competition)

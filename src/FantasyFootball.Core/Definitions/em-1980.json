@@ -1,0 +1,281 @@
+{
+  "id": "em-1980",
+  "title": "European Championship 1980",
+  "type": "EM",
+  "year": 1980,
+  "formatId": "euro-8team-2group",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "third",
+      "name": "Third Place Match",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 4
+    }
+  ],
+  "groups": {
+    "A": [
+      "FRG",
+      "NED",
+      "TCH",
+      "GRE"
+    ],
+    "B": [
+      "ITA",
+      "ENG",
+      "ESP",
+      "BEL"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "TCH",
+      "awayTeamId": "FRG",
+      "playedOn": "1980-06-11T17:00:00Z",
+      "attendance": 10500,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "NED",
+      "awayTeamId": "GRE",
+      "playedOn": "1980-06-11T19:30:00Z",
+      "attendance": 14990,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "BEL",
+      "awayTeamId": "ENG",
+      "playedOn": "1980-06-12T17:00:00Z",
+      "attendance": 15186,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "ESP",
+      "awayTeamId": "ITA",
+      "playedOn": "1980-06-12T19:30:00Z",
+      "attendance": 46337,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "FRG",
+      "awayTeamId": "NED",
+      "playedOn": "1980-06-14T17:00:00Z",
+      "attendance": 29889,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "GRE",
+      "awayTeamId": "TCH",
+      "playedOn": "1980-06-14T19:30:00Z",
+      "attendance": 7614,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "BEL",
+      "awayTeamId": "ESP",
+      "playedOn": "1980-06-15T17:00:00Z",
+      "attendance": 11430,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "ITA",
+      "playedOn": "1980-06-15T19:30:00Z",
+      "attendance": 59649,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "NED",
+      "awayTeamId": "TCH",
+      "playedOn": "1980-06-17T17:00:00Z",
+      "attendance": 11889,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "GRE",
+      "awayTeamId": "FRG",
+      "playedOn": "1980-06-17T19:30:00Z",
+      "attendance": 13901,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "ESP",
+      "awayTeamId": "ENG",
+      "playedOn": "1980-06-18T17:00:00Z",
+      "attendance": 14440,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "ITA",
+      "awayTeamId": "BEL",
+      "playedOn": "1980-06-18T19:30:00Z",
+      "attendance": 42318,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 13,
+      "roundId": "third",
+      "homeQual": "A2",
+      "awayQual": "B2",
+      "homeTeamId": "TCH",
+      "awayTeamId": "ITA",
+      "playedOn": "1980-06-21T18:00:00Z",
+      "attendance": 24652,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 9,
+        "penaltyAway": 8
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 14,
+      "roundId": "final",
+      "homeQual": "B1",
+      "awayQual": "A1",
+      "homeTeamId": "BEL",
+      "awayTeamId": "FRG",
+      "playedOn": "1980-06-22T19:00:00Z",
+      "attendance": 47860,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    }
+  ]
+}
