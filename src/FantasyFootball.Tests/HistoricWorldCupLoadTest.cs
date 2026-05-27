@@ -21,6 +21,9 @@ public class HistoricWorldCupLoadTest
 	[InlineData("wm-1986", 52, "ARG")]
 	[InlineData("wm-1990", 52, "FRG")]
 	[InlineData("wm-1994", 52, "BRA")]
+	[InlineData("wm-1998", 64, "FRA")]
+	[InlineData("wm-2002", 64, "BRA")]
+	[InlineData("wm-2006", 64, "ITA")]
 	[InlineData("wm-2010", 64, "ESP")]
 	[InlineData("wm-2014", 64, "GER")]
 	[InlineData("wm-2018", 64, "FRA")]
@@ -61,6 +64,17 @@ public class HistoricWorldCupLoadTest
 	{
 		// 24-team: four best-3rd R16 slots share the A/B/C/D/E/F3 pool.
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "wm-1990", Played = false });
+		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+
+		c.IsFinished().Should().BeTrue();
+		c.WinnerTeamId().Should().NotBeNull();
+	}
+
+	[Fact]
+	public void WorldCup2002_ReSim_RunsThroughNonStandardR16Bracket()
+	{
+		// 2002's R16 cross-bracket is non-standard (1E-2B, 1A-2F, ...).
+		var c = _factory.Create(new HistoricalSpec { DefinitionId = "wm-2002", Played = false });
 		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
 
 		c.IsFinished().Should().BeTrue();
