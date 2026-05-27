@@ -18,6 +18,9 @@ public class HistoricWorldCupLoadTest
 	[InlineData("wm-1962", 32, "BRA")]
 	[InlineData("wm-1966", 32, "ENG")]
 	[InlineData("wm-1970", 32, "BRA")]
+	[InlineData("wm-2010", 64, "ESP")]
+	[InlineData("wm-2014", 64, "GER")]
+	[InlineData("wm-2018", 64, "FRA")]
 	public void HistoricWorldCup_LoadsFinishedWithRealChampion(string definitionId, int gameCount, string champion)
 	{
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = definitionId });
@@ -34,6 +37,16 @@ public class HistoricWorldCupLoadTest
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "wm-1970", Played = false });
 		c.IsFinished().Should().BeFalse();
 
+		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+
+		c.IsFinished().Should().BeTrue();
+		c.WinnerTeamId().Should().NotBeNull();
+	}
+
+	[Fact]
+	public void WorldCup2018_ReSim_RunsThroughR16Bracket()
+	{
+		var c = _factory.Create(new HistoricalSpec { DefinitionId = "wm-2018", Played = false });
 		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
 
 		c.IsFinished().Should().BeTrue();

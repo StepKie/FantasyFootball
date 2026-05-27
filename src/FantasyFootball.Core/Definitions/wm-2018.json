@@ -1,0 +1,1105 @@
+{
+  "id": "wm-2018",
+  "title": "World Cup 2018",
+  "type": "WM",
+  "year": 2018,
+  "formatId": "wc-32team-8group",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "r16",
+      "name": "Round of 16",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "qf",
+      "name": "Quarterfinal",
+      "stageId": "ko",
+      "order": 4
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 5
+    },
+    {
+      "id": "third",
+      "name": "Third Place Match",
+      "stageId": "ko",
+      "order": 6
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 7
+    }
+  ],
+  "groups": {
+    "A": [
+      "RUS",
+      "KSA",
+      "EGY",
+      "URU"
+    ],
+    "B": [
+      "POR",
+      "ESP",
+      "MAR",
+      "IRN"
+    ],
+    "C": [
+      "FRA",
+      "DEN",
+      "AUS",
+      "PER"
+    ],
+    "D": [
+      "ARG",
+      "ISL",
+      "CRO",
+      "NGA"
+    ],
+    "E": [
+      "BRA",
+      "SUI",
+      "CRC",
+      "SRB"
+    ],
+    "F": [
+      "GER",
+      "MEX",
+      "SWE",
+      "KOR"
+    ],
+    "G": [
+      "BEL",
+      "PAN",
+      "TUN",
+      "ENG"
+    ],
+    "H": [
+      "POL",
+      "SEN",
+      "COL",
+      "JPN"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "RUS",
+      "awayTeamId": "KSA",
+      "playedOn": "2018-06-14T18:00:00Z",
+      "attendance": 78011,
+      "result": {
+        "homeScore": 5,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "EGY",
+      "awayTeamId": "URU",
+      "playedOn": "2018-06-15T18:00:00Z",
+      "attendance": 27015,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "RUS",
+      "awayTeamId": "EGY",
+      "playedOn": "2018-06-19T18:00:00Z",
+      "attendance": 64468,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "URU",
+      "awayTeamId": "KSA",
+      "playedOn": "2018-06-20T18:00:00Z",
+      "attendance": 42678,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "URU",
+      "awayTeamId": "RUS",
+      "playedOn": "2018-06-25T18:00:00Z",
+      "attendance": 41970,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "KSA",
+      "awayTeamId": "EGY",
+      "playedOn": "2018-06-25T18:00:00Z",
+      "attendance": 36823,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "MAR",
+      "awayTeamId": "IRN",
+      "playedOn": "2018-06-15T18:00:00Z",
+      "attendance": 62548,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "POR",
+      "awayTeamId": "ESP",
+      "playedOn": "2018-06-15T18:00:00Z",
+      "attendance": 43866,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "POR",
+      "awayTeamId": "MAR",
+      "playedOn": "2018-06-20T18:00:00Z",
+      "attendance": 78011,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "IRN",
+      "awayTeamId": "ESP",
+      "playedOn": "2018-06-20T18:00:00Z",
+      "attendance": 42718,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "IRN",
+      "awayTeamId": "POR",
+      "playedOn": "2018-06-25T18:00:00Z",
+      "attendance": 41685,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "ESP",
+      "awayTeamId": "MAR",
+      "playedOn": "2018-06-25T18:00:00Z",
+      "attendance": 33973,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 13,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "FRA",
+      "awayTeamId": "AUS",
+      "playedOn": "2018-06-16T18:00:00Z",
+      "attendance": 41279,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 14,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "PER",
+      "awayTeamId": "DEN",
+      "playedOn": "2018-06-16T18:00:00Z",
+      "attendance": 40502,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 15,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "DEN",
+      "awayTeamId": "AUS",
+      "playedOn": "2018-06-21T18:00:00Z",
+      "attendance": 40727,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 16,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "FRA",
+      "awayTeamId": "PER",
+      "playedOn": "2018-06-21T18:00:00Z",
+      "attendance": 32789,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 17,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "DEN",
+      "awayTeamId": "FRA",
+      "playedOn": "2018-06-26T18:00:00Z",
+      "attendance": 78011,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 18,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "AUS",
+      "awayTeamId": "PER",
+      "playedOn": "2018-06-26T18:00:00Z",
+      "attendance": 44073,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 19,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "ARG",
+      "awayTeamId": "ISL",
+      "playedOn": "2018-06-16T18:00:00Z",
+      "attendance": 44190,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 20,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "CRO",
+      "awayTeamId": "NGA",
+      "playedOn": "2018-06-16T18:00:00Z",
+      "attendance": 31136,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 21,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "ARG",
+      "awayTeamId": "CRO",
+      "playedOn": "2018-06-21T18:00:00Z",
+      "attendance": 43319,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 22,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "NGA",
+      "awayTeamId": "ISL",
+      "playedOn": "2018-06-22T18:00:00Z",
+      "attendance": 40904,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 23,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "NGA",
+      "awayTeamId": "ARG",
+      "playedOn": "2018-06-26T18:00:00Z",
+      "attendance": 64468,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 24,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "ISL",
+      "awayTeamId": "CRO",
+      "playedOn": "2018-06-26T18:00:00Z",
+      "attendance": 43472,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 25,
+      "groupLetter": "E",
+      "roundId": "group-r1",
+      "homeTeamId": "CRC",
+      "awayTeamId": "SRB",
+      "playedOn": "2018-06-17T18:00:00Z",
+      "attendance": 41432,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 26,
+      "groupLetter": "E",
+      "roundId": "group-r1",
+      "homeTeamId": "BRA",
+      "awayTeamId": "SUI",
+      "playedOn": "2018-06-17T18:00:00Z",
+      "attendance": 43109,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 27,
+      "groupLetter": "E",
+      "roundId": "group-r2",
+      "homeTeamId": "BRA",
+      "awayTeamId": "CRC",
+      "playedOn": "2018-06-22T18:00:00Z",
+      "attendance": 64468,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 28,
+      "groupLetter": "E",
+      "roundId": "group-r2",
+      "homeTeamId": "SRB",
+      "awayTeamId": "SUI",
+      "playedOn": "2018-06-22T18:00:00Z",
+      "attendance": 33167,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 29,
+      "groupLetter": "E",
+      "roundId": "group-r3",
+      "homeTeamId": "SRB",
+      "awayTeamId": "BRA",
+      "playedOn": "2018-06-27T18:00:00Z",
+      "attendance": 44190,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 30,
+      "groupLetter": "E",
+      "roundId": "group-r3",
+      "homeTeamId": "SUI",
+      "awayTeamId": "CRC",
+      "playedOn": "2018-06-27T18:00:00Z",
+      "attendance": 43319,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 31,
+      "groupLetter": "F",
+      "roundId": "group-r1",
+      "homeTeamId": "GER",
+      "awayTeamId": "MEX",
+      "playedOn": "2018-06-17T18:00:00Z",
+      "attendance": 78011,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 32,
+      "groupLetter": "F",
+      "roundId": "group-r1",
+      "homeTeamId": "SWE",
+      "awayTeamId": "KOR",
+      "playedOn": "2018-06-18T18:00:00Z",
+      "attendance": 42300,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 33,
+      "groupLetter": "F",
+      "roundId": "group-r2",
+      "homeTeamId": "KOR",
+      "awayTeamId": "MEX",
+      "playedOn": "2018-06-23T18:00:00Z",
+      "attendance": 43472,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 34,
+      "groupLetter": "F",
+      "roundId": "group-r2",
+      "homeTeamId": "GER",
+      "awayTeamId": "SWE",
+      "playedOn": "2018-06-23T18:00:00Z",
+      "attendance": 44287,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 35,
+      "groupLetter": "F",
+      "roundId": "group-r3",
+      "homeTeamId": "KOR",
+      "awayTeamId": "GER",
+      "playedOn": "2018-06-27T18:00:00Z",
+      "attendance": 41835,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 36,
+      "groupLetter": "F",
+      "roundId": "group-r3",
+      "homeTeamId": "MEX",
+      "awayTeamId": "SWE",
+      "playedOn": "2018-06-27T18:00:00Z",
+      "attendance": 33061,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 37,
+      "groupLetter": "G",
+      "roundId": "group-r1",
+      "homeTeamId": "BEL",
+      "awayTeamId": "PAN",
+      "playedOn": "2018-06-18T18:00:00Z",
+      "attendance": 43257,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 38,
+      "groupLetter": "G",
+      "roundId": "group-r1",
+      "homeTeamId": "TUN",
+      "awayTeamId": "ENG",
+      "playedOn": "2018-06-18T18:00:00Z",
+      "attendance": 41064,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 39,
+      "groupLetter": "G",
+      "roundId": "group-r2",
+      "homeTeamId": "BEL",
+      "awayTeamId": "TUN",
+      "playedOn": "2018-06-23T18:00:00Z",
+      "attendance": 44190,
+      "result": {
+        "homeScore": 5,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 40,
+      "groupLetter": "G",
+      "roundId": "group-r2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "PAN",
+      "playedOn": "2018-06-24T18:00:00Z",
+      "attendance": 43319,
+      "result": {
+        "homeScore": 6,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 41,
+      "groupLetter": "G",
+      "roundId": "group-r3",
+      "homeTeamId": "ENG",
+      "awayTeamId": "BEL",
+      "playedOn": "2018-06-28T18:00:00Z",
+      "attendance": 33973,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 42,
+      "groupLetter": "G",
+      "roundId": "group-r3",
+      "homeTeamId": "PAN",
+      "awayTeamId": "TUN",
+      "playedOn": "2018-06-28T18:00:00Z",
+      "attendance": 37168,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 43,
+      "groupLetter": "H",
+      "roundId": "group-r1",
+      "homeTeamId": "POL",
+      "awayTeamId": "SEN",
+      "playedOn": "2018-06-19T18:00:00Z",
+      "attendance": 44190,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 44,
+      "groupLetter": "H",
+      "roundId": "group-r1",
+      "homeTeamId": "COL",
+      "awayTeamId": "JPN",
+      "playedOn": "2018-06-19T18:00:00Z",
+      "attendance": 40842,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 45,
+      "groupLetter": "H",
+      "roundId": "group-r2",
+      "homeTeamId": "JPN",
+      "awayTeamId": "SEN",
+      "playedOn": "2018-06-24T18:00:00Z",
+      "attendance": 32572,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 46,
+      "groupLetter": "H",
+      "roundId": "group-r2",
+      "homeTeamId": "POL",
+      "awayTeamId": "COL",
+      "playedOn": "2018-06-24T18:00:00Z",
+      "attendance": 42873,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 47,
+      "groupLetter": "H",
+      "roundId": "group-r3",
+      "homeTeamId": "JPN",
+      "awayTeamId": "POL",
+      "playedOn": "2018-06-28T18:00:00Z",
+      "attendance": 42189,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 48,
+      "groupLetter": "H",
+      "roundId": "group-r3",
+      "homeTeamId": "SEN",
+      "awayTeamId": "COL",
+      "playedOn": "2018-06-28T18:00:00Z",
+      "attendance": 41970,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 49,
+      "roundId": "r16",
+      "homeQual": "A1",
+      "awayQual": "B2",
+      "homeTeamId": "URU",
+      "awayTeamId": "POR",
+      "playedOn": "2018-06-30T18:00:00Z",
+      "attendance": 44287,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 50,
+      "roundId": "r16",
+      "homeQual": "C1",
+      "awayQual": "D2",
+      "homeTeamId": "FRA",
+      "awayTeamId": "ARG",
+      "playedOn": "2018-06-30T18:00:00Z",
+      "attendance": 42873,
+      "result": {
+        "homeScore": 4,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 51,
+      "roundId": "r16",
+      "homeQual": "B1",
+      "awayQual": "A2",
+      "homeTeamId": "ESP",
+      "awayTeamId": "RUS",
+      "playedOn": "2018-07-01T18:00:00Z",
+      "attendance": 78011,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 4
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 52,
+      "roundId": "r16",
+      "homeQual": "D1",
+      "awayQual": "C2",
+      "homeTeamId": "CRO",
+      "awayTeamId": "DEN",
+      "playedOn": "2018-07-01T18:00:00Z",
+      "attendance": 40851,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 2
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 53,
+      "roundId": "r16",
+      "homeQual": "E1",
+      "awayQual": "F2",
+      "homeTeamId": "BRA",
+      "awayTeamId": "MEX",
+      "playedOn": "2018-07-02T18:00:00Z",
+      "attendance": 41970,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 54,
+      "roundId": "r16",
+      "homeQual": "G1",
+      "awayQual": "H2",
+      "homeTeamId": "BEL",
+      "awayTeamId": "JPN",
+      "playedOn": "2018-07-02T18:00:00Z",
+      "attendance": 41466,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 55,
+      "roundId": "r16",
+      "homeQual": "F1",
+      "awayQual": "E2",
+      "homeTeamId": "SWE",
+      "awayTeamId": "SUI",
+      "playedOn": "2018-07-03T18:00:00Z",
+      "attendance": 64042,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 56,
+      "roundId": "r16",
+      "homeQual": "H1",
+      "awayQual": "G2",
+      "homeTeamId": "COL",
+      "awayTeamId": "ENG",
+      "playedOn": "2018-07-03T18:00:00Z",
+      "attendance": 44190,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 4
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 57,
+      "roundId": "qf",
+      "homeQual": "W-49",
+      "awayQual": "W-50",
+      "homeTeamId": "URU",
+      "awayTeamId": "FRA",
+      "playedOn": "2018-07-06T18:00:00Z",
+      "attendance": 43319,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 58,
+      "roundId": "qf",
+      "homeQual": "W-53",
+      "awayQual": "W-54",
+      "homeTeamId": "BRA",
+      "awayTeamId": "BEL",
+      "playedOn": "2018-07-06T18:00:00Z",
+      "attendance": 42873,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 59,
+      "roundId": "qf",
+      "homeQual": "W-55",
+      "awayQual": "W-56",
+      "homeTeamId": "SWE",
+      "awayTeamId": "ENG",
+      "playedOn": "2018-07-07T18:00:00Z",
+      "attendance": 57361,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 60,
+      "roundId": "qf",
+      "homeQual": "W-51",
+      "awayQual": "W-52",
+      "homeTeamId": "RUS",
+      "awayTeamId": "CRO",
+      "playedOn": "2018-07-07T18:00:00Z",
+      "attendance": 44287,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 4
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 61,
+      "roundId": "sf",
+      "homeQual": "W-57",
+      "awayQual": "W-58",
+      "homeTeamId": "FRA",
+      "awayTeamId": "BEL",
+      "playedOn": "2018-07-10T18:00:00Z",
+      "attendance": 54490,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 62,
+      "roundId": "sf",
+      "homeQual": "W-60",
+      "awayQual": "W-59",
+      "homeTeamId": "CRO",
+      "awayTeamId": "ENG",
+      "playedOn": "2018-07-11T18:00:00Z",
+      "attendance": 67269,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "EXTRA_TIME"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 63,
+      "roundId": "third",
+      "homeQual": "L-62",
+      "awayQual": "L-61",
+      "homeTeamId": "BEL",
+      "awayTeamId": "ENG",
+      "playedOn": "2018-07-14T18:00:00Z",
+      "attendance": 44000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 64,
+      "roundId": "final",
+      "homeQual": "W-61",
+      "awayQual": "W-62",
+      "homeTeamId": "FRA",
+      "awayTeamId": "CRO",
+      "playedOn": "2018-07-15T18:00:00Z",
+      "attendance": 78011,
+      "result": {
+        "homeScore": 4,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    }
+  ]
+}
