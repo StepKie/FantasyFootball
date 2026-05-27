@@ -24,6 +24,8 @@ public class HistoricEuroLoadTest
 	[InlineData("em-2004", 31, "GRE")]
 	[InlineData("em-2008", 31, "ESP")]
 	[InlineData("em-2012", 31, "ESP")]
+	[InlineData("em-2016", 51, "POR")]
+	[InlineData("em-2020", 51, "ITA")]
 	public void HistoricEuro_LoadsFinishedWithRealChampion(string definitionId, int gameCount, string champion)
 	{
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = definitionId });
@@ -44,6 +46,20 @@ public class HistoricEuroLoadTest
 		c.IsFinished().Should().BeFalse();
 		c.Games.OfType<KoGame>().Should().OnlyContain(g => g.HomeTeamId == null && g.AwayTeamId == null);
 
+		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+
+		c.IsFinished().Should().BeTrue();
+		c.WinnerTeamId().Should().NotBeNull();
+	}
+
+	[Fact]
+	public void Euro2020_ReSim_ResolvesBestThirdPoolsWithoutDuplicates()
+	{
+		// 24-team format: the four best-3rd R16 slots share an A/B/C/D/E/F3
+		// pool. Re-sim must fill them with four DISTINCT teams and run the
+		// whole bracket — a pool that double-assigned a team would throw or
+		// leave the competition unfinished.
+		var c = _factory.Create(new HistoricalSpec { DefinitionId = "em-2020", Played = false });
 		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
 
 		c.IsFinished().Should().BeTrue();
