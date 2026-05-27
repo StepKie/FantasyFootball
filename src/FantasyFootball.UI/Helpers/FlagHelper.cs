@@ -11,7 +11,7 @@ public static class FlagHelper
 	// Defunct national teams with locally-bundled flag SVGs. West Germany (FRG) and Czechoslovakia (TCH) share the modern Germany / Czechia flag respectively and route through flagcdn via their inherited alpha-2 code.
 	static readonly HashSet<string> BundledByCode3 = new(StringComparer.OrdinalIgnoreCase)
 	{
-		"GDR", "URS", "YUG", "SCG", "ZAI",
+		"GDR", "URS", "YUG", "SCG", "ZAI", "CIS",
 	};
 
 	public static string Url(string code2) => $"https://flagcdn.com/{code2.ToLowerInvariant()}.svg";

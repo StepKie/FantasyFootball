@@ -41,6 +41,8 @@ fetch urs "Flag_of_the_Soviet_Union.svg"                   || failed=1
 fetch yug "Flag_of_Yugoslavia_(1946%E2%80%931992).svg"             || failed=1
 fetch scg "Flag_of_Serbia_and_Montenegro_(1992%E2%80%932006).svg"  || failed=1
 fetch zai "Flag_of_Zaire_(1971%E2%80%931997).svg"                  || failed=1
+# CIS (Commonwealth of Independent States) — the one-tournament post-USSR team at Euro 1992, which played under a provisional "C.I.S." flag.
+fetch cis "Flag_of_the_CIS_(UEFA_Euro_1992).svg"                    || failed=1
 
 if [ "$failed" -eq 0 ]; then
   echo "  done: $(find "$OUT_DIR" -name '*.svg' | wc -l) historic flag SVGs"
