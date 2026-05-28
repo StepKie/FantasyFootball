@@ -22,6 +22,7 @@ public sealed class LocalStorageRepository : IRepository
     typeof(Team),
     typeof(Confederation),
     typeof(Country),
+    typeof(EloSet),
   ];
 
   static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { WriteIndented = false };
