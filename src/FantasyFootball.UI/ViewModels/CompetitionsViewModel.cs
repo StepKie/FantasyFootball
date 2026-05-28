@@ -22,17 +22,20 @@ public partial class CompetitionsViewModel : ObservableObject
 	readonly IDataService _dataService;
 	readonly CompetitionFactory _factory;
 	readonly CompetitionSimulator _simulator;
+	readonly ICompetitionDefinitionStore _definitions;
 
 	public CompetitionsViewModel(
 		ICompetitionRepository repo,
 		IDataService dataService,
 		CompetitionFactory factory,
-		CompetitionSimulator simulator)
+		CompetitionSimulator simulator,
+		ICompetitionDefinitionStore definitions)
 	{
 		_repo = repo;
 		_dataService = dataService;
 		_factory = factory;
 		_simulator = simulator;
+		_definitions = definitions;
 
 		// Hydrate from the shared type pref so the chip state survives navigation between list and setup pages.
 		SelectedType = dataService.SelectedCompetitionType;
@@ -140,6 +143,28 @@ public partial class CompetitionsViewModel : ObservableObject
 		};
 	}
 
+	bool _seeded;
+
+	/// <summary>
+	/// First-page-mount entry. Seeds bundled historicals once per WASM session
+	/// (VM is <c>AddScoped</c> = session-singleton), then loads the list.
+	/// Subsequent page mounts only reload — so "Delete All" + navigate away and
+	/// back doesn't undo the wipe by re-seeding.
+	/// </summary>
+	public async Task InitializeAsync()
+	{
+		if (!_seeded)
+		{
+			_seeded = true;
+			if (await _repo.CountAsync() == 0)
+			{
+				await SeedFinishedDefinitionsAsync();
+			}
+		}
+		await ReloadAsync();
+	}
+
+	/// <summary> Re-reads the repo into the visible list. No seeding. </summary>
 	public async Task ReloadAsync()
 	{
 		IsBusy = true;
@@ -151,6 +176,27 @@ public partial class CompetitionsViewModel : ObservableObject
 		finally
 		{
 			IsBusy = false;
+		}
+	}
+
+	/// <summary>
+	/// Populates an empty repo with every bundled finished tournament. Saved
+	/// oldest-first so newer tournaments get the higher repo Ids and land at
+	/// the top under the default Id-desc list sort.
+	/// </summary>
+	async Task SeedFinishedDefinitionsAsync()
+	{
+		var finished = _definitions.AvailableIds
+			.Select(id => _factory.Create(new HistoricalSpec { DefinitionId = id }))
+			.Where(c => c.IsFinished())
+			.OrderBy(c => c.Year)
+			.ToList();
+
+		foreach (var competition in finished)
+		{
+			competition.SimulationStart = competition.Games.Min(g => g.PlayedOn);
+			competition.SimulationFinished = competition.Games.Max(g => g.PlayedOn);
+			await _repo.SaveAsync(competition);
 		}
 	}
 

@@ -33,9 +33,8 @@ public class CompetitionFactoryTests
 	[Fact]
 	public void Historical_TwoCreations_AreIndependentInstances()
 	{
-		// The factory must not share mutable state across calls — bulk
-		// sim relies on this to run N independent competitions.
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		// Factory must not share mutable state — bulk sim runs N independent competitions.
+		var spec = new HistoricalSpec { DefinitionId = "wm-2026" };
 		var a = _factory.Create(spec);
 		var b = _factory.Create(spec);
 

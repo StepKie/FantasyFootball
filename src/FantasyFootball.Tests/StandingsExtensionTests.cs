@@ -11,7 +11,8 @@ public class StandingsExtensionTests
 	[Fact]
 	public void Standings_OfUnplayedGroup_AllZeros()
 	{
-		var c = _definitions.Load("wm-2022");
+		// wm-2026 is a future tournament with no baked results.
+		var c = _definitions.Load("wm-2026");
 		var s = c.Standings("A");
 		s.Should().HaveCount(4);
 		s.Should().OnlyContain(r => r.Played == 0 && r.Points == 0);

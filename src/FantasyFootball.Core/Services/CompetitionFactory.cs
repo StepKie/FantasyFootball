@@ -33,14 +33,20 @@ public sealed class CompetitionFactory
 
 		switch (spec)
 		{
+			case HistoricalSpec { Played: true }:
+				// Definition's own lineup, keep the baked results — browse the real outcome.
+				break;
+
 			case HistoricalSpec:
-				// Definition file already carries the historical lineup; nothing to do.
-				return competition;
+				// Definition's own lineup, but re-simulate from scratch.
+				ResetPlayState(competition);
+				break;
 
 			case CustomLineupSpec custom:
 				ValidateLineupShape(custom.Groups, competition);
 				ApplyLineup(competition, custom.Groups);
-				return competition;
+				ResetPlayState(competition);
+				break;
 
 			case RandomLineupSpec random:
 				var drawn = random.DrawAlgorithm.Draw(
@@ -48,11 +54,36 @@ public sealed class CompetitionFactory
 					competition.GroupAssignments[0].Length);
 				ValidateLineupShape(drawn, competition);
 				ApplyLineup(competition, drawn);
-				return competition;
+				ResetPlayState(competition);
+				break;
 
 			default:
 				throw new ArgumentException($"Unknown spec type {spec.GetType().Name}.", nameof(spec));
 		}
+
+		return competition;
+	}
+
+	// Clears the definition's baked results: every game's Result, the KO slots (so they re-resolve from qualifiers and lose the historic Attendance), and the sim stamps. Yields a scheduled competition ready to simulate from scratch.
+	static void ResetPlayState(Competition competition)
+	{
+		// Attendance is init-only on Game; replace each array slot via `with` to clear it. Otherwise a re-drawn lineup would carry the historic crowd figure forward (Group games as well as KO).
+		for (int i = 0; i < competition.Games.Length; i++)
+		{
+			var game = competition.Games[i];
+			game.Result = null;
+			if (game is KoGame ko)
+			{
+				competition.Games[i] = ko with { HomeTeamId = null, AwayTeamId = null, Attendance = null };
+			}
+			else if (game.Attendance.HasValue)
+			{
+				competition.Games[i] = game with { Attendance = null };
+			}
+		}
+
+		competition.SimulationStart = null;
+		competition.SimulationFinished = null;
 	}
 
 	static void ValidateLineupShape(string[][] lineup, Competition competition)
