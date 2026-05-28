@@ -11,7 +11,7 @@ public class StandingsExtensionTests
 	[Fact]
 	public void Standings_OfUnplayedGroup_AllZeros()
 	{
-		// wm-2026 is unplayed (future); wm-2022 now ships baked results.
+		// wm-2026 is a future tournament with no baked results.
 		var c = _definitions.Load("wm-2026");
 		var s = c.Standings("A");
 		s.Should().HaveCount(4);

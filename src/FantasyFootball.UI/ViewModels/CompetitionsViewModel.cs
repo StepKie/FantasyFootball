@@ -143,16 +143,33 @@ public partial class CompetitionsViewModel : ObservableObject
 		};
 	}
 
+	bool _seeded;
+
+	/// <summary>
+	/// First-page-mount entry. Seeds bundled historicals once per WASM session
+	/// (VM is <c>AddScoped</c> = session-singleton), then loads the list.
+	/// Subsequent page mounts only reload — so "Delete All" + navigate away and
+	/// back doesn't undo the wipe by re-seeding.
+	/// </summary>
+	public async Task InitializeAsync()
+	{
+		if (!_seeded)
+		{
+			_seeded = true;
+			if (await _repo.CountAsync() == 0)
+			{
+				await SeedFinishedDefinitionsAsync();
+			}
+		}
+		await ReloadAsync();
+	}
+
+	/// <summary> Re-reads the repo into the visible list. No seeding. </summary>
 	public async Task ReloadAsync()
 	{
 		IsBusy = true;
 		try
 		{
-			if (await _repo.CountAsync() == 0)
-			{
-				await SeedFinishedDefinitionsAsync();
-			}
-
 			var all = await _repo.GetAllAsync();
 			AllCompetitions = all.OrderByDescending(c => c.Id).ToList();
 		}
@@ -172,7 +189,8 @@ public partial class CompetitionsViewModel : ObservableObject
 		var finished = _definitions.AvailableIds
 			.Select(id => _factory.Create(new HistoricalSpec { DefinitionId = id }))
 			.Where(c => c.IsFinished())
-			.OrderBy(c => c.Year);
+			.OrderBy(c => c.Year)
+			.ToList();
 
 		foreach (var competition in finished)
 		{

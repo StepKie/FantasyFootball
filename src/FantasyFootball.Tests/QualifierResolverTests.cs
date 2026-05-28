@@ -49,7 +49,7 @@ public class QualifierResolverTests
 	[Fact]
 	public void Resolve_GameWinner_UnplayedGame_Throws()
 	{
-		// wm-2026 is the future tournament — genuinely unplayed (wm-2022 now ships baked results).
+		// wm-2026 is a future tournament with no baked results.
 		var c = _definitions.Load("wm-2026");
 		Action act = () => QualifierResolver.Resolve(c, "W-1");
 		act.Should().Throw<InvalidOperationException>()

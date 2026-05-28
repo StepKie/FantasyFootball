@@ -25,7 +25,7 @@ public class BulkSimRunnerTests
 	[Fact]
 	public async Task Run_Historical_PersistsRequestedCount()
 	{
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		var ids = await _runner.RunAsync(spec, count: 3);
 
 		ids.Should().HaveCount(3);
@@ -36,7 +36,7 @@ public class BulkSimRunnerTests
 	[Fact]
 	public async Task Run_Historical_EachPersistedCompetitionIsFinished()
 	{
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		var ids = await _runner.RunAsync(spec, count: 2);
 
 		foreach (var id in ids)
@@ -56,7 +56,7 @@ public class BulkSimRunnerTests
 		// score model they SHOULD produce identical results too. The point
 		// here is that they're stored as separate competition rows — not
 		// that they're stored together.
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		var ids = await _runner.RunAsync(spec, count: 2);
 
 		var first = await _repo.GetAsync(ids[0]);
@@ -87,7 +87,7 @@ public class BulkSimRunnerTests
 	[Fact]
 	public async Task Run_CountZero_Throws()
 	{
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		Func<Task> act = () => _runner.RunAsync(spec, 0);
 		await act.Should().ThrowAsync<ArgumentOutOfRangeException>();
 	}
@@ -95,7 +95,7 @@ public class BulkSimRunnerTests
 	[Fact]
 	public async Task Run_ReportsProgressEveryIteration()
 	{
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		var reports = new List<int>();
 		var progress = new SyncProgress<int>(reports.Add);
 
@@ -108,7 +108,7 @@ public class BulkSimRunnerTests
 	public async Task Run_HonorsCancellation_StopsMidway()
 	{
 		// Pre-cancelled token: not even the first iteration should run.
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		using var cts = new CancellationTokenSource();
 		cts.Cancel();
 

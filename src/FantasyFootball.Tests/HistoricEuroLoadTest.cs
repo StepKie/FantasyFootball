@@ -40,9 +40,7 @@ public class HistoricEuroLoadTest
 	[Fact]
 	public void Euro1996_ReSim_RunsThroughKoBracketFromScratch()
 	{
-		// Played=false loads the real lineup but scheduled — no Groups needed.
-		// Simulating exercises the full QF→SF→Final qualifier chain (A1/B2 +
-		// W-NN); a broken bracket wire (bad W-NN id) would throw here.
+		// Re-sim via Played=false: exercises the full QF→SF→Final qualifier chain.
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "em-1996", Played = false });
 		c.IsFinished().Should().BeFalse();
 		c.Games.OfType<KoGame>().Should().OnlyContain(g => g.HomeTeamId == null && g.AwayTeamId == null);
@@ -56,10 +54,7 @@ public class HistoricEuroLoadTest
 	[Fact]
 	public void Euro2020_ReSim_ResolvesBestThirdPoolsWithoutDuplicates()
 	{
-		// 24-team format: the four best-3rd R16 slots share an A/B/C/D/E/F3
-		// pool. Re-sim must fill them with four DISTINCT teams and run the
-		// whole bracket — a pool that double-assigned a team would throw or
-		// leave the competition unfinished.
+		// 24-team: re-sim must fill best-3rd R16 slots with four distinct teams.
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "em-2020", Played = false });
 		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
 

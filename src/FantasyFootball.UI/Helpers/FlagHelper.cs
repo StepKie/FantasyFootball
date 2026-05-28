@@ -23,6 +23,12 @@ public static class FlagHelper
 			return $"_content/FantasyFootball.UI/img/flags/{code3.ToLowerInvariant()}.svg";
 		}
 
+		// FlagIcon's null-Team path puts the team's 3-letter ShortName into the `Code` param, which arrives here as code2. Check that against the bundled set too so the bundled SVG resolves whether the team object is hydrated or not.
+		if (!string.IsNullOrEmpty(code2) && BundledByCode3.Contains(code2))
+		{
+			return $"_content/FantasyFootball.UI/img/flags/{code2.ToLowerInvariant()}.svg";
+		}
+
 		return Url(code2 ?? "");
 	}
 }

@@ -64,16 +64,21 @@ public sealed class CompetitionFactory
 		return competition;
 	}
 
-	// Clears the definition's baked results: every game's Result, the KO slots (so they re-resolve from qualifiers), and the sim stamps. Yields a scheduled competition ready to simulate from scratch.
+	// Clears the definition's baked results: every game's Result, the KO slots (so they re-resolve from qualifiers and lose the historic Attendance), and the sim stamps. Yields a scheduled competition ready to simulate from scratch.
 	static void ResetPlayState(Competition competition)
 	{
-		foreach (var game in competition.Games)
+		// Attendance is init-only on Game; replace each array slot via `with` to clear it. Otherwise a re-drawn lineup would carry the historic crowd figure forward (Group games as well as KO).
+		for (int i = 0; i < competition.Games.Length; i++)
 		{
+			var game = competition.Games[i];
 			game.Result = null;
 			if (game is KoGame ko)
 			{
-				ko.HomeTeamId = null;
-				ko.AwayTeamId = null;
+				competition.Games[i] = ko with { HomeTeamId = null, AwayTeamId = null, Attendance = null };
+			}
+			else if (game.Attendance.HasValue)
+			{
+				competition.Games[i] = game with { Attendance = null };
 			}
 		}
 

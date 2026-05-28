@@ -101,7 +101,7 @@ else
       <MudTd DataLabel="Started">
         @if (context.SimulationStart is { } start)
         {
-          <span title="@start.ToString("yyyy-MM-dd HH:mm 'UTC'")">@start.ToLocalTime().ToString("MMM d, yyyy")</span>
+          <span title="@start.ToString("yyyy-MM-dd HH:mm 'UTC'")">@start.ToLocalTime().ToString(start.ToLocalTime().Year < DateTime.Now.Year ? "MMM d, yyyy" : "MMM d, HH:mm")</span>
         }
         else
         {
@@ -211,7 +211,7 @@ else
   {
     ViewModel.PropertyChanged += OnVmChanged;
     ViewModel.SyncFromDataService();
-    await ViewModel.ReloadAsync();
+    await ViewModel.InitializeAsync();
   }
 
   void OnVmChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
