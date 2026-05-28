@@ -29,19 +29,20 @@ public sealed class CompetitionSimulator
 	/// Stamps <c>SimulationStart</c> on first call (any sim entry point;
 	/// list views can tell scheduled from in-progress competitions).
 	/// </summary>
-	public void SimulateGame(Competition c, Game game)
+	public void SimulateGame(Competition c, Game game, IScoreModel? scoreModelOverride = null)
 	{
 		if (game.Result is not null) { return; }
 
+		var model = scoreModelOverride ?? _scoreModel;
 		c.SimulationStart ??= DateTime.UtcNow;
 		switch (game)
 		{
 			case GroupGame gg:
-				gg.Result = _scoreModel.ScoreGroupGame(gg.HomeTeamId, gg.AwayTeamId);
+				gg.Result = model.ScoreGroupGame(gg.HomeTeamId, gg.AwayTeamId);
 				break;
 			case KoGame ko:
 				ResolveKoTeams(c, ko);
-				ko.Result = _scoreModel.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
+				ko.Result = model.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
 				break;
 		}
 
@@ -66,14 +67,19 @@ public sealed class CompetitionSimulator
 		}
 	}
 
-	public void Simulate(Competition c)
+	/// <param name="scoreModelOverride">
+	/// Optional per-call score model. Used by the bulk runner to thread a
+	/// year-matched <see cref="EloSet"/> through a HistoricalSpec sim without
+	/// touching the UI's active set. <c>null</c> falls back to the DI default.
+	/// </param>
+	public void Simulate(Competition c, IScoreModel? scoreModelOverride = null)
 	{
 		c.SimulationStart ??= DateTime.UtcNow;
 
 		// Defensive sort: a hand-edited out-of-order definition file would foot-gun without this.
 		foreach (var game in c.Games.OrderBy(g => g.PlayedOn))
 		{
-			SimulateGame(c, game);
+			SimulateGame(c, game, scoreModelOverride);
 		}
 
 		c.SimulationFinished = DateTime.UtcNow;

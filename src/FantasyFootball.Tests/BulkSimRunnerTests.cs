@@ -14,12 +14,13 @@ public class BulkSimRunnerTests
 	readonly CompetitionFactory _factory;
 	readonly CompetitionSimulator _simulator = new(new StubScoreModel());
 	readonly InMemoryCompetitionRepository _repo = new();
+	readonly InMemoryRepository _entityRepo = new();
 	readonly BulkSimRunner _runner;
 
 	public BulkSimRunnerTests()
 	{
 		_factory = new(_definitions);
-		_runner = new(_factory, _simulator, _repo);
+		_runner = new(_factory, _simulator, _repo, _entityRepo);
 	}
 
 	[Fact]
