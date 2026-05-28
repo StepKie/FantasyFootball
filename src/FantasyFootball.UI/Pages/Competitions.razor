@@ -101,7 +101,7 @@ else
       <MudTd DataLabel="Started">
         @if (context.SimulationStart is { } start)
         {
-          <span title="@start.ToString("yyyy-MM-dd HH:mm 'UTC'")">@start.ToLocalTime().ToString("MMM d, HH:mm")</span>
+          <span title="@start.ToString("yyyy-MM-dd HH:mm 'UTC'")">@start.ToLocalTime().ToString("MMM d, yyyy")</span>
         }
         else
         {

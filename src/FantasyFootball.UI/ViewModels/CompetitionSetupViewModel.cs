@@ -177,7 +177,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	{
 		var spec = CurrentLineup == LineupMode.Random && _drawnLineup is not null
 			? (CompetitionSpec)new CustomLineupSpec { DefinitionId = DefinitionId, Groups = _drawnLineup }
-			: new HistoricalSpec { DefinitionId = DefinitionId };
+			: new HistoricalSpec { DefinitionId = DefinitionId, Played = false };
 
 		var competition = _factory.Create(spec);
 		return await _repo.SaveAsync(competition);
@@ -235,7 +235,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 
 		return CurrentLineup == LineupMode.Random && _drawnLineup is not null
 			? new CustomLineupSpec { DefinitionId = DefinitionId, Groups = _drawnLineup }
-			: new HistoricalSpec { DefinitionId = DefinitionId };
+			: new HistoricalSpec { DefinitionId = DefinitionId, Played = false };
 	}
 
 	IReadOnlyList<LineupGroup> BuildGroupsForPreview()
