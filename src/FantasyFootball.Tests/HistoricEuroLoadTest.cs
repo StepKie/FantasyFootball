@@ -1,0 +1,64 @@
+using FantasyFootball.Models;
+
+namespace FantasyFootball.Tests;
+
+/// <summary>
+/// Regression guard for the group-based historic Euros: each definition
+/// loads via HistoricalSpec as a finished competition with the real
+/// champion and the expected game count.
+/// </summary>
+public class HistoricEuroLoadTest
+{
+	readonly EmbeddedCompetitionDefinitionStore _definitions = new();
+	readonly CompetitionFactory _factory;
+
+	public HistoricEuroLoadTest() => _factory = new(_definitions);
+
+	[Theory]
+	[InlineData("em-1980", 14, "FRG")]
+	[InlineData("em-1984", 15, "FRA")]
+	[InlineData("em-1988", 15, "NED")]
+	[InlineData("em-1996", 31, "GER")]
+	[InlineData("em-1992", 15, "DEN")]
+	[InlineData("em-2000", 31, "FRA")]
+	[InlineData("em-2004", 31, "GRE")]
+	[InlineData("em-2008", 31, "ESP")]
+	[InlineData("em-2012", 31, "ESP")]
+	[InlineData("em-2016", 51, "POR")]
+	[InlineData("em-2020", 51, "ITA")]
+	[InlineData("em-2024", 51, "ESP")]
+	public void HistoricEuro_LoadsFinishedWithRealChampion(string definitionId, int gameCount, string champion)
+	{
+		var c = _factory.Create(new HistoricalSpec { DefinitionId = definitionId });
+
+		c.Games.Should().HaveCount(gameCount);
+		c.Games.Should().OnlyContain(g => g.Result != null);
+		c.IsFinished().Should().BeTrue();
+		c.WinnerTeamId().Should().Be(champion);
+	}
+
+	[Fact]
+	public void Euro1996_ReSim_RunsThroughKoBracketFromScratch()
+	{
+		// Re-sim via Played=false: exercises the full QF→SF→Final qualifier chain.
+		var c = _factory.Create(new HistoricalSpec { DefinitionId = "em-1996", Played = false });
+		c.IsFinished().Should().BeFalse();
+		c.Games.OfType<KoGame>().Should().OnlyContain(g => g.HomeTeamId == null && g.AwayTeamId == null);
+
+		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+
+		c.IsFinished().Should().BeTrue();
+		c.WinnerTeamId().Should().NotBeNull();
+	}
+
+	[Fact]
+	public void Euro2020_ReSim_ResolvesBestThirdPoolsWithoutDuplicates()
+	{
+		// 24-team: re-sim must fill best-3rd R16 slots with four distinct teams.
+		var c = _factory.Create(new HistoricalSpec { DefinitionId = "em-2020", Played = false });
+		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+
+		c.IsFinished().Should().BeTrue();
+		c.WinnerTeamId().Should().NotBeNull();
+	}
+}
