@@ -8,15 +8,19 @@ public class JsonDataService : IDataService
 	public const string CountriesFile = "FantasyFootball.Resources.Data.countries.json";
 	public const string EloCurrentFile = "FantasyFootball.Resources.Data.elo-current.json";
 
+	public const string CurrentEloSetName = "Current";
+
 	static readonly JsonSerializerOptions JsonOpts = new(JsonSerializerDefaults.Web);
 
 	List<Team>? _teamCache;
 	readonly IRepository _repo;
+	readonly IActiveEloSet _activeEloSet;
 	readonly string _languageId;
 
-	public JsonDataService(IRepository repo, CultureInfo? language = null)
+	public JsonDataService(IRepository repo, IActiveEloSet activeEloSet, CultureInfo? language = null)
 	{
 		_repo = repo;
+		_activeEloSet = activeEloSet;
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
 		Initialize();
 		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => _teamCache = null);
@@ -24,10 +28,11 @@ public class JsonDataService : IDataService
 
 	public void Initialize()
 	{
-		if (AllTeams.Count == 0)
-		{
-			Reset();
-		}
+		if (AllTeams.Count == 0) { Reset(); return; }
+
+		// Repo already populated from a previous session — ensure the active set is also wired up.
+		var current = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == CurrentEloSetName);
+		if (current is not null) { _activeEloSet.SetCurrent(current); }
 	}
 
 	/// <summary> Global selected competition type to sync across all relevant pages </summary>
@@ -35,10 +40,9 @@ public class JsonDataService : IDataService
 
 	public List<Team> AllTeams => _teamCache ??= ReloadTeams();
 
-	List<Country> CreateCountries()
+	List<Country> CreateCountries(EloSet currentEloSet)
 	{
 		var seeds = LoadCountrySeeds();
-		var elos = LoadCurrentElos();
 		var confederations = _repo.GetAll<Confederation>();
 
 		return seeds.Select(s => new Country
@@ -46,23 +50,24 @@ public class JsonDataService : IDataService
 			Code2 = s.Code2,
 			Code3 = s.Code3,
 			Name = s.Name.GetValueOrDefault(_languageId, s.Name["en"]),
-			Elo = elos.GetValueOrDefault(s.Code3),
+			Elo = currentEloSet.Snapshot.GetValueOrDefault(s.Code3),
 			Confederation = confederations.FirstOrDefault(c => c.Name == s.Confederation) ?? Confederation.UNKNOWN,
 		}).ToList();
 	}
 
-	public List<Team> CreateTeams()
-	{
-		var countries = CreateCountries();
-		return countries.Select(country => country.NationalTeam).ToList();
-	}
+	public List<Team> CreateTeams() => CreateCountries(LoadCurrentEloSet()).Select(country => country.NationalTeam).ToList();
 
 	public void Reset()
 	{
 		_teamCache = null;
 		_repo.Reset();
 		_repo.SaveAll(Confederation.ALL);
-		_repo.SaveAll(CreateTeams());
+
+		var currentEloSet = LoadCurrentEloSet();
+		_repo.Save(currentEloSet);
+		_activeEloSet.SetCurrent(currentEloSet);
+
+		_repo.SaveAll(CreateCountries(currentEloSet).Select(c => c.NationalTeam));
 
 		SelectedCompetitionType = CompetitionType.WM;
 
@@ -84,13 +89,15 @@ public class JsonDataService : IDataService
 			?? throw new InvalidOperationException($"{CountriesFile} deserialized to null");
 	}
 
-	static Dictionary<string, int> LoadCurrentElos()
+	static EloSet LoadCurrentEloSet()
 	{
 		using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(EloCurrentFile)
 			?? throw new FileNotFoundException($"{EloCurrentFile} not found in embedded resources");
 		var eloSet = JsonSerializer.Deserialize<EloSet>(stream, JsonOpts)
 			?? throw new InvalidOperationException($"{EloCurrentFile} deserialized to null");
-		return eloSet.Snapshot;
+		// Seed-time entity — let the repo assign an Id on first save.
+		eloSet.Id = 0;
+		return eloSet;
 	}
 
 	sealed class CountrySeed

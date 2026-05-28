@@ -1,8 +1,5 @@
-﻿using System.Text.Json.Serialization;
-
 namespace FantasyFootball.Models;
 
-[Table(nameof(Confederation))]
 public class Confederation : NamedUniqueId
 {
 	public static List<Confederation> ALL => [UEFA, CAF, CONMEBOL, CONCACAF, OFC, AFC];
@@ -16,9 +13,8 @@ public class Confederation : NamedUniqueId
 
 	public static readonly Confederation UNKNOWN = new("?", "?", 0);
 
-	public Confederation() { /* Ignore: public parameterless constructor for SQLite, DO NOT USE */ }
+	public Confederation() { }
 
-	/// <summary> Do not set Id manually, rather let SQLite assign the id! </summary>
 	Confederation(string name, string continent, int noOfWmPartipants)
 	{
 		Name = name;
@@ -28,11 +24,7 @@ public class Confederation : NamedUniqueId
 
 	public string Continent { get; init; }
 
-	// SQLite back-pointer (inverse of Country.Confederation). Not part of the persisted shape.
-	[OneToMany(CascadeOperations = CascadeOperation.CascadeRead), JsonIgnore]
-	public virtual List<Country> Countries { get; init; } = [];
-
-	[JsonIgnore] public string Logo => IconStrings.GetConfederationLogo(this);
+	public string Logo => IconStrings.GetConfederationLogo(this);
 	public int NoOfWmParticipants { get; init; }
 
 	public override bool Equals(object? obj) => GetType() == obj?.GetType() && Name == (obj as Confederation)?.Name;

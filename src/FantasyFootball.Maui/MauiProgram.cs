@@ -18,8 +18,9 @@ public static class MauiProgram
 		builder.Services
 			.AddSingleton<IConnectivity>(Connectivity.Current)
 			.AddSingleton<ISettingsService, SettingsService>()
+			.AddSingleton<IActiveEloSet, ActiveEloSet>()
 			.AddSingleton<IDataService, JsonDataService>()
-			.AddSingleton<IRepository>(new Repository(inMemory: false))
+			.AddSingleton<IRepository>(new InMemoryRepository())
 			.AddLogging(lb => lb.AddSerilog());
 
 		// Competition pages removed; Teams + Settings still registered below.
