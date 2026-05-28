@@ -9,9 +9,9 @@
     <!-- RootNamespace and AssemblyName are pinned to "FantasyFootball" deliberately, not the
          project filename (FantasyFootball.Core). Two things depend on this:
          (1) Source files declare `namespace FantasyFootball.X;`, not `.Core.X`.
-         (2) The embedded-resource manifest name `FantasyFootball.Resources.Data.fifa_elo_new.csv`
-             — referenced literally by CsvDataService.cs — is derived from RootNamespace at
-             build time. Renaming the namespace here without updating that lookup breaks
+         (2) Embedded-resource manifest names like `FantasyFootball.Resources.Data.countries.json`
+             — referenced literally by JsonDataService.cs — are derived from RootNamespace at
+             build time. Renaming the namespace here without updating those lookups breaks
              team-data loading at runtime with a silent FileNotFoundException. -->
     <RootNamespace>FantasyFootball</RootNamespace>
     <AssemblyName>FantasyFootball</AssemblyName>
@@ -20,13 +20,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Data\fifa_elo_new.csv" />
+    <None Remove="Resources\Data\countries.json" />
+    <None Remove="Resources\Data\elo-current.json" />
     <None Remove="Resources\Data\venues.json" />
     <None Remove="Definitions\*.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Data\fifa_elo_new.csv" />
+    <EmbeddedResource Include="Resources\Data\countries.json" />
+    <EmbeddedResource Include="Resources\Data\elo-current.json" />
     <EmbeddedResource Include="Resources\Data\venues.json" />
     <!-- Competition definition JSON files. Manifest names are derived from
          RootNamespace (FantasyFootball), so `Definitions/wm-2022.json` is
@@ -37,7 +39,6 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Serilog" Version="4.3.0" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />

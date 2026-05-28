@@ -17,6 +17,6 @@ public class BaseTest
 		Output = output;
 		Log.Logger = ISettingsService.StandardLoggerConfig.MinimumLevel.Is(level).WriteTo.XUnit3TestOutput().CreateLogger();
 		Repo = new Repository(inMemory: true);
-		DataService = new CsvDataService(Repo, new CultureInfo("de"));
+		DataService = new JsonDataService(Repo, new CultureInfo("de"));
 	}
 }
