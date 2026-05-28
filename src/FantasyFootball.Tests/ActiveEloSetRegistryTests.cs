@@ -8,7 +8,22 @@ public class ActiveEloSetRegistryTests(ITestOutputHelper output) : BaseTest(outp
 		ActiveEloSet.Current.Should().NotBeNull();
 		ActiveEloSet.Current!.Name.Should().Be("Current");
 		ActiveEloSet.Current.Snapshot.Should().NotBeEmpty();
-		Repo.GetAll<EloSet>().Should().ContainSingle(s => s.Name == "Current");
+		Repo.GetAll<EloSet>().Should().Contain(s => s.Name == "Current");
+	}
+
+	[Fact]
+	public void JsonDataService_Init_SeedsHistoricalEloSets()
+	{
+		var sets = Repo.GetAll<EloSet>();
+
+		// 25 historical (WC 1962-2022, EC 1980-2024) + 1 Current.
+		sets.Should().HaveCount(26);
+		sets.Select(s => s.Name).Should().Contain(["Current", "1986", "2018", "2024"]);
+
+		var wc2018 = sets.Single(s => s.Name == "2018");
+		wc2018.Date.Should().Be(new DateOnly(2018, 6, 14));
+		wc2018.Snapshot["GER"].Should().BeGreaterThan(1500, "Germany was a top side heading into WC 2018");
+		wc2018.Snapshot["BRA"].Should().BeGreaterThan(1500);
 	}
 
 	[Fact]

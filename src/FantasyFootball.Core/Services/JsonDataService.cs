@@ -7,6 +7,7 @@ public class JsonDataService : IDataService
 {
 	public const string CountriesFile = "FantasyFootball.Resources.Data.countries.json";
 	public const string EloCurrentFile = "FantasyFootball.Resources.Data.elo-current.json";
+	public const string HistoricalEloSetPrefix = "FantasyFootball.Resources.Data.EloSets.";
 
 	public const string CurrentEloSetName = "Current";
 
@@ -65,6 +66,8 @@ public class JsonDataService : IDataService
 		_repo.Save(currentEloSet);
 		_activeEloSet.SetCurrent(currentEloSet);
 
+		_repo.SaveAll(LoadHistoricalEloSets());
+
 		_repo.SaveAll(CreateTeams());
 
 		SelectedCompetitionType = CompetitionType.WM;
@@ -96,6 +99,22 @@ public class JsonDataService : IDataService
 		// Seed-time entity — let the repo assign an Id on first save.
 		eloSet.Id = 0;
 		return eloSet;
+	}
+
+	static List<EloSet> LoadHistoricalEloSets()
+	{
+		var asm = Assembly.GetExecutingAssembly();
+		return asm.GetManifestResourceNames()
+			.Where(n => n.StartsWith(HistoricalEloSetPrefix, StringComparison.Ordinal) && n.EndsWith(".json", StringComparison.Ordinal))
+			.Select(n =>
+			{
+				using var stream = asm.GetManifestResourceStream(n)!;
+				var set = JsonSerializer.Deserialize<EloSet>(stream, JsonOpts)
+					?? throw new InvalidOperationException($"{n} deserialized to null");
+				set.Id = 0;
+				return set;
+			})
+			.ToList();
 	}
 
 	sealed class CountrySeed
