@@ -7,7 +7,6 @@ public class Team : NamedUniqueId
 	public TeamType Type { get; init; }
 	[JsonIgnore] public bool IsNationalTeam => Type is TeamType.NATIONAL_MEN or TeamType.NATIONAL_WOMEN;
 	public virtual string ShortName { get; init; }
-	public int Elo { get; set; }
 	[JsonIgnore] public virtual string Logo => IconStrings.GetTeamLogo(this);
 
 	public int CountryId { get; set; }

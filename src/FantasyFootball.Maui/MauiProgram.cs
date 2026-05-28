@@ -23,16 +23,10 @@ public static class MauiProgram
 			.AddSingleton<IRepository>(new InMemoryRepository())
 			.AddLogging(lb => lb.AddSerilog());
 
-		// Competition pages removed; Teams + Settings still registered below.
+		// Shell is Settings-only pending the BlazorWebView rewrite.
 		builder.Services
 			.AddSingleton<SettingsPage>()
-			.AddSingleton<SettingsViewModel>()
-
-			.AddSingleton<TeamsPage>()
-			.AddSingleton<TeamsViewModel>()
-
-			.AddTransient<TeamDetailPage>()
-			.AddTransient<TeamViewModel>();
+			.AddSingleton<SettingsViewModel>();
 
 		return builder.Build();
 	}

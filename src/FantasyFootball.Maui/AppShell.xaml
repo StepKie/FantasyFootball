@@ -6,13 +6,9 @@
   xmlns:views="clr-namespace:FantasyFootball.Views"
   xmlns:translate="clr-namespace:FantasyFootball.Markup">
 
-  <!-- MAUI port pending: the competition/games/standings surface was removed during the
-       graph-model → flat-model cleanup. Teams + Settings remain functional. A future PR
-       will rebuild the competition tabs against the new model. -->
+  <!-- MAUI shell is Settings-only pending the BlazorWebView rewrite. Teams/Competitions
+       UI lives in the Blazor host (FantasyFootball.Web). -->
   <TabBar>
-    <Tab Title="{translate:Translate Stats}" Icon="{x:StaticResource StatsIcon}" Route="StatsTab">
-      <ShellContent Title="{translate:Translate Teams}" ContentTemplate="{DataTemplate views:TeamsPage}" Route="TeamsPage" />
-    </Tab>
     <ShellContent Title="{translate:Translate Settings}" ContentTemplate="{DataTemplate views:SettingsPage}" Icon="{x:StaticResource SettingsIcon}" />
   </TabBar>
 </Shell>

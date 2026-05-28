@@ -3,6 +3,7 @@
 @using FantasyFootball.Repositories
 @using FantasyFootball.Services
 @inject IDataService DataService
+@inject IActiveEloSet ActiveEloSet
 @inject ICompetitionRepository Repo
 @inject IVenueRegistry VenueRegistry
 
@@ -96,9 +97,9 @@
       <div class="game-details-row">
         <span class="game-details-label">Elo</span>
         <span class="game-details-value game-details-value-pair">
-          <span>@_homeTeam.Elo</span>
+          <span>@ActiveEloSet.EloOf(_homeTeam)</span>
           <span class="game-details-sep">—</span>
-          <span>@_awayTeam.Elo</span>
+          <span>@ActiveEloSet.EloOf(_awayTeam)</span>
         </span>
       </div>
       <div class="game-details-row">
@@ -194,7 +195,7 @@
       var fetchAwayId = _awayTeam!.ShortName;
       _lastFetchedHomeId = fetchHomeId;
       _lastFetchedAwayId = fetchAwayId;
-      _prob = MatchProbability.Predict(_homeTeam.Elo, _awayTeam.Elo);
+      _prob = MatchProbability.Predict(ActiveEloSet.EloOf(_homeTeam), ActiveEloSet.EloOf(_awayTeam));
       // Force a real yield so the popover renders W/D/L + xG immediately while the O(N comps) H2H walk runs. Capture team ids into locals above — they're stable across the suspension; _homeTeam / _awayTeam could be reset by a concurrent OnParametersSetAsync.
       await Task.Yield();
       _h2h = await HeadToHeadLookup.AcrossAsync(Repo, fetchHomeId, fetchAwayId);

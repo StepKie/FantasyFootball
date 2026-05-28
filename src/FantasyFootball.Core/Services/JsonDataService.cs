@@ -23,7 +23,6 @@ public class JsonDataService : IDataService
 		_activeEloSet = activeEloSet;
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
 		Initialize();
-		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => _teamCache = null);
 	}
 
 	public void Initialize()
@@ -40,7 +39,7 @@ public class JsonDataService : IDataService
 
 	public List<Team> AllTeams => _teamCache ??= ReloadTeams();
 
-	List<Country> CreateCountries(EloSet currentEloSet)
+	List<Country> CreateCountries()
 	{
 		var seeds = LoadCountrySeeds();
 		var confederations = _repo.GetAll<Confederation>();
@@ -50,12 +49,11 @@ public class JsonDataService : IDataService
 			Code2 = s.Code2,
 			Code3 = s.Code3,
 			Name = s.Name.GetValueOrDefault(_languageId, s.Name["en"]),
-			Elo = currentEloSet.Snapshot.GetValueOrDefault(s.Code3),
 			Confederation = confederations.FirstOrDefault(c => c.Name == s.Confederation) ?? Confederation.UNKNOWN,
 		}).ToList();
 	}
 
-	public List<Team> CreateTeams() => CreateCountries(LoadCurrentEloSet()).Select(country => country.NationalTeam).ToList();
+	public List<Team> CreateTeams() => CreateCountries().Select(country => country.NationalTeam).ToList();
 
 	public void Reset()
 	{
@@ -67,7 +65,7 @@ public class JsonDataService : IDataService
 		_repo.Save(currentEloSet);
 		_activeEloSet.SetCurrent(currentEloSet);
 
-		_repo.SaveAll(CreateCountries(currentEloSet).Select(c => c.NationalTeam));
+		_repo.SaveAll(CreateTeams());
 
 		SelectedCompetitionType = CompetitionType.WM;
 

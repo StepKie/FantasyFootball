@@ -1,9 +1,11 @@
 @page "/competitions/setup"
 @using FantasyFootball.Data
 @using FantasyFootball.Models
+@using FantasyFootball.Services
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
 @inject CompetitionSetupViewModel ViewModel
+@inject IActiveEloSet ActiveEloSet
 @inject NavigationManager Nav
 @implements IDisposable
 
@@ -163,7 +165,7 @@
                 <FlagIcon Team="team" Size="28" />
                 <MudText Typo="Typo.body2">@team.Name</MudText>
                 <MudSpacer />
-                <MudText Typo="Typo.caption" Color="Color.Secondary">@team.Elo</MudText>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">@ActiveEloSet.EloOf(team)</MudText>
               </div>
             }
           </div>

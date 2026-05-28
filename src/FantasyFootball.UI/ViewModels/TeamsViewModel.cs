@@ -7,28 +7,19 @@ using static FantasyFootball.Messaging;
 
 namespace FantasyFootball.UI.ViewModels;
 
-/// <summary>
-/// Teams page view-model. Lives in the shared UI library so the same instance
-/// works in both Blazor WASM and the future MAUI BlazorWebView host.
-///
-/// Differences from the MAUI VM (FantasyFootball.ViewModels.TeamsViewModel):
-/// - No Shell navigation; the .razor page handles row-click navigation via NavigationManager.
-/// - No SelectionMode / QueryProperty plumbing; that flow was MAUI-Shell specific and will
-///   be replaced by a dialog/route on the web side as the CompetitionSetup port lands.
-/// - +new-team is deliberately omitted: the MAUI version is [Obsolete] and shows an
-///   "under construction" dialog. Will land as a MudDialog when the feature is built.
-/// </summary>
 public partial class TeamsViewModel : ObservableObject
 {
 	readonly IDataService _dataService;
+	readonly IActiveEloSet _activeEloSet;
 
 	List<TeamListItem> _allTeams = [];
 
-	public TeamsViewModel(IDataService dataService)
+	public TeamsViewModel(IDataService dataService, IActiveEloSet activeEloSet)
 	{
 		_dataService = dataService;
+		_activeEloSet = activeEloSet;
 
-		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => LoadTeams());
+		MessageBus.Register<EloSetChangedMessage>(this, (_, _) => LoadTeams());
 		MessageBus.Register<DataResetMessage>(this, (_, _) => LoadTeams());
 
 		Confederations = Confederation.ALL.Select(c => c.Name).Prepend(AllLabel).ToList();
@@ -58,8 +49,8 @@ public partial class TeamsViewModel : ObservableObject
 		try
 		{
 			_allTeams = _dataService.AllTeams
-				.OrderByDescending(t => t.Elo)
-				.Select((t, i) => new TeamListItem(i + 1, t))
+				.OrderByDescending(t => _activeEloSet.EloOf(t))
+				.Select((t, i) => new TeamListItem(i + 1, t, _activeEloSet.EloOf(t)))
 				.ToList();
 			UpdateFilteredTeams();
 		}
@@ -83,7 +74,7 @@ public partial class TeamsViewModel : ObservableObject
 
 /// <summary>
 /// Lightweight projection for the Teams list. Rank is computed once at load time
-/// from the global Elo ordering; the full TeamViewModel (with editing/save logic)
-/// will land with the TeamDetail page port.
+/// from the active EloSet's ordering; Elo is snapshotted at load time too so the
+/// table row doesn't need to consult IActiveEloSet on every render.
 /// </summary>
-public record TeamListItem(int Rank, Team Team);
+public record TeamListItem(int Rank, Team Team, int Elo);

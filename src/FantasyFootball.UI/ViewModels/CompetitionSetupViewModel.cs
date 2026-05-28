@@ -261,7 +261,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	}
 
 	// Placeholder Team for IDs not in the local registry (e.g. synthetic test IDs from an extended-pool draw).
-	static Team Placeholder(string shortName) => new() { Name = shortName, ShortName = shortName, Elo = 0 };
+	static Team Placeholder(string shortName) => new() { Name = shortName, ShortName = shortName };
 
 	public sealed record LineupGroup(string Name, IReadOnlyList<Team> Teams);
 }
