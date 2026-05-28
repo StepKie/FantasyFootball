@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Models;
+using FantasyFootball.Repositories;
 using FantasyFootball.Services;
 using static FantasyFootball.Messaging;
 
@@ -11,26 +12,38 @@ public partial class TeamsViewModel : ObservableObject
 {
 	readonly IDataService _dataService;
 	readonly IActiveEloSet _activeEloSet;
+	readonly IRepository _repo;
 
 	List<TeamListItem> _allTeams = [];
+	bool _suppressActiveChange;
 
-	public TeamsViewModel(IDataService dataService, IActiveEloSet activeEloSet)
+	public TeamsViewModel(IDataService dataService, IActiveEloSet activeEloSet, IRepository repo)
 	{
 		_dataService = dataService;
 		_activeEloSet = activeEloSet;
+		_repo = repo;
 
-		MessageBus.Register<EloSetChangedMessage>(this, (_, _) => LoadTeams());
-		MessageBus.Register<DataResetMessage>(this, (_, _) => LoadTeams());
+		MessageBus.Register<EloSetChangedMessage>(this, (_, _) =>
+		{
+			SyncSelectedFromActive();
+			LoadTeams();
+		});
+		MessageBus.Register<DataResetMessage>(this, (_, _) =>
+		{
+			LoadEloSets();
+			SyncSelectedFromActive();
+			LoadTeams();
+		});
 
 		Confederations = Confederation.ALL.Select(c => c.Name).Prepend(AllLabel).ToList();
 		SelectedConfederation = AllLabel;
+		LoadEloSets();
+		SyncSelectedFromActive();
 		LoadTeams();
 	}
 
-	// "All" sentinel used to show every confederation. AppResources.All exists but the
-	// resource manager isn't reliably initialized in Blazor WASM without extra wiring;
-	// a fixed English string is fine here until the i18n follow-up lands.
 	public const string AllLabel = "All";
+	public const string CurrentName = "Current";
 
 	public IList<string> Confederations { get; }
 
@@ -38,10 +51,74 @@ public partial class TeamsViewModel : ObservableObject
 	public partial string SelectedConfederation { get; set; }
 
 	[ObservableProperty]
+	public partial IReadOnlyList<string> AvailableEloSetNames { get; set; } = [];
+
+	[ObservableProperty]
+	public partial string? SelectedEloSetName { get; set; }
+
+	[ObservableProperty]
 	public partial ObservableCollection<TeamListItem> TeamsInSelectedConfederation { get; set; } = [];
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
+
+	public bool CanDeleteSelectedSet => SelectedEloSetName is not null and not CurrentName;
+
+	void LoadEloSets()
+	{
+		var all = _repo.GetAll<EloSet>();
+		AvailableEloSetNames = all
+			.Select(s => s.Name)
+			.OrderBy(name => name == CurrentName ? 0 : 1)
+			.ThenBy(name => name, StringComparer.Ordinal)
+			.ToList();
+	}
+
+	void SyncSelectedFromActive()
+	{
+		_suppressActiveChange = true;
+		try { SelectedEloSetName = _activeEloSet.Current?.Name; }
+		finally { _suppressActiveChange = false; }
+		OnPropertyChanged(nameof(CanDeleteSelectedSet));
+	}
+
+	partial void OnSelectedEloSetNameChanged(string? value)
+	{
+		if (_suppressActiveChange) { return; }
+		if (string.IsNullOrEmpty(value)) { return; }
+		if (_activeEloSet.Current?.Name == value) { return; }
+		var target = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == value);
+		if (target is not null) { _activeEloSet.SetCurrent(target); }
+	}
+
+	/// <summary>Clones the active set's snapshot into a new EloSet with <paramref name="name"/> and makes it active.</summary>
+	public void SaveAs(string name)
+	{
+		var source = _activeEloSet.Current ?? throw new InvalidOperationException("No active EloSet to save.");
+		var copy = new EloSet
+		{
+			Name = name,
+			Date = DateOnly.FromDateTime(DateTime.UtcNow),
+			Snapshot = new Dictionary<string, int>(source.Snapshot),
+		};
+		_repo.Save(copy);
+		LoadEloSets();
+		_activeEloSet.SetCurrent(copy);
+	}
+
+	/// <summary>Deletes the active set (unless it's the read-only "Current") and switches the active set back to "Current".</summary>
+	public void DeleteSelected()
+	{
+		if (!CanDeleteSelectedSet) { return; }
+		var name = SelectedEloSetName!;
+		var target = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == name);
+		if (target is null) { return; }
+		_repo.Delete(target);
+
+		var fallback = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == CurrentName);
+		if (fallback is not null) { _activeEloSet.SetCurrent(fallback); }
+		LoadEloSets();
+	}
 
 	void LoadTeams()
 	{

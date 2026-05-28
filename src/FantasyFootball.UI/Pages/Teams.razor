@@ -1,12 +1,49 @@
 @page "/teams"
+@using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
 @inject TeamsViewModel ViewModel
+@inject IDialogService DialogService
 @inject NavigationManager Nav
 @implements IDisposable
 
 <PageTitle>Teams — Fantasy Football</PageTitle>
 
 <MudStack Spacing="3">
+  <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+    <MudSelect T="string"
+               Label="Elo set"
+               Value="ViewModel.SelectedEloSetName"
+               ValueChanged="@(v => ViewModel.SelectedEloSetName = v)"
+               Class="elo-set-picker">
+      @foreach (var name in ViewModel.AvailableEloSetNames)
+      {
+        <MudSelectItem Value="@name">@name</MudSelectItem>
+      }
+    </MudSelect>
+    <MudIconButton Icon="@Icons.Material.Filled.SaveAs"
+                   Size="Size.Small"
+                   OnClick="OpenSaveAs"
+                   title="Save the current snapshot under a new name" />
+    @if (_confirmingDelete)
+    {
+      <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small"
+                     OnClick="@(() => _confirmingDelete = false)"
+                     title="Cancel" />
+      <MudIconButton Icon="@Icons.Material.Filled.DeleteForever" Size="Size.Small"
+                     Color="Color.Error" Variant="Variant.Filled"
+                     OnClick="ConfirmDelete"
+                     title="@($"Confirm delete \"{ViewModel.SelectedEloSetName}\"")" />
+    }
+    else
+    {
+      <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small"
+                     Color="Color.Default"
+                     Disabled="@(!ViewModel.CanDeleteSelectedSet)"
+                     OnClick="@(() => _confirmingDelete = true)"
+                     title="Delete this Elo set" />
+    }
+  </MudStack>
+
   <MudSelect T="string"
              Label="Confederation"
              Value="ViewModel.SelectedConfederation"
@@ -25,10 +62,6 @@
             Dense="true"
             Breakpoint="Breakpoint.None"
             OnRowClick="OnRowClick">
-    @* Virtualize="true" was tried but collapses the empty-header flag column under
-       MudTable's virtualized layout. Pre-warming IDataService already takes most
-       of the perceived wait off this page; 200 rows render fine in one go. Revisit
-       via MudDataGrid if a much larger list lands later. *@
     <HeaderContent>
       <MudTh Style="width: 3rem;">#</MudTh>
       <MudTh Style="width: 2.5rem;"></MudTh>
@@ -42,20 +75,43 @@
       <MudTd Style="text-align: right;"><span class="elo-muted">@context.Elo</span></MudTd>
     </RowTemplate>
   </MudTable>
-
-  @* +new-team: deliberately omitted — MAUI version is [Obsolete] and shows
-     "under construction". Lands as a MudDialog when the feature is built. *@
 </MudStack>
 
 @code {
+  bool _confirmingDelete;
+
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnViewModelChanged;
 
-  void OnViewModelChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+  void OnViewModelChanged(object? sender, EventArgs e)
+  {
+    // Selected set changed (e.g. via the dropdown or after a save) — drop any pending delete-confirm state so the new selection's button reflects its own deletability.
+    _confirmingDelete = false;
+    InvokeAsync(StateHasChanged);
+  }
 
   void OnRowClick(TableRowClickEventArgs<TeamListItem> args)
   {
-    // /teams/{id} lands with the TeamDetail page port (#7). 404 expected for now.
     Nav.NavigateTo($"teams/{args.Item!.Team.Id}");
+  }
+
+  async Task OpenSaveAs()
+  {
+    var parameters = new DialogParameters<SaveEloSetDialog>
+    {
+      { x => x.ExistingNames, ViewModel.AvailableEloSetNames },
+    };
+    var dialog = await DialogService.ShowAsync<SaveEloSetDialog>("Save Elo set as", parameters);
+    var result = await dialog.Result;
+    if (result is { Canceled: false, Data: string name })
+    {
+      ViewModel.SaveAs(name);
+    }
+  }
+
+  void ConfirmDelete()
+  {
+    ViewModel.DeleteSelected();
+    _confirmingDelete = false;
   }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
