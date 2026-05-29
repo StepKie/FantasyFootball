@@ -1,0 +1,1964 @@
+[
+  {
+    "code3": "AFG",
+    "code2": "AF",
+    "name": {
+      "en": "Afghanistan",
+      "de": "Afghanistan"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "AIA",
+    "code2": "AI",
+    "name": {
+      "en": "Anguilla",
+      "de": "Anguilla"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "ALB",
+    "code2": "AL",
+    "name": {
+      "en": "Albania",
+      "de": "Albanien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "ALG",
+    "code2": "DZ",
+    "name": {
+      "en": "Algeria",
+      "de": "Algerien"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "AND",
+    "code2": "AD",
+    "name": {
+      "en": "Andorra",
+      "de": "Andorra"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "ANG",
+    "code2": "AO",
+    "name": {
+      "en": "Angola",
+      "de": "Angola"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "ARG",
+    "code2": "AR",
+    "name": {
+      "en": "Argentina",
+      "de": "Argentinien"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "ARM",
+    "code2": "AM",
+    "name": {
+      "en": "Armenia",
+      "de": "Armenien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "ARU",
+    "code2": "AW",
+    "name": {
+      "en": "Aruba",
+      "de": "Aruba"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "ASA",
+    "code2": "AS",
+    "name": {
+      "en": "American Samoa",
+      "de": "Amerikanischen Samoa-Inseln"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "ATG",
+    "code2": "AG",
+    "name": {
+      "en": "Antigua and Barbuda",
+      "de": "Antigua und Barbuda"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "AUS",
+    "code2": "AU",
+    "name": {
+      "en": "Australia",
+      "de": "Australien"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "AUT",
+    "code2": "AT",
+    "name": {
+      "en": "Austria",
+      "de": "Österreich"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "AZE",
+    "code2": "AZ",
+    "name": {
+      "en": "Azerbaijan",
+      "de": "Aserbaidschan"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "BAH",
+    "code2": "BS",
+    "name": {
+      "en": "Bahamas",
+      "de": "Bahamas"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "BAN",
+    "code2": "BD",
+    "name": {
+      "en": "Bangladesh",
+      "de": "Bangladesch"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "BDI",
+    "code2": "BI",
+    "name": {
+      "en": "Burundi",
+      "de": "Burundi"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "BEL",
+    "code2": "BE",
+    "name": {
+      "en": "Belgium",
+      "de": "Belgien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "BEN",
+    "code2": "BJ",
+    "name": {
+      "en": "Benin",
+      "de": "Benin"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "BER",
+    "code2": "BM",
+    "name": {
+      "en": "Bermuda",
+      "de": "Bermuda"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "BFA",
+    "code2": "BF",
+    "name": {
+      "en": "Burkina Faso",
+      "de": "Burkina Faso"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "BHR",
+    "code2": "BH",
+    "name": {
+      "en": "Bahrain",
+      "de": "Bahrein"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "BHU",
+    "code2": "BT",
+    "name": {
+      "en": "Bhutan",
+      "de": "Bhutan"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "BIH",
+    "code2": "BA",
+    "name": {
+      "en": "Bosnia and Herzegovina",
+      "de": "Bosnien und Herzegowina"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "BLR",
+    "code2": "BY",
+    "name": {
+      "en": "Belarus",
+      "de": "Weißrussland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "BLZ",
+    "code2": "BZ",
+    "name": {
+      "en": "Belize",
+      "de": "Belize"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "BOL",
+    "code2": "BO",
+    "name": {
+      "en": "Bolivia",
+      "de": "Bolivien"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "BOT",
+    "code2": "BW",
+    "name": {
+      "en": "Botswana",
+      "de": "Botswana"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "BRA",
+    "code2": "BR",
+    "name": {
+      "en": "Brazil",
+      "de": "Brasilien"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "BRB",
+    "code2": "BB",
+    "name": {
+      "en": "Barbados",
+      "de": "Barbados"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "BRU",
+    "code2": "BN",
+    "name": {
+      "en": "Brunei",
+      "de": "Brunei"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "BUL",
+    "code2": "BG",
+    "name": {
+      "en": "Bulgaria",
+      "de": "Bulgarien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "CAM",
+    "code2": "KH",
+    "name": {
+      "en": "Cambodia",
+      "de": "Kambodscha"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "CAN",
+    "code2": "CA",
+    "name": {
+      "en": "Canada",
+      "de": "Kanada"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "CAY",
+    "code2": "KY",
+    "name": {
+      "en": "Cayman Islands",
+      "de": "Cayman Inseln"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "CGO",
+    "code2": "CG",
+    "name": {
+      "en": "Congo",
+      "de": "Kongo"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "CHA",
+    "code2": "TD",
+    "name": {
+      "en": "Chad",
+      "de": "Tschad"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "CHI",
+    "code2": "CL",
+    "name": {
+      "en": "Chile",
+      "de": "Chile"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "CHN",
+    "code2": "CN",
+    "name": {
+      "en": "China",
+      "de": "China"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "CIV",
+    "code2": "CI",
+    "name": {
+      "en": "Cote d'Ivoire",
+      "de": "Cote d'Ivoire"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "CMR",
+    "code2": "CM",
+    "name": {
+      "en": "Cameroon",
+      "de": "Kamerun"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "COD",
+    "code2": "CD",
+    "name": {
+      "en": "Congo DR",
+      "de": "Kongo DR"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "COK",
+    "code2": "CK",
+    "name": {
+      "en": "Cook Islands",
+      "de": "Cookinseln"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "COL",
+    "code2": "CO",
+    "name": {
+      "en": "Colombia",
+      "de": "Kolumbien"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "COM",
+    "code2": "KM",
+    "name": {
+      "en": "Comoros",
+      "de": "Komoren"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "CPV",
+    "code2": "CV",
+    "name": {
+      "en": "Cape Verde Islands",
+      "de": "Kapverden"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "CRC",
+    "code2": "CR",
+    "name": {
+      "en": "Costa Rica",
+      "de": "Costa Rica"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "CRO",
+    "code2": "HR",
+    "name": {
+      "en": "Croatia",
+      "de": "Kroatien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "CTA",
+    "code2": "CF",
+    "name": {
+      "en": "Central African Republic",
+      "de": "Zentralafrikanische Republik"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "CUB",
+    "code2": "CU",
+    "name": {
+      "en": "Cuba",
+      "de": "Kuba"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "CUW",
+    "code2": "CW",
+    "name": {
+      "en": "Curacao",
+      "de": "Curacao"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "CYP",
+    "code2": "CY",
+    "name": {
+      "en": "Cyprus",
+      "de": "Zypern"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "CZE",
+    "code2": "CZ",
+    "name": {
+      "en": "Czech Republic",
+      "de": "Tschechien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "DEN",
+    "code2": "DK",
+    "name": {
+      "en": "Denmark",
+      "de": "Dänemark"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "DJI",
+    "code2": "DJ",
+    "name": {
+      "en": "Djibouti",
+      "de": "Dschibuti"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "DMA",
+    "code2": "DM",
+    "name": {
+      "en": "Dominica",
+      "de": "Dominica"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "DOM",
+    "code2": "DO",
+    "name": {
+      "en": "Dominican Republic",
+      "de": "Dominikanische Republik"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "ECU",
+    "code2": "EC",
+    "name": {
+      "en": "Ecuador",
+      "de": "Ecuador"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "EGY",
+    "code2": "EG",
+    "name": {
+      "en": "Egypt",
+      "de": "Ägypten"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "ENG",
+    "code2": "GB-ENG",
+    "name": {
+      "en": "England",
+      "de": "England"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "EQG",
+    "code2": "GQ",
+    "name": {
+      "en": "Equatorial Guinea",
+      "de": "Äquatorialguinea"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "ERI",
+    "code2": "ER",
+    "name": {
+      "en": "Eritrea",
+      "de": "Eritrea"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "ESP",
+    "code2": "ES",
+    "name": {
+      "en": "Spain",
+      "de": "Spanien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "EST",
+    "code2": "EE",
+    "name": {
+      "en": "Estonia",
+      "de": "Estland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "ETH",
+    "code2": "ET",
+    "name": {
+      "en": "Ethiopia",
+      "de": "Äthiopien"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "FIJ",
+    "code2": "FJ",
+    "name": {
+      "en": "Fiji",
+      "de": "Fidschi"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "FIN",
+    "code2": "FI",
+    "name": {
+      "en": "Finland",
+      "de": "Finnland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "FRA",
+    "code2": "FR",
+    "name": {
+      "en": "France",
+      "de": "Frankreich"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "FRG",
+    "code2": "DE",
+    "name": {
+      "en": "West Germany",
+      "de": "Westdeutschland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "FRO",
+    "code2": "FO",
+    "name": {
+      "en": "Faroe Islands",
+      "de": "Färöer Inseln"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "GAB",
+    "code2": "GA",
+    "name": {
+      "en": "Gabon",
+      "de": "Gabun"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "GAM",
+    "code2": "GM",
+    "name": {
+      "en": "Gambia",
+      "de": "Gambia"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "GDR",
+    "code2": "DD",
+    "name": {
+      "en": "East Germany",
+      "de": "DDR"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "GEO",
+    "code2": "GE",
+    "name": {
+      "en": "Georgia",
+      "de": "Georgia"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "GER",
+    "code2": "DE",
+    "name": {
+      "en": "Germany",
+      "de": "Deutschland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "GHA",
+    "code2": "GH",
+    "name": {
+      "en": "Ghana",
+      "de": "Ghana"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "GIB",
+    "code2": "GI",
+    "name": {
+      "en": "Gibraltar",
+      "de": "Gibraltar"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "GNB",
+    "code2": "GW",
+    "name": {
+      "en": "Guinea-Bissau",
+      "de": "Guinea-Bissau"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "GRE",
+    "code2": "GR",
+    "name": {
+      "en": "Greece",
+      "de": "Griechenland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "GRN",
+    "code2": "GD",
+    "name": {
+      "en": "Grenada",
+      "de": "Grenada"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "GUA",
+    "code2": "GT",
+    "name": {
+      "en": "Guatemala",
+      "de": "Guatemala"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "GUI",
+    "code2": "GN",
+    "name": {
+      "en": "Guinea",
+      "de": "Guinea"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "GUM",
+    "code2": "GU",
+    "name": {
+      "en": "Guam",
+      "de": "Guam"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "GUY",
+    "code2": "GY",
+    "name": {
+      "en": "Guyana",
+      "de": "Guyana"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "HAI",
+    "code2": "HT",
+    "name": {
+      "en": "Haiti",
+      "de": "Haiti"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "HKG",
+    "code2": "HK",
+    "name": {
+      "en": "Hong Kong",
+      "de": "Hongkong"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "HON",
+    "code2": "HN",
+    "name": {
+      "en": "Honduras",
+      "de": "Honduras"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "HUN",
+    "code2": "HU",
+    "name": {
+      "en": "Hungary",
+      "de": "Ungarn"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "IDN",
+    "code2": "ID",
+    "name": {
+      "en": "Indonesia",
+      "de": "Indonesien"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "IND",
+    "code2": "IN",
+    "name": {
+      "en": "India",
+      "de": "Indien"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "IRL",
+    "code2": "IE",
+    "name": {
+      "en": "Ireland",
+      "de": "Irland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "IRN",
+    "code2": "IR",
+    "name": {
+      "en": "Iran",
+      "de": "IR Iran"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "IRQ",
+    "code2": "IQ",
+    "name": {
+      "en": "Iraq",
+      "de": "Irak"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "ISL",
+    "code2": "IS",
+    "name": {
+      "en": "Iceland",
+      "de": "Island"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "ISR",
+    "code2": "IL",
+    "name": {
+      "en": "Israel",
+      "de": "Israel"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "ITA",
+    "code2": "IT",
+    "name": {
+      "en": "Italy",
+      "de": "Italien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "JAM",
+    "code2": "JM",
+    "name": {
+      "en": "Jamaica",
+      "de": "Jamaika"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "JOR",
+    "code2": "JO",
+    "name": {
+      "en": "Jordan",
+      "de": "Jordanien"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "JPN",
+    "code2": "JP",
+    "name": {
+      "en": "Japan",
+      "de": "Japan"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "KAZ",
+    "code2": "KZ",
+    "name": {
+      "en": "Kazakhstan",
+      "de": "Kasachstan"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "KEN",
+    "code2": "KE",
+    "name": {
+      "en": "Kenya",
+      "de": "Kenia"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "KGZ",
+    "code2": "KG",
+    "name": {
+      "en": "Kyrgyzstan",
+      "de": "Kirgisische Republik"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "KOR",
+    "code2": "KR",
+    "name": {
+      "en": "South Korea",
+      "de": "Südkorea"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "KSA",
+    "code2": "SA",
+    "name": {
+      "en": "Saudi Arabia",
+      "de": "Saudi-Arabien"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "KUW",
+    "code2": "KW",
+    "name": {
+      "en": "Kuwait",
+      "de": "Kuwait"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "KVX",
+    "code2": "XK",
+    "name": {
+      "en": "Kosovo",
+      "de": "Kosovo"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "LAO",
+    "code2": "LA",
+    "name": {
+      "en": "Laos",
+      "de": "Laos"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "LBR",
+    "code2": "LR",
+    "name": {
+      "en": "Liberia",
+      "de": "Liberia"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "LBY",
+    "code2": "LY",
+    "name": {
+      "en": "Libya",
+      "de": "Libyen"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "LCA",
+    "code2": "LC",
+    "name": {
+      "en": "St Lucia",
+      "de": "St. Lucia"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "LES",
+    "code2": "LS",
+    "name": {
+      "en": "Lesotho",
+      "de": "Lesotho"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "LIB",
+    "code2": "LB",
+    "name": {
+      "en": "Lebanon",
+      "de": "Libanon"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "LIE",
+    "code2": "LI",
+    "name": {
+      "en": "Liechtenstein",
+      "de": "Liechtenstein"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "LTU",
+    "code2": "LT",
+    "name": {
+      "en": "Lithuania",
+      "de": "Litauen"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "LUX",
+    "code2": "LU",
+    "name": {
+      "en": "Luxembourg",
+      "de": "Luxemburg"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "LVA",
+    "code2": "LV",
+    "name": {
+      "en": "Latvia",
+      "de": "Lettland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "MAC",
+    "code2": "MO",
+    "name": {
+      "en": "Macau",
+      "de": "Macau"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "MAD",
+    "code2": "MG",
+    "name": {
+      "en": "Madagascar",
+      "de": "Madagaskar"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "MAR",
+    "code2": "MA",
+    "name": {
+      "en": "Morocco",
+      "de": "Marokko"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "MAS",
+    "code2": "MY",
+    "name": {
+      "en": "Malaysia",
+      "de": "Malaysia"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "MDA",
+    "code2": "MD",
+    "name": {
+      "en": "Moldova",
+      "de": "Moldawien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "MDV",
+    "code2": "MV",
+    "name": {
+      "en": "Maldives",
+      "de": "Malediven"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "MEX",
+    "code2": "MX",
+    "name": {
+      "en": "Mexico",
+      "de": "Mexiko"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "MKD",
+    "code2": "MK",
+    "name": {
+      "en": "FYR Macedonia",
+      "de": "EJR Mazedonien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "MLI",
+    "code2": "ML",
+    "name": {
+      "en": "Mali",
+      "de": "Mali"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "MLT",
+    "code2": "MT",
+    "name": {
+      "en": "Malta",
+      "de": "Malta"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "MNE",
+    "code2": "ME",
+    "name": {
+      "en": "Montenegro",
+      "de": "Montenegro"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "MNG",
+    "code2": "MN",
+    "name": {
+      "en": "Mongolia",
+      "de": "Mongolei"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "MOZ",
+    "code2": "MZ",
+    "name": {
+      "en": "Mozambique",
+      "de": "Mosambik"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "MRI",
+    "code2": "MU",
+    "name": {
+      "en": "Mauritius",
+      "de": "Mauritius"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "MSR",
+    "code2": "MS",
+    "name": {
+      "en": "Montserrat",
+      "de": "Montserrat"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "MTN",
+    "code2": "MR",
+    "name": {
+      "en": "Mauritania",
+      "de": "Mauretanien"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "MWI",
+    "code2": "MW",
+    "name": {
+      "en": "Malawi",
+      "de": "Malawi"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "MYA",
+    "code2": "MM",
+    "name": {
+      "en": "Myanmar",
+      "de": "Myanmar"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "NAM",
+    "code2": "NA",
+    "name": {
+      "en": "Namibia",
+      "de": "Namibia"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "NCA",
+    "code2": "NI",
+    "name": {
+      "en": "Nicaragua",
+      "de": "Nicaragua"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "NCL",
+    "code2": "NC",
+    "name": {
+      "en": "New Caledonia",
+      "de": "Neu-Kaledonien"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "NED",
+    "code2": "NL",
+    "name": {
+      "en": "Netherlands",
+      "de": "Niederlande"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "NEP",
+    "code2": "NP",
+    "name": {
+      "en": "Nepal",
+      "de": "Nepal"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "NGA",
+    "code2": "NG",
+    "name": {
+      "en": "Nigeria",
+      "de": "Nigeria"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "NIG",
+    "code2": "NE",
+    "name": {
+      "en": "Niger",
+      "de": "Niger"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "NIR",
+    "code2": "GB-NIR",
+    "name": {
+      "en": "Northern Ireland",
+      "de": "Nordirland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "NOR",
+    "code2": "NO",
+    "name": {
+      "en": "Norway",
+      "de": "Norwegen"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "NZL",
+    "code2": "NZ",
+    "name": {
+      "en": "New Zealand",
+      "de": "Neuseeland"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "OMA",
+    "code2": "OM",
+    "name": {
+      "en": "Oman",
+      "de": "Oman"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "PAK",
+    "code2": "PK",
+    "name": {
+      "en": "Pakistan",
+      "de": "Pakistan"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "PAN",
+    "code2": "PA",
+    "name": {
+      "en": "Panama",
+      "de": "Panama"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "PAR",
+    "code2": "PY",
+    "name": {
+      "en": "Paraguay",
+      "de": "Paraguay"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "PER",
+    "code2": "PE",
+    "name": {
+      "en": "Peru",
+      "de": "Peru"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "PHI",
+    "code2": "PH",
+    "name": {
+      "en": "Philippines",
+      "de": "Philippinen"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "PLE",
+    "code2": "PS",
+    "name": {
+      "en": "Palestine",
+      "de": "Palästina"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "PNG",
+    "code2": "PG",
+    "name": {
+      "en": "Papua New Guinea",
+      "de": "Papua Neu-Guinea"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "POL",
+    "code2": "PL",
+    "name": {
+      "en": "Poland",
+      "de": "Polen"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "POR",
+    "code2": "PT",
+    "name": {
+      "en": "Portugal",
+      "de": "Portugal"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "PRK",
+    "code2": "KP",
+    "name": {
+      "en": "North Korea",
+      "de": "Nord Korea"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "PUR",
+    "code2": "PR",
+    "name": {
+      "en": "Puerto Rico",
+      "de": "Puerto Rico"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "QAT",
+    "code2": "QA",
+    "name": {
+      "en": "Qatar",
+      "de": "Katar"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "ROU",
+    "code2": "RO",
+    "name": {
+      "en": "Romania",
+      "de": "Rumänien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "RSA",
+    "code2": "ZA",
+    "name": {
+      "en": "South Africa",
+      "de": "Südafrika"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "RUS",
+    "code2": "RU",
+    "name": {
+      "en": "Russia",
+      "de": "Russland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "RWA",
+    "code2": "RW",
+    "name": {
+      "en": "Rwanda",
+      "de": "Ruanda"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "SAM",
+    "code2": "WS",
+    "name": {
+      "en": "Samoa",
+      "de": "Samoa"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "SCG",
+    "code2": "CS",
+    "name": {
+      "en": "Serbia and Montenegro",
+      "de": "Serbien und Montenegro"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "SCO",
+    "code2": "GB-SCT",
+    "name": {
+      "en": "Scotland",
+      "de": "Schottland"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "SDN",
+    "code2": "SD",
+    "name": {
+      "en": "Sudan",
+      "de": "Sudan"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "SEN",
+    "code2": "SN",
+    "name": {
+      "en": "Senegal",
+      "de": "Senegal"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "SEY",
+    "code2": "SC",
+    "name": {
+      "en": "Seychelles",
+      "de": "Seychellen"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "SIN",
+    "code2": "SG",
+    "name": {
+      "en": "Singapore",
+      "de": "Singapur"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "SKN",
+    "code2": "KN",
+    "name": {
+      "en": "St Kitts and Nevis",
+      "de": "St. Kitts und Nevis"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "SLE",
+    "code2": "SL",
+    "name": {
+      "en": "Sierra Leone",
+      "de": "Sierra Leone"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "SLV",
+    "code2": "SV",
+    "name": {
+      "en": "El Salvador",
+      "de": "El Salvador"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "SMR",
+    "code2": "SM",
+    "name": {
+      "en": "San Marino",
+      "de": "San Marino"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "SOL",
+    "code2": "SB",
+    "name": {
+      "en": "Solomon Islands",
+      "de": "Salomon-Inseln"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "SOM",
+    "code2": "SO",
+    "name": {
+      "en": "Somalia",
+      "de": "Somalia"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "SRB",
+    "code2": "RS",
+    "name": {
+      "en": "Serbia",
+      "de": "Serbien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "SRI",
+    "code2": "LK",
+    "name": {
+      "en": "Sri Lanka",
+      "de": "Sri Lanka"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "SSD",
+    "code2": "SS",
+    "name": {
+      "en": "South Sudan",
+      "de": "Südsudan"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "STP",
+    "code2": "ST",
+    "name": {
+      "en": "Sao Tomé und Principe",
+      "de": "Sao Tomé und Principe"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "SUI",
+    "code2": "CH",
+    "name": {
+      "en": "Switzerland",
+      "de": "Schweiz"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "SUR",
+    "code2": "SR",
+    "name": {
+      "en": "Suriname",
+      "de": "Suriname"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "SVK",
+    "code2": "SK",
+    "name": {
+      "en": "Slovakia",
+      "de": "Slowakei"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "SVN",
+    "code2": "SI",
+    "name": {
+      "en": "Slovenia",
+      "de": "Slowenien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "SWE",
+    "code2": "SE",
+    "name": {
+      "en": "Sweden",
+      "de": "Schweden"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "SWZ",
+    "code2": "SZ",
+    "name": {
+      "en": "Swaziland",
+      "de": "Swasiland"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "SYR",
+    "code2": "SY",
+    "name": {
+      "en": "Syria",
+      "de": "Syrien"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "TAH",
+    "code2": "PF",
+    "name": {
+      "en": "Tahiti",
+      "de": "Tahiti"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "TAN",
+    "code2": "TZ",
+    "name": {
+      "en": "Tanzania",
+      "de": "Tansania"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "TCA",
+    "code2": "TC",
+    "name": {
+      "en": "Turks and Caicos Islands",
+      "de": "Turks- und Caicosinseln"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "TCH",
+    "code2": "CZ",
+    "name": {
+      "en": "Czechoslovakia",
+      "de": "Tschechoslowakei"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "TGA",
+    "code2": "TO",
+    "name": {
+      "en": "Tonga",
+      "de": "Tonga"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "THA",
+    "code2": "TH",
+    "name": {
+      "en": "Thailand",
+      "de": "Thailand"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "TJK",
+    "code2": "TJ",
+    "name": {
+      "en": "Tajikistan",
+      "de": "Tadschikistan"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "TKM",
+    "code2": "TM",
+    "name": {
+      "en": "Turkmenistan",
+      "de": "Turkmenistan"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "TLS",
+    "code2": "TL",
+    "name": {
+      "en": "Timor-Leste",
+      "de": "Timor-Leste"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "TOG",
+    "code2": "TG",
+    "name": {
+      "en": "Togo",
+      "de": "Gehen"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "TRI",
+    "code2": "TT",
+    "name": {
+      "en": "Trinidad and Tobago",
+      "de": "Trinidad und Tobago"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "TUN",
+    "code2": "TN",
+    "name": {
+      "en": "Tunisia",
+      "de": "Tunesien"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "TUR",
+    "code2": "TR",
+    "name": {
+      "en": "Turkey",
+      "de": "Türkei"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "TWN",
+    "code2": "TW",
+    "name": {
+      "en": "Taiwan",
+      "de": "Taiwan"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "UAE",
+    "code2": "AE",
+    "name": {
+      "en": "United Arab Emirates",
+      "de": "UAE"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "UGA",
+    "code2": "UG",
+    "name": {
+      "en": "Uganda",
+      "de": "Uganda"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "UKR",
+    "code2": "UA",
+    "name": {
+      "en": "Ukraine",
+      "de": "Ukraine"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "URS",
+    "code2": "SU",
+    "name": {
+      "en": "Soviet Union",
+      "de": "Sowjetunion"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "URU",
+    "code2": "UY",
+    "name": {
+      "en": "Uruguay",
+      "de": "Uruguay"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "USA",
+    "code2": "US",
+    "name": {
+      "en": "USA",
+      "de": "USA"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "UZB",
+    "code2": "UZ",
+    "name": {
+      "en": "Uzbekistan",
+      "de": "Usbekistan"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "VAN",
+    "code2": "VU",
+    "name": {
+      "en": "Vanuatu",
+      "de": "Vanuatu"
+    },
+    "confederation": "OFC"
+  },
+  {
+    "code3": "VEN",
+    "code2": "VE",
+    "name": {
+      "en": "Venezuela",
+      "de": "Venezuela"
+    },
+    "confederation": "CONMEBOL"
+  },
+  {
+    "code3": "VGB",
+    "code2": "IO",
+    "name": {
+      "en": "British Virgin Islands",
+      "de": "Britische Jungferninseln"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "VIE",
+    "code2": "VN",
+    "name": {
+      "en": "Vietnam",
+      "de": "Vietnam"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "VIN",
+    "code2": "VC",
+    "name": {
+      "en": "St Vincent and the Grenadines",
+      "de": "St. Vincent und die Grenadinen"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "VIR",
+    "code2": "VI",
+    "name": {
+      "en": "US Virgin Islands",
+      "de": "US Jungferninseln"
+    },
+    "confederation": "CONCACAF"
+  },
+  {
+    "code3": "WAL",
+    "code2": "GB-WLS",
+    "name": {
+      "en": "Wales",
+      "de": "Wales"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "YEM",
+    "code2": "YE",
+    "name": {
+      "en": "Yemen",
+      "de": "Jemen"
+    },
+    "confederation": "AFC"
+  },
+  {
+    "code3": "YUG",
+    "code2": "YU",
+    "name": {
+      "en": "Yugoslavia",
+      "de": "Jugoslawien"
+    },
+    "confederation": "UEFA"
+  },
+  {
+    "code3": "ZAI",
+    "code2": "ZR",
+    "name": {
+      "en": "Zaire",
+      "de": "Zaire"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "ZAM",
+    "code2": "ZM",
+    "name": {
+      "en": "Zambia",
+      "de": "Sambia"
+    },
+    "confederation": "CAF"
+  },
+  {
+    "code3": "ZIM",
+    "code2": "ZW",
+    "name": {
+      "en": "Zimbabwe",
+      "de": "Zimbabwe"
+    },
+    "confederation": "CAF"
+  }
+]

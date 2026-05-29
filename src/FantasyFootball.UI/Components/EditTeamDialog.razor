@@ -10,7 +10,7 @@
                        Min="0" Max="3000" Step="1"
                        Immediate="true"
                        OnKeyUp="OnKeyUp"
-                       HelperText="@($"World ranking strength. Original: {Team.Elo}.")" />
+                       HelperText="@($"World ranking strength. Original: {OriginalElo}.")" />
     </MudStack>
   </DialogContent>
   <DialogActions>
@@ -27,16 +27,13 @@
 @code {
   [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
   [Parameter] public Team Team { get; set; } = null!;
+  [Parameter] public int OriginalElo { get; set; }
 
   int _elo;
 
-  protected override void OnInitialized() => _elo = Team.Elo;
+  protected override void OnInitialized() => _elo = OriginalElo;
 
-  // Name is intentionally not edited here: NamedUniqueId.Name is init-only on the
-  // shared base class (used by Confederation, Country, Competition — none of which
-  // should be renameable). Promoting Name to a settable property is a deliberate
-  // Core-lib change for another day; the user story specifies Elo editing.
-  bool IsDirty => _elo != Team.Elo;
+  bool IsDirty => _elo != OriginalElo;
 
   void Cancel() => MudDialog.Cancel();
 

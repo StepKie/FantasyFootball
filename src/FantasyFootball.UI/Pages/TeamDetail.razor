@@ -38,7 +38,7 @@ else
           @ViewModel.Team.Country?.Confederation?.Continent
         </MudText>
         <MudText Typo="Typo.body1" Class="mt-2">
-          Rank <strong>#@ViewModel.Rank</strong> <span class="elo-muted">· Elo @ViewModel.Team.Elo</span>
+          Rank <strong>#@ViewModel.Rank</strong> <span class="elo-muted">· Elo @ViewModel.Elo</span>
         </MudText>
       </MudItem>
       <MudItem xs="12" sm="3" md="2" Class="d-flex justify-end">
@@ -93,7 +93,8 @@ else
 
     var parameters = new DialogParameters<EditTeamDialog>
     {
-      { x => x.Team, ViewModel.Team }
+      { x => x.Team, ViewModel.Team },
+      { x => x.OriginalElo, ViewModel.Elo },
     };
     var dialog = await DialogService.ShowAsync<EditTeamDialog>("Edit team", parameters);
     var result = await dialog.Result;

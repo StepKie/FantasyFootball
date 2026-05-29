@@ -8,9 +8,9 @@ namespace FantasyFootball.Web.Services;
 
 /// <summary>
 /// IRepository implementation that persists each aggregate-root type as a JSON list
-/// under its own browser LocalStorage key. After the graph-model cleanup the remaining
-/// roots are Team, Confederation, Country — TeamDetailViewModel uses this for Elo edit
-/// persistence. The flat competition model has its own repository
+/// under its own browser LocalStorage key. Aggregate roots: Team, Confederation,
+/// EloSet — TeamDetailViewModel writes Elo edits into the active EloSet via this
+/// repo. The flat competition model has its own repository
 /// (<see cref="LocalStorageCompetitionRepository"/>).
 /// </summary>
 public sealed class LocalStorageRepository : IRepository
@@ -21,7 +21,7 @@ public sealed class LocalStorageRepository : IRepository
   [
     typeof(Team),
     typeof(Confederation),
-    typeof(Country),
+    typeof(EloSet),
   ];
 
   static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { WriteIndented = false };

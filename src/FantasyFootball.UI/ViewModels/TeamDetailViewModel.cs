@@ -9,29 +9,24 @@ namespace FantasyFootball.UI.ViewModels;
 
 /// <summary>
 /// Backs the /teams/{id} profile page. Display-only — edit lifecycle lives in
-/// EditTeamDialog, which persists via IRepository and broadcasts
-/// TeamUpdatedMessage. This VM subscribes to that message and reloads when the
-/// currently-shown team is the one that changed.
-///
-/// The MAUI equivalent (FantasyFootball.ViewModels.TeamViewModel) doubles as
-/// both list-row and edit-page VM; the Blazor port splits those:
-///   - TeamListItem (in TeamsViewModel.cs) for list rows
-///   - TeamDetailViewModel for the profile page display
-///   - EditTeamDialog for the dialog-local edit state
+/// EditTeamDialog, which calls back into <see cref="UpdateElo"/> here for the
+/// active-EloSet write + broadcast.
 /// </summary>
 public partial class TeamDetailViewModel : ObservableObject
 {
 	readonly IRepository _repo;
 	readonly IDataService _dataService;
+	readonly IActiveEloSet _activeEloSet;
 
-	public TeamDetailViewModel(IRepository repo, IDataService dataService)
+	public TeamDetailViewModel(IRepository repo, IDataService dataService, IActiveEloSet activeEloSet)
 	{
 		_repo = repo;
 		_dataService = dataService;
+		_activeEloSet = activeEloSet;
 
-		MessageBus.Register<TeamUpdatedMessage>(this, (_, msg) =>
+		MessageBus.Register<EloSetChangedMessage>(this, (_, _) =>
 		{
-			if (Team?.Id == msg.UpdatedTeam.Id) { Load(msg.UpdatedTeam.Id); }
+			if (Team is not null) { ReloadCurrent(); }
 		});
 	}
 
@@ -41,24 +36,41 @@ public partial class TeamDetailViewModel : ObservableObject
 	[ObservableProperty]
 	public partial int Rank { get; set; }
 
+	[ObservableProperty]
+	public partial int Elo { get; set; }
+
 	public void Load(int teamId)
 	{
-		var previous = Team;
 		Team = _repo.Get<Team>(teamId);
-		Rank = Team is null ? 0 : _dataService.AllTeams.RankByElo(teamId);
-
-		// Force notify only on same-ref reload (in-place Elo mutation) — [ObservableProperty]'s setter already fires when the ref changes.
-		if (ReferenceEquals(previous, Team)) { OnPropertyChanged(nameof(Team)); }
+		ReloadCurrent();
 	}
 
-	// Persists a new Elo for the currently-loaded team. Owns the mutation so the
-	// edit dialog doesn't have to touch a [Parameter] object it doesn't own.
+	void ReloadCurrent()
+	{
+		if (Team is null) { Rank = 0; Elo = 0; return; }
+		Rank = _dataService.AllTeams.RankByElo(_activeEloSet, Team.Id);
+		Elo = _activeEloSet.EloOf(Team);
+	}
+
+	/// <summary>
+	/// Writes a new Elo for the loaded team into the active <see cref="EloSet"/>,
+	/// persists the set, and broadcasts the change so list VMs refresh.
+	/// </summary>
 	public void UpdateElo(int newElo)
 	{
-		if (Team is null || newElo == Team.Elo) { return; }
+		if (Team is null || _activeEloSet.Current is null) { return; }
+		if (_activeEloSet.EloOf(Team) == newElo) { return; }
 
-		Team.Elo = newElo;
-		_repo.Save(Team);
-		MessageBus.Send(new TeamUpdatedMessage(Team));
+		var current = _activeEloSet.Current;
+		var hadKey = current.Snapshot.TryGetValue(Team.ShortName, out var rollback);
+		current.Snapshot[Team.ShortName] = newElo;
+		try { _repo.Save(current); }
+		catch
+		{
+			if (hadKey) { current.Snapshot[Team.ShortName] = rollback; }
+			else { current.Snapshot.Remove(Team.ShortName); }
+			throw;
+		}
+		_activeEloSet.SetCurrent(current);
 	}
 }

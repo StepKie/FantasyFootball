@@ -16,7 +16,7 @@ public class DefunctTeamLoadTest(ITestOutputHelper output) : BaseTest(output)
 	{
 		var team = DataService.AllTeams.FirstOrDefault(t => t.Country.Code3 == code3);
 
-		_ = team ?? throw new Xunit.Sdk.XunitException($"Defunct team {code3} ({englishName}) not loaded from the CSV.");
-		team.Elo.Should().Be(elo);
+		_ = team ?? throw new Xunit.Sdk.XunitException($"Defunct team {code3} ({englishName}) not loaded from the seed.");
+		ActiveEloSet.EloOf(team).Should().Be(elo);
 	}
 }

@@ -18,20 +18,15 @@ public static class MauiProgram
 		builder.Services
 			.AddSingleton<IConnectivity>(Connectivity.Current)
 			.AddSingleton<ISettingsService, SettingsService>()
-			.AddSingleton<IDataService, CsvDataService>()
-			.AddSingleton<IRepository>(new Repository(inMemory: false))
+			.AddSingleton<IActiveEloSet, ActiveEloSet>()
+			.AddSingleton<IDataService, JsonDataService>()
+			.AddSingleton<IRepository>(new InMemoryRepository())
 			.AddLogging(lb => lb.AddSerilog());
 
-		// Competition pages removed; Teams + Settings still registered below.
+		// Shell is Settings-only pending the BlazorWebView rewrite.
 		builder.Services
 			.AddSingleton<SettingsPage>()
-			.AddSingleton<SettingsViewModel>()
-
-			.AddSingleton<TeamsPage>()
-			.AddSingleton<TeamsViewModel>()
-
-			.AddTransient<TeamDetailPage>()
-			.AddTransient<TeamViewModel>();
+			.AddSingleton<SettingsViewModel>();
 
 		return builder.Build();
 	}

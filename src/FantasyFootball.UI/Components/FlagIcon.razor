@@ -2,6 +2,7 @@
 @using FantasyFootball.Services
 @using FantasyFootball.UI.Helpers
 @inject ISettingsService Settings
+@inject IActiveEloSet ActiveEloSet
 
 @if (Resolved is { } code)
 {
@@ -13,7 +14,7 @@
 }
 
 @code {
-  /// <summary>Team to render the flag for. Convenience parameter — reads <c>Team.Country.Code2</c> and <c>Team.Elo</c>.</summary>
+  /// <summary>Team to render the flag for. Convenience parameter — reads <c>Team.Country.Code2</c> for the flag and looks up the team's elo in the active <see cref="EloSet"/> for the tier border.</summary>
   [Parameter] public Team? Team { get; set; }
 
   /// <summary>ISO 3166-1 alpha-2 code. Used when <see cref="Team"/> isn't passed.</summary>
@@ -36,7 +37,7 @@
   // Caller-set Alt wins (including "" for decorative). Otherwise prefer country name → team name → code as last resort.
   string ResolvedAlt => Alt ?? Team?.Country?.Name ?? Team?.Name ?? Resolved ?? "";
 
-  int? ResolvedElo => Team?.Elo ?? Elo;
+  int? ResolvedElo => Elo ?? (Team is null ? null : ActiveEloSet.EloOf(Team));
 
   string CssClass => Settings.FlagStyle switch
   {

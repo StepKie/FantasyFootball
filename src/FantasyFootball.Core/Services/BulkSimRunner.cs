@@ -27,15 +27,18 @@ public sealed class BulkSimRunner
 	readonly CompetitionFactory _factory;
 	readonly CompetitionSimulator _simulator;
 	readonly ICompetitionRepository _repo;
+	readonly IRepository _entityRepo;
 
 	public BulkSimRunner(
 		CompetitionFactory factory,
 		CompetitionSimulator simulator,
-		ICompetitionRepository repo)
+		ICompetitionRepository repo,
+		IRepository entityRepo)
 	{
 		_factory = factory;
 		_simulator = simulator;
 		_repo = repo;
+		_entityRepo = entityRepo;
 	}
 
 	public async Task<IReadOnlyList<int>> RunAsync(
@@ -49,12 +52,15 @@ public sealed class BulkSimRunner
 			throw new ArgumentOutOfRangeException(nameof(count), count, "Bulk sim needs at least one run.");
 		}
 
+		// HistoricalSpec sims use the year-matched EloSet; resolve once since the snapshot is immutable mid-bulk.
+		IScoreModel? historicalOverride = ResolveHistoricalScoreModel(spec);
+
 		var ids = new List<int>(count);
 		for (int i = 0; i < count; i++)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			var competition = _factory.Create(spec);
-			_simulator.Simulate(competition);
+			_simulator.Simulate(competition, historicalOverride);
 			var id = await _repo.SaveAsync(competition);
 			ids.Add(id);
 			progress?.Report(i + 1);
@@ -63,5 +69,20 @@ public sealed class BulkSimRunner
 		}
 
 		return ids;
+	}
+
+	IScoreModel? ResolveHistoricalScoreModel(CompetitionSpec spec)
+	{
+		if (spec is not HistoricalSpec) { return null; }
+		// Materialize the spec once to read its Year; cheap relative to the upcoming N runs.
+		var sample = _factory.Create(spec);
+		var year = sample.Year.ToString(CultureInfo.InvariantCulture);
+		var historical = _entityRepo.GetAll<EloSet>().FirstOrDefault(s => s.Name == year);
+		if (historical is null)
+		{
+			Log.Debug("No EloSet named {Year} for HistoricalSpec {DefinitionId}", year, spec.DefinitionId);
+			return null;
+		}
+		return new EloScoreModel(new EloSetTeamRegistry(historical));
 	}
 }
