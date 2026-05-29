@@ -56,7 +56,7 @@ $EloratingsCodeOverride = @{
     'SU' = 'URS'   # Soviet Union
     'DD' = 'GDR'   # East Germany
     'WG' = 'FRG'   # West Germany (pre-unification)
-    'CS' = 'TCH'   # Czechoslovakia
+    # 'CS' is year-dependent — handled in Resolve-Code3: pre-1993 Czechoslovakia (TCH), 1993+ Czech Republic (CZE).
     'YU' = 'YUG'   # Yugoslavia (1929-2003)
     'SM' = 'SCG'   # Serbia and Montenegro (2003-2006); reuse code? eloratings may use different
     'ZR' = 'ZAI'   # Zaire
@@ -75,7 +75,11 @@ $Code2ToCode3 = @{}
 foreach ($c in $countries) { $Code2ToCode3[$c.code2] = $c.code3 }
 
 function Resolve-Code3 {
-    param([string]$EloratingsCode)
+    param([string]$EloratingsCode, [int]$Year)
+    # 'CS' is Czechoslovakia (TCH) until the 1992 split, then Czech Republic (CZE) — eloratings.net kept the legacy 2-letter code for the FIFA-recognized successor.
+    if ($EloratingsCode -eq 'CS') {
+        if ($Year -lt 1993) { return 'TCH' } else { return 'CZE' }
+    }
     if ($EloratingsCodeOverride.ContainsKey($EloratingsCode)) {
         return $EloratingsCodeOverride[$EloratingsCode]
     }
@@ -110,7 +114,7 @@ foreach ($t in $Tournaments) {
         if ($cols.Length -lt 4) { continue }
         $eloCode = $cols[2]
         $eloValue = [int]$cols[3]
-        $code3 = Resolve-Code3 $eloCode
+        $code3 = Resolve-Code3 $eloCode $year
         if ($null -eq $code3) {
             $unmapped.Add($eloCode) | Out-Null
             $unmappedAll.Add($eloCode) | Out-Null
