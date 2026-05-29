@@ -14,7 +14,7 @@
 }
 
 @code {
-  /// <summary>Team to render the flag for. Convenience parameter — reads <c>Team.Country.Code2</c> and <c>Team.Elo</c>.</summary>
+  /// <summary>Team to render the flag for. Convenience parameter — reads <c>Team.Country.Code2</c> for the flag and looks up the team's elo in the active <see cref="EloSet"/> for the tier border.</summary>
   [Parameter] public Team? Team { get; set; }
 
   /// <summary>ISO 3166-1 alpha-2 code. Used when <see cref="Team"/> isn't passed.</summary>

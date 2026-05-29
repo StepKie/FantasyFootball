@@ -43,7 +43,6 @@ public partial class TeamsViewModel : ObservableObject
 	}
 
 	public const string AllLabel = "All";
-	public const string CurrentName = "Current";
 
 	public IList<string> Confederations { get; }
 
@@ -62,14 +61,17 @@ public partial class TeamsViewModel : ObservableObject
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
 
-	public bool CanDeleteSelectedSet => SelectedEloSetName is not null and not CurrentName;
+	// Bundled EloSets (Current + every elo-{year}.json) can't be deleted: removing one would break HistoricalSpec sims for that year (bulk wm-1986 with "1986" removed falls through to the active set and crashes on FRG/GDR).
+	public bool CanDeleteSelectedSet =>
+		SelectedEloSetName is not null
+		&& !JsonDataService.BundledEloSetNames.Contains(SelectedEloSetName);
 
 	void LoadEloSets()
 	{
 		var all = _repo.GetAll<EloSet>();
 		AvailableEloSetNames = all
 			.Select(s => s.Name)
-			.OrderBy(name => name == CurrentName ? 0 : 1)
+			.OrderBy(name => name == JsonDataService.CurrentEloSetName ? 0 : 1)
 			.ThenBy(name => name, StringComparer.Ordinal)
 			.ToList();
 	}
@@ -115,7 +117,7 @@ public partial class TeamsViewModel : ObservableObject
 		if (target is null) { return; }
 		_repo.Delete(target);
 
-		var fallback = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == CurrentName);
+		var fallback = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == JsonDataService.CurrentEloSetName);
 		if (fallback is not null) { _activeEloSet.SetCurrent(fallback); }
 		LoadEloSets();
 	}

@@ -52,9 +52,7 @@ public sealed class BulkSimRunner
 			throw new ArgumentOutOfRangeException(nameof(count), count, "Bulk sim needs at least one run.");
 		}
 
-		// HistoricalSpec sims read elos from the year-matched EloSet instead of the
-		// user's UI-active set; the lookup is once per run since the snapshot doesn't
-		// change mid-bulk.
+		// HistoricalSpec sims use the year-matched EloSet; resolve once since the snapshot is immutable mid-bulk.
 		IScoreModel? historicalOverride = ResolveHistoricalScoreModel(spec);
 
 		var ids = new List<int>(count);
@@ -80,6 +78,11 @@ public sealed class BulkSimRunner
 		var sample = _factory.Create(spec);
 		var year = sample.Year.ToString(CultureInfo.InvariantCulture);
 		var historical = _entityRepo.GetAll<EloSet>().FirstOrDefault(s => s.Name == year);
-		return historical is null ? null : new EloScoreModel(new EloSetTeamRegistry(historical));
+		if (historical is null)
+		{
+			Log.Debug("No EloSet named {Year} for HistoricalSpec {DefinitionId}", year, spec.DefinitionId);
+			return null;
+		}
+		return new EloScoreModel(new EloSetTeamRegistry(historical));
 	}
 }

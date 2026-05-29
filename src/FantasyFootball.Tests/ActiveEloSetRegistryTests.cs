@@ -29,10 +29,9 @@ public class ActiveEloSetRegistryTests(ITestOutputHelper output) : BaseTest(outp
 	[Fact]
 	public void EloOf_ReadsFromActiveSnapshot()
 	{
-		var registry = new ActiveEloSetRegistry(ActiveEloSet, DataService);
+		var registry = new ActiveEloSetRegistry(ActiveEloSet);
 
-		// ARG and BRA are always in the current snapshot; cross-reference against
-		// the active EloSet directly to avoid hardcoding a value that drifts.
+		// Cross-reference the live snapshot rather than hardcoding a value that drifts.
 		var argFromSnapshot = ActiveEloSet.Current!.Snapshot["ARG"];
 
 		registry.EloOf("ARG").Should().Be(argFromSnapshot);
@@ -41,7 +40,7 @@ public class ActiveEloSetRegistryTests(ITestOutputHelper output) : BaseTest(outp
 	[Fact]
 	public void SetCurrent_SwitchesEloSource()
 	{
-		var registry = new ActiveEloSetRegistry(ActiveEloSet, DataService);
+		var registry = new ActiveEloSetRegistry(ActiveEloSet);
 		var argBefore = registry.EloOf("ARG");
 
 		ActiveEloSet.SetCurrent(new EloSet
@@ -63,7 +62,7 @@ public class ActiveEloSetRegistryTests(ITestOutputHelper output) : BaseTest(outp
 			Date = new DateOnly(2026, 1, 1),
 			Snapshot = new Dictionary<string, int> { ["BRA"] = 2000 },
 		});
-		var registry = new ActiveEloSetRegistry(ActiveEloSet, DataService);
+		var registry = new ActiveEloSetRegistry(ActiveEloSet);
 
 		Action act = () => registry.EloOf("ARG");
 

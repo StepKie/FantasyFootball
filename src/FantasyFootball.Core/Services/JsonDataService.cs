@@ -11,6 +11,9 @@ public class JsonDataService : IDataService
 
 	public const string CurrentEloSetName = "Current";
 
+	/// <summary>Names of the bundled EloSets shipped with the app (Current + every elo-{year}.json resource). Used by the UI to mark them as undeletable.</summary>
+	public static readonly IReadOnlySet<string> BundledEloSetNames = LoadBundledEloSetNames();
+
 	static readonly JsonSerializerOptions JsonOpts = new(JsonSerializerDefaults.Web);
 
 	List<Team>? _teamCache;
@@ -30,9 +33,10 @@ public class JsonDataService : IDataService
 	{
 		if (AllTeams.Count == 0) { Reset(); return; }
 
-		// Repo already populated from a previous session — ensure the active set is also wired up.
+		// Treat a missing Current EloSet as corruption (first-run, pre-EloSet migration, or hand-edited localStorage) and re-seed.
 		var current = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == CurrentEloSetName);
-		if (current is not null) { _activeEloSet.SetCurrent(current); }
+		if (current is null) { Reset(); return; }
+		_activeEloSet.SetCurrent(current);
 	}
 
 	/// <summary> Global selected competition type to sync across all relevant pages </summary>
@@ -49,7 +53,7 @@ public class JsonDataService : IDataService
 		{
 			Code2 = s.Code2,
 			Code3 = s.Code3,
-			Name = s.Name.GetValueOrDefault(_languageId, s.Name["en"]),
+			Name = s.Name.GetValueOrDefault(_languageId) ?? s.Name.GetValueOrDefault("en") ?? s.Code3,
 			Confederation = confederations.FirstOrDefault(c => c.Name == s.Confederation) ?? Confederation.UNKNOWN,
 		}).ToList();
 	}
@@ -64,21 +68,20 @@ public class JsonDataService : IDataService
 
 		var currentEloSet = LoadCurrentEloSet();
 		_repo.Save(currentEloSet);
-		_activeEloSet.SetCurrent(currentEloSet);
-
 		_repo.SaveAll(LoadHistoricalEloSets());
-
 		_repo.SaveAll(CreateTeams());
 
 		SelectedCompetitionType = CompetitionType.WM;
 
+		// Broadcast last so subscribers see the fully-populated repo, not a half-written intermediate.
+		_activeEloSet.SetCurrent(currentEloSet);
 		MessageBus.Send(new DataResetMessage());
 	}
 
 	List<Team> ReloadTeams()
 	{
 		var teams = _repo.GetAll<Team>();
-		Log.Debug($"Reloaded teams, repo now has {teams.Count} teams");
+		Log.Debug("Reloaded teams, repo now has {Count} teams", teams.Count);
 		return teams;
 	}
 
@@ -115,6 +118,22 @@ public class JsonDataService : IDataService
 				return set;
 			})
 			.ToList();
+	}
+
+	// Enumerates the embedded elo-{year}.json resource names to extract their year part; cheap (no JSON parse, no I/O beyond Assembly.GetManifestResourceNames).
+	static IReadOnlySet<string> LoadBundledEloSetNames()
+	{
+		var names = new HashSet<string> { CurrentEloSetName };
+		const string prefix = HistoricalEloSetPrefix + "elo-";
+		const string suffix = ".json";
+		foreach (var resource in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+		{
+			if (resource.StartsWith(prefix, StringComparison.Ordinal) && resource.EndsWith(suffix, StringComparison.Ordinal))
+			{
+				names.Add(resource[prefix.Length..^suffix.Length]);
+			}
+		}
+		return names;
 	}
 
 	sealed class CountrySeed

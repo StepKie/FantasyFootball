@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace FantasyFootball.Models;
 
 public class Confederation : NamedUniqueId
@@ -24,7 +26,7 @@ public class Confederation : NamedUniqueId
 
 	public string Continent { get; init; }
 
-	public string Logo => IconStrings.GetConfederationLogo(this);
+	[JsonIgnore] public string Logo => IconStrings.GetConfederationLogo(this);
 	public int NoOfWmParticipants { get; init; }
 
 	public override bool Equals(object? obj) => GetType() == obj?.GetType() && Name == (obj as Confederation)?.Name;

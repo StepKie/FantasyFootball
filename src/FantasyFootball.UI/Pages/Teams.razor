@@ -40,7 +40,7 @@
                      Color="Color.Default"
                      Disabled="@(!ViewModel.CanDeleteSelectedSet)"
                      OnClick="@(() => _confirmingDelete = true)"
-                     title="Delete this Elo set" />
+                     title="@(ViewModel.CanDeleteSelectedSet ? "Delete this Elo set" : "Bundled Elo sets can't be deleted")" />
     }
   </MudStack>
 

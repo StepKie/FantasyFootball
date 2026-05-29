@@ -119,6 +119,36 @@ public class BulkSimRunnerTests
 		(await _repo.CountAsync()).Should().Be(0);
 	}
 
+	[Fact]
+	public async Task Run_Historical_UsesYearMatchedEloSetOverride()
+	{
+		// Throwing default model verifies the year-matched EloSet override is the sole score path.
+		var throwingRunner = new BulkSimRunner(
+			_factory,
+			new CompetitionSimulator(new ThrowOnCallScoreModel()),
+			_repo,
+			_entityRepo);
+
+		string[] wm2018Teams = ["ARG","AUS","BEL","BRA","COL","CRC","CRO","DEN","EGY","ENG","ESP","FRA","GER","IRN","ISL","JPN","KOR","KSA","MAR","MEX","NGA","PAN","PER","POL","POR","RUS","SEN","SRB","SUI","SWE","TUN","URU"];
+		_entityRepo.Save(new EloSet
+		{
+			Name = "2018",
+			Date = new DateOnly(2018, 6, 14),
+			Snapshot = wm2018Teams.ToDictionary(t => t, _ => 1500),
+		});
+
+		var spec = new HistoricalSpec { DefinitionId = "wm-2018", Played = false };
+		Func<Task> act = () => throwingRunner.RunAsync(spec, count: 1);
+
+		await act.Should().NotThrowAsync("the year-matched override should supply every score, never falling back to the throwing default");
+	}
+
+	sealed class ThrowOnCallScoreModel : IScoreModel
+	{
+		public Result ScoreGroupGame(string h, string a) => throw new InvalidOperationException("default model called — override didn't kick in");
+		public Result ScoreKoGame(string h, string a) => throw new InvalidOperationException("default model called — override didn't kick in");
+	}
+
 	sealed class StubRegistry : ITeamRegistry
 	{
 		public IReadOnlyList<string> AllTeamIds { get; }

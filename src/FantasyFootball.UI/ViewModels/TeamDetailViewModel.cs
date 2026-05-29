@@ -62,8 +62,15 @@ public partial class TeamDetailViewModel : ObservableObject
 		if (_activeEloSet.EloOf(Team) == newElo) { return; }
 
 		var current = _activeEloSet.Current;
+		var hadKey = current.Snapshot.TryGetValue(Team.ShortName, out var rollback);
 		current.Snapshot[Team.ShortName] = newElo;
-		_repo.Save(current);
+		try { _repo.Save(current); }
+		catch
+		{
+			if (hadKey) { current.Snapshot[Team.ShortName] = rollback; }
+			else { current.Snapshot.Remove(Team.ShortName); }
+			throw;
+		}
 		_activeEloSet.SetCurrent(current);
 	}
 }
