@@ -1,3 +1,4 @@
+#Requires -PSEdition Core
 # One-off dev tool: scrape eloratings.net year-end TSVs and emit one EloSet JSON
 # per tournament-year. Each tournament's pre-tournament Elo is approximated by
 # the year-end snapshot of the prior year (i.e. WC 2018 → 2017.tsv), which is
@@ -58,7 +59,7 @@ $EloratingsCodeOverride = @{
     'WG' = 'FRG'   # West Germany (pre-unification)
     # 'CS' is year-dependent — handled in Resolve-Code3: pre-1993 Czechoslovakia (TCH), 1993+ Czech Republic (CZE).
     'YU' = 'YUG'   # Yugoslavia (1929-2003)
-    'SM' = 'SCG'   # Serbia and Montenegro (2003-2006); reuse code? eloratings may use different
+    # 'SM' is San Marino (ISO/FIFA SMR) — no SCG override; 2004/2006 SCG values are hand-filled in elo-2004.json and elo-2006.json.
     'ZR' = 'ZAI'   # Zaire
     'EI' = 'IRL'   # Eire / Republic of Ireland
     'TI' = 'TAH'   # Tahiti
@@ -75,11 +76,13 @@ $Code2ToCode3 = @{}
 foreach ($c in $countries) { $Code2ToCode3[$c.code2] = $c.code3 }
 
 function Resolve-Code3 {
-    param([string]$EloratingsCode, [int]$Year)
+    param([string]$EloratingsCode, [int]$Year, [int]$SourceYear)
     # 'CS' is Czechoslovakia (TCH) until the 1992 split, then Czech Republic (CZE) — eloratings.net kept the legacy 2-letter code for the FIFA-recognized successor.
     if ($EloratingsCode -eq 'CS') {
         if ($Year -lt 1993) { return 'TCH' } else { return 'CZE' }
     }
+    # 1965.tsv uses 'RU' for the Soviet Union (other Soviet-era years use 'SU'). Gate on the source TSV year — the only known anomaly is 1965; -le 1965 keeps it tight while leaving headroom if earlier TSVs are ever added.
+    if ($EloratingsCode -eq 'RU' -and $SourceYear -le 1965) { return 'URS' }
     if ($EloratingsCodeOverride.ContainsKey($EloratingsCode)) {
         return $EloratingsCodeOverride[$EloratingsCode]
     }
@@ -114,7 +117,7 @@ foreach ($t in $Tournaments) {
         if ($cols.Length -lt 4) { continue }
         $eloCode = $cols[2]
         $eloValue = [int]$cols[3]
-        $code3 = Resolve-Code3 $eloCode $year
+        $code3 = Resolve-Code3 $eloCode $year $src
         if ($null -eq $code3) {
             $unmapped.Add($eloCode) | Out-Null
             $unmappedAll.Add($eloCode) | Out-Null
@@ -141,6 +144,23 @@ foreach ($t in $Tournaments) {
     $count = $sortedSnapshot.Count
     $skipped = $unmapped.Count
     Write-Host "  → $outPath ($count teams, $skipped unmapped)"
+}
+
+# Hand-filled patches — Resolve-Code3 cannot produce these, so the main loop never writes them. Re-applied every run so a future re-fetch doesn't silently drop them.
+$HandFilledPatches = @(
+    @{ Year = 2004; Code = 'SCG'; Elo = 1830 }   # Serbia and Montenegro (no entry in eloratings 2003.tsv); YUG=1834 continuity.
+    @{ Year = 2006; Code = 'SCG'; Elo = 1860 }   # Serbia and Montenegro (no entry in eloratings 2005.tsv); estimate ahead of WC 2006.
+)
+foreach ($patch in $HandFilledPatches) {
+    $patchPath = Join-Path $OutputDir "elo-$($patch.Year).json"
+    if (-not (Test-Path $patchPath)) { Write-Warning "Patch target $patchPath not found — $($patch.Code) patch for $($patch.Year) was not applied"; continue }
+    $obj = Get-Content $patchPath -Raw | ConvertFrom-Json -AsHashtable
+    $obj.snapshot[$patch.Code] = $patch.Elo
+    $sorted = [ordered]@{}
+    foreach ($k in ($obj.snapshot.Keys | Sort-Object)) { $sorted[$k] = $obj.snapshot[$k] }
+    $patched = [ordered]@{ id = $obj.id; name = $obj.name; date = $obj.date; snapshot = $sorted }
+    $patched | ConvertTo-Json -Depth 5 | Set-Content -Path $patchPath -Encoding utf8NoBOM
+    Write-Host "  patched $patchPath ($($patch.Code)=$($patch.Elo))"
 }
 
 if ($unmappedAll.Count -gt 0) {
