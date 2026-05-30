@@ -356,6 +356,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		{
 			DefinitionId = Competition.DefinitionId,
 			Groups = Competition.GroupAssignments.Select(g => (string[])g.Clone()).ToArray(),
+			EloSetName = Competition.EloSetName,
 		};
 		var replay = _factory.Create(spec);
 		return await _repo.SaveAsync(replay);

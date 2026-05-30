@@ -24,22 +24,28 @@ public static class HistoricalScoreModelResolver
 	/// </summary>
 	public static IScoreModel? Resolve(string? eloSetName, int year, IRepository repo)
 	{
+		var set = ResolveEloSet(eloSetName, year, repo);
+		return set is null ? null : new EloScoreModel(new EloSetTeamRegistry(set));
+	}
+
+	/// <summary>
+	/// EloSet variant — same priority chain (pinned → year-matched → null), but
+	/// returns the resolved <see cref="EloSet"/> instead of a score model. Used by
+	/// the game-detail popover so display strengths match the period the competition
+	/// was simulated against, not whichever set the user happens to have active.
+	/// </summary>
+	public static EloSet? ResolveEloSet(string? eloSetName, int year, IRepository repo)
+	{
 		var sets = repo.GetAll<EloSet>();
 
 		if (eloSetName is { } pinned)
 		{
 			var explicitSet = sets.FirstOrDefault(s => s.Name == pinned);
-			if (explicitSet is not null) { return Build(explicitSet); }
+			if (explicitSet is not null) { return explicitSet; }
 			Log.Debug("Pinned EloSet {EloSetName} isn't in the repo; trying year-matched fallback", pinned);
 		}
 
 		var yearKey = year.ToString(CultureInfo.InvariantCulture);
-		var yearSet = sets.FirstOrDefault(s => s.Name == yearKey);
-		if (yearSet is not null) { return Build(yearSet); }
-
-		Log.Debug("No EloSet named {Year}; falling back to active set", yearKey);
-		return null;
+		return sets.FirstOrDefault(s => s.Name == yearKey);
 	}
-
-	static IScoreModel Build(EloSet set) => new EloScoreModel(new EloSetTeamRegistry(set));
 }
