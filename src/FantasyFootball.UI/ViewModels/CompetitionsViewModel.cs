@@ -23,19 +23,22 @@ public partial class CompetitionsViewModel : ObservableObject
 	readonly CompetitionFactory _factory;
 	readonly CompetitionSimulator _simulator;
 	readonly ICompetitionDefinitionStore _definitions;
+	readonly IRepository _entityRepo;
 
 	public CompetitionsViewModel(
 		ICompetitionRepository repo,
 		IDataService dataService,
 		CompetitionFactory factory,
 		CompetitionSimulator simulator,
-		ICompetitionDefinitionStore definitions)
+		ICompetitionDefinitionStore definitions,
+		IRepository entityRepo)
 	{
 		_repo = repo;
 		_dataService = dataService;
 		_factory = factory;
 		_simulator = simulator;
 		_definitions = definitions;
+		_entityRepo = entityRepo;
 
 		// Hydrate from the shared type pref so the chip state survives navigation between list and setup pages.
 		SelectedType = dataService.SelectedCompetitionType;
@@ -227,7 +230,7 @@ public partial class CompetitionsViewModel : ObservableObject
 		{
 			// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
 			await Task.Yield();
-			_simulator.Simulate(comp);
+			_simulator.Simulate(comp, HistoricalScoreModelResolver.Resolve(comp, _entityRepo));
 			await _repo.SaveAsync(comp);
 			await ReloadAsync();
 		}

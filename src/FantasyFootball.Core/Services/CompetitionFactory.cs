@@ -23,6 +23,7 @@ public sealed class CompetitionFactory
 	public Competition Create(CompetitionSpec spec)
 	{
 		var competition = _definitions.Load(spec.DefinitionId);
+		competition.EloSetName = spec.EloSetName;
 
 		if (competition.GroupAssignments.Length == 0 && spec is not HistoricalSpec)
 		{

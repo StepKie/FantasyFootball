@@ -35,6 +35,9 @@ namespace FantasyFootball.Models;
 public abstract record class CompetitionSpec
 {
 	public required string DefinitionId { get; init; }
+
+	/// <summary>EloSet name to bake onto the materialized Competition (defaults to null = legacy fallback chain).</summary>
+	public string? EloSetName { get; init; }
 }
 
 /// <summary>
