@@ -116,6 +116,7 @@ public static class CompetitionDefinitionLoader
 			Year = raw.Year,
 			DefinitionId = raw.Id,
 			FormatId = raw.FormatId,
+			EloSetName = raw.EloSetName,
 			SimulationStart = raw.SimulationStart,
 			SimulationFinished = raw.SimulationFinished,
 			GroupAssignments = groupAssignments,
@@ -163,6 +164,7 @@ public static class CompetitionDefinitionLoader
 		public required CompetitionType Type { get; init; }
 		public required int Year { get; init; }
 		public required string FormatId { get; init; }
+		public string? EloSetName { get; init; }
 		public DateTime? SimulationStart { get; init; }
 		public DateTime? SimulationFinished { get; init; }
 		public required Stage[] Stages { get; init; }

@@ -51,6 +51,16 @@
             <MudSelectItem Value="@year">@year</MudSelectItem>
           }
         </MudSelect>
+        <MudSelect T="string"
+                   Label="Elo set"
+                   Value="ViewModel.SelectedEloSetName"
+                   ValueChanged="@((string v) => ViewModel.SelectedEloSetName = v)"
+                   HelperText="@($"Used as the source of team strengths for this competition.{(ViewModel.SelectedEloSetName == ViewModel.SelectedYear.ToString(System.Globalization.CultureInfo.InvariantCulture) ? " (year-matched default)" : "")}")">
+          @foreach (var name in ViewModel.AvailableEloSetNames)
+          {
+            <MudSelectItem Value="@name">@name</MudSelectItem>
+          }
+        </MudSelect>
 
         <MudSpacer />
 

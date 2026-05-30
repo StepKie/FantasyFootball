@@ -32,6 +32,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	readonly CompetitionFactory _factory;
 	readonly ICompetitionRepository _repo;
 	readonly BulkSimRunner _runner;
+	readonly IRepository _entityRepo;
 
 	/// <summary>(Type, Year) for every committed definition; flat list to drive the pickers.</summary>
 	readonly List<(CompetitionType Type, int Year, string DefinitionId)> _catalog;
@@ -45,7 +46,8 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		IDataService dataService,
 		CompetitionFactory factory,
 		ICompetitionRepository repo,
-		BulkSimRunner runner)
+		BulkSimRunner runner,
+		IRepository entityRepo)
 	{
 		_definitions = definitions;
 		_registry = registry;
@@ -53,6 +55,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		_factory = factory;
 		_repo = repo;
 		_runner = runner;
+		_entityRepo = entityRepo;
 
 		_catalog = _definitions.AvailableIds
 			.Select(id => _definitions.Load(id))
@@ -70,6 +73,9 @@ public partial class CompetitionSetupViewModel : ObservableObject
 			: _catalog.First();
 		SelectedType = seed.Type;
 		SelectedYear = seed.Year;
+
+		AvailableEloSetNames = LoadEloSetNames();
+		SelectedEloSetName = DefaultEloSetNameFor(SelectedYear);
 	}
 
 	public IReadOnlyList<CompetitionType> AvailableTypes { get; }
@@ -88,6 +94,12 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(Groups))]
 	public partial int SelectedYear { get; set; }
+
+	[ObservableProperty]
+	public partial IReadOnlyList<string> AvailableEloSetNames { get; set; } = [];
+
+	[ObservableProperty]
+	public partial string? SelectedEloSetName { get; set; }
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(Groups))]
@@ -150,7 +162,22 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	{
 		_drawnLineup = null;
 		CurrentLineup = LineupMode.Original;
+		SelectedEloSetName = DefaultEloSetNameFor(value);
 	}
+
+	// Year-matched ("2018") if a bundled snapshot exists, else "Current". Names come from the live repo so user forks are pickable too.
+	string? DefaultEloSetNameFor(int year)
+	{
+		var yearName = year.ToString(CultureInfo.InvariantCulture);
+		if (AvailableEloSetNames.Contains(yearName)) { return yearName; }
+		return AvailableEloSetNames.Contains(JsonDataService.CurrentEloSetName) ? JsonDataService.CurrentEloSetName : AvailableEloSetNames.FirstOrDefault();
+	}
+
+	IReadOnlyList<string> LoadEloSetNames() => _entityRepo.GetAll<EloSet>()
+		.Select(s => s.Name)
+		.OrderBy(name => name == JsonDataService.CurrentEloSetName ? 0 : 1)
+		.ThenBy(name => name, StringComparer.Ordinal)
+		.ToList();
 
 	public void ResetToOriginal()
 	{
@@ -176,8 +203,8 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	public async Task<int> CreateSingleAsync()
 	{
 		var spec = CurrentLineup == LineupMode.Random && _drawnLineup is not null
-			? (CompetitionSpec)new CustomLineupSpec { DefinitionId = DefinitionId, Groups = _drawnLineup }
-			: new HistoricalSpec { DefinitionId = DefinitionId, Played = false };
+			? (CompetitionSpec)new CustomLineupSpec { DefinitionId = DefinitionId, Groups = _drawnLineup, EloSetName = SelectedEloSetName }
+			: new HistoricalSpec { DefinitionId = DefinitionId, Played = false, EloSetName = SelectedEloSetName };
 
 		var competition = _factory.Create(spec);
 		return await _repo.SaveAsync(competition);
@@ -230,12 +257,13 @@ public partial class CompetitionSetupViewModel : ObservableObject
 			{
 				DefinitionId = DefinitionId,
 				DrawAlgorithm = new UniformDrawFromRegistry(_registry),
+				EloSetName = SelectedEloSetName,
 			};
 		}
 
 		return CurrentLineup == LineupMode.Random && _drawnLineup is not null
-			? new CustomLineupSpec { DefinitionId = DefinitionId, Groups = _drawnLineup }
-			: new HistoricalSpec { DefinitionId = DefinitionId, Played = false };
+			? new CustomLineupSpec { DefinitionId = DefinitionId, Groups = _drawnLineup, EloSetName = SelectedEloSetName }
+			: new HistoricalSpec { DefinitionId = DefinitionId, Played = false, EloSetName = SelectedEloSetName };
 	}
 
 	IReadOnlyList<LineupGroup> BuildGroupsForPreview()

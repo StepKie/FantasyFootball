@@ -56,14 +56,14 @@ public sealed class CompetitionSimulator
 	/// <summary>
 	/// Score every unplayed game in the given round, chronological order.
 	/// </summary>
-	public void SimulateRound(Competition c, string roundId)
+	public void SimulateRound(Competition c, string roundId, IScoreModel? scoreModelOverride = null)
 	{
 		var roundGames = c.Games
 			.Where(g => g.RoundId == roundId && g.Result is null)
 			.OrderBy(g => g.PlayedOn);
 		foreach (var game in roundGames)
 		{
-			SimulateGame(c, game);
+			SimulateGame(c, game, scoreModelOverride);
 		}
 	}
 

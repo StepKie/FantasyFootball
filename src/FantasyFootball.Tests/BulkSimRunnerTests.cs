@@ -20,7 +20,7 @@ public class BulkSimRunnerTests
 	public BulkSimRunnerTests()
 	{
 		_factory = new(_definitions);
-		_runner = new(_factory, _simulator, _repo, _entityRepo);
+		_runner = new(_factory, _simulator, _repo, _entityRepo, _definitions);
 	}
 
 	[Fact]
@@ -127,7 +127,8 @@ public class BulkSimRunnerTests
 			_factory,
 			new CompetitionSimulator(new ThrowOnCallScoreModel()),
 			_repo,
-			_entityRepo);
+			_entityRepo,
+			_definitions);
 
 		string[] wm2018Teams = ["ARG","AUS","BEL","BRA","COL","CRC","CRO","DEN","EGY","ENG","ESP","FRA","GER","IRN","ISL","JPN","KOR","KSA","MAR","MEX","NGA","PAN","PER","POL","POR","RUS","SEN","SRB","SUI","SWE","TUN","URU"];
 		_entityRepo.Save(new EloSet
@@ -141,6 +142,27 @@ public class BulkSimRunnerTests
 		Func<Task> act = () => throwingRunner.RunAsync(spec, count: 1);
 
 		await act.Should().NotThrowAsync("the year-matched override should supply every score, never falling back to the throwing default");
+	}
+
+	[Fact]
+	public async Task Run_ExplicitEloSetName_OverridesYearMatch()
+	{
+		// Picker selected a non-year EloSet — it must win over both the year-match and the active fallback.
+		var throwingRunner = new BulkSimRunner(
+			_factory,
+			new CompetitionSimulator(new ThrowOnCallScoreModel()),
+			_repo,
+			_entityRepo,
+			_definitions);
+
+		string[] wm2018Teams = ["ARG","AUS","BEL","BRA","COL","CRC","CRO","DEN","EGY","ENG","ESP","FRA","GER","IRN","ISL","JPN","KOR","KSA","MAR","MEX","NGA","PAN","PER","POL","POR","RUS","SEN","SRB","SUI","SWE","TUN","URU"];
+		_entityRepo.Save(new EloSet { Name = "Germany-OP", Date = new DateOnly(2026, 1, 1), Snapshot = wm2018Teams.ToDictionary(t => t, _ => 1500) });
+		// Year-matched "2018" is intentionally absent here — only the picked set covers the lineup. If the resolver ignored EloSetName, the test would fall through and the throwing default would fire.
+
+		var spec = new HistoricalSpec { DefinitionId = "wm-2018", Played = false, EloSetName = "Germany-OP" };
+		Func<Task> act = () => throwingRunner.RunAsync(spec, count: 1);
+
+		await act.Should().NotThrowAsync("the explicit EloSetName must resolve, regardless of year-match availability");
 	}
 
 	sealed class ThrowOnCallScoreModel : IScoreModel

@@ -73,4 +73,13 @@ public sealed class Competition
 
 	/// <summary>All games, in chronological order.</summary>
 	public required Game[] Games { get; init; }
+
+	/// <summary>
+	/// Name of the <see cref="EloSet"/> the simulator should use for this
+	/// competition (e.g. <c>"2018"</c>, <c>"Current"</c>, <c>"Germany-OP"</c>).
+	/// Null = use the legacy fallback chain (year-matched if it exists,
+	/// otherwise the UI's active EloSet). Set by the setup picker; persists
+	/// across saves so the sim path is deterministic per competition.
+	/// </summary>
+	public string? EloSetName { get; set; }
 }
