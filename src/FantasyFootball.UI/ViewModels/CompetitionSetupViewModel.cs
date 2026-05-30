@@ -1,8 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Data;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
+using static FantasyFootball.Messaging;
 
 namespace FantasyFootball.UI.ViewModels;
 
@@ -76,6 +78,19 @@ public partial class CompetitionSetupViewModel : ObservableObject
 
 		AvailableEloSetNames = LoadEloSetNames();
 		SelectedEloSetName = DefaultEloSetNameFor(SelectedYear);
+
+		// Refresh when the user creates / deletes / switches an EloSet on the Teams page mid-session, so the new name shows up here without a page reload.
+		MessageBus.Register<EloSetChangedMessage>(this, (_, _) => RefreshEloSetNames());
+		MessageBus.Register<DataResetMessage>(this, (_, _) => RefreshEloSetNames());
+	}
+
+	void RefreshEloSetNames()
+	{
+		AvailableEloSetNames = LoadEloSetNames();
+		if (SelectedEloSetName is not null && !AvailableEloSetNames.Contains(SelectedEloSetName))
+		{
+			SelectedEloSetName = DefaultEloSetNameFor(SelectedYear);
+		}
 	}
 
 	public IReadOnlyList<CompetitionType> AvailableTypes { get; }

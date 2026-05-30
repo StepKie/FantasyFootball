@@ -4,6 +4,7 @@
 @using FantasyFootball.Services
 @inject IDataService DataService
 @inject IActiveEloSet ActiveEloSet
+@inject IRepository EntityRepo
 @inject ICompetitionRepository Repo
 @inject IVenueRegistry VenueRegistry
 
@@ -97,9 +98,9 @@
       <div class="game-details-row">
         <span class="game-details-label">Elo</span>
         <span class="game-details-value game-details-value-pair">
-          <span>@ActiveEloSet.EloOf(_homeTeam)</span>
+          <span>@DisplayEloOf(_homeTeam)</span>
           <span class="game-details-sep">—</span>
-          <span>@ActiveEloSet.EloOf(_awayTeam)</span>
+          <span>@DisplayEloOf(_awayTeam)</span>
         </span>
       </div>
       <div class="game-details-row">
@@ -195,7 +196,7 @@
       var fetchAwayId = _awayTeam!.ShortName;
       _lastFetchedHomeId = fetchHomeId;
       _lastFetchedAwayId = fetchAwayId;
-      _prob = MatchProbability.Predict(ActiveEloSet.EloOf(_homeTeam), ActiveEloSet.EloOf(_awayTeam));
+      _prob = MatchProbability.Predict(DisplayEloOf(_homeTeam), DisplayEloOf(_awayTeam));
       // Force a real yield so the popover renders W/D/L + xG immediately while the O(N comps) H2H walk runs. Capture team ids into locals above — they're stable across the suspension; _homeTeam / _awayTeam could be reset by a concurrent OnParametersSetAsync.
       await Task.Yield();
       _h2h = await HeadToHeadLookup.AcrossAsync(Repo, fetchHomeId, fetchAwayId);
@@ -207,6 +208,15 @@
   }
 
   Task HandleRowClick() => OnDetailsToggle.InvokeAsync();
+
+  // Display elos for the popover + probability: match the EloSet this competition is pinned to (or year-matched), falling back to the UI-active set only when neither is available. Otherwise a historical sim's popover shows modern elos for a 1986 game (FRG → 0 if not in the active set).
+  int DisplayEloOf(Team? team)
+  {
+    if (team is null) { return 0; }
+    var set = Competition is null ? null : HistoricalScoreModelResolver.ResolveEloSet(Competition.EloSetName, Competition.Year, EntityRepo);
+    var snapshot = set?.Snapshot ?? ActiveEloSet.Current?.Snapshot;
+    return snapshot?.GetValueOrDefault(team.ShortName) ?? 0;
+  }
 
   // Floor at "<1%": "0%" reads as impossible for a heavy underdog who could still win.
   static string FormatPct(double p) => p > 0 && p < 0.005 ? "<1%" : $"{p * 100:0}%";
