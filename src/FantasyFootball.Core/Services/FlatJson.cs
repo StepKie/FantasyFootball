@@ -104,6 +104,7 @@ public static class FlatJson
 			type = c.Type,
 			year = c.Year,
 			formatId = c.FormatId,
+			eloSetName = c.EloSetName,
 			simulationStart = c.SimulationStart,
 			simulationFinished = c.SimulationFinished,
 			stages = c.Stages,

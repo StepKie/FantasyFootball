@@ -1,0 +1,558 @@
+{
+  "id": "em-2000",
+  "title": "European Championship 2000",
+  "type": "EM",
+  "year": 2000,
+  "formatId": "euro-16team-4group",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "qf",
+      "name": "Quarterfinal",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 4
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 5
+    }
+  ],
+  "groups": {
+    "A": [
+      "GER",
+      "ROU",
+      "POR",
+      "ENG"
+    ],
+    "B": [
+      "BEL",
+      "SWE",
+      "TUR",
+      "ITA"
+    ],
+    "C": [
+      "ESP",
+      "NOR",
+      "YUG",
+      "SVN"
+    ],
+    "D": [
+      "NED",
+      "CZE",
+      "FRA",
+      "DEN"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "GER",
+      "awayTeamId": "ROU",
+      "playedOn": "2000-06-12T18:00:00Z",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      },
+      "attendance": 28500
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "POR",
+      "awayTeamId": "ENG",
+      "playedOn": "2000-06-12T18:00:00Z",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      },
+      "attendance": 31500
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "ROU",
+      "awayTeamId": "POR",
+      "playedOn": "2000-06-17T18:00:00Z",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      },
+      "attendance": 28400
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "GER",
+      "playedOn": "2000-06-17T18:00:00Z",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      },
+      "attendance": 29000
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "ENG",
+      "awayTeamId": "ROU",
+      "playedOn": "2000-06-20T18:00:00Z",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      },
+      "attendance": 30000
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "POR",
+      "awayTeamId": "GER",
+      "playedOn": "2000-06-20T18:00:00Z",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      },
+      "attendance": 44000
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "BEL",
+      "awayTeamId": "SWE",
+      "playedOn": "2000-06-10T18:00:00Z",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      },
+      "attendance": 46700
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "TUR",
+      "awayTeamId": "ITA",
+      "playedOn": "2000-06-11T18:00:00Z",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      },
+      "attendance": 22500
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "ITA",
+      "awayTeamId": "BEL",
+      "playedOn": "2000-06-14T18:00:00Z",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      },
+      "attendance": 44500
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "SWE",
+      "awayTeamId": "TUR",
+      "playedOn": "2000-06-15T18:00:00Z",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      },
+      "attendance": 27000
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "TUR",
+      "awayTeamId": "BEL",
+      "playedOn": "2000-06-19T18:00:00Z",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      },
+      "attendance": 48000
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "ITA",
+      "awayTeamId": "SWE",
+      "playedOn": "2000-06-19T18:00:00Z",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      },
+      "attendance": 30000
+    },
+    {
+      "kind": "group",
+      "id": 13,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "ESP",
+      "awayTeamId": "NOR",
+      "playedOn": "2000-06-13T18:00:00Z",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      },
+      "attendance": 41000
+    },
+    {
+      "kind": "group",
+      "id": 14,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "YUG",
+      "awayTeamId": "SVN",
+      "playedOn": "2000-06-13T18:00:00Z",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      },
+      "attendance": 18500
+    },
+    {
+      "kind": "group",
+      "id": 15,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "SVN",
+      "awayTeamId": "ESP",
+      "playedOn": "2000-06-18T18:00:00Z",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      },
+      "attendance": 51300
+    },
+    {
+      "kind": "group",
+      "id": 16,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "NOR",
+      "awayTeamId": "YUG",
+      "playedOn": "2000-06-18T18:00:00Z",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      },
+      "attendance": 28750
+    },
+    {
+      "kind": "group",
+      "id": 17,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "YUG",
+      "awayTeamId": "ESP",
+      "playedOn": "2000-06-21T18:00:00Z",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      },
+      "attendance": 26611
+    },
+    {
+      "kind": "group",
+      "id": 18,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "SVN",
+      "awayTeamId": "NOR",
+      "playedOn": "2000-06-21T18:00:00Z",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      },
+      "attendance": 21000
+    },
+    {
+      "kind": "group",
+      "id": 19,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "FRA",
+      "awayTeamId": "DEN",
+      "playedOn": "2000-06-11T18:00:00Z",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      },
+      "attendance": 28100
+    },
+    {
+      "kind": "group",
+      "id": 20,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "NED",
+      "awayTeamId": "CZE",
+      "playedOn": "2000-06-11T18:00:00Z",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      },
+      "attendance": 50800
+    },
+    {
+      "kind": "group",
+      "id": 21,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "CZE",
+      "awayTeamId": "FRA",
+      "playedOn": "2000-06-16T18:00:00Z",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      },
+      "attendance": 27243
+    },
+    {
+      "kind": "group",
+      "id": 22,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "DEN",
+      "awayTeamId": "NED",
+      "playedOn": "2000-06-16T18:00:00Z",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      },
+      "attendance": 51425
+    },
+    {
+      "kind": "group",
+      "id": 23,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "DEN",
+      "awayTeamId": "CZE",
+      "playedOn": "2000-06-21T18:00:00Z",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      },
+      "attendance": 20000
+    },
+    {
+      "kind": "group",
+      "id": 24,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "FRA",
+      "awayTeamId": "NED",
+      "playedOn": "2000-06-21T18:00:00Z",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 25,
+      "roundId": "qf",
+      "homeQual": "A1",
+      "awayQual": "B2",
+      "homeTeamId": "POR",
+      "awayTeamId": "TUR",
+      "playedOn": "2000-06-24T18:00:00Z",
+      "attendance": 42000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 26,
+      "roundId": "qf",
+      "homeQual": "B1",
+      "awayQual": "A2",
+      "homeTeamId": "ITA",
+      "awayTeamId": "ROU",
+      "playedOn": "2000-06-24T18:00:00Z",
+      "attendance": 41000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 27,
+      "roundId": "qf",
+      "homeQual": "C1",
+      "awayQual": "D2",
+      "homeTeamId": "ESP",
+      "awayTeamId": "FRA",
+      "playedOn": "2000-06-25T18:00:00Z",
+      "attendance": 26614,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 28,
+      "roundId": "qf",
+      "homeQual": "D1",
+      "awayQual": "C2",
+      "homeTeamId": "NED",
+      "awayTeamId": "YUG",
+      "playedOn": "2000-06-25T18:00:00Z",
+      "attendance": 44000,
+      "result": {
+        "homeScore": 6,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 29,
+      "roundId": "sf",
+      "homeQual": "W-27",
+      "awayQual": "W-25",
+      "homeTeamId": "FRA",
+      "awayTeamId": "POR",
+      "playedOn": "2000-06-28T18:00:00Z",
+      "attendance": 48000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "EXTRA_TIME"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 30,
+      "roundId": "sf",
+      "homeQual": "W-26",
+      "awayQual": "W-28",
+      "homeTeamId": "ITA",
+      "awayTeamId": "NED",
+      "playedOn": "2000-06-29T18:00:00Z",
+      "attendance": 50000,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 1
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 31,
+      "roundId": "final",
+      "homeQual": "W-29",
+      "awayQual": "W-30",
+      "homeTeamId": "FRA",
+      "awayTeamId": "ITA",
+      "playedOn": "2000-07-02T18:00:00Z",
+      "attendance": 48100,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "EXTRA_TIME"
+      }
+    }
+  ]
+}

@@ -14,8 +14,6 @@ public partial class App : Application
 		ServiceHelper.GetService<IDataService>()!.Initialize();
 
 		Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
-		Routing.RegisterRoute(nameof(TeamsPage), typeof(TeamsPage));
-		Routing.RegisterRoute(nameof(TeamDetailPage), typeof(TeamDetailPage));
 	}
 
 	protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell());

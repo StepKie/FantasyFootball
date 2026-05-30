@@ -3,7 +3,10 @@
 @using FantasyFootball.Repositories
 @using FantasyFootball.Services
 @inject IDataService DataService
+@inject IActiveEloSet ActiveEloSet
+@inject IRepository EntityRepo
 @inject ICompetitionRepository Repo
+@inject IVenueRegistry VenueRegistry
 
 <div class="scoreboard-row-wrapper" id="@(ShowSim ? "current-game" : ShowUndo ? "just-finished-game" : null)">
 <div class="scoreboard-row @(IsJustFinished ? "scoreboard-row-just-finished" : "") @(DetailsOpen ? "scoreboard-row-open" : "")"
@@ -72,6 +75,20 @@
             Class="game-details-popover">
   @if (DetailsOpen)
   {
+    @if (_venue is not null)
+    {
+      <div class="game-details-row">
+        <span class="game-details-label">Venue</span>
+        <span class="game-details-value game-details-value-text">@_venue.Name@(_venue.City is { } c ? $" · {c}" : "") · cap. @_venue.Capacity.ToString("N0")</span>
+      </div>
+    }
+    @if (Game.Attendance is { } att)
+    {
+      <div class="game-details-row">
+        <span class="game-details-label">Attendance</span>
+        <span class="game-details-value">@att.ToString("N0")</span>
+      </div>
+    }
     @if (_homeTeam is null || _awayTeam is null)
     {
       <MudText Typo="Typo.body2">Teams not yet decided.</MudText>
@@ -81,9 +98,9 @@
       <div class="game-details-row">
         <span class="game-details-label">Elo</span>
         <span class="game-details-value game-details-value-pair">
-          <span>@_homeTeam.Elo</span>
+          <span>@DisplayEloOf(_homeTeam)</span>
           <span class="game-details-sep">—</span>
-          <span>@_awayTeam.Elo</span>
+          <span>@DisplayEloOf(_awayTeam)</span>
         </span>
       </div>
       <div class="game-details-row">
@@ -136,6 +153,7 @@
 
   Team? _homeTeam;
   Team? _awayTeam;
+  Venue? _venue;
   string _homeLabel = "";
   string _awayLabel = "";
   string _groupLetter = "";
@@ -151,6 +169,7 @@
     var awayId = CompetitionExtensions.AwayTeamIdOf(Game);
     _homeTeam = homeId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == homeId);
     _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId);
+    _venue = Game.VenueId is { } vid ? VenueRegistry.Get(vid) : null;
 
     // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id.
     _homeLabel = _homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?";
@@ -177,7 +196,7 @@
       var fetchAwayId = _awayTeam!.ShortName;
       _lastFetchedHomeId = fetchHomeId;
       _lastFetchedAwayId = fetchAwayId;
-      _prob = MatchProbability.Predict(_homeTeam.Elo, _awayTeam.Elo);
+      _prob = MatchProbability.Predict(DisplayEloOf(_homeTeam), DisplayEloOf(_awayTeam));
       // Force a real yield so the popover renders W/D/L + xG immediately while the O(N comps) H2H walk runs. Capture team ids into locals above — they're stable across the suspension; _homeTeam / _awayTeam could be reset by a concurrent OnParametersSetAsync.
       await Task.Yield();
       _h2h = await HeadToHeadLookup.AcrossAsync(Repo, fetchHomeId, fetchAwayId);
@@ -189,6 +208,15 @@
   }
 
   Task HandleRowClick() => OnDetailsToggle.InvokeAsync();
+
+  // Display elos for the popover + probability: match the EloSet this competition is pinned to (or year-matched), falling back to the UI-active set only when neither is available. Otherwise a historical sim's popover shows modern elos for a 1986 game (FRG → 0 if not in the active set).
+  int DisplayEloOf(Team? team)
+  {
+    if (team is null) { return 0; }
+    var set = Competition is null ? null : HistoricalScoreModelResolver.ResolveEloSet(Competition.EloSetName, Competition.Year, EntityRepo);
+    var snapshot = set?.Snapshot ?? ActiveEloSet.Current?.Snapshot;
+    return snapshot?.GetValueOrDefault(team.ShortName) ?? 0;
+  }
 
   // Floor at "<1%": "0%" reads as impossible for a heavy underdog who could still win.
   static string FormatPct(double p) => p > 0 && p < 0.005 ? "<1%" : $"{p * 100:0}%";

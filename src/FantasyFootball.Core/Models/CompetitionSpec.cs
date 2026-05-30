@@ -35,6 +35,9 @@ namespace FantasyFootball.Models;
 public abstract record class CompetitionSpec
 {
 	public required string DefinitionId { get; init; }
+
+	/// <summary>EloSet name to bake onto the materialized Competition (defaults to null = legacy fallback chain).</summary>
+	public string? EloSetName { get; init; }
 }
 
 /// <summary>
@@ -42,7 +45,18 @@ public abstract record class CompetitionSpec
 /// finished historical competition (e.g. WC2022), this is the real
 /// 32-team field that actually played.
 /// </summary>
-public sealed record class HistoricalSpec : CompetitionSpec;
+public sealed record class HistoricalSpec : CompetitionSpec
+{
+	/// <summary>
+	/// Whether to keep the definition's baked-in results (true — browse the
+	/// real historical outcome) or reset to a scheduled, unplayed competition
+	/// (false — re-simulate the real lineup from scratch). Default true.
+	/// Lives here, not on the base, because it only makes sense for the
+	/// definition's own lineup: a substituted lineup (Custom/Random) can't
+	/// carry the original results, so those specs always reset regardless.
+	/// </summary>
+	public bool Played { get; init; } = true;
+}
 
 /// <summary>
 /// "Use exactly these teams in these groups." Source is typically a

@@ -16,15 +16,21 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	readonly ICompetitionRepository _repo;
 	readonly CompetitionSimulator _simulator;
 	readonly CompetitionFactory _factory;
+	readonly IRepository _entityRepo;
+
+	// Resolved when Competition loads; passed to every Simulate* call so the year-matched or pinned EloSet is used.
+	IScoreModel? _scoreOverride;
 
 	public CompetitionDetailViewModel(
 		ICompetitionRepository repo,
 		CompetitionSimulator simulator,
-		CompetitionFactory factory)
+		CompetitionFactory factory,
+		IRepository entityRepo)
 	{
 		_repo = repo;
 		_simulator = simulator;
 		_factory = factory;
+		_entityRepo = entityRepo;
 	}
 
 	/// <summary>
@@ -115,6 +121,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		Competition = await _repo.GetAsync(competitionId);
 		if (Competition is null) { return; }
 
+		_scoreOverride = HistoricalScoreModelResolver.Resolve(Competition, _entityRepo);
+
 		var currentGame = Competition.CurrentGame();
 		var currentRoundId = currentGame?.RoundId
 			?? Competition.Rounds.OrderByDescending(r => r.Order).FirstOrDefault()?.Id;
@@ -153,7 +161,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		{
 			try
 			{
-				_simulator.SimulateGame(Competition, game);
+				_simulator.SimulateGame(Competition, game, _scoreOverride);
 				await _repo.SaveAsync(Competition);
 			}
 			catch
@@ -239,7 +247,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			{
 				lastPlayed.Result = null;
 				ClearUnplayedKoResolutions(Competition);
-				_simulator.SimulateGame(Competition, lastPlayed);
+				_simulator.SimulateGame(Competition, lastPlayed, _scoreOverride);
 				CompetitionSimulator.ResolveAvailableKoTeams(Competition);
 				await _repo.SaveAsync(Competition);
 			}
@@ -316,7 +324,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 					.Where(g => g.Result is null && g.PlayedOn <= cutoff)
 					.OrderBy(g => g.PlayedOn))
 				{
-					_simulator.SimulateGame(Competition, game);
+					_simulator.SimulateGame(Competition, game, _scoreOverride);
 					played.Add(game);
 				}
 				await _repo.SaveAsync(Competition);
@@ -348,6 +356,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		{
 			DefinitionId = Competition.DefinitionId,
 			Groups = Competition.GroupAssignments.Select(g => (string[])g.Clone()).ToArray(),
+			EloSetName = Competition.EloSetName,
 		};
 		var replay = _factory.Create(spec);
 		return await _repo.SaveAsync(replay);
@@ -361,7 +370,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		{
 			// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
 			await Task.Yield();
-			_simulator.Simulate(Competition);
+			_simulator.Simulate(Competition, _scoreOverride);
 			await _repo.SaveAsync(Competition);
 		}
 		finally

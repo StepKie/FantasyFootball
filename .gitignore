@@ -11,9 +11,6 @@
 [Oo]bj/
 bin/
 
-# Locally-placed official competition logos — owner asserts fair use; not for redistribution via the public repo.
-src/FantasyFootball.Web/wwwroot/competition-icons/official/
-
 
 # temporary and other unwanted files #
 ######################

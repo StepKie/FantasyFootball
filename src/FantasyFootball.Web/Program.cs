@@ -31,10 +31,12 @@ builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<IRepository, LocalStorageRepository>();
 builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
-builder.Services.AddScoped<IDataService, CsvDataService>();
+builder.Services.AddScoped<IActiveEloSet, ActiveEloSet>();
+builder.Services.AddScoped<IDataService, JsonDataService>();
 
 builder.Services.AddSingleton<ICompetitionDefinitionStore, EmbeddedCompetitionDefinitionStore>();
-builder.Services.AddScoped<ITeamRegistry, DataServiceTeamRegistry>();
+builder.Services.AddSingleton<IVenueRegistry, EmbeddedVenueRegistry>();
+builder.Services.AddScoped<ITeamRegistry, ActiveEloSetRegistry>();
 builder.Services.AddScoped<ICompetitionRepository, LocalStorageCompetitionRepository>();
 builder.Services.AddScoped<CompetitionFactory>();
 builder.Services.AddScoped<IScoreModel, EloScoreModel>();
@@ -50,7 +52,7 @@ builder.Services.AddScoped<CompetitionsViewModel>();
 
 var app = builder.Build();
 
-// Pre-warm IDataService so the embedded-CSV parse / LocalStorage polymorphic
+// Pre-warm IDataService so the embedded-JSON parse / LocalStorage polymorphic
 // deserialize (~200 teams + countries + confederations) runs during the WASM
 // boot splash rather than stalling the first navigation to Teams / Competitions.
 _ = app.Services.GetRequiredService<IDataService>();

@@ -14,18 +14,19 @@ public class BulkSimRunnerTests
 	readonly CompetitionFactory _factory;
 	readonly CompetitionSimulator _simulator = new(new StubScoreModel());
 	readonly InMemoryCompetitionRepository _repo = new();
+	readonly InMemoryRepository _entityRepo = new();
 	readonly BulkSimRunner _runner;
 
 	public BulkSimRunnerTests()
 	{
 		_factory = new(_definitions);
-		_runner = new(_factory, _simulator, _repo);
+		_runner = new(_factory, _simulator, _repo, _entityRepo, _definitions);
 	}
 
 	[Fact]
 	public async Task Run_Historical_PersistsRequestedCount()
 	{
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		var ids = await _runner.RunAsync(spec, count: 3);
 
 		ids.Should().HaveCount(3);
@@ -36,7 +37,7 @@ public class BulkSimRunnerTests
 	[Fact]
 	public async Task Run_Historical_EachPersistedCompetitionIsFinished()
 	{
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		var ids = await _runner.RunAsync(spec, count: 2);
 
 		foreach (var id in ids)
@@ -56,7 +57,7 @@ public class BulkSimRunnerTests
 		// score model they SHOULD produce identical results too. The point
 		// here is that they're stored as separate competition rows — not
 		// that they're stored together.
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		var ids = await _runner.RunAsync(spec, count: 2);
 
 		var first = await _repo.GetAsync(ids[0]);
@@ -87,7 +88,7 @@ public class BulkSimRunnerTests
 	[Fact]
 	public async Task Run_CountZero_Throws()
 	{
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		Func<Task> act = () => _runner.RunAsync(spec, 0);
 		await act.Should().ThrowAsync<ArgumentOutOfRangeException>();
 	}
@@ -95,7 +96,7 @@ public class BulkSimRunnerTests
 	[Fact]
 	public async Task Run_ReportsProgressEveryIteration()
 	{
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		var reports = new List<int>();
 		var progress = new SyncProgress<int>(reports.Add);
 
@@ -108,7 +109,7 @@ public class BulkSimRunnerTests
 	public async Task Run_HonorsCancellation_StopsMidway()
 	{
 		// Pre-cancelled token: not even the first iteration should run.
-		var spec = new HistoricalSpec { DefinitionId = "wm-2022" };
+		var spec = new HistoricalSpec { DefinitionId = "wm-2022", Played = false };
 		using var cts = new CancellationTokenSource();
 		cts.Cancel();
 
@@ -116,6 +117,58 @@ public class BulkSimRunnerTests
 
 		await act.Should().ThrowAsync<OperationCanceledException>();
 		(await _repo.CountAsync()).Should().Be(0);
+	}
+
+	[Fact]
+	public async Task Run_Historical_UsesYearMatchedEloSetOverride()
+	{
+		// Throwing default model verifies the year-matched EloSet override is the sole score path.
+		var throwingRunner = new BulkSimRunner(
+			_factory,
+			new CompetitionSimulator(new ThrowOnCallScoreModel()),
+			_repo,
+			_entityRepo,
+			_definitions);
+
+		string[] wm2018Teams = ["ARG","AUS","BEL","BRA","COL","CRC","CRO","DEN","EGY","ENG","ESP","FRA","GER","IRN","ISL","JPN","KOR","KSA","MAR","MEX","NGA","PAN","PER","POL","POR","RUS","SEN","SRB","SUI","SWE","TUN","URU"];
+		_entityRepo.Save(new EloSet
+		{
+			Name = "2018",
+			Date = new DateOnly(2018, 6, 14),
+			Snapshot = wm2018Teams.ToDictionary(t => t, _ => 1500),
+		});
+
+		var spec = new HistoricalSpec { DefinitionId = "wm-2018", Played = false };
+		Func<Task> act = () => throwingRunner.RunAsync(spec, count: 1);
+
+		await act.Should().NotThrowAsync("the year-matched override should supply every score, never falling back to the throwing default");
+	}
+
+	[Fact]
+	public async Task Run_ExplicitEloSetName_OverridesYearMatch()
+	{
+		// Picker selected a non-year EloSet — it must win over both the year-match and the active fallback.
+		var throwingRunner = new BulkSimRunner(
+			_factory,
+			new CompetitionSimulator(new ThrowOnCallScoreModel()),
+			_repo,
+			_entityRepo,
+			_definitions);
+
+		string[] wm2018Teams = ["ARG","AUS","BEL","BRA","COL","CRC","CRO","DEN","EGY","ENG","ESP","FRA","GER","IRN","ISL","JPN","KOR","KSA","MAR","MEX","NGA","PAN","PER","POL","POR","RUS","SEN","SRB","SUI","SWE","TUN","URU"];
+		_entityRepo.Save(new EloSet { Name = "Germany-OP", Date = new DateOnly(2026, 1, 1), Snapshot = wm2018Teams.ToDictionary(t => t, _ => 1500) });
+		// Year-matched "2018" is intentionally absent here — only the picked set covers the lineup. If the resolver ignored EloSetName, the test would fall through and the throwing default would fire.
+
+		var spec = new HistoricalSpec { DefinitionId = "wm-2018", Played = false, EloSetName = "Germany-OP" };
+		Func<Task> act = () => throwingRunner.RunAsync(spec, count: 1);
+
+		await act.Should().NotThrowAsync("the explicit EloSetName must resolve, regardless of year-match availability");
+	}
+
+	sealed class ThrowOnCallScoreModel : IScoreModel
+	{
+		public Result ScoreGroupGame(string h, string a) => throw new InvalidOperationException("default model called — override didn't kick in");
+		public Result ScoreKoGame(string h, string a) => throw new InvalidOperationException("default model called — override didn't kick in");
 	}
 
 	sealed class StubRegistry : ITeamRegistry

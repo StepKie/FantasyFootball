@@ -1,9 +1,11 @@
 @page "/competitions/setup"
 @using FantasyFootball.Data
 @using FantasyFootball.Models
+@using FantasyFootball.Services
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
 @inject CompetitionSetupViewModel ViewModel
+@inject IActiveEloSet ActiveEloSet
 @inject NavigationManager Nav
 @implements IDisposable
 
@@ -32,7 +34,12 @@
                    ValueChanged="@((CompetitionType v) => ViewModel.SelectedType = v)">
           @foreach (var t in ViewModel.AvailableTypes)
           {
-            <MudSelectItem Value="@t">@DisplayName(t)</MudSelectItem>
+            <MudSelectItem Value="@t">
+              <div class="d-flex align-center gap-2">
+                <CompetitionTypeIcon Type="@t" Size="22" />
+                <span>@DisplayName(t)</span>
+              </div>
+            </MudSelectItem>
           }
         </MudSelect>
         <MudSelect T="int"
@@ -42,6 +49,16 @@
           @foreach (var year in ViewModel.Years)
           {
             <MudSelectItem Value="@year">@year</MudSelectItem>
+          }
+        </MudSelect>
+        <MudSelect T="string"
+                   Label="Elo set"
+                   Value="ViewModel.SelectedEloSetName"
+                   ValueChanged="@((string v) => ViewModel.SelectedEloSetName = v)"
+                   HelperText="@($"Used as the source of team strengths for this competition.{(ViewModel.SelectedEloSetName == ViewModel.SelectedYear.ToString(System.Globalization.CultureInfo.InvariantCulture) ? " (year-matched default)" : "")}")">
+          @foreach (var name in ViewModel.AvailableEloSetNames)
+          {
+            <MudSelectItem Value="@name">@name</MudSelectItem>
           }
         </MudSelect>
 
@@ -158,7 +175,7 @@
                 <FlagIcon Team="team" Size="28" />
                 <MudText Typo="Typo.body2">@team.Name</MudText>
                 <MudSpacer />
-                <MudText Typo="Typo.caption" Color="Color.Secondary">@team.Elo</MudText>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">@ActiveEloSet.EloOf(team)</MudText>
               </div>
             }
           </div>
@@ -197,6 +214,7 @@
   {
     CompetitionType.WM => "World Cup",
     CompetitionType.EM => "European Championship",
+    CompetitionType.CHAMPIONS_LEAGUE => "Champions League",
     _ => t.ToString(),
   };
 }

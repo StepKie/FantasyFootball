@@ -1,0 +1,16 @@
+/* MudIcon underneath, img overlay on top. If img 404s, onerror hides it and the MudIcon shows through. */
+.comp-type-icon-stack {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.comp-type-icon-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

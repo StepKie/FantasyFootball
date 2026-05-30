@@ -2,43 +2,46 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Models;
+using FantasyFootball.Repositories;
 using FantasyFootball.Services;
 using static FantasyFootball.Messaging;
 
 namespace FantasyFootball.UI.ViewModels;
 
-/// <summary>
-/// Teams page view-model. Lives in the shared UI library so the same instance
-/// works in both Blazor WASM and the future MAUI BlazorWebView host.
-///
-/// Differences from the MAUI VM (FantasyFootball.ViewModels.TeamsViewModel):
-/// - No Shell navigation; the .razor page handles row-click navigation via NavigationManager.
-/// - No SelectionMode / QueryProperty plumbing; that flow was MAUI-Shell specific and will
-///   be replaced by a dialog/route on the web side as the CompetitionSetup port lands.
-/// - +new-team is deliberately omitted: the MAUI version is [Obsolete] and shows an
-///   "under construction" dialog. Will land as a MudDialog when the feature is built.
-/// </summary>
 public partial class TeamsViewModel : ObservableObject
 {
 	readonly IDataService _dataService;
+	readonly IActiveEloSet _activeEloSet;
+	readonly IRepository _repo;
 
 	List<TeamListItem> _allTeams = [];
+	bool _suppressActiveChange;
 
-	public TeamsViewModel(IDataService dataService)
+	public TeamsViewModel(IDataService dataService, IActiveEloSet activeEloSet, IRepository repo)
 	{
 		_dataService = dataService;
+		_activeEloSet = activeEloSet;
+		_repo = repo;
 
-		MessageBus.Register<TeamUpdatedMessage>(this, (_, _) => LoadTeams());
-		MessageBus.Register<DataResetMessage>(this, (_, _) => LoadTeams());
+		MessageBus.Register<EloSetChangedMessage>(this, (_, _) =>
+		{
+			SyncSelectedFromActive();
+			LoadTeams();
+		});
+		MessageBus.Register<DataResetMessage>(this, (_, _) =>
+		{
+			LoadEloSets();
+			SyncSelectedFromActive();
+			LoadTeams();
+		});
 
 		Confederations = Confederation.ALL.Select(c => c.Name).Prepend(AllLabel).ToList();
 		SelectedConfederation = AllLabel;
+		LoadEloSets();
+		SyncSelectedFromActive();
 		LoadTeams();
 	}
 
-	// "All" sentinel used to show every confederation. AppResources.All exists but the
-	// resource manager isn't reliably initialized in Blazor WASM without extra wiring;
-	// a fixed English string is fine here until the i18n follow-up lands.
 	public const string AllLabel = "All";
 
 	public IList<string> Confederations { get; }
@@ -47,10 +50,77 @@ public partial class TeamsViewModel : ObservableObject
 	public partial string SelectedConfederation { get; set; }
 
 	[ObservableProperty]
+	public partial IReadOnlyList<string> AvailableEloSetNames { get; set; } = [];
+
+	[ObservableProperty]
+	public partial string? SelectedEloSetName { get; set; }
+
+	[ObservableProperty]
 	public partial ObservableCollection<TeamListItem> TeamsInSelectedConfederation { get; set; } = [];
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
+
+	// Bundled EloSets (Current + every elo-{year}.json) can't be deleted: removing one would break HistoricalSpec sims for that year (bulk wm-1986 with "1986" removed falls through to the active set and crashes on FRG/GDR).
+	public bool CanDeleteSelectedSet =>
+		SelectedEloSetName is not null
+		&& !JsonDataService.BundledEloSetNames.Contains(SelectedEloSetName);
+
+	void LoadEloSets()
+	{
+		var all = _repo.GetAll<EloSet>();
+		AvailableEloSetNames = all
+			.Select(s => s.Name)
+			.OrderBy(name => name == JsonDataService.CurrentEloSetName ? 0 : 1)
+			.ThenBy(name => name, StringComparer.Ordinal)
+			.ToList();
+	}
+
+	void SyncSelectedFromActive()
+	{
+		_suppressActiveChange = true;
+		try { SelectedEloSetName = _activeEloSet.Current?.Name; }
+		finally { _suppressActiveChange = false; }
+		OnPropertyChanged(nameof(CanDeleteSelectedSet));
+	}
+
+	partial void OnSelectedEloSetNameChanged(string? value)
+	{
+		if (_suppressActiveChange) { return; }
+		if (string.IsNullOrEmpty(value)) { return; }
+		if (_activeEloSet.Current?.Name == value) { return; }
+		var target = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == value);
+		if (target is not null) { _activeEloSet.SetCurrent(target); }
+	}
+
+	/// <summary>Clones the active set's snapshot into a new EloSet with <paramref name="name"/> and makes it active.</summary>
+	public void SaveAs(string name)
+	{
+		var source = _activeEloSet.Current ?? throw new InvalidOperationException("No active EloSet to save.");
+		var copy = new EloSet
+		{
+			Name = name,
+			Date = DateOnly.FromDateTime(DateTime.UtcNow),
+			Snapshot = new Dictionary<string, int>(source.Snapshot),
+		};
+		_repo.Save(copy);
+		LoadEloSets();
+		_activeEloSet.SetCurrent(copy);
+	}
+
+	/// <summary>Deletes the active set (unless it's the read-only "Current") and switches the active set back to "Current".</summary>
+	public void DeleteSelected()
+	{
+		if (!CanDeleteSelectedSet) { return; }
+		var name = SelectedEloSetName!;
+		var target = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == name);
+		if (target is null) { return; }
+		_repo.Delete(target);
+
+		var fallback = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == JsonDataService.CurrentEloSetName);
+		if (fallback is not null) { _activeEloSet.SetCurrent(fallback); }
+		LoadEloSets();
+	}
 
 	void LoadTeams()
 	{
@@ -58,8 +128,8 @@ public partial class TeamsViewModel : ObservableObject
 		try
 		{
 			_allTeams = _dataService.AllTeams
-				.OrderByDescending(t => t.Elo)
-				.Select((t, i) => new TeamListItem(i + 1, t))
+				.OrderByDescending(t => _activeEloSet.EloOf(t))
+				.Select((t, i) => new TeamListItem(i + 1, t, _activeEloSet.EloOf(t)))
 				.ToList();
 			UpdateFilteredTeams();
 		}
@@ -83,7 +153,7 @@ public partial class TeamsViewModel : ObservableObject
 
 /// <summary>
 /// Lightweight projection for the Teams list. Rank is computed once at load time
-/// from the global Elo ordering; the full TeamViewModel (with editing/save logic)
-/// will land with the TeamDetail page port.
+/// from the active EloSet's ordering; Elo is snapshotted at load time too so the
+/// table row doesn't need to consult IActiveEloSet on every render.
 /// </summary>
-public record TeamListItem(int Rank, Team Team);
+public record TeamListItem(int Rank, Team Team, int Elo);

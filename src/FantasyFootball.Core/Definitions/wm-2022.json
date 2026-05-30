@@ -123,8 +123,15 @@
       "homeTeamId": "QAT",
       "awayTeamId": "ECU",
       "id": 1,
-      "playedOn": "2022-11-20T17:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-20T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "al-bayt-stadium",
+      "attendance": 67372,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -132,8 +139,15 @@
       "homeTeamId": "ENG",
       "awayTeamId": "IRN",
       "id": 2,
-      "playedOn": "2022-11-21T14:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-21T13:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "khalifa-international-stadium",
+      "attendance": 45334,
+      "result": {
+        "homeScore": 6,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -141,8 +155,15 @@
       "homeTeamId": "SEN",
       "awayTeamId": "NED",
       "id": 3,
-      "playedOn": "2022-11-21T17:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-21T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "al-thumama-stadium",
+      "attendance": 41721,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -150,8 +171,15 @@
       "homeTeamId": "USA",
       "awayTeamId": "WAL",
       "id": 4,
-      "playedOn": "2022-11-21T20:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-21T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "ahmad-bin-ali-stadium",
+      "attendance": 43418,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -159,8 +187,15 @@
       "homeTeamId": "ARG",
       "awayTeamId": "KSA",
       "id": 5,
-      "playedOn": "2022-11-22T11:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-22T10:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "lusail-stadium",
+      "attendance": 88012,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -168,8 +203,15 @@
       "homeTeamId": "DEN",
       "awayTeamId": "TUN",
       "id": 6,
-      "playedOn": "2022-11-22T14:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-22T13:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "education-city-stadium",
+      "attendance": 42925,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -177,8 +219,15 @@
       "homeTeamId": "MEX",
       "awayTeamId": "POL",
       "id": 7,
-      "playedOn": "2022-11-22T17:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-22T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "stadium-974",
+      "attendance": 39369,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -186,8 +235,15 @@
       "homeTeamId": "FRA",
       "awayTeamId": "AUS",
       "id": 8,
-      "playedOn": "2022-11-22T20:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-22T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "al-janoub-stadium",
+      "attendance": 40875,
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -195,8 +251,15 @@
       "homeTeamId": "MAR",
       "awayTeamId": "CRO",
       "id": 9,
-      "playedOn": "2022-11-23T11:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-23T10:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "al-bayt-stadium",
+      "attendance": 59407,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -204,8 +267,15 @@
       "homeTeamId": "GER",
       "awayTeamId": "JPN",
       "id": 10,
-      "playedOn": "2022-11-23T14:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-23T13:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "khalifa-international-stadium",
+      "attendance": 42608,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -213,8 +283,15 @@
       "homeTeamId": "ESP",
       "awayTeamId": "CRC",
       "id": 11,
-      "playedOn": "2022-11-23T17:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-23T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "al-thumama-stadium",
+      "attendance": 40013,
+      "result": {
+        "homeScore": 7,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -222,8 +299,15 @@
       "homeTeamId": "BEL",
       "awayTeamId": "CAN",
       "id": 12,
-      "playedOn": "2022-11-23T20:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-23T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "ahmad-bin-ali-stadium",
+      "attendance": 40432,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -231,8 +315,15 @@
       "homeTeamId": "SUI",
       "awayTeamId": "CMR",
       "id": 13,
-      "playedOn": "2022-11-24T11:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-24T10:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "al-janoub-stadium",
+      "attendance": 39089,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -240,8 +331,15 @@
       "homeTeamId": "URU",
       "awayTeamId": "KOR",
       "id": 14,
-      "playedOn": "2022-11-24T14:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-24T13:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "education-city-stadium",
+      "attendance": 41663,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -249,8 +347,15 @@
       "homeTeamId": "POR",
       "awayTeamId": "GHA",
       "id": 15,
-      "playedOn": "2022-11-24T17:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-24T16:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "stadium-974",
+      "attendance": 42662,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -258,8 +363,15 @@
       "homeTeamId": "BRA",
       "awayTeamId": "SRB",
       "id": 16,
-      "playedOn": "2022-11-24T20:00:00Z",
-      "roundId": "group-r1"
+      "playedOn": "2022-11-24T19:00:00Z",
+      "roundId": "group-r1",
+      "venueId": "lusail-stadium",
+      "attendance": 88103,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -267,8 +379,15 @@
       "homeTeamId": "WAL",
       "awayTeamId": "IRN",
       "id": 17,
-      "playedOn": "2022-11-25T11:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-25T10:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "ahmad-bin-ali-stadium",
+      "attendance": 40875,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -276,8 +395,15 @@
       "homeTeamId": "QAT",
       "awayTeamId": "SEN",
       "id": 18,
-      "playedOn": "2022-11-25T14:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-25T13:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "al-thumama-stadium",
+      "attendance": 41797,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -285,8 +411,15 @@
       "homeTeamId": "NED",
       "awayTeamId": "ECU",
       "id": 19,
-      "playedOn": "2022-11-25T17:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-25T16:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "khalifa-international-stadium",
+      "attendance": 44833,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -294,8 +427,15 @@
       "homeTeamId": "ENG",
       "awayTeamId": "USA",
       "id": 20,
-      "playedOn": "2022-11-25T20:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-25T19:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "al-bayt-stadium",
+      "attendance": 68463,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -303,8 +443,15 @@
       "homeTeamId": "TUN",
       "awayTeamId": "AUS",
       "id": 21,
-      "playedOn": "2022-11-26T11:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-26T10:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "al-janoub-stadium",
+      "attendance": 41823,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -312,8 +459,15 @@
       "homeTeamId": "POL",
       "awayTeamId": "KSA",
       "id": 22,
-      "playedOn": "2022-11-26T14:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-26T13:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "education-city-stadium",
+      "attendance": 44259,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -321,8 +475,15 @@
       "homeTeamId": "FRA",
       "awayTeamId": "DEN",
       "id": 23,
-      "playedOn": "2022-11-26T17:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-26T16:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "stadium-974",
+      "attendance": 42860,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -330,8 +491,15 @@
       "homeTeamId": "ARG",
       "awayTeamId": "MEX",
       "id": 24,
-      "playedOn": "2022-11-26T20:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-26T19:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "lusail-stadium",
+      "attendance": 88966,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -339,8 +507,15 @@
       "homeTeamId": "JPN",
       "awayTeamId": "CRC",
       "id": 25,
-      "playedOn": "2022-11-27T11:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-27T10:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "ahmad-bin-ali-stadium",
+      "attendance": 41479,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -348,8 +523,15 @@
       "homeTeamId": "BEL",
       "awayTeamId": "MAR",
       "id": 26,
-      "playedOn": "2022-11-27T14:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-27T13:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "al-thumama-stadium",
+      "attendance": 43738,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -357,8 +539,15 @@
       "homeTeamId": "CRO",
       "awayTeamId": "CAN",
       "id": 27,
-      "playedOn": "2022-11-27T17:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-27T16:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "khalifa-international-stadium",
+      "attendance": 44374,
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -366,8 +555,15 @@
       "homeTeamId": "ESP",
       "awayTeamId": "GER",
       "id": 28,
-      "playedOn": "2022-11-27T20:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-27T19:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "al-bayt-stadium",
+      "attendance": 68895,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -375,8 +571,15 @@
       "homeTeamId": "CMR",
       "awayTeamId": "SRB",
       "id": 29,
-      "playedOn": "2022-11-28T11:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-28T10:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "al-janoub-stadium",
+      "attendance": 39789,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -384,8 +587,15 @@
       "homeTeamId": "KOR",
       "awayTeamId": "GHA",
       "id": 30,
-      "playedOn": "2022-11-28T14:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-28T13:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "education-city-stadium",
+      "attendance": 43983,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -393,8 +603,15 @@
       "homeTeamId": "BRA",
       "awayTeamId": "SUI",
       "id": 31,
-      "playedOn": "2022-11-28T17:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-28T16:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "stadium-974",
+      "attendance": 43649,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -402,8 +619,15 @@
       "homeTeamId": "POR",
       "awayTeamId": "URU",
       "id": 32,
-      "playedOn": "2022-11-28T20:00:00Z",
-      "roundId": "group-r2"
+      "playedOn": "2022-11-28T19:00:00Z",
+      "roundId": "group-r2",
+      "venueId": "lusail-stadium",
+      "attendance": 88668,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -411,8 +635,15 @@
       "homeTeamId": "NED",
       "awayTeamId": "QAT",
       "id": 33,
-      "playedOn": "2022-11-29T16:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-11-29T15:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "al-bayt-stadium",
+      "attendance": 66784,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -420,8 +651,15 @@
       "homeTeamId": "ECU",
       "awayTeamId": "SEN",
       "id": 34,
-      "playedOn": "2022-11-29T16:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-11-29T15:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "khalifa-international-stadium",
+      "attendance": 44569,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -429,8 +667,15 @@
       "homeTeamId": "IRN",
       "awayTeamId": "USA",
       "id": 35,
-      "playedOn": "2022-11-29T20:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-11-29T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "al-thumama-stadium",
+      "attendance": 42127,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -438,8 +683,15 @@
       "homeTeamId": "WAL",
       "awayTeamId": "ENG",
       "id": 36,
-      "playedOn": "2022-11-29T20:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-11-29T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "ahmad-bin-ali-stadium",
+      "attendance": 44297,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -447,8 +699,15 @@
       "homeTeamId": "TUN",
       "awayTeamId": "FRA",
       "id": 37,
-      "playedOn": "2022-11-30T16:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-11-30T15:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "education-city-stadium",
+      "attendance": 43627,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -456,8 +715,15 @@
       "homeTeamId": "AUS",
       "awayTeamId": "DEN",
       "id": 38,
-      "playedOn": "2022-11-30T16:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-11-30T15:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "al-janoub-stadium",
+      "attendance": 41232,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -465,8 +731,15 @@
       "homeTeamId": "KSA",
       "awayTeamId": "MEX",
       "id": 39,
-      "playedOn": "2022-11-30T20:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-11-30T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "lusail-stadium",
+      "attendance": 84985,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -474,8 +747,15 @@
       "homeTeamId": "POL",
       "awayTeamId": "ARG",
       "id": 40,
-      "playedOn": "2022-11-30T20:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-11-30T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "stadium-974",
+      "attendance": 44089,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -483,8 +763,15 @@
       "homeTeamId": "CAN",
       "awayTeamId": "MAR",
       "id": 41,
-      "playedOn": "2022-12-01T16:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-12-01T15:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "al-thumama-stadium",
+      "attendance": 43102,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -492,8 +779,15 @@
       "homeTeamId": "CRO",
       "awayTeamId": "BEL",
       "id": 42,
-      "playedOn": "2022-12-01T16:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-12-01T15:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "ahmad-bin-ali-stadium",
+      "attendance": 43984,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -501,8 +795,15 @@
       "homeTeamId": "CRC",
       "awayTeamId": "GER",
       "id": 43,
-      "playedOn": "2022-12-01T20:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-12-01T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "al-bayt-stadium",
+      "attendance": 67054,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -510,8 +811,15 @@
       "homeTeamId": "JPN",
       "awayTeamId": "ESP",
       "id": 44,
-      "playedOn": "2022-12-01T20:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-12-01T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "khalifa-international-stadium",
+      "attendance": 44851,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -519,8 +827,15 @@
       "homeTeamId": "GHA",
       "awayTeamId": "URU",
       "id": 45,
-      "playedOn": "2022-12-02T16:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-12-02T15:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "al-janoub-stadium",
+      "attendance": 43443,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -528,8 +843,15 @@
       "homeTeamId": "KOR",
       "awayTeamId": "POR",
       "id": 46,
-      "playedOn": "2022-12-02T16:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-12-02T15:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "education-city-stadium",
+      "attendance": 44097,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -537,8 +859,15 @@
       "homeTeamId": "SRB",
       "awayTeamId": "SUI",
       "id": 47,
-      "playedOn": "2022-12-02T20:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-12-02T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "stadium-974",
+      "attendance": 41378,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "group",
@@ -546,136 +875,297 @@
       "homeTeamId": "CMR",
       "awayTeamId": "BRA",
       "id": 48,
-      "playedOn": "2022-12-02T20:00:00Z",
-      "roundId": "group-r3"
+      "playedOn": "2022-12-02T19:00:00Z",
+      "roundId": "group-r3",
+      "venueId": "lusail-stadium",
+      "attendance": 85986,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "A1",
       "awayQual": "B2",
       "id": 49,
-      "playedOn": "2022-12-03T16:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2022-12-03T15:00:00Z",
+      "roundId": "r16",
+      "venueId": "khalifa-international-stadium",
+      "attendance": 44846,
+      "homeTeamId": "NED",
+      "awayTeamId": "USA",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "C1",
       "awayQual": "D2",
       "id": 50,
-      "playedOn": "2022-12-03T20:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2022-12-03T19:00:00Z",
+      "roundId": "r16",
+      "venueId": "ahmad-bin-ali-stadium",
+      "attendance": 45032,
+      "homeTeamId": "ARG",
+      "awayTeamId": "AUS",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "D1",
       "awayQual": "C2",
       "id": 51,
-      "playedOn": "2022-12-04T16:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2022-12-04T15:00:00Z",
+      "roundId": "r16",
+      "venueId": "al-thumama-stadium",
+      "attendance": 40989,
+      "homeTeamId": "FRA",
+      "awayTeamId": "POL",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "B1",
       "awayQual": "A2",
       "id": 52,
-      "playedOn": "2022-12-04T20:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2022-12-04T19:00:00Z",
+      "roundId": "r16",
+      "venueId": "al-bayt-stadium",
+      "attendance": 65985,
+      "homeTeamId": "ENG",
+      "awayTeamId": "SEN",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "E1",
       "awayQual": "F2",
       "id": 53,
-      "playedOn": "2022-12-05T16:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2022-12-05T15:00:00Z",
+      "roundId": "r16",
+      "venueId": "al-janoub-stadium",
+      "attendance": 42523,
+      "homeTeamId": "JPN",
+      "awayTeamId": "CRO",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 1,
+        "penaltyAway": 3
+      }
     },
     {
       "kind": "ko",
       "homeQual": "G1",
       "awayQual": "H2",
       "id": 54,
-      "playedOn": "2022-12-05T20:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2022-12-05T19:00:00Z",
+      "roundId": "r16",
+      "venueId": "stadium-974",
+      "attendance": 43847,
+      "homeTeamId": "BRA",
+      "awayTeamId": "KOR",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "F1",
       "awayQual": "E2",
       "id": 55,
-      "playedOn": "2022-12-06T16:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2022-12-06T15:00:00Z",
+      "roundId": "r16",
+      "venueId": "education-city-stadium",
+      "attendance": 44667,
+      "homeTeamId": "MAR",
+      "awayTeamId": "ESP",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 0
+      }
     },
     {
       "kind": "ko",
       "homeQual": "H1",
       "awayQual": "G2",
       "id": 56,
-      "playedOn": "2022-12-06T20:00:00Z",
-      "roundId": "r16"
+      "playedOn": "2022-12-06T19:00:00Z",
+      "roundId": "r16",
+      "venueId": "lusail-stadium",
+      "attendance": 83720,
+      "homeTeamId": "POR",
+      "awayTeamId": "SUI",
+      "result": {
+        "homeScore": 6,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "W-53",
       "awayQual": "W-54",
       "id": 57,
-      "playedOn": "2022-12-09T16:00:00Z",
-      "roundId": "qf"
+      "playedOn": "2022-12-09T15:00:00Z",
+      "roundId": "qf",
+      "venueId": "education-city-stadium",
+      "attendance": 43893,
+      "homeTeamId": "CRO",
+      "awayTeamId": "BRA",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 4,
+        "penaltyAway": 2
+      }
     },
     {
       "kind": "ko",
       "homeQual": "W-49",
       "awayQual": "W-50",
       "id": 58,
-      "playedOn": "2022-12-09T20:00:00Z",
-      "roundId": "qf"
+      "playedOn": "2022-12-09T19:00:00Z",
+      "roundId": "qf",
+      "venueId": "lusail-stadium",
+      "attendance": 88235,
+      "homeTeamId": "NED",
+      "awayTeamId": "ARG",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 4
+      }
     },
     {
       "kind": "ko",
       "homeQual": "W-55",
       "awayQual": "W-56",
       "id": 59,
-      "playedOn": "2022-12-10T16:00:00Z",
-      "roundId": "qf"
+      "playedOn": "2022-12-10T15:00:00Z",
+      "roundId": "qf",
+      "venueId": "al-thumama-stadium",
+      "attendance": 44198,
+      "homeTeamId": "MAR",
+      "awayTeamId": "POR",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "W-51",
       "awayQual": "W-52",
       "id": 60,
-      "playedOn": "2022-12-10T20:00:00Z",
-      "roundId": "qf"
+      "playedOn": "2022-12-10T19:00:00Z",
+      "roundId": "qf",
+      "venueId": "al-bayt-stadium",
+      "attendance": 68895,
+      "homeTeamId": "ENG",
+      "awayTeamId": "FRA",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "W-57",
       "awayQual": "W-58",
       "id": 61,
-      "playedOn": "2022-12-13T16:00:00Z",
-      "roundId": "sf"
+      "playedOn": "2022-12-13T19:00:00Z",
+      "roundId": "sf",
+      "venueId": "lusail-stadium",
+      "attendance": 88966,
+      "homeTeamId": "ARG",
+      "awayTeamId": "CRO",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "W-59",
       "awayQual": "W-60",
       "id": 62,
-      "playedOn": "2022-12-14T16:00:00Z",
-      "roundId": "sf"
+      "playedOn": "2022-12-14T19:00:00Z",
+      "roundId": "sf",
+      "venueId": "al-bayt-stadium",
+      "attendance": 68294,
+      "homeTeamId": "FRA",
+      "awayTeamId": "MAR",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "L-61",
       "awayQual": "L-62",
       "id": 63,
-      "playedOn": "2022-12-17T16:00:00Z",
-      "roundId": "third"
+      "playedOn": "2022-12-17T15:00:00Z",
+      "roundId": "third",
+      "venueId": "khalifa-international-stadium",
+      "attendance": 44137,
+      "homeTeamId": "CRO",
+      "awayTeamId": "MAR",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
     },
     {
       "kind": "ko",
       "homeQual": "W-61",
       "awayQual": "W-62",
       "id": 64,
-      "playedOn": "2022-12-18T16:00:00Z",
-      "roundId": "final"
+      "playedOn": "2022-12-18T15:00:00Z",
+      "roundId": "final",
+      "venueId": "lusail-stadium",
+      "attendance": 88966,
+      "homeTeamId": "ARG",
+      "awayTeamId": "FRA",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "PENALTIES",
+        "penaltyHome": 4,
+        "penaltyAway": 2
+      }
     }
   ]
 }

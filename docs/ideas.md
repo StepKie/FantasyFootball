@@ -41,20 +41,32 @@ Unsorted feature/UX ideas that aren't yet committed to a PR plan. Promote to
   entity with proper relationships. Probably a follow-up to whatever
   surface lands first.
 
-## Confederation + governing-body logos in pickers
+## Logos: confederations, country flags, club crests
 
-- **Confederation logos** (UEFA, CONMEBOL, AFC, CAF, CONCACAF, OFC, plus
-  FIFA as the global parent) shown in the team picker and next to
-  confederation-scoped filters / dropdowns.
+- **Confederation marks** (UEFA, CONMEBOL, AFC, CAF, CONCACAF, OFC, plus
+  FIFA as the global parent) in the team picker, confed-scoped filters,
+  and next to `/competitions` type pickers.
 - **FIFA WC + UEFA Euros marks** next to the competition-type picker on
   `/competitions` (and on the start-new dialog), so the visual identity of
   the tournament is immediately recognisable.
-- Asset source: sortitoutsi.net FM24 graphics pack —
-  `logos/confeds/normal/{1..7}.png` (7 PNGs) and selected entries from
-  `logos/comps/normal/` (5975 PNGs total; pick out WC + Euros IDs via
-  `config.xml`). FM IDs are numeric, not ISO/UEFA-style codes — small
-  hand-maintained mapping table: `Confederation` enum → file ID,
-  comp-type enum → file ID.
+- **Club crests** for the eventual league + Champions League work.
+- Country flags already shipped (FlagIcon component), but worth migrating
+  to the lipis/flag-icons SVG set for cleaner vector rendering.
+
+**Sources** (see `docs/data-model-research.md § Logo + asset sources` for
+the full table):
+
+- Confed marks → Wikimedia Commons SVGs, ~7 files, ~140 KB total.
+- Country flags → lipis/flag-icons on GitHub (MIT-licensed, 250 SVGs).
+- Club crests → luukhopman/football-logos on GitHub (PNG 139×181, all
+  teams in top 25 European leagues, season-versioned, annual refresh).
+- Sortitoutsi FM24 pack (available locally) is the most complete fallback
+  but uses FM-internal numeric IDs; only worth the remap work for clubs
+  missing from luukhopman, which is rare for top-tier teams.
+
+**Bundle strategy:** ship confed + flag SVGs in the initial WASM payload
+(~1 MB, negligible). Lazy-load club crests via `<img src=...>`. Annual
+`tools/fetch-logos.sh` refresh, same pattern as `tools/refresh-elo.awk`.
 
 ## Active focus (2026-05-24) — web-app extensions
 

@@ -27,15 +27,21 @@ public sealed class BulkSimRunner
 	readonly CompetitionFactory _factory;
 	readonly CompetitionSimulator _simulator;
 	readonly ICompetitionRepository _repo;
+	readonly IRepository _entityRepo;
+	readonly ICompetitionDefinitionStore _definitions;
 
 	public BulkSimRunner(
 		CompetitionFactory factory,
 		CompetitionSimulator simulator,
-		ICompetitionRepository repo)
+		ICompetitionRepository repo,
+		IRepository entityRepo,
+		ICompetitionDefinitionStore definitions)
 	{
 		_factory = factory;
 		_simulator = simulator;
 		_repo = repo;
+		_entityRepo = entityRepo;
+		_definitions = definitions;
 	}
 
 	public async Task<IReadOnlyList<int>> RunAsync(
@@ -49,12 +55,16 @@ public sealed class BulkSimRunner
 			throw new ArgumentOutOfRangeException(nameof(count), count, "Bulk sim needs at least one run.");
 		}
 
+		// Resolve once per bulk run using scalar overload — avoids materializing a Competition, which for RandomLineupSpec would consume the draw RNG and shift all subsequent iterations.
+		var year = _definitions.Load(spec.DefinitionId).Year;
+		IScoreModel? scoreOverride = HistoricalScoreModelResolver.Resolve(spec.EloSetName, year, _entityRepo);
+
 		var ids = new List<int>(count);
 		for (int i = 0; i < count; i++)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			var competition = _factory.Create(spec);
-			_simulator.Simulate(competition);
+			_simulator.Simulate(competition, scoreOverride);
 			var id = await _repo.SaveAsync(competition);
 			ids.Add(id);
 			progress?.Report(i + 1);
