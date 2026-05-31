@@ -163,15 +163,15 @@ public class CompetitionExtensionsTests
 	}
 
 	[Fact]
-	public void HomeTeamIdOf_ReadsFromBothGameTypes()
+	public void HomeTeamId_ReadsFromBaseAcrossGameKinds()
 	{
 		var c = BuildMiniWc(simulateFinal: true);
-		CompetitionExtensions.HomeTeamIdOf(c.Games[0]).Should().Be("MEX");
-		CompetitionExtensions.HomeTeamIdOf(c.Games[2]).Should().Be("MEX");
+		c.Games[0].HomeTeamId.Should().Be("MEX");
+		c.Games[2].HomeTeamId.Should().Be("MEX");
 	}
 
 	[Fact]
-	public void HomeTeamIdOf_ReturnsNullForUnresolvedKoGame()
+	public void HomeTeamId_NullForUnresolvedKoGame()
 	{
 		var unresolved = new KoGame
 		{
@@ -179,8 +179,8 @@ public class CompetitionExtensionsTests
 			HomeQual = "A1", AwayQual = "B1",
 			HomeTeamId = null, AwayTeamId = null,
 		};
-		CompetitionExtensions.HomeTeamIdOf(unresolved).Should().BeNull();
-		CompetitionExtensions.AwayTeamIdOf(unresolved).Should().BeNull();
+		unresolved.HomeTeamId.Should().BeNull();
+		unresolved.AwayTeamId.Should().BeNull();
 	}
 
 	[Fact]

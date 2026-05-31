@@ -97,23 +97,40 @@ public static class FlatJson
 	/// </summary>
 	public static string Serialize(Competition c, bool compact = false)
 	{
-		var dto = new
-		{
-			id = c.DefinitionId,
-			title = c.Title,
-			type = c.Type,
-			year = c.Year,
-			formatId = c.FormatId,
-			eloSetName = c.EloSetName,
-			simulationStart = c.SimulationStart,
-			simulationFinished = c.SimulationFinished,
-			stages = c.Stages,
-			rounds = c.Rounds,
-			groups = ToGroupsDict(c.GroupAssignments),
-			games = c.Games,
-		};
+		var dto = new CompetitionDto(
+			Id: c.DefinitionId,
+			Title: c.Title,
+			Type: c.Type,
+			Year: c.Year,
+			FormatId: c.FormatId,
+			EloSetName: c.EloSetName,
+			SimulationStart: c.SimulationStart,
+			SimulationFinished: c.SimulationFinished,
+			Stages: c.Stages,
+			Rounds: c.Rounds,
+			Groups: c.IsLeague() ? null : ToGroupsDict(c.GroupAssignments),
+			Teams: c.IsLeague() ? c.Teams : null,
+			QualificationSlots: c.QualificationSlots.Length == 0 ? null : c.QualificationSlots,
+			Games: c.Games);
 		return JsonSerializer.Serialize(dto, compact ? CompactOptions : Options);
 	}
+
+	/// <summary>On-disk shape of a Competition — drives both writes here and the read path in <see cref="CompetitionDefinitionLoader"/>.</summary>
+	internal sealed record CompetitionDto(
+		string Id,
+		string Title,
+		CompetitionType Type,
+		int Year,
+		string FormatId,
+		string? EloSetName,
+		DateTime? SimulationStart,
+		DateTime? SimulationFinished,
+		Stage[] Stages,
+		Round[] Rounds,
+		Dictionary<string, string[]>? Groups,
+		string[]? Teams,
+		QualificationSlot[]? QualificationSlots,
+		Game[] Games);
 
 	static Dictionary<string, string[]> ToGroupsDict(string[][] arr)
 	{

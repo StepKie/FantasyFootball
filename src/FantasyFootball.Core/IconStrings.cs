@@ -1,4 +1,4 @@
-﻿namespace FantasyFootball;
+namespace FantasyFootball;
 
 public class IconStrings
 {
@@ -20,6 +20,10 @@ public class IconStrings
 			_ => null,
 		};
 
-	// TODO Return (from folder?) based on club id
-	public static string GetTeamLogo(Team team) => team.IsNationalTeam ? GetNationalFlagWeb(team.Country) : "question_mark";
+	public static string GetTeamLogo(Team team) => team.Type switch
+	{
+		TeamType.NATIONAL_MEN or TeamType.NATIONAL_WOMEN => GetNationalFlagWeb(team.Country),
+		TeamType.CLUB_MEN or TeamType.CLUB_WOMEN => $"clubs/{team.ShortName.ToLowerInvariant()}.png",
+		_ => "question_mark",
+	};
 }

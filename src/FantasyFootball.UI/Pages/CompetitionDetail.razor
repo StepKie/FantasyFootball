@@ -30,7 +30,7 @@ else
 
     @* Title + main sim controls *@
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
-      <CompetitionTypeIcon Type="@ViewModel.Competition.Type" Size="36" />
+      <CompetitionTypeIcon Type="@ViewModel.Competition.Type" LeagueKey="@ViewModel.Competition.LeagueKey()" Size="36" />
       <MudText Typo="Typo.h5" HtmlTag="h1">
         @ViewModel.Competition.Title <span style="opacity:0.6;">#@ViewModel.Competition.Id</span>
       </MudText>
@@ -53,7 +53,7 @@ else
       }
       @if (ViewModel.IsFinished && ViewModel.WinnerTeamId is { } winnerId)
       {
-        var winnerTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId);
+        var winnerTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == ViewModel.Competition.IsNationalTeamCompetition());
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
           <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.EmojiEvents" Size="Size.Small">
             Winner: @(winnerTeam?.Name ?? winnerId)
@@ -236,10 +236,10 @@ else
                   <tbody>
                     @foreach (var row in standings)
                     {
-                      var rowTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == row.TeamId);
+                      var rowTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == row.TeamId && t.IsNationalTeam == ViewModel.Competition.IsNationalTeamCompetition());
                       <tr>
                         <td class="standings-pos">
-                          <span class="standings-qual-bar @QualBarClass(row.Position, slots)"></span>
+                          <span class="standings-qual-bar @QualBarClassFor(ViewModel.Competition, row.Position, slots)"></span>
                           @row.Position
                         </td>
                         <td class="standings-flag"><FlagIcon Team="rowTeam" Code="@row.TeamId" Size="20" /></td>
@@ -294,9 +294,15 @@ else
 
   void ToggleDetails(int gameId) => _openDetailsGameId = _openDetailsGameId == gameId ? null : gameId;
 
-  // Advance = direct qualifier; 3rd = pool result (null until group stage done); else out.
-  static string QualBarClass(int position, GroupQualification.GroupQualSlots slots)
+  // League: look up the declared QualificationSlot for this position. Cup: advance / 3rd-pool / out.
+  static string QualBarClassFor(Competition comp, int position, GroupQualification.GroupQualSlots slots)
   {
+    if (comp.IsLeague())
+    {
+      var slot = comp.QualificationSlots.FirstOrDefault(q => q.Positions.Contains(position));
+      return slot is null ? "" : $"standings-qual-bar-{slot.Kind.ToString().ToLowerInvariant().Replace('_', '-')}";
+    }
+
     if (slots.DirectSlots?.Contains(position) == true) { return "standings-qual-bar-advance"; }
     if (position == 3 && slots.ThirdPlaceEligible)
     {

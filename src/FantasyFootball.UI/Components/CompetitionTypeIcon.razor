@@ -22,12 +22,20 @@
   [Parameter] public CompetitionType Type { get; set; }
   [Parameter] public int Size { get; set; } = 24;
 
+  /// <summary>
+  /// League slug for DOMESTIC_LEAGUE disambiguation — e.g. "bundesliga", "premier-league",
+  /// "laliga". Maps to <c>img/competitions/{key}.svg</c>. Ignored for non-league types.
+  /// Callers passing a Competition typically derive this from its DefinitionId prefix.
+  /// </summary>
+  [Parameter] public string? LeagueKey { get; set; }
+
   // Material Icons used when the "official logos" flag is off OR the official file 404s. Default arm so an unhandled enum value still renders something.
   string? FallbackIcon => Type switch
   {
     CompetitionType.WM => Icons.Material.Filled.EmojiEvents,
     CompetitionType.EM => Icons.Material.Filled.Stars,
     CompetitionType.CHAMPIONS_LEAGUE => Icons.Material.Filled.WorkspacePremium,
+    CompetitionType.DOMESTIC_LEAGUE => Icons.Material.Filled.SportsSoccer,
     _ => Icons.Material.Filled.SportsSoccer,
   };
 
@@ -37,15 +45,18 @@
     CompetitionType.WM => "_content/FantasyFootball.UI/img/competitions/wm.svg",
     CompetitionType.EM => "_content/FantasyFootball.UI/img/competitions/em.svg",
     CompetitionType.CHAMPIONS_LEAGUE => "_content/FantasyFootball.UI/img/competitions/ucl.svg",
+    CompetitionType.DOMESTIC_LEAGUE => LeagueKey is { Length: > 0 } key
+      ? $"_content/FantasyFootball.UI/img/competitions/{key}.svg"
+      : null,
     _ => null,
   };
 
-  // Human-readable alt/title — raw enum names ("WM", "EM") would be spelled out letter-by-letter by screen readers.
   string AltText => Type switch
   {
     CompetitionType.WM => "FIFA World Cup",
     CompetitionType.EM => "UEFA European Championship",
     CompetitionType.CHAMPIONS_LEAGUE => "UEFA Champions League",
+    CompetitionType.DOMESTIC_LEAGUE => "Domestic League",
     _ => Type.ToString(),
   };
 
