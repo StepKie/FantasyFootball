@@ -1,6 +1,7 @@
 using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
 
@@ -19,15 +20,21 @@ public partial class SettingsViewModel : ObservableObject
 	readonly ISettingsService _settings;
 	readonly IDataService _dataService;
 	readonly ICompetitionRepository _repo;
+	readonly ICompetitionDefinitionStore _definitions;
+	readonly CompetitionFactory _factory;
 
 	public SettingsViewModel(
 		ISettingsService settings,
 		IDataService dataService,
-		ICompetitionRepository repo)
+		ICompetitionRepository repo,
+		ICompetitionDefinitionStore definitions,
+		CompetitionFactory factory)
 	{
 		_settings = settings;
 		_dataService = dataService;
 		_repo = repo;
+		_definitions = definitions;
+		_factory = factory;
 
 		SelectedLanguage = settings.LastUsedLanguage;
 		SelectedSimulationSpeed = SimulationSpeedExtensions.FromTimeSpan(settings.SimulationSpeed);
@@ -89,6 +96,46 @@ public partial class SettingsViewModel : ObservableObject
 		{
 			await Task.Run(_dataService.Reset).ConfigureAwait(false);
 			await _repo.ResetAsync().ConfigureAwait(false);
+		}
+		finally
+		{
+			IsBusy = false;
+		}
+	}
+
+	[ObservableProperty]
+	public partial int LastRestoredCount { get; set; }
+
+	/// <summary>
+	/// Adds every bundled finished historical (World Cups, Euros, Bundesliga …) that isn't
+	/// already in the repo, matched by DefinitionId. Idempotent — clicking again is a no-op
+	/// once everything's been imported. Doesn't touch in-progress sims.
+	/// </summary>
+	[RelayCommand]
+	async Task RestoreHistoricalCompetitions()
+	{
+		IsBusy = true;
+		try
+		{
+			var existing = (await _repo.GetAllAsync())
+				.Select(c => c.DefinitionId)
+				.ToHashSet(StringComparer.Ordinal);
+
+			var missing = _definitions.AvailableIds
+				.Where(id => !existing.Contains(id))
+				.Select(id => _factory.Create(new HistoricalSpec { DefinitionId = id }))
+				.Where(c => c.IsFinished())
+				.OrderBy(c => c.Year)
+				.ToList();
+
+			foreach (var competition in missing)
+			{
+				competition.SimulationStart = competition.Games.Min(g => g.PlayedOn);
+				competition.SimulationFinished = competition.Games.Max(g => g.PlayedOn);
+				await _repo.SaveAsync(competition);
+			}
+
+			LastRestoredCount = missing.Count;
 		}
 		finally
 		{

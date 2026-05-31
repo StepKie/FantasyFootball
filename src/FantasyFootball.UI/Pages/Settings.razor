@@ -93,17 +93,27 @@
 
     <MudDivider />
 
-    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Wrap="Wrap.Wrap">
+      <MudButton Variant="Variant.Outlined"
+                 Color="Color.Primary"
+                 StartIcon="@Icons.Material.Filled.History"
+                 OnClick="HandleRestoreHistoricals"
+                 Disabled="ViewModel.IsBusy">
+        Restore historical competitions
+      </MudButton>
       <MudButton Variant="Variant.Outlined"
                  Color="Color.Error"
-                 OnClick="ViewModel.ResetDatabaseCommand.ExecuteAsync"
+                 OnClick="HandleReset"
                  Disabled="ViewModel.IsBusy">
         Reset database
       </MudButton>
       @if (ViewModel.IsBusy)
       {
         <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-        <MudText Typo="Typo.body2">Resetting…</MudText>
+      }
+      @if (_lastRestoredMessage is { } msg)
+      {
+        <MudText Typo="Typo.caption" Color="Color.Secondary">@msg</MudText>
       }
     </MudStack>
 
@@ -114,9 +124,28 @@
 </MudPaper>
 
 @code {
+  string? _lastRestoredMessage;
+
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnViewModelChanged;
 
   void OnViewModelChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
+
+  async Task HandleRestoreHistoricals()
+  {
+    await ViewModel.RestoreHistoricalCompetitionsCommand.ExecuteAsync(null);
+    _lastRestoredMessage = ViewModel.LastRestoredCount switch
+    {
+      0 => "All bundled historicals are already in your list.",
+      1 => "Added 1 historical competition.",
+      var n => $"Added {n} historical competitions.",
+    };
+  }
+
+  async Task HandleReset()
+  {
+    await ViewModel.ResetDatabaseCommand.ExecuteAsync(null);
+    _lastRestoredMessage = null;
+  }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
 }
