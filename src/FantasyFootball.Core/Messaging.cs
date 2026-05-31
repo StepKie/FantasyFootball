@@ -7,6 +7,4 @@ public static class Messaging
 
 	/// <summary> Sent after JsonDataService.Reset wipes and re-seeds the data so list VMs can refresh. </summary>
 	public record DataResetMessage();
-	/// <summary> Sent when <see cref="IActiveEloSet.Current"/> changes (set switched, in-place edit, etc.). </summary>
-	public record EloSetChangedMessage(EloSet ActiveEloSet);
 }

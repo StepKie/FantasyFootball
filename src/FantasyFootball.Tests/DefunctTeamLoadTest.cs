@@ -1,4 +1,5 @@
 using FantasyFootball.Models;
+using FantasyFootball.Services;
 
 namespace FantasyFootball.Tests;
 
@@ -17,6 +18,7 @@ public class DefunctTeamLoadTest(ITestOutputHelper output) : BaseTest(output)
 		var team = DataService.AllTeams.FirstOrDefault(t => t.Country.Code3 == code3);
 
 		_ = team ?? throw new Xunit.Sdk.XunitException($"Defunct team {code3} ({englishName}) not loaded from the seed.");
-		ActiveEloSet.EloOf(team).Should().Be(elo);
+		var current = Repo.GetAll<EloSet>().First(s => s.Name == JsonDataService.CurrentEloSetName);
+		current.Snapshot.GetValueOrDefault(team.ShortName).Should().Be(elo);
 	}
 }

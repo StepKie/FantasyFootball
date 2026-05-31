@@ -7,13 +7,14 @@ namespace FantasyFootball.Tests;
 public class CompetitionSimulatorTests
 {
 	readonly EmbeddedCompetitionDefinitionStore _definitions = new();
-	readonly CompetitionSimulator _simulator = new(new StubScoreModel());
+	readonly CompetitionSimulator _simulator = new();
+	readonly StubScoreModel _scoreModel = new();
 
 	[Fact]
 	public void Simulate_Wm2022_AllGamesGetResults()
 	{
 		var c = _definitions.Load("wm-2022");
-		_simulator.Simulate(c);
+		_simulator.Simulate(c, _scoreModel);
 
 		c.Games.Should().OnlyContain(g => g.Result != null);
 		c.IsFinished().Should().BeTrue();
@@ -23,7 +24,7 @@ public class CompetitionSimulatorTests
 	public void Simulate_Wm2022_KoGames_HaveResolvedTeamIds()
 	{
 		var c = _definitions.Load("wm-2022");
-		_simulator.Simulate(c);
+		_simulator.Simulate(c, _scoreModel);
 
 		var koGames = c.Games.OfType<KoGame>().ToList();
 		koGames.Should().OnlyContain(g => g.HomeTeamId != null && g.AwayTeamId != null);
@@ -33,7 +34,7 @@ public class CompetitionSimulatorTests
 	public void Simulate_Wm2022_KoGames_AreDecisive()
 	{
 		var c = _definitions.Load("wm-2022");
-		_simulator.Simulate(c);
+		_simulator.Simulate(c, _scoreModel);
 
 		var koGames = c.Games.OfType<KoGame>().ToList();
 		koGames.Should().OnlyContain(g => g.Result!.Value.HomeWon || g.Result.Value.AwayWon,
@@ -46,7 +47,7 @@ public class CompetitionSimulatorTests
 		var c = _definitions.Load("wm-2022");
 		var before = DateTime.UtcNow;
 
-		_simulator.Simulate(c);
+		_simulator.Simulate(c, _scoreModel);
 
 		c.SimulationStart.Should().BeOnOrAfter(before);
 		c.SimulationFinished.Should().BeOnOrAfter(c.SimulationStart!.Value);
@@ -56,7 +57,7 @@ public class CompetitionSimulatorTests
 	public void Simulate_Wm2022_ProducesWinner()
 	{
 		var c = _definitions.Load("wm-2022");
-		_simulator.Simulate(c);
+		_simulator.Simulate(c, _scoreModel);
 
 		c.WinnerTeamId().Should().NotBeNullOrEmpty();
 	}
@@ -70,7 +71,7 @@ public class CompetitionSimulatorTests
 		var game1 = (GroupGame)c.Games.First(g => g.Id == 1);
 		game1.Result = preset;
 
-		_simulator.Simulate(c);
+		_simulator.Simulate(c, _scoreModel);
 
 		game1.Result.Should().Be(preset, "simulator should skip games that already have a Result");
 	}
@@ -80,7 +81,7 @@ public class CompetitionSimulatorTests
 	{
 		// EM format has no third-place game, but otherwise should round-trip cleanly.
 		var c = _definitions.Load("em-2024");
-		_simulator.Simulate(c);
+		_simulator.Simulate(c, _scoreModel);
 		c.IsFinished().Should().BeTrue();
 		c.Rounds.Select(r => r.Id).Should().NotContain("third");
 	}
@@ -92,7 +93,7 @@ public class CompetitionSimulatorTests
 		// Successful end-to-end sim of this format proves the pool path
 		// actually runs (vs. throwing) and resolves to real team IDs.
 		var c = _definitions.Load("wm-2026");
-		_simulator.Simulate(c);
+		_simulator.Simulate(c, _scoreModel);
 
 		c.IsFinished().Should().BeTrue();
 		var koGames = c.Games.OfType<KoGame>().ToList();
@@ -107,7 +108,7 @@ public class CompetitionSimulatorTests
 		foreach (var defId in new[] { "wm-2022", "em-2024", "wm-2026" })
 		{
 			var c = _definitions.Load(defId);
-			_simulator.Simulate(c);
+			_simulator.Simulate(c, _scoreModel);
 
 			foreach (var round in c.Rounds)
 			{

@@ -15,13 +15,6 @@ namespace FantasyFootball.Services;
 /// </summary>
 public sealed class CompetitionSimulator
 {
-	readonly IScoreModel _scoreModel;
-
-	public CompetitionSimulator(IScoreModel scoreModel)
-	{
-		_scoreModel = scoreModel;
-	}
-
 	/// <summary>
 	/// Score a single game in place. Resolves KO qualifier chains as needed.
 	/// No-op if the game already has a Result. Caller ensures upstream games
@@ -29,20 +22,23 @@ public sealed class CompetitionSimulator
 	/// Stamps <c>SimulationStart</c> on first call (any sim entry point;
 	/// list views can tell scheduled from in-progress competitions).
 	/// </summary>
-	public void SimulateGame(Competition c, Game game, IScoreModel? scoreModelOverride = null)
+	public void SimulateGame(Competition c, Game game, IScoreModel scoreModel)
 	{
 		if (game.Result is not null) { return; }
 
-		var model = scoreModelOverride ?? _scoreModel;
 		c.SimulationStart ??= DateTime.UtcNow;
 		switch (game)
 		{
 			case GroupGame gg:
-				gg.Result = model.ScoreGroupGame(gg.HomeTeamId, gg.AwayTeamId);
+				gg.Result = scoreModel.ScoreGroupGame(gg.HomeTeamId, gg.AwayTeamId);
+				break;
+			case LeagueGame lg:
+				// Scored like a group game; no qualifier chain.
+				lg.Result = scoreModel.ScoreGroupGame(lg.HomeTeamId, lg.AwayTeamId);
 				break;
 			case KoGame ko:
 				ResolveKoTeams(c, ko);
-				ko.Result = model.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
+				ko.Result = scoreModel.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
 				break;
 		}
 
@@ -53,33 +49,26 @@ public sealed class CompetitionSimulator
 		}
 	}
 
-	/// <summary>
-	/// Score every unplayed game in the given round, chronological order.
-	/// </summary>
-	public void SimulateRound(Competition c, string roundId, IScoreModel? scoreModelOverride = null)
+	/// <summary>Score every unplayed game in the given round, chronological order.</summary>
+	public void SimulateRound(Competition c, string roundId, IScoreModel scoreModel)
 	{
 		var roundGames = c.Games
 			.Where(g => g.RoundId == roundId && g.Result is null)
 			.OrderBy(g => g.PlayedOn);
 		foreach (var game in roundGames)
 		{
-			SimulateGame(c, game, scoreModelOverride);
+			SimulateGame(c, game, scoreModel);
 		}
 	}
 
-	/// <param name="scoreModelOverride">
-	/// Optional per-call score model. Used by the bulk runner to thread a
-	/// year-matched <see cref="EloSet"/> through a HistoricalSpec sim without
-	/// touching the UI's active set. <c>null</c> falls back to the DI default.
-	/// </param>
-	public void Simulate(Competition c, IScoreModel? scoreModelOverride = null)
+	public void Simulate(Competition c, IScoreModel scoreModel)
 	{
 		c.SimulationStart ??= DateTime.UtcNow;
 
 		// Defensive sort: a hand-edited out-of-order definition file would foot-gun without this.
 		foreach (var game in c.Games.OrderBy(g => g.PlayedOn))
 		{
-			SimulateGame(c, game, scoreModelOverride);
+			SimulateGame(c, game, scoreModel);
 		}
 
 		c.SimulationFinished = DateTime.UtcNow;

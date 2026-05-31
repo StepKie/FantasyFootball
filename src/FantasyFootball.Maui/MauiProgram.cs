@@ -18,7 +18,6 @@ public static class MauiProgram
 		builder.Services
 			.AddSingleton<IConnectivity>(Connectivity.Current)
 			.AddSingleton<ISettingsService, SettingsService>()
-			.AddSingleton<IActiveEloSet, ActiveEloSet>()
 			.AddSingleton<IDataService, JsonDataService>()
 			.AddSingleton<IRepository>(new InMemoryRepository())
 			.AddLogging(lb => lb.AddSerilog());

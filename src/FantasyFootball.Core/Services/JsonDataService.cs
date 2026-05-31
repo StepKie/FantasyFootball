@@ -1,11 +1,13 @@
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace FantasyFootball.Services;
 
 public class JsonDataService : IDataService
 {
 	public const string CountriesFile = "FantasyFootball.Resources.Data.countries.json";
+	public const string ClubsFile = "FantasyFootball.Resources.Data.clubs.json";
 	public const string EloCurrentFile = "FantasyFootball.Resources.Data.elo-current.json";
 	public const string HistoricalEloSetPrefix = "FantasyFootball.Resources.Data.EloSets.";
 
@@ -14,17 +16,18 @@ public class JsonDataService : IDataService
 	/// <summary>Names of the bundled EloSets shipped with the app (Current + every elo-{year}.json resource). Used by the UI to mark them as undeletable.</summary>
 	public static readonly IReadOnlySet<string> BundledEloSetNames = LoadBundledEloSetNames();
 
-	static readonly JsonSerializerOptions JsonOpts = new(JsonSerializerDefaults.Web);
+	static readonly JsonSerializerOptions JsonOpts = new(JsonSerializerDefaults.Web)
+	{
+		Converters = { new JsonStringEnumConverter() },
+	};
 
 	List<Team>? _teamCache;
 	readonly IRepository _repo;
-	readonly IActiveEloSet _activeEloSet;
 	readonly string _languageId;
 
-	public JsonDataService(IRepository repo, IActiveEloSet activeEloSet, CultureInfo? language = null)
+	public JsonDataService(IRepository repo, CultureInfo? language = null)
 	{
 		_repo = repo;
-		_activeEloSet = activeEloSet;
 		_languageId = language?.TwoLetterISOLanguageName ?? "en";
 		Initialize();
 	}
@@ -33,10 +36,9 @@ public class JsonDataService : IDataService
 	{
 		if (AllTeams.Count == 0) { Reset(); return; }
 
-		// Treat a missing Current EloSet as corruption (first-run, pre-EloSet migration, or hand-edited localStorage) and re-seed.
+		// Missing Current EloSet ⇒ corruption (first-run, hand-edited localStorage). Full reset.
 		var current = _repo.GetAll<EloSet>().FirstOrDefault(s => s.Name == CurrentEloSetName);
 		if (current is null) { Reset(); return; }
-		_activeEloSet.SetCurrent(current);
 	}
 
 	/// <summary> Global selected competition type to sync across all relevant pages </summary>
@@ -58,7 +60,20 @@ public class JsonDataService : IDataService
 		}).ToList();
 	}
 
-	public List<Team> CreateTeams() => CreateCountries().Select(country => country.NationalTeam).ToList();
+	public List<Team> CreateTeams()
+	{
+		var countries = CreateCountries();
+		var countryByCode3 = countries.ToDictionary(c => c.Code3, c => c);
+		var nationalTeams = countries.Select(country => country.NationalTeam);
+		var clubTeams = LoadClubSeeds().Select(s => new Team
+		{
+			Type = TeamType.CLUB_MEN,
+			ShortName = s.Code,
+			Name = s.Name.GetValueOrDefault(_languageId) ?? s.Name.GetValueOrDefault("en") ?? s.Code,
+			Country = countryByCode3[s.Country],
+		});
+		return nationalTeams.Concat(clubTeams).ToList();
+	}
 
 	public void Reset()
 	{
@@ -66,15 +81,13 @@ public class JsonDataService : IDataService
 		_repo.Reset();
 		_repo.SaveAll(Confederation.ALL);
 
-		var currentEloSet = LoadCurrentEloSet();
-		_repo.Save(currentEloSet);
+		_repo.Save(LoadCurrentEloSet());
 		_repo.SaveAll(LoadHistoricalEloSets());
 		_repo.SaveAll(CreateTeams());
 
 		SelectedCompetitionType = CompetitionType.WM;
 
 		// Broadcast last so subscribers see the fully-populated repo, not a half-written intermediate.
-		_activeEloSet.SetCurrent(currentEloSet);
 		MessageBus.Send(new DataResetMessage());
 	}
 
@@ -91,6 +104,14 @@ public class JsonDataService : IDataService
 			?? throw new FileNotFoundException($"{CountriesFile} not found in embedded resources");
 		return JsonSerializer.Deserialize<List<CountrySeed>>(stream, JsonOpts)
 			?? throw new InvalidOperationException($"{CountriesFile} deserialized to null");
+	}
+
+	static List<ClubSeed> LoadClubSeeds()
+	{
+		using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ClubsFile)
+			?? throw new FileNotFoundException($"{ClubsFile} not found in embedded resources");
+		return JsonSerializer.Deserialize<List<ClubSeed>>(stream, JsonOpts)
+			?? throw new InvalidOperationException($"{ClubsFile} deserialized to null");
 	}
 
 	static EloSet LoadCurrentEloSet()
@@ -142,5 +163,12 @@ public class JsonDataService : IDataService
 		public string Code2 { get; set; } = "";
 		public Dictionary<string, string> Name { get; set; } = [];
 		public string Confederation { get; set; } = "";
+	}
+
+	sealed class ClubSeed
+	{
+		public string Code { get; set; } = "";
+		public Dictionary<string, string> Name { get; set; } = [];
+		public string Country { get; set; } = "";
 	}
 }
