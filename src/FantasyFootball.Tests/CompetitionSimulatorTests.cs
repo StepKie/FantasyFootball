@@ -27,7 +27,7 @@ public class CompetitionSimulatorTests
 		_simulator.Simulate(c, _scoreModel);
 
 		var koGames = c.Games.OfType<KoGame>().ToList();
-		koGames.Should().OnlyContain(g => g.HomeTeamId != null && g.AwayTeamId != null);
+		koGames.Should().OnlyContain(g => g.IsFullyInitialized);
 	}
 
 	[Fact]
@@ -98,7 +98,7 @@ public class CompetitionSimulatorTests
 		c.IsFinished().Should().BeTrue();
 		var koGames = c.Games.OfType<KoGame>().ToList();
 		koGames.Should().HaveCount(32, "WC48 has R32+R16+QF+SF+3rd+Final = 16+8+4+2+1+1");
-		koGames.Should().OnlyContain(g => g.HomeTeamId != null && g.AwayTeamId != null);
+		koGames.Should().OnlyContain(g => g.IsFullyInitialized);
 	}
 
 	[Fact]

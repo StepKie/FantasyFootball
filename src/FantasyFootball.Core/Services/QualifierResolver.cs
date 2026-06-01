@@ -60,10 +60,12 @@ public static class QualifierResolver
 			throw new InvalidOperationException(
 				$"Qualifier references game {gameId}, which hasn't been played yet — simulator should run games chronologically.");
 		}
-		var home = game.HomeTeamId
-			?? throw new InvalidOperationException($"Game {gameId} has no resolved home team — qualifier chain broken upstream.");
-		var away = game.AwayTeamId
-			?? throw new InvalidOperationException($"Game {gameId} has no resolved away team — qualifier chain broken upstream.");
+		var home = game.IsHomeInitialized
+			? game.HomeTeamId
+			: throw new InvalidOperationException($"Game {gameId} has no resolved home team — qualifier chain broken upstream.");
+		var away = game.IsAwayInitialized
+			? game.AwayTeamId
+			: throw new InvalidOperationException($"Game {gameId} has no resolved away team — qualifier chain broken upstream.");
 
 		// IsDraw covers regulation ties; the simulator guarantees ET/PENALTIES for KO games. A draw here means the DSL is misused on a group game.
 		if (r.IsDraw)

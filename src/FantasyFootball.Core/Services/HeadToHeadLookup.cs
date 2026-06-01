@@ -26,9 +26,9 @@ public static class HeadToHeadLookup
 			foreach (var game in comp.Games)
 			{
 				if (game.Result is not { } r) { continue; }
+				if (!game.IsFullyInitialized) { continue; }
 				var home = game.HomeTeamId;
 				var away = game.AwayTeamId;
-				if (home is null || away is null) { continue; }
 
 				bool isAB = home == teamAId && away == teamBId;
 				bool isBA = home == teamBId && away == teamAId;

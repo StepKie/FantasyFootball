@@ -90,9 +90,9 @@ public sealed class Competition
 	/// <summary>
 	/// Name of the <see cref="EloSet"/> the simulator should use for this
 	/// competition (e.g. <c>"2018"</c>, <c>"Current"</c>, <c>"Germany-OP"</c>).
-	/// Null = use the legacy fallback chain (year-matched if it exists,
-	/// otherwise the UI's active EloSet). Set by the setup picker; persists
-	/// across saves so the sim path is deterministic per competition.
+	/// Null or an unresolvable name leaves the sim with no score model — the
+	/// caller errors. Set by the setup picker; persists across saves so the
+	/// sim path is deterministic per competition.
 	/// </summary>
 	public string? EloSetName { get; set; }
 }

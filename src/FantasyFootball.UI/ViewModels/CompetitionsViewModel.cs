@@ -100,9 +100,9 @@ public partial class CompetitionsViewModel : ObservableObject
 				{
 					if (game.Result is not { } r) { continue; }
 
+					if (!game.IsFullyInitialized) { continue; }
 					var home = game.HomeTeamId;
 					var away = game.AwayTeamId;
-					if (home is null || away is null) { continue; }
 
 					Accumulate(perTeam, (isNational, home), r, isHomeTeam: true);
 					Accumulate(perTeam, (isNational, away), r, isHomeTeam: false);

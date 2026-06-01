@@ -36,7 +36,7 @@ public abstract record class CompetitionSpec
 {
 	public required string DefinitionId { get; init; }
 
-	/// <summary>EloSet name to bake onto the materialized Competition (defaults to null = legacy fallback chain).</summary>
+	/// <summary>EloSet name to bake onto the materialized Competition (null leaves the sim with no resolvable score model).</summary>
 	public string? EloSetName { get; init; }
 }
 
