@@ -18,8 +18,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	readonly CompetitionFactory _factory;
 	readonly IRepository _entityRepo;
 
-	// Resolved when Competition loads; passed to every Simulate* call.
-	IScoreModel? _scoreModel;
+	// Resolved eagerly in LoadAsync (throws if the pinned EloSet can't be found); passed to every Simulate* call.
+	IScoreModel _scoreModel = null!;
 
 	public CompetitionDetailViewModel(
 		ICompetitionRepository repo,
@@ -127,7 +127,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		Competition = await _repo.GetAsync(competitionId);
 		if (Competition is null) { return; }
 
-		_scoreModel = HistoricalScoreModelResolver.Resolve(Competition, _entityRepo);
+		_scoreModel = HistoricalScoreModelResolver.Resolve(Competition, _entityRepo)
+			?? throw new InvalidOperationException($"Cannot resolve EloSet '{Competition.EloSetName}' for competition '{Competition.DefinitionId}'.");
 
 		var currentGame = Competition.CurrentGame();
 		var currentRoundId = currentGame?.RoundId
@@ -275,8 +276,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		foreach (var ko in c.Games.OfType<KoGame>().Where(g => g.Result is null))
 		{
-			ko.HomeTeamId = null;
-			ko.AwayTeamId = null;
+			ko.HomeTeamId = "";
+			ko.AwayTeamId = "";
 		}
 	}
 

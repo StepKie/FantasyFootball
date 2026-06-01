@@ -201,7 +201,9 @@ public partial class CompetitionsViewModel : ObservableObject
 		{
 			// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
 			await Task.Yield();
-			_simulator.Simulate(comp, HistoricalScoreModelResolver.Resolve(comp, _entityRepo));
+			var scoreModel = HistoricalScoreModelResolver.Resolve(comp, _entityRepo)
+				?? throw new InvalidOperationException($"Cannot resolve EloSet '{comp.EloSetName}' for competition '{comp.DefinitionId}'.");
+			_simulator.Simulate(comp, scoreModel);
 			await _repo.SaveAsync(comp);
 			await ReloadAsync();
 		}

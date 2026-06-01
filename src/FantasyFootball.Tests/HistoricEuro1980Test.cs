@@ -43,6 +43,6 @@ public class HistoricEuro1980Test
 		c.Games.Should().OnlyContain(g => g.Result == null);
 		c.IsFinished().Should().BeFalse();
 		c.SimulationFinished.Should().BeNull();
-		c.Games.OfType<KoGame>().Should().OnlyContain(g => g.HomeTeamId == null && g.AwayTeamId == null);
+		c.Games.OfType<KoGame>().Should().OnlyContain(g => !g.IsFullyInitialized);
 	}
 }

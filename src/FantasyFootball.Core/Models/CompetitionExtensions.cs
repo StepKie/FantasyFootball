@@ -99,7 +99,7 @@ public static class CompetitionExtensions
 		return r.HomeWon ? finalGame.HomeTeamId : finalGame.AwayTeamId;
 	}
 
-/// <summary>
+	/// <summary>
 	/// 1-based position of <paramref name="game"/> within its round
 	/// (chronological by <c>PlayedOn</c>). Used to build labels like
 	/// "R16 1" or "Winner of QF #2".

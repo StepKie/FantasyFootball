@@ -76,7 +76,7 @@ public sealed class CompetitionFactory
 			game.Result = null;
 			if (game is KoGame ko)
 			{
-				competition.Games[i] = ko with { HomeTeamId = null, AwayTeamId = null, Attendance = null };
+				competition.Games[i] = ko with { HomeTeamId = "", AwayTeamId = "", Attendance = null };
 			}
 			else if (game.Attendance.HasValue)
 			{

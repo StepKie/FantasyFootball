@@ -177,10 +177,8 @@ public class CompetitionExtensionsTests
 		{
 			Id = 99, PlayedOn = DateTime.Now, RoundId = "final",
 			HomeQual = "A1", AwayQual = "B1",
-			HomeTeamId = null, AwayTeamId = null,
 		};
-		unresolved.HomeTeamId.Should().BeNull();
-		unresolved.AwayTeamId.Should().BeNull();
+		unresolved.IsFullyInitialized.Should().BeFalse();
 	}
 
 	[Fact]
@@ -209,7 +207,6 @@ public class CompetitionExtensionsTests
 		{
 			Id = 50, PlayedOn = new(2026, 6, 28, 20, 0, 0), RoundId = "r32",
 			HomeQual = "A1", AwayQual = "B2",
-			HomeTeamId = null, AwayTeamId = null,
 		};
 		unresolved.Format().Should().Be("[50] 28.06.2026 20:00 A1 v B2  [r32]");
 	}

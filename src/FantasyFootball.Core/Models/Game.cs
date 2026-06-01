@@ -8,9 +8,12 @@ namespace FantasyFootball.Models;
 /// on the base.
 ///
 /// <see cref="HomeTeamId"/> / <see cref="AwayTeamId"/> live on the base so callers
-/// can read them uniformly. Direct games (Group/League) populate them at definition
-/// time; KO games leave them null until the qualifier chain resolves, then write the
-/// resolved id in.
+/// can read them uniformly. Group / League games carry their IDs at definition
+/// time (required, STJ enforces); KO games default to the empty sentinel until
+/// the qualifier chain resolves, then the simulator writes the resolved id.
+/// Callers should never compare these strings directly — use <see cref="IsHomeInitialized"/>,
+/// <see cref="IsAwayInitialized"/>, or <see cref="IsFullyInitialized"/> instead, so the
+/// sentinel representation can change without rippling.
 ///
 /// JSON polymorphism uses a "kind" discriminator: "group", "league", or "ko".
 ///
@@ -42,15 +45,12 @@ public abstract record class Game
 	/// <summary>Official spectator count for completed real-world games. Null for simulated or unplayed matches.</summary>
 	public int? Attendance { get; init; }
 
-	/// <summary>
-	/// Home team id. Set at definition time for Group/League games (where the lineup is
-	/// known up front) and at qualifier-resolution time for <see cref="KoGame"/>. Null only
-	/// before a KO qualifier resolves; the loader rejects null for Group/League games.
-	/// </summary>
-	public string? HomeTeamId { get; set; }
+	public abstract string HomeTeamId { get; set; }
+	public abstract string AwayTeamId { get; set; }
 
-	/// <summary>Away team id — same semantics as <see cref="HomeTeamId"/>.</summary>
-	public string? AwayTeamId { get; set; }
+	public bool IsHomeInitialized => !string.IsNullOrEmpty(HomeTeamId);
+	public bool IsAwayInitialized => !string.IsNullOrEmpty(AwayTeamId);
+	public bool IsFullyInitialized => IsHomeInitialized && IsAwayInitialized;
 
 	/// <summary>
 	/// null = scheduled (not yet played). Non-null = played.
@@ -72,6 +72,8 @@ public abstract record class Game
 public sealed record class GroupGame : Game
 {
 	public required string GroupLetter { get; init; }
+	public override required string HomeTeamId { get; set; }
+	public override required string AwayTeamId { get; set; }
 
 	public override string Format() =>
 		Result is { } r
@@ -86,6 +88,9 @@ public sealed record class GroupGame : Game
 /// </summary>
 public sealed record class LeagueGame : Game
 {
+	public override required string HomeTeamId { get; set; }
+	public override required string AwayTeamId { get; set; }
+
 	public override string Format() =>
 		Result is { } r
 			? $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {HomeTeamId} {r.Format()} {AwayTeamId}  [{RoundId}]"
@@ -97,6 +102,8 @@ public sealed record class LeagueGame : Game
 /// against earlier stage outcomes; the resolved team IDs are cached on
 /// <see cref="Game.HomeTeamId"/> / <see cref="Game.AwayTeamId"/> once the upstream
 /// qualifier resolves, so subsequent reads don't re-walk the qualifier chain.
+/// Until then both default to the empty sentinel; <see cref="Game.IsHomeInitialized"/>
+/// / <see cref="Game.IsAwayInitialized"/> tell the two states apart.
 ///
 /// Qualifier DSL: <c>A1</c> = group A's 1st place, <c>W-49</c> = winner
 /// of game 49, <c>L-61</c> = loser of game 61, <c>A/B/F3</c> = best
@@ -107,11 +114,18 @@ public sealed record class KoGame : Game
 	public required string HomeQual { get; init; }
 	public required string AwayQual { get; init; }
 
+	// Stay omitted from the on-disk JSON until resolved — definition files have no homeTeamId/awayTeamId on KO games, and FlatJson.Options drops nulls but not defaults.
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public override string HomeTeamId { get; set; } = "";
+
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public override string AwayTeamId { get; set; } = "";
+
 	public override string Format()
 	{
 		// Resolved IDs take priority; fall back to the qualifier expression for unresolved KO slots.
-		var home = HomeTeamId ?? HomeQual;
-		var away = AwayTeamId ?? AwayQual;
+		var home = IsHomeInitialized ? HomeTeamId : HomeQual;
+		var away = IsAwayInitialized ? AwayTeamId : AwayQual;
 		return Result is { } r
 			? $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {home} {r.Format()} {away}  [{RoundId}]"
 			: $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {home} v {away}  [{RoundId}]";

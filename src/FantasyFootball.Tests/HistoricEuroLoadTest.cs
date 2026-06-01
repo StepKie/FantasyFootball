@@ -43,7 +43,7 @@ public class HistoricEuroLoadTest
 		// Re-sim via Played=false: exercises the full QF→SF→Final qualifier chain.
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "em-1996", Played = false });
 		c.IsFinished().Should().BeFalse();
-		c.Games.OfType<KoGame>().Should().OnlyContain(g => g.HomeTeamId == null && g.AwayTeamId == null);
+		c.Games.OfType<KoGame>().Should().OnlyContain(g => !g.IsFullyInitialized);
 
 		new CompetitionSimulator().Simulate(c, new StubScoreModel());
 

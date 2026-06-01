@@ -38,7 +38,7 @@ public sealed class CompetitionSimulator
 				break;
 			case KoGame ko:
 				ResolveKoTeams(c, ko);
-				ko.Result = scoreModel.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
+				ko.Result = scoreModel.ScoreKoGame(ko.HomeTeamId, ko.AwayTeamId);
 				break;
 		}
 
@@ -77,9 +77,9 @@ public sealed class CompetitionSimulator
 	static void ResolveKoTeams(Competition c, KoGame ko)
 	{
 		// Pool slots resolve as a batch; refresh before per-slot Resolve to guarantee they're populated.
-		if (ko.HomeTeamId is null || ko.AwayTeamId is null) { ResolveAvailableKoTeams(c); }
-		ko.HomeTeamId ??= QualifierResolver.Resolve(c, ko.HomeQual);
-		ko.AwayTeamId ??= QualifierResolver.Resolve(c, ko.AwayQual);
+		if (!ko.IsFullyInitialized) { ResolveAvailableKoTeams(c); }
+		if (!ko.IsHomeInitialized) { ko.HomeTeamId = QualifierResolver.Resolve(c, ko.HomeQual); }
+		if (!ko.IsAwayInitialized) { ko.AwayTeamId = QualifierResolver.Resolve(c, ko.AwayQual); }
 	}
 
 	/// <summary>
@@ -96,19 +96,21 @@ public sealed class CompetitionSimulator
 		var anyUnresolved = false;
 		foreach (var ko in c.Games.OfType<KoGame>())
 		{
-			if (ko.HomeTeamId is null || ko.AwayTeamId is null) { anyUnresolved = true; break; }
+			if (!ko.IsFullyInitialized) { anyUnresolved = true; break; }
 		}
 		if (!anyUnresolved) { return; }
 
 		foreach (var ko in c.Games.OfType<KoGame>())
 		{
-			if (ko.HomeTeamId is null && IsNonPool(ko.HomeQual))
+			if (!ko.IsHomeInitialized && IsNonPool(ko.HomeQual))
 			{
-				ko.HomeTeamId = QualifierResolver.TryResolve(c, ko.HomeQual);
+				var resolved = QualifierResolver.TryResolve(c, ko.HomeQual);
+				if (resolved is not null) { ko.HomeTeamId = resolved; }
 			}
-			if (ko.AwayTeamId is null && IsNonPool(ko.AwayQual))
+			if (!ko.IsAwayInitialized && IsNonPool(ko.AwayQual))
 			{
-				ko.AwayTeamId = QualifierResolver.TryResolve(c, ko.AwayQual);
+				var resolved = QualifierResolver.TryResolve(c, ko.AwayQual);
+				if (resolved is not null) { ko.AwayTeamId = resolved; }
 			}
 		}
 		ResolveThirdPlacePools(c);
@@ -132,13 +134,13 @@ public sealed class CompetitionSimulator
 		var poolSlots = new List<(KoGame Game, bool IsHome, ThirdPlacePool Pool)>();
 		foreach (var ko in c.Games.OfType<KoGame>())
 		{
-			if (ko.HomeTeamId is null
+			if (!ko.IsHomeInitialized
 				&& QualifierParser.TryParse(ko.HomeQual, out var qh)
 				&& qh is ThirdPlacePool ph)
 			{
 				poolSlots.Add((ko, true, ph));
 			}
-			if (ko.AwayTeamId is null
+			if (!ko.IsAwayInitialized
 				&& QualifierParser.TryParse(ko.AwayQual, out var qa)
 				&& qa is ThirdPlacePool pa)
 			{
