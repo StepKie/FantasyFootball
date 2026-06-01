@@ -46,6 +46,10 @@ body {
   object-fit: contain;
 }
 
+.flag-crest {
+  object-fit: contain;
+}
+
 .flag-round {
   border-radius: 50%;
 }
@@ -439,6 +443,14 @@ body {
 
 .standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
 .standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
+
+/* League-format qualification slots — darker = stronger consequence (positive or negative). */
+.standings-qual-bar-champion           { background: #1b5e20; opacity: 0.9;  }
+.standings-qual-bar-champions-league   { background: #2e7d32; opacity: 0.75; }
+.standings-qual-bar-europa-league      { background: #4caf50; opacity: 0.6;  }
+.standings-qual-bar-conference-league  { background: #81c784; opacity: 0.5;  }
+.standings-qual-bar-relegation-playoff { background: #ef5350; opacity: 0.5;  }
+.standings-qual-bar-relegated          { background: #c62828; opacity: 0.85; }
 
 /* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
 .scoreboard-action {

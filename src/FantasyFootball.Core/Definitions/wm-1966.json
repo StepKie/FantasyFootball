@@ -4,6 +4,7 @@
   "type": "WM",
   "year": 1966,
   "formatId": "wc-16team-4group",
+  "eloSetName": "1966",
   "stages": [
     {
       "id": "group",

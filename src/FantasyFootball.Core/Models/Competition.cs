@@ -58,12 +58,25 @@ public sealed class Competition
 	public DateTime? SimulationFinished { get; set; }
 
 	/// <summary>
-	/// Group assignments. GroupAssignments[i] holds the team IDs in group
-	/// letter (char)('A' + i). Empty for knockout-only formats. The
-	/// full participant list is the flat union — see
+	/// Group assignments — cup formats only. <c>GroupAssignments[i]</c> holds the team IDs
+	/// in group letter <c>(char)('A' + i)</c>. Empty for knockout-only and for league formats
+	/// (which use <see cref="Teams"/>). The full participant list is the flat union — see
 	/// <see cref="CompetitionExtensions.AllTeamIds"/>.
 	/// </summary>
 	public required string[][] GroupAssignments { get; init; }
+
+	/// <summary>
+	/// Flat team list — league formats only (no group structure). Empty for cup formats
+	/// (which use <see cref="GroupAssignments"/>). The two fields are mutually exclusive
+	/// per definition: cup → groups, league → teams.
+	/// </summary>
+	public string[] Teams { get; init; } = [];
+
+	/// <summary>
+	/// Final-position bands (champion / UEFA spots / relegation) — league formats only.
+	/// Empty for cup formats. Drives the colored qualification bar on the standings table.
+	/// </summary>
+	public QualificationSlot[] QualificationSlots { get; init; } = [];
 
 	/// <summary>Stage metadata, declared up-front by the competition definition.</summary>
 	public required Stage[] Stages { get; init; }
@@ -77,9 +90,9 @@ public sealed class Competition
 	/// <summary>
 	/// Name of the <see cref="EloSet"/> the simulator should use for this
 	/// competition (e.g. <c>"2018"</c>, <c>"Current"</c>, <c>"Germany-OP"</c>).
-	/// Null = use the legacy fallback chain (year-matched if it exists,
-	/// otherwise the UI's active EloSet). Set by the setup picker; persists
-	/// across saves so the sim path is deterministic per competition.
+	/// Null or an unresolvable name leaves the sim with no score model — the
+	/// caller errors. Set by the setup picker; persists across saves so the
+	/// sim path is deterministic per competition.
 	/// </summary>
 	public string? EloSetName { get; set; }
 }

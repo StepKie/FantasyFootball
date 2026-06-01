@@ -1,76 +1,55 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using FantasyFootball.Models;
 using FantasyFootball.Repositories;
 using FantasyFootball.Services;
-using static FantasyFootball.Messaging;
 
 namespace FantasyFootball.UI.ViewModels;
 
 /// <summary>
-/// Backs the /teams/{id} profile page. Display-only — edit lifecycle lives in
-/// EditTeamDialog, which calls back into <see cref="UpdateElo"/> here for the
-/// active-EloSet write + broadcast.
+/// Backs the /teams/{id} profile page. Display-only — shows the team's elo and rank
+/// across every stored <see cref="EloSet"/> that covers it.
 /// </summary>
 public partial class TeamDetailViewModel : ObservableObject
 {
 	readonly IRepository _repo;
 	readonly IDataService _dataService;
-	readonly IActiveEloSet _activeEloSet;
 
-	public TeamDetailViewModel(IRepository repo, IDataService dataService, IActiveEloSet activeEloSet)
+	public TeamDetailViewModel(IRepository repo, IDataService dataService)
 	{
 		_repo = repo;
 		_dataService = dataService;
-		_activeEloSet = activeEloSet;
-
-		MessageBus.Register<EloSetChangedMessage>(this, (_, _) =>
-		{
-			if (Team is not null) { ReloadCurrent(); }
-		});
 	}
 
 	[ObservableProperty]
 	public partial Team? Team { get; set; }
 
 	[ObservableProperty]
-	public partial int Rank { get; set; }
-
-	[ObservableProperty]
-	public partial int Elo { get; set; }
+	public partial IReadOnlyList<EloSetRow> EloSetRows { get; set; } = [];
 
 	public void Load(int teamId)
 	{
 		Team = _repo.Get<Team>(teamId);
-		ReloadCurrent();
+		ReloadRows();
 	}
 
-	void ReloadCurrent()
+	void ReloadRows()
 	{
-		if (Team is null) { Rank = 0; Elo = 0; return; }
-		Rank = _dataService.AllTeams.RankByElo(_activeEloSet, Team.Id);
-		Elo = _activeEloSet.EloOf(Team);
-	}
+		if (Team is null) { EloSetRows = []; return; }
 
-	/// <summary>
-	/// Writes a new Elo for the loaded team into the active <see cref="EloSet"/>,
-	/// persists the set, and broadcasts the change so list VMs refresh.
-	/// </summary>
-	public void UpdateElo(int newElo)
-	{
-		if (Team is null || _activeEloSet.Current is null) { return; }
-		if (_activeEloSet.EloOf(Team) == newElo) { return; }
+		var allSets = _repo.GetAll<EloSet>().Where(s => s.TeamType == Team.Type).ToList();
+		var pool = _dataService.AllTeams.Where(t => t.Type == Team.Type).ToList();
 
-		var current = _activeEloSet.Current;
-		var hadKey = current.Snapshot.TryGetValue(Team.ShortName, out var rollback);
-		current.Snapshot[Team.ShortName] = newElo;
-		try { _repo.Save(current); }
-		catch
-		{
-			if (hadKey) { current.Snapshot[Team.ShortName] = rollback; }
-			else { current.Snapshot.Remove(Team.ShortName); }
-			throw;
-		}
-		_activeEloSet.SetCurrent(current);
+		EloSetRows = allSets
+			.Select(set =>
+			{
+				var elo = set.Snapshot.GetValueOrDefault(Team.ShortName);
+				var rank = pool.RankByElo(set, Team.Id);
+				return new EloSetRow(set.Name, set.Date, elo, rank);
+			})
+			.Where(r => r.Elo > 0)
+			.OrderByDescending(r => r.Date)
+			.ToList();
 	}
 }
+
+public sealed record EloSetRow(string EloSetName, DateOnly Date, int Elo, int Rank);

@@ -20,6 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Data\clubs.json" />
     <None Remove="Resources\Data\countries.json" />
     <None Remove="Resources\Data\elo-current.json" />
     <None Remove="Resources\Data\EloSets\*.json" />
@@ -28,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Data\clubs.json" />
     <EmbeddedResource Include="Resources\Data\countries.json" />
     <EmbeddedResource Include="Resources\Data\elo-current.json" />
     <EmbeddedResource Include="Resources\Data\EloSets\*.json" />

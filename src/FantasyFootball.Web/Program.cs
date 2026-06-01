@@ -31,15 +31,12 @@ builder.Services.AddMudServices();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<IRepository, LocalStorageRepository>();
 builder.Services.AddScoped<ISettingsService, LocalStorageSettingsService>();
-builder.Services.AddScoped<IActiveEloSet, ActiveEloSet>();
 builder.Services.AddScoped<IDataService, JsonDataService>();
 
 builder.Services.AddSingleton<ICompetitionDefinitionStore, EmbeddedCompetitionDefinitionStore>();
 builder.Services.AddSingleton<IVenueRegistry, EmbeddedVenueRegistry>();
-builder.Services.AddScoped<ITeamRegistry, ActiveEloSetRegistry>();
 builder.Services.AddScoped<ICompetitionRepository, LocalStorageCompetitionRepository>();
 builder.Services.AddScoped<CompetitionFactory>();
-builder.Services.AddScoped<IScoreModel, EloScoreModel>();
 builder.Services.AddScoped<CompetitionSimulator>();
 builder.Services.AddScoped<BulkSimRunner>();
 

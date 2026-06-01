@@ -1,0 +1,146 @@
+[
+  {
+    "code": "B04",
+    "name": {
+      "en": "Bayer 04 Leverkusen",
+      "de": "Bayer 04 Leverkusen"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "BMG",
+    "name": {
+      "en": "Borussia Mönchengladbach",
+      "de": "Borussia Mönchengladbach"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "BVB",
+    "name": {
+      "en": "Borussia Dortmund",
+      "de": "Borussia Dortmund"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "FCA",
+    "name": {
+      "en": "FC Augsburg",
+      "de": "FC Augsburg"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "FCB",
+    "name": {
+      "en": "FC Bayern Munich",
+      "de": "FC Bayern München"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "FCH",
+    "name": {
+      "en": "1. FC Heidenheim",
+      "de": "1. FC Heidenheim"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "FCU",
+    "name": {
+      "en": "1. FC Union Berlin",
+      "de": "1. FC Union Berlin"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "HSV",
+    "name": {
+      "en": "Hamburger SV",
+      "de": "Hamburger SV"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "KOE",
+    "name": {
+      "en": "1. FC Köln",
+      "de": "1. FC Köln"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "M05",
+    "name": {
+      "en": "1. FSV Mainz 05",
+      "de": "1. FSV Mainz 05"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "RBL",
+    "name": {
+      "en": "RB Leipzig",
+      "de": "RB Leipzig"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "SCF",
+    "name": {
+      "en": "SC Freiburg",
+      "de": "SC Freiburg"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "SGE",
+    "name": {
+      "en": "Eintracht Frankfurt",
+      "de": "Eintracht Frankfurt"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "STP",
+    "name": {
+      "en": "FC St. Pauli",
+      "de": "FC St. Pauli"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "SVW",
+    "name": {
+      "en": "Werder Bremen",
+      "de": "Werder Bremen"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "TSG",
+    "name": {
+      "en": "TSG 1899 Hoffenheim",
+      "de": "TSG 1899 Hoffenheim"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "VFB",
+    "name": {
+      "en": "VfB Stuttgart",
+      "de": "VfB Stuttgart"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "WOB",
+    "name": {
+      "en": "VfL Wolfsburg",
+      "de": "VfL Wolfsburg"
+    },
+    "country": "GER"
+  }
+]

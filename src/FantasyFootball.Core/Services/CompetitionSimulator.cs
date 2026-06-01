@@ -15,13 +15,6 @@ namespace FantasyFootball.Services;
 /// </summary>
 public sealed class CompetitionSimulator
 {
-	readonly IScoreModel _scoreModel;
-
-	public CompetitionSimulator(IScoreModel scoreModel)
-	{
-		_scoreModel = scoreModel;
-	}
-
 	/// <summary>
 	/// Score a single game in place. Resolves KO qualifier chains as needed.
 	/// No-op if the game already has a Result. Caller ensures upstream games
@@ -29,20 +22,23 @@ public sealed class CompetitionSimulator
 	/// Stamps <c>SimulationStart</c> on first call (any sim entry point;
 	/// list views can tell scheduled from in-progress competitions).
 	/// </summary>
-	public void SimulateGame(Competition c, Game game, IScoreModel? scoreModelOverride = null)
+	public void SimulateGame(Competition c, Game game, IScoreModel scoreModel)
 	{
 		if (game.Result is not null) { return; }
 
-		var model = scoreModelOverride ?? _scoreModel;
 		c.SimulationStart ??= DateTime.UtcNow;
 		switch (game)
 		{
 			case GroupGame gg:
-				gg.Result = model.ScoreGroupGame(gg.HomeTeamId, gg.AwayTeamId);
+				gg.Result = scoreModel.ScoreGroupGame(gg.HomeTeamId, gg.AwayTeamId);
+				break;
+			case LeagueGame lg:
+				// Scored like a group game; no qualifier chain.
+				lg.Result = scoreModel.ScoreGroupGame(lg.HomeTeamId, lg.AwayTeamId);
 				break;
 			case KoGame ko:
 				ResolveKoTeams(c, ko);
-				ko.Result = model.ScoreKoGame(ko.HomeTeamId!, ko.AwayTeamId!);
+				ko.Result = scoreModel.ScoreKoGame(ko.HomeTeamId, ko.AwayTeamId);
 				break;
 		}
 
@@ -53,33 +49,26 @@ public sealed class CompetitionSimulator
 		}
 	}
 
-	/// <summary>
-	/// Score every unplayed game in the given round, chronological order.
-	/// </summary>
-	public void SimulateRound(Competition c, string roundId, IScoreModel? scoreModelOverride = null)
+	/// <summary>Score every unplayed game in the given round, chronological order.</summary>
+	public void SimulateRound(Competition c, string roundId, IScoreModel scoreModel)
 	{
 		var roundGames = c.Games
 			.Where(g => g.RoundId == roundId && g.Result is null)
 			.OrderBy(g => g.PlayedOn);
 		foreach (var game in roundGames)
 		{
-			SimulateGame(c, game, scoreModelOverride);
+			SimulateGame(c, game, scoreModel);
 		}
 	}
 
-	/// <param name="scoreModelOverride">
-	/// Optional per-call score model. Used by the bulk runner to thread a
-	/// year-matched <see cref="EloSet"/> through a HistoricalSpec sim without
-	/// touching the UI's active set. <c>null</c> falls back to the DI default.
-	/// </param>
-	public void Simulate(Competition c, IScoreModel? scoreModelOverride = null)
+	public void Simulate(Competition c, IScoreModel scoreModel)
 	{
 		c.SimulationStart ??= DateTime.UtcNow;
 
 		// Defensive sort: a hand-edited out-of-order definition file would foot-gun without this.
 		foreach (var game in c.Games.OrderBy(g => g.PlayedOn))
 		{
-			SimulateGame(c, game, scoreModelOverride);
+			SimulateGame(c, game, scoreModel);
 		}
 
 		c.SimulationFinished = DateTime.UtcNow;
@@ -88,9 +77,9 @@ public sealed class CompetitionSimulator
 	static void ResolveKoTeams(Competition c, KoGame ko)
 	{
 		// Pool slots resolve as a batch; refresh before per-slot Resolve to guarantee they're populated.
-		if (ko.HomeTeamId is null || ko.AwayTeamId is null) { ResolveAvailableKoTeams(c); }
-		ko.HomeTeamId ??= QualifierResolver.Resolve(c, ko.HomeQual);
-		ko.AwayTeamId ??= QualifierResolver.Resolve(c, ko.AwayQual);
+		if (!ko.IsFullyInitialized) { ResolveAvailableKoTeams(c); }
+		if (!ko.IsHomeInitialized) { ko.HomeTeamId = QualifierResolver.Resolve(c, ko.HomeQual); }
+		if (!ko.IsAwayInitialized) { ko.AwayTeamId = QualifierResolver.Resolve(c, ko.AwayQual); }
 	}
 
 	/// <summary>
@@ -107,19 +96,21 @@ public sealed class CompetitionSimulator
 		var anyUnresolved = false;
 		foreach (var ko in c.Games.OfType<KoGame>())
 		{
-			if (ko.HomeTeamId is null || ko.AwayTeamId is null) { anyUnresolved = true; break; }
+			if (!ko.IsFullyInitialized) { anyUnresolved = true; break; }
 		}
 		if (!anyUnresolved) { return; }
 
 		foreach (var ko in c.Games.OfType<KoGame>())
 		{
-			if (ko.HomeTeamId is null && IsNonPool(ko.HomeQual))
+			if (!ko.IsHomeInitialized && IsNonPool(ko.HomeQual))
 			{
-				ko.HomeTeamId = QualifierResolver.TryResolve(c, ko.HomeQual);
+				var resolved = QualifierResolver.TryResolve(c, ko.HomeQual);
+				if (resolved is not null) { ko.HomeTeamId = resolved; }
 			}
-			if (ko.AwayTeamId is null && IsNonPool(ko.AwayQual))
+			if (!ko.IsAwayInitialized && IsNonPool(ko.AwayQual))
 			{
-				ko.AwayTeamId = QualifierResolver.TryResolve(c, ko.AwayQual);
+				var resolved = QualifierResolver.TryResolve(c, ko.AwayQual);
+				if (resolved is not null) { ko.AwayTeamId = resolved; }
 			}
 		}
 		ResolveThirdPlacePools(c);
@@ -143,13 +134,13 @@ public sealed class CompetitionSimulator
 		var poolSlots = new List<(KoGame Game, bool IsHome, ThirdPlacePool Pool)>();
 		foreach (var ko in c.Games.OfType<KoGame>())
 		{
-			if (ko.HomeTeamId is null
+			if (!ko.IsHomeInitialized
 				&& QualifierParser.TryParse(ko.HomeQual, out var qh)
 				&& qh is ThirdPlacePool ph)
 			{
 				poolSlots.Add((ko, true, ph));
 			}
-			if (ko.AwayTeamId is null
+			if (!ko.IsAwayInitialized
 				&& QualifierParser.TryParse(ko.AwayQual, out var qa)
 				&& qa is ThirdPlacePool pa)
 			{

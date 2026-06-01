@@ -4,6 +4,7 @@
   "type": "EM",
   "year": 2016,
   "formatId": "euro-24team-6group",
+  "eloSetName": "2016",
   "stages": [
     {
       "id": "group",

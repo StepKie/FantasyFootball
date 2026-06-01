@@ -4,6 +4,7 @@
   "type": "EM",
   "year": 2000,
   "formatId": "euro-16team-4group",
+  "eloSetName": "2000",
   "stages": [
     {
       "id": "group",

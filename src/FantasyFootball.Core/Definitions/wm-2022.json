@@ -4,6 +4,7 @@
   "type": "WM",
   "year": 2022,
   "formatId": "world-cup-32",
+  "eloSetName": "2022",
   "stages": [
     {
       "id": "group",

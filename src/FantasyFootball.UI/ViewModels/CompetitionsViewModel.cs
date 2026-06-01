@@ -22,7 +22,6 @@ public partial class CompetitionsViewModel : ObservableObject
 	readonly IDataService _dataService;
 	readonly CompetitionFactory _factory;
 	readonly CompetitionSimulator _simulator;
-	readonly ICompetitionDefinitionStore _definitions;
 	readonly IRepository _entityRepo;
 
 	public CompetitionsViewModel(
@@ -30,14 +29,12 @@ public partial class CompetitionsViewModel : ObservableObject
 		IDataService dataService,
 		CompetitionFactory factory,
 		CompetitionSimulator simulator,
-		ICompetitionDefinitionStore definitions,
 		IRepository entityRepo)
 	{
 		_repo = repo;
 		_dataService = dataService;
 		_factory = factory;
 		_simulator = simulator;
-		_definitions = definitions;
 		_entityRepo = entityRepo;
 
 		// Hydrate from the shared type pref so the chip state survives navigation between list and setup pages.
@@ -64,7 +61,7 @@ public partial class CompetitionsViewModel : ObservableObject
 	}
 
 	public IReadOnlyList<CompetitionType?> AvailableTypeFilters { get; } =
-		[null, CompetitionType.WM, CompetitionType.EM];
+		[null, CompetitionType.WM, CompetitionType.EM, CompetitionType.DOMESTIC_LEAGUE];
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(FilteredCompetitions))]
@@ -90,37 +87,46 @@ public partial class CompetitionsViewModel : ObservableObject
 	{
 		get
 		{
-			var teamLookup = _dataService.AllTeams.ToDictionary(t => t.ShortName, t => t);
-			var perTeam = new Dictionary<string, TeamRecord.Mutable>();
+			// Codes collide across kinds (STP = São Tomé and Príncipe national + FC St. Pauli club). Aggregate per (isNational, code).
+			var clubsByCode = _dataService.AllTeams.Where(t => !t.IsNationalTeam).ToDictionary(t => t.ShortName, t => t);
+			var nationsByCode = _dataService.AllTeams.Where(t => t.IsNationalTeam).ToDictionary(t => t.ShortName, t => t);
+			var perTeam = new Dictionary<(bool IsNational, string Code), TeamRecord.Mutable>();
 
 			foreach (var comp in FilteredCompetitions.Where(c => c.IsFinished()))
 			{
+				var isNational = IsNationalComp(comp.Type);
 				var champion = comp.WinnerTeamId();
 				foreach (var game in comp.Games)
 				{
 					if (game.Result is not { } r) { continue; }
 
-					var home = CompetitionExtensions.HomeTeamIdOf(game);
-					var away = CompetitionExtensions.AwayTeamIdOf(game);
-					if (home is null || away is null) { continue; }
+					if (!game.IsFullyInitialized) { continue; }
+					var home = game.HomeTeamId;
+					var away = game.AwayTeamId;
 
-					Accumulate(perTeam, home, r, isHomeTeam: true);
-					Accumulate(perTeam, away, r, isHomeTeam: false);
+					Accumulate(perTeam, (isNational, home), r, isHomeTeam: true);
+					Accumulate(perTeam, (isNational, away), r, isHomeTeam: false);
 				}
 
 				if (champion is not null)
 				{
-					var entry = perTeam.GetValueOrDefault(champion);
-					perTeam[champion] = entry with { CompetitionWins = entry.CompetitionWins + 1 };
+					var key = (isNational, champion);
+					var entry = perTeam.GetValueOrDefault(key);
+					perTeam[key] = entry with { CompetitionWins = entry.CompetitionWins + 1 };
 				}
 			}
 
 			return perTeam
-				.Select(kv => new TeamRecord(
-					teamLookup.TryGetValue(kv.Key, out var team) ? team : new Team { Name = kv.Key, ShortName = kv.Key },
-					kv.Value.Wins, kv.Value.Draws, kv.Value.Losses,
-					kv.Value.GoalsFor, kv.Value.GoalsAgainst,
-					kv.Value.CompetitionWins))
+				.Select(kv =>
+				{
+					var lookup = kv.Key.IsNational ? nationsByCode : clubsByCode;
+					var team = lookup.TryGetValue(kv.Key.Code, out var t) ? t : new Team { Name = kv.Key.Code, ShortName = kv.Key.Code };
+
+					return new TeamRecord(team,
+						kv.Value.Wins, kv.Value.Draws, kv.Value.Losses,
+						kv.Value.GoalsFor, kv.Value.GoalsAgainst,
+						kv.Value.CompetitionWins);
+				})
 				.OrderByDescending(r => r.Points)
 				.ThenByDescending(r => r.GoalDifference)
 				.ThenByDescending(r => r.GoalsFor)
@@ -129,14 +135,16 @@ public partial class CompetitionsViewModel : ObservableObject
 		}
 	}
 
-	static void Accumulate(Dictionary<string, TeamRecord.Mutable> store, string teamId, Result r, bool isHomeTeam)
+	static bool IsNationalComp(CompetitionType t) => t is CompetitionType.WM or CompetitionType.EM;
+
+	static void Accumulate(Dictionary<(bool IsNational, string Code), TeamRecord.Mutable> store, (bool IsNational, string Code) key, Result r, bool isHomeTeam)
 	{
 		var scored = isHomeTeam ? r.HomeScore : r.AwayScore;
 		var conceded = isHomeTeam ? r.AwayScore : r.HomeScore;
 		var won = isHomeTeam ? r.HomeWon : r.AwayWon;
 		var lost = isHomeTeam ? r.AwayWon : r.HomeWon;
-		var row = store.GetValueOrDefault(teamId);
-		store[teamId] = row with
+		var row = store.GetValueOrDefault(key);
+		store[key] = row with
 		{
 			GoalsFor = row.GoalsFor + scored,
 			GoalsAgainst = row.GoalsAgainst + conceded,
@@ -146,28 +154,12 @@ public partial class CompetitionsViewModel : ObservableObject
 		};
 	}
 
-	bool _seeded;
-
 	/// <summary>
-	/// First-page-mount entry. Seeds bundled historicals once per WASM session
-	/// (VM is <c>AddScoped</c> = session-singleton), then loads the list.
-	/// Subsequent page mounts only reload — so "Delete All" + navigate away and
-	/// back doesn't undo the wipe by re-seeding.
+	/// Re-reads the repo into the visible list. Bundled historicals are user-imported
+	/// via Settings → "Restore historical competitions"; this VM never auto-seeds.
 	/// </summary>
-	public async Task InitializeAsync()
-	{
-		if (!_seeded)
-		{
-			_seeded = true;
-			if (await _repo.CountAsync() == 0)
-			{
-				await SeedFinishedDefinitionsAsync();
-			}
-		}
-		await ReloadAsync();
-	}
+	public Task InitializeAsync() => ReloadAsync();
 
-	/// <summary> Re-reads the repo into the visible list. No seeding. </summary>
 	public async Task ReloadAsync()
 	{
 		IsBusy = true;
@@ -179,27 +171,6 @@ public partial class CompetitionsViewModel : ObservableObject
 		finally
 		{
 			IsBusy = false;
-		}
-	}
-
-	/// <summary>
-	/// Populates an empty repo with every bundled finished tournament. Saved
-	/// oldest-first so newer tournaments get the higher repo Ids and land at
-	/// the top under the default Id-desc list sort.
-	/// </summary>
-	async Task SeedFinishedDefinitionsAsync()
-	{
-		var finished = _definitions.AvailableIds
-			.Select(id => _factory.Create(new HistoricalSpec { DefinitionId = id }))
-			.Where(c => c.IsFinished())
-			.OrderBy(c => c.Year)
-			.ToList();
-
-		foreach (var competition in finished)
-		{
-			competition.SimulationStart = competition.Games.Min(g => g.PlayedOn);
-			competition.SimulationFinished = competition.Games.Max(g => g.PlayedOn);
-			await _repo.SaveAsync(competition);
 		}
 	}
 
@@ -230,7 +201,9 @@ public partial class CompetitionsViewModel : ObservableObject
 		{
 			// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
 			await Task.Yield();
-			_simulator.Simulate(comp, HistoricalScoreModelResolver.Resolve(comp, _entityRepo));
+			var scoreModel = HistoricalScoreModelResolver.Resolve(comp, _entityRepo)
+				?? throw new InvalidOperationException($"Cannot resolve EloSet '{comp.EloSetName}' for competition '{comp.DefinitionId}'.");
+			_simulator.Simulate(comp, scoreModel);
 			await _repo.SaveAsync(comp);
 			await ReloadAsync();
 		}
@@ -249,12 +222,15 @@ public partial class CompetitionsViewModel : ObservableObject
 		var source = await _repo.GetAsync(sourceId);
 		if (source is null) { return null; }
 
-		var spec = new CustomLineupSpec
-		{
-			DefinitionId = source.DefinitionId,
-			Groups = source.GroupAssignments.Select(g => (string[])g.Clone()).ToArray(),
-			EloSetName = source.EloSetName,
-		};
+		// Leagues have a fixed schedule — no lineup to substitute. Replay = re-run the historical fixture list, results cleared.
+		CompetitionSpec spec = source.IsLeague()
+			? new HistoricalSpec { DefinitionId = source.DefinitionId, Played = false, EloSetName = source.EloSetName }
+			: new CustomLineupSpec
+			{
+				DefinitionId = source.DefinitionId,
+				Groups = source.GroupAssignments.Select(g => (string[])g.Clone()).ToArray(),
+				EloSetName = source.EloSetName,
+			};
 		var replay = _factory.Create(spec);
 		var id = await _repo.SaveAsync(replay);
 		await ReloadAsync();

@@ -22,6 +22,8 @@ public class EmbeddedCompetitionDefinitionStoreTests
 	[InlineData("wm-2022", CompetitionType.WM, 2022, 8, 32, 64, "world-cup-32")]
 	[InlineData("wm-2026", CompetitionType.WM, 2026, 12, 48, 104, "world-cup-48")]
 	[InlineData("em-2024", CompetitionType.EM, 2024, 6, 24, 51, "european-championship-24")]
+	// League formats have 0 groups and store participants in Competition.Teams instead.
+	[InlineData("bundesliga-2025-2026", CompetitionType.DOMESTIC_LEAGUE, 2026, 0, 18, 306, "bundesliga-18")]
 	public void Load_HistoricalCompetition_HasExpectedShape(
 		string id, CompetitionType type, int year, int groups, int teams, int games, string formatId)
 	{

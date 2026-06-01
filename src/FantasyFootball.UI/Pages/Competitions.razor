@@ -67,7 +67,8 @@ else if (ViewModel.FilteredCompetitions.Count == 0)
 {
   <MudAlert Severity="Severity.Info">
     No competitions @(ViewModel.SelectedType is { } t ? $"of type {t} " : "")yet.
-    <MudLink Href="competitions/setup">Start one.</MudLink>
+    <MudLink Href="competitions/setup">Start one</MudLink>, or load the bundled tournaments from
+    <MudLink Href="settings">Settings → Restore historical competitions</MudLink>.
   </MudAlert>
 }
 else
@@ -94,7 +95,7 @@ else
       <MudTd DataLabel="#">@context.Id</MudTd>
       <MudTd DataLabel="Title">
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-          <CompetitionTypeIcon Type="@context.Type" Size="20" />
+          <CompetitionTypeIcon Type="@context.Type" LeagueKey="@context.LeagueKey()" Size="20" />
           <span>@context.Title</span>
         </MudStack>
       </MudTd>
@@ -125,7 +126,7 @@ else
       <MudTd DataLabel="Winner">
         @if (isFinished && context.WinnerTeamId() is { } winnerId)
         {
-          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId);
+          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == context.IsNationalTeamCompetition());
           <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
             <FlagIcon Team="winner" Code="@winnerId" Size="20" />
             <span>@(winner?.Name ?? winnerId)</span>

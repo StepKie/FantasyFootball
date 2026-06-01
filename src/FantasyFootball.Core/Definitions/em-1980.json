@@ -4,6 +4,7 @@
   "type": "EM",
   "year": 1980,
   "formatId": "euro-8team-2group",
+  "eloSetName": "1980",
   "stages": [
     {
       "id": "group",

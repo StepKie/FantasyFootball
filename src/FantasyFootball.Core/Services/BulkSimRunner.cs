@@ -56,15 +56,16 @@ public sealed class BulkSimRunner
 		}
 
 		// Resolve once per bulk run using scalar overload — avoids materializing a Competition, which for RandomLineupSpec would consume the draw RNG and shift all subsequent iterations.
-		var year = _definitions.Load(spec.DefinitionId).Year;
-		IScoreModel? scoreOverride = HistoricalScoreModelResolver.Resolve(spec.EloSetName, year, _entityRepo);
+		var eloSetName = spec.EloSetName ?? _definitions.Load(spec.DefinitionId).EloSetName;
+		var scoreModel = HistoricalScoreModelResolver.Resolve(eloSetName, _entityRepo)
+			?? throw new InvalidOperationException($"Cannot resolve EloSet '{eloSetName}' for definition '{spec.DefinitionId}'.");
 
 		var ids = new List<int>(count);
 		for (int i = 0; i < count; i++)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			var competition = _factory.Create(spec);
-			_simulator.Simulate(competition, scoreOverride);
+			_simulator.Simulate(competition, scoreModel);
 			var id = await _repo.SaveAsync(competition);
 			ids.Add(id);
 			progress?.Report(i + 1);

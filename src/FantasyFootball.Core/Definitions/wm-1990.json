@@ -4,6 +4,7 @@
   "type": "WM",
   "year": 1990,
   "formatId": "wc-24team-6group",
+  "eloSetName": "1990",
   "stages": [
     {
       "id": "group",

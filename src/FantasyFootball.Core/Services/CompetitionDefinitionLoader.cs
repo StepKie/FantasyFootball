@@ -120,6 +120,8 @@ public static class CompetitionDefinitionLoader
 			SimulationStart = raw.SimulationStart,
 			SimulationFinished = raw.SimulationFinished,
 			GroupAssignments = groupAssignments,
+			Teams = raw.Teams ?? [],
+			QualificationSlots = raw.QualificationSlots ?? [],
 			Stages = raw.Stages,
 			Rounds = raw.Rounds,
 			Games = raw.Games,
@@ -170,6 +172,8 @@ public static class CompetitionDefinitionLoader
 		public required Stage[] Stages { get; init; }
 		public required Round[] Rounds { get; init; }
 		public Dictionary<string, string[]>? Groups { get; init; }
+		public string[]? Teams { get; init; }
+		public QualificationSlot[]? QualificationSlots { get; init; }
 		public required Game[] Games { get; init; }
 	}
 }

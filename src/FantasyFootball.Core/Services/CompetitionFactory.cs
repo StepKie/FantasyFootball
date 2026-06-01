@@ -23,7 +23,8 @@ public sealed class CompetitionFactory
 	public Competition Create(CompetitionSpec spec)
 	{
 		var competition = _definitions.Load(spec.DefinitionId);
-		competition.EloSetName = spec.EloSetName;
+		// Spec wins when present; otherwise keep the definition's own declared EloSet (e.g. "Bundesliga 2025-2026" baked into the JSON).
+		if (spec.EloSetName is not null) { competition.EloSetName = spec.EloSetName; }
 
 		if (competition.GroupAssignments.Length == 0 && spec is not HistoricalSpec)
 		{
@@ -75,7 +76,7 @@ public sealed class CompetitionFactory
 			game.Result = null;
 			if (game is KoGame ko)
 			{
-				competition.Games[i] = ko with { HomeTeamId = null, AwayTeamId = null, Attendance = null };
+				competition.Games[i] = ko with { HomeTeamId = "", AwayTeamId = "", Attendance = null };
 			}
 			else if (game.Attendance.HasValue)
 			{
