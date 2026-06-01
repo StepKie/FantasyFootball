@@ -18,10 +18,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	readonly CompetitionFactory _factory;
 	readonly IRepository _entityRepo;
 
-	// Resolved when Competition loads; passed to every Simulate* call. Null = competition's EloSet can't be resolved (sim disabled).
+	// Resolved when Competition loads; passed to every Simulate* call.
 	IScoreModel? _scoreModel;
-
-	public bool CanSimulate => _scoreModel is not null;
 
 	public CompetitionDetailViewModel(
 		ICompetitionRepository repo,

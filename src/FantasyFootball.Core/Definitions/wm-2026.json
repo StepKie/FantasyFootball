@@ -4,6 +4,7 @@
   "type": "WM",
   "year": 2026,
   "formatId": "world-cup-48",
+  "eloSetName": "Current",
   "stages": [
     {
       "id": "group",

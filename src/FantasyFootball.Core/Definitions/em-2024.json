@@ -4,6 +4,7 @@
   "type": "EM",
   "year": 2024,
   "formatId": "european-championship-24",
+  "eloSetName": "2024",
   "stages": [
     {
       "id": "group",

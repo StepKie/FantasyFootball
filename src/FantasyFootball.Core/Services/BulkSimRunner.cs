@@ -58,7 +58,7 @@ public sealed class BulkSimRunner
 		// Resolve once per bulk run using scalar overload — avoids materializing a Competition, which for RandomLineupSpec would consume the draw RNG and shift all subsequent iterations.
 		var eloSetName = spec.EloSetName ?? _definitions.Load(spec.DefinitionId).EloSetName;
 		var scoreModel = HistoricalScoreModelResolver.Resolve(eloSetName, _entityRepo)
-			?? throw new InvalidOperationException($"Cannot resolve EloSet '{eloSetName}' for definition '{spec.DefinitionId}' — pin one on the spec or the definition.");
+			?? throw new InvalidOperationException($"Cannot resolve EloSet '{eloSetName}' for definition '{spec.DefinitionId}'.");
 
 		var ids = new List<int>(count);
 		for (int i = 0; i < count; i++)

@@ -4,6 +4,7 @@
   "type": "WM",
   "year": 2010,
   "formatId": "wc-32team-8group",
+  "eloSetName": "2010",
   "stages": [
     {
       "id": "group",

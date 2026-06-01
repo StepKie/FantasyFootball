@@ -4,6 +4,7 @@
   "type": "EM",
   "year": 1988,
   "formatId": "euro-8team-2group-sf",
+  "eloSetName": "1988",
   "stages": [
     {
       "id": "group",
