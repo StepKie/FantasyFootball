@@ -25,7 +25,7 @@
     <None Remove="Resources\Data\elo-current.json" />
     <None Remove="Resources\Data\EloSets\*.json" />
     <None Remove="Resources\Data\venues.json" />
-    <None Remove="Definitions\*.json" />
+    <None Remove="Resources\Data\Competitions\*.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +35,10 @@
     <EmbeddedResource Include="Resources\Data\EloSets\*.json" />
     <EmbeddedResource Include="Resources\Data\venues.json" />
     <!-- Competition definition JSON files. Manifest names are derived from
-         RootNamespace (FantasyFootball), so `Definitions/wm-2022.json` is
-         loadable as `FantasyFootball.Definitions.wm-2022.json` via
+         RootNamespace (FantasyFootball), so `Resources/Data/Competitions/wm-2022.json` is
+         loadable as `FantasyFootball.Resources.Data.Competitions.wm-2022.json` via
          Assembly.GetManifestResourceStream — see EmbeddedCompetitionDefinitionStore. -->
-    <EmbeddedResource Include="Definitions\*.json" />
+    <EmbeddedResource Include="Resources\Data\Competitions\*.json" />
   </ItemGroup>
 
   <ItemGroup>
