@@ -1,0 +1,16 @@
+<Project>
+
+  <PropertyGroup>
+    <!--
+      Single source of truth for the project version. All .csproj files in the solution
+      inherit this. MSBuild auto-derives AssemblyVersion / FileVersion / InformationalVersion
+      from <Version>, so reading via Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+      gives the same string back (with a +<git-sha> suffix appended automatically when the
+      build sees a git working copy).
+
+      Bump this on each release; do not put <Version> in individual .csproj files.
+    -->
+    <Version>0.6.0</Version>
+  </PropertyGroup>
+
+</Project>
