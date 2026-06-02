@@ -179,13 +179,39 @@ also happen to be accessible) remain in scope under their non-a11y framing.
 
 - **`develop`** is the default branch. Feature branches branch off `develop`
   and PR back to `develop`.
-- **`main`** is the release branch. When `develop` is release-ready, open a PR
-  from `develop` → `main`, bump version, tag the merge commit (e.g. `0.3.0`).
-  The `develop` → `main` PR is a **pure formality** — everything substantial
-  has already been reviewed on its way into `develop`. Auto-review is
-  **disabled** at the workflow level on PRs targeting `main` (see
-  `claude-auto-review` in `.github/workflows/claude.yml`); open, then merge as
-  soon as the .NET build is green (the build is real CI, not review).
+- **`main`** is the release branch. When `develop` is release-ready, merge
+  `develop` → `main` **directly** (no PR — everything was already reviewed on
+  its way into `develop`), then tag the merge commit (e.g. `0.6.0`). Auto-review
+  is **disabled** at the workflow level on PRs targeting `main` (see
+  `claude-auto-review` in `.github/workflows/claude.yml`) — left in place as
+  belt-and-braces in case a PR is ever opened.
+- **Version bump** lives in `Directory.Build.props` at the repo root (single
+  source of truth — every `.csproj` inherits it). The .NET SDK auto-derives
+  `AssemblyInformationalVersionAttribute` from `<Version>` and appends
+  `+<git-sha>` when a git working copy is present. The toolbar's "v{version} ·
+  {commit}" link reads this attribute at runtime.
+- **`CHANGELOG.md`** at the repo root tracks releases in user-facing language
+  (see `[[feedback-changelog-user-facing]]`). The Web project stages it into
+  `wwwroot/` via a build target so the `/whats-new` page can fetch + render it.
+
+### Release workflow
+
+Cutting `X.Y.Z` from `develop`:
+
+1. **Release-prep PR to `develop`** (mandatory — never tag without it):
+   - Bump `<Version>` in `Directory.Build.props` to `X.Y.Z`.
+   - Add a new `## [X.Y.Z](https://github.com/StepKie/FantasyFootball/releases/tag/X.Y.Z) — YYYY-MM-DD`
+     section at the top of `CHANGELOG.md` with user-facing notes (New Features /
+     Bugfixes only; see the feedback memory).
+   - Open as a small PR to `develop` so the changelog wording gets one round of
+     review before it ships.
+2. **Cut release**: after the prep PR merges, locally
+   `git checkout main && git merge --no-ff develop && git push origin main`,
+   then `git tag X.Y.Z` on the merge commit and `git push origin X.Y.Z`.
+3. **GitHub release**: `gh release create X.Y.Z --title "X.Y.Z" --notes "..."`
+   pasting the matching `CHANGELOG.md` section as the notes — the `/whats-new`
+   page's `[X.Y.Z](.../releases/tag/X.Y.Z)` link expects a real release page,
+   not a bare tag.
 - **GitHub Pages deployment** is handled by `.github/workflows/github-pages.yml`,
   which auto-deploys on push to `main`. It uses the modern Pages-from-Actions
   artifact pattern (`actions/configure-pages` + `upload-pages-artifact` +
