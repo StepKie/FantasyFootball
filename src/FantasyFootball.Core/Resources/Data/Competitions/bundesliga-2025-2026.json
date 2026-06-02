@@ -1,10 +1,10 @@
 {
   "id": "bundesliga-2025-2026",
   "title": "Bundesliga 2025-2026",
-  "type": "DOMESTIC_LEAGUE",
+  "type": "BUNDESLIGA",
   "year": 2026,
   "formatId": "bundesliga-18",
-  "eloSetName": "Bundesliga 2025-2026",
+  "eloSetName": "Clubs 2025-2026",
   "qualificationSlots": [
     { "positions": [1], "kind": "CHAMPION" },
     { "positions": [2, 3, 4], "kind": "CHAMPIONS_LEAGUE" },

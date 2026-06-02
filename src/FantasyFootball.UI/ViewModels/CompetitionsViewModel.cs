@@ -61,7 +61,11 @@ public partial class CompetitionsViewModel : ObservableObject
 	}
 
 	public IReadOnlyList<CompetitionType?> AvailableTypeFilters { get; } =
-		[null, CompetitionType.WM, CompetitionType.EM, CompetitionType.DOMESTIC_LEAGUE];
+	[
+		null, CompetitionType.WM, CompetitionType.EM,
+		CompetitionType.BUNDESLIGA, CompetitionType.PREMIER_LEAGUE,
+		CompetitionType.SERIE_A, CompetitionType.LA_LIGA, CompetitionType.LIGUE_1,
+	];
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(FilteredCompetitions))]

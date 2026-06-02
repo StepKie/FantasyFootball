@@ -30,7 +30,9 @@ public static class CompetitionExtensions
 	/// branch — league formats use <see cref="Competition.Teams"/>, cup formats use
 	/// <see cref="Competition.GroupAssignments"/>.
 	/// </summary>
-	public static bool IsLeague(this Competition c) => c.Type is CompetitionType.DOMESTIC_LEAGUE;
+	public static bool IsLeague(this Competition c) =>
+		c.Type is CompetitionType.BUNDESLIGA or CompetitionType.PREMIER_LEAGUE
+			or CompetitionType.SERIE_A or CompetitionType.LA_LIGA or CompetitionType.LIGUE_1;
 
 	/// <summary>All games in a given group letter (e.g. "A"). Empty for KO games.</summary>
 	public static IEnumerable<GroupGame> GroupGames(this Competition c, string letter) =>

@@ -1,0 +1,5216 @@
+{
+  "id": "pl-2025-2026",
+  "title": "Premier League 2025-2026",
+  "type": "PREMIER_LEAGUE",
+  "year": 2026,
+  "formatId": "pl-20",
+  "eloSetName": "Clubs 2025-2026",
+  "qualificationSlots": [
+    { "positions": [1], "kind": "CHAMPION" },
+    { "positions": [2, 3, 4], "kind": "CHAMPIONS_LEAGUE" },
+    { "positions": [5], "kind": "EUROPA_LEAGUE" },
+    { "positions": [6], "kind": "CONFERENCE_LEAGUE" },
+    { "positions": [18, 19, 20], "kind": "RELEGATED" }
+  ],
+  "stages": [
+    {
+      "id": "season",
+      "name": "Season",
+      "order": 0
+    }
+  ],
+  "rounds": [
+    {
+      "id": "md-1",
+      "name": "Matchday 1",
+      "stageId": "season",
+      "order": 0
+    },
+    {
+      "id": "md-2",
+      "name": "Matchday 2",
+      "stageId": "season",
+      "order": 1
+    },
+    {
+      "id": "md-3",
+      "name": "Matchday 3",
+      "stageId": "season",
+      "order": 2
+    },
+    {
+      "id": "md-4",
+      "name": "Matchday 4",
+      "stageId": "season",
+      "order": 3
+    },
+    {
+      "id": "md-5",
+      "name": "Matchday 5",
+      "stageId": "season",
+      "order": 4
+    },
+    {
+      "id": "md-6",
+      "name": "Matchday 6",
+      "stageId": "season",
+      "order": 5
+    },
+    {
+      "id": "md-7",
+      "name": "Matchday 7",
+      "stageId": "season",
+      "order": 6
+    },
+    {
+      "id": "md-8",
+      "name": "Matchday 8",
+      "stageId": "season",
+      "order": 7
+    },
+    {
+      "id": "md-9",
+      "name": "Matchday 9",
+      "stageId": "season",
+      "order": 8
+    },
+    {
+      "id": "md-10",
+      "name": "Matchday 10",
+      "stageId": "season",
+      "order": 9
+    },
+    {
+      "id": "md-11",
+      "name": "Matchday 11",
+      "stageId": "season",
+      "order": 10
+    },
+    {
+      "id": "md-12",
+      "name": "Matchday 12",
+      "stageId": "season",
+      "order": 11
+    },
+    {
+      "id": "md-13",
+      "name": "Matchday 13",
+      "stageId": "season",
+      "order": 12
+    },
+    {
+      "id": "md-14",
+      "name": "Matchday 14",
+      "stageId": "season",
+      "order": 13
+    },
+    {
+      "id": "md-15",
+      "name": "Matchday 15",
+      "stageId": "season",
+      "order": 14
+    },
+    {
+      "id": "md-16",
+      "name": "Matchday 16",
+      "stageId": "season",
+      "order": 15
+    },
+    {
+      "id": "md-17",
+      "name": "Matchday 17",
+      "stageId": "season",
+      "order": 16
+    },
+    {
+      "id": "md-18",
+      "name": "Matchday 18",
+      "stageId": "season",
+      "order": 17
+    },
+    {
+      "id": "md-19",
+      "name": "Matchday 19",
+      "stageId": "season",
+      "order": 18
+    },
+    {
+      "id": "md-20",
+      "name": "Matchday 20",
+      "stageId": "season",
+      "order": 19
+    },
+    {
+      "id": "md-21",
+      "name": "Matchday 21",
+      "stageId": "season",
+      "order": 20
+    },
+    {
+      "id": "md-22",
+      "name": "Matchday 22",
+      "stageId": "season",
+      "order": 21
+    },
+    {
+      "id": "md-23",
+      "name": "Matchday 23",
+      "stageId": "season",
+      "order": 22
+    },
+    {
+      "id": "md-24",
+      "name": "Matchday 24",
+      "stageId": "season",
+      "order": 23
+    },
+    {
+      "id": "md-25",
+      "name": "Matchday 25",
+      "stageId": "season",
+      "order": 24
+    },
+    {
+      "id": "md-26",
+      "name": "Matchday 26",
+      "stageId": "season",
+      "order": 25
+    },
+    {
+      "id": "md-27",
+      "name": "Matchday 27",
+      "stageId": "season",
+      "order": 26
+    },
+    {
+      "id": "md-28",
+      "name": "Matchday 28",
+      "stageId": "season",
+      "order": 27
+    },
+    {
+      "id": "md-29",
+      "name": "Matchday 29",
+      "stageId": "season",
+      "order": 28
+    },
+    {
+      "id": "md-30",
+      "name": "Matchday 30",
+      "stageId": "season",
+      "order": 29
+    },
+    {
+      "id": "md-31",
+      "name": "Matchday 31",
+      "stageId": "season",
+      "order": 30
+    },
+    {
+      "id": "md-32",
+      "name": "Matchday 32",
+      "stageId": "season",
+      "order": 31
+    },
+    {
+      "id": "md-33",
+      "name": "Matchday 33",
+      "stageId": "season",
+      "order": 32
+    },
+    {
+      "id": "md-34",
+      "name": "Matchday 34",
+      "stageId": "season",
+      "order": 33
+    },
+    {
+      "id": "md-35",
+      "name": "Matchday 35",
+      "stageId": "season",
+      "order": 34
+    },
+    {
+      "id": "md-36",
+      "name": "Matchday 36",
+      "stageId": "season",
+      "order": 35
+    },
+    {
+      "id": "md-37",
+      "name": "Matchday 37",
+      "stageId": "season",
+      "order": 36
+    },
+    {
+      "id": "md-38",
+      "name": "Matchday 38",
+      "stageId": "season",
+      "order": 37
+    }
+  ],
+  "teams": [
+    "ARS",
+    "AVL",
+    "BHA",
+    "BOU",
+    "BRE",
+    "BUR",
+    "CHE",
+    "CRY",
+    "EVE",
+    "FUL",
+    "LEE",
+    "LIV",
+    "MCI",
+    "MUN",
+    "NEW",
+    "NFO",
+    "SUN",
+    "TOT",
+    "WHU",
+    "WOL"
+  ],
+  "games": [
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "BOU",
+      "id": 1,
+      "playedOn": "2025-08-15T20:00:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "NEW",
+      "id": 2,
+      "playedOn": "2025-08-16T12:30:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "FUL",
+      "id": 3,
+      "playedOn": "2025-08-16T15:00:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "WHU",
+      "id": 4,
+      "playedOn": "2025-08-16T15:00:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "BUR",
+      "id": 5,
+      "playedOn": "2025-08-16T15:00:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "MCI",
+      "id": 6,
+      "playedOn": "2025-08-16T17:30:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "BRE",
+      "id": 7,
+      "playedOn": "2025-08-17T14:00:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "CRY",
+      "id": 8,
+      "playedOn": "2025-08-17T14:00:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "ARS",
+      "id": 9,
+      "playedOn": "2025-08-17T16:30:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "EVE",
+      "id": 10,
+      "playedOn": "2025-08-18T20:00:00Z",
+      "roundId": "md-1",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "CHE",
+      "id": 11,
+      "playedOn": "2025-08-22T20:00:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 5,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "TOT",
+      "id": 12,
+      "playedOn": "2025-08-23T12:30:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "WOL",
+      "id": 13,
+      "playedOn": "2025-08-23T15:00:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "AVL",
+      "id": 14,
+      "playedOn": "2025-08-23T15:00:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "SUN",
+      "id": 15,
+      "playedOn": "2025-08-23T15:00:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "LEE",
+      "id": 16,
+      "playedOn": "2025-08-23T17:30:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 5,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "NFO",
+      "id": 17,
+      "playedOn": "2025-08-24T14:00:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "BHA",
+      "id": 18,
+      "playedOn": "2025-08-24T14:00:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "MUN",
+      "id": 19,
+      "playedOn": "2025-08-24T16:30:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "LIV",
+      "id": 20,
+      "playedOn": "2025-08-25T20:00:00Z",
+      "roundId": "md-2",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "FUL",
+      "id": 21,
+      "playedOn": "2025-08-30T12:30:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "BRE",
+      "id": 22,
+      "playedOn": "2025-08-30T15:00:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "BUR",
+      "id": 23,
+      "playedOn": "2025-08-30T15:00:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "BOU",
+      "id": 24,
+      "playedOn": "2025-08-30T15:00:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "EVE",
+      "id": 25,
+      "playedOn": "2025-08-30T15:00:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "NEW",
+      "id": 26,
+      "playedOn": "2025-08-30T17:30:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "MCI",
+      "id": 27,
+      "playedOn": "2025-08-31T14:00:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "WHU",
+      "id": 28,
+      "playedOn": "2025-08-31T14:00:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "ARS",
+      "id": 29,
+      "playedOn": "2025-08-31T16:30:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "CRY",
+      "id": 30,
+      "playedOn": "2025-08-31T19:00:00Z",
+      "roundId": "md-3",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "NFO",
+      "id": 31,
+      "playedOn": "2025-09-13T12:30:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "BHA",
+      "id": 32,
+      "playedOn": "2025-09-13T15:00:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "SUN",
+      "id": 33,
+      "playedOn": "2025-09-13T15:00:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "AVL",
+      "id": 34,
+      "playedOn": "2025-09-13T15:00:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "LEE",
+      "id": 35,
+      "playedOn": "2025-09-13T15:00:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "WOL",
+      "id": 36,
+      "playedOn": "2025-09-13T15:00:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "TOT",
+      "id": 37,
+      "playedOn": "2025-09-13T17:30:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "CHE",
+      "id": 38,
+      "playedOn": "2025-09-13T20:00:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "LIV",
+      "id": 39,
+      "playedOn": "2025-09-14T14:00:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "MUN",
+      "id": 40,
+      "playedOn": "2025-09-14T16:30:00Z",
+      "roundId": "md-4",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "EVE",
+      "id": 41,
+      "playedOn": "2025-09-20T12:30:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "TOT",
+      "id": 42,
+      "playedOn": "2025-09-20T15:00:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "NFO",
+      "id": 43,
+      "playedOn": "2025-09-20T15:00:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "CRY",
+      "id": 44,
+      "playedOn": "2025-09-20T15:00:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "LEE",
+      "id": 45,
+      "playedOn": "2025-09-20T15:00:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "CHE",
+      "id": 46,
+      "playedOn": "2025-09-20T17:30:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "BRE",
+      "id": 47,
+      "playedOn": "2025-09-20T20:00:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "NEW",
+      "id": 48,
+      "playedOn": "2025-09-21T14:00:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "AVL",
+      "id": 49,
+      "playedOn": "2025-09-21T14:00:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "MCI",
+      "id": 50,
+      "playedOn": "2025-09-21T16:30:00Z",
+      "roundId": "md-5",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "MUN",
+      "id": 51,
+      "playedOn": "2025-09-27T12:30:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "LIV",
+      "id": 52,
+      "playedOn": "2025-09-27T15:00:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "BHA",
+      "id": 53,
+      "playedOn": "2025-09-27T15:00:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "BOU",
+      "id": 54,
+      "playedOn": "2025-09-27T15:00:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "BUR",
+      "id": 55,
+      "playedOn": "2025-09-27T15:00:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 5,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "SUN",
+      "id": 56,
+      "playedOn": "2025-09-27T17:30:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "WOL",
+      "id": 57,
+      "playedOn": "2025-09-27T20:00:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "FUL",
+      "id": 58,
+      "playedOn": "2025-09-28T14:00:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "ARS",
+      "id": 59,
+      "playedOn": "2025-09-28T16:30:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "WHU",
+      "id": 60,
+      "playedOn": "2025-09-29T20:00:00Z",
+      "roundId": "md-6",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "FUL",
+      "id": 61,
+      "playedOn": "2025-10-03T20:00:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "TOT",
+      "id": 62,
+      "playedOn": "2025-10-04T12:30:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "WHU",
+      "id": 63,
+      "playedOn": "2025-10-04T15:00:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "SUN",
+      "id": 64,
+      "playedOn": "2025-10-04T15:00:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "LIV",
+      "id": 65,
+      "playedOn": "2025-10-04T17:30:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "BUR",
+      "id": 66,
+      "playedOn": "2025-10-05T14:00:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "CRY",
+      "id": 67,
+      "playedOn": "2025-10-05T14:00:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "NFO",
+      "id": 68,
+      "playedOn": "2025-10-05T14:00:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "BHA",
+      "id": 69,
+      "playedOn": "2025-10-05T14:00:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "MCI",
+      "id": 70,
+      "playedOn": "2025-10-05T16:30:00Z",
+      "roundId": "md-7",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "CHE",
+      "id": 71,
+      "playedOn": "2025-10-18T12:30:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "NEW",
+      "id": 72,
+      "playedOn": "2025-10-18T15:00:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "BOU",
+      "id": 73,
+      "playedOn": "2025-10-18T15:00:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "LEE",
+      "id": 74,
+      "playedOn": "2025-10-18T15:00:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "EVE",
+      "id": 75,
+      "playedOn": "2025-10-18T15:00:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "WOL",
+      "id": 76,
+      "playedOn": "2025-10-18T15:00:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "ARS",
+      "id": 77,
+      "playedOn": "2025-10-18T17:30:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "AVL",
+      "id": 78,
+      "playedOn": "2025-10-19T14:00:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "MUN",
+      "id": 79,
+      "playedOn": "2025-10-19T16:30:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "BRE",
+      "id": 80,
+      "playedOn": "2025-10-20T20:00:00Z",
+      "roundId": "md-8",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "WHU",
+      "id": 81,
+      "playedOn": "2025-10-24T20:00:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "SUN",
+      "id": 82,
+      "playedOn": "2025-10-25T15:00:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "FUL",
+      "id": 83,
+      "playedOn": "2025-10-25T15:00:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "BHA",
+      "id": 84,
+      "playedOn": "2025-10-25T17:30:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "LIV",
+      "id": 85,
+      "playedOn": "2025-10-25T20:00:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "NFO",
+      "id": 86,
+      "playedOn": "2025-10-26T14:00:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "MCI",
+      "id": 87,
+      "playedOn": "2025-10-26T14:00:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "CRY",
+      "id": 88,
+      "playedOn": "2025-10-26T14:00:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "BUR",
+      "id": 89,
+      "playedOn": "2025-10-26T14:00:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "TOT",
+      "id": 90,
+      "playedOn": "2025-10-26T16:30:00Z",
+      "roundId": "md-9",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "LEE",
+      "id": 91,
+      "playedOn": "2025-11-01T15:00:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "BRE",
+      "id": 92,
+      "playedOn": "2025-11-01T15:00:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "ARS",
+      "id": 93,
+      "playedOn": "2025-11-01T15:00:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "WOL",
+      "id": 94,
+      "playedOn": "2025-11-01T15:00:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "MUN",
+      "id": 95,
+      "playedOn": "2025-11-01T15:00:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "CHE",
+      "id": 96,
+      "playedOn": "2025-11-01T17:30:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "AVL",
+      "id": 97,
+      "playedOn": "2025-11-01T20:00:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "NEW",
+      "id": 98,
+      "playedOn": "2025-11-02T14:00:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "BOU",
+      "id": 99,
+      "playedOn": "2025-11-02T16:30:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "EVE",
+      "id": 100,
+      "playedOn": "2025-11-03T20:00:00Z",
+      "roundId": "md-10",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "MUN",
+      "id": 101,
+      "playedOn": "2025-11-08T12:30:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "FUL",
+      "id": 102,
+      "playedOn": "2025-11-08T15:00:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "BUR",
+      "id": 103,
+      "playedOn": "2025-11-08T15:00:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "ARS",
+      "id": 104,
+      "playedOn": "2025-11-08T17:30:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "WOL",
+      "id": 105,
+      "playedOn": "2025-11-08T20:00:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "BOU",
+      "id": 106,
+      "playedOn": "2025-11-09T14:00:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "BHA",
+      "id": 107,
+      "playedOn": "2025-11-09T14:00:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "NEW",
+      "id": 108,
+      "playedOn": "2025-11-09T14:00:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "LEE",
+      "id": 109,
+      "playedOn": "2025-11-09T14:00:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "LIV",
+      "id": 110,
+      "playedOn": "2025-11-09T16:30:00Z",
+      "roundId": "md-11",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "CHE",
+      "id": 111,
+      "playedOn": "2025-11-22T12:30:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "WHU",
+      "id": 112,
+      "playedOn": "2025-11-22T15:00:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "BRE",
+      "id": 113,
+      "playedOn": "2025-11-22T15:00:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "SUN",
+      "id": 114,
+      "playedOn": "2025-11-22T15:00:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "NFO",
+      "id": 115,
+      "playedOn": "2025-11-22T15:00:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "CRY",
+      "id": 116,
+      "playedOn": "2025-11-22T15:00:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "MCI",
+      "id": 117,
+      "playedOn": "2025-11-22T17:30:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "AVL",
+      "id": 118,
+      "playedOn": "2025-11-23T14:00:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "TOT",
+      "id": 119,
+      "playedOn": "2025-11-23T16:30:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "EVE",
+      "id": 120,
+      "playedOn": "2025-11-24T20:00:00Z",
+      "roundId": "md-12",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "BOU",
+      "id": 121,
+      "playedOn": "2025-11-29T15:00:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "BUR",
+      "id": 122,
+      "playedOn": "2025-11-29T15:00:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "LEE",
+      "id": 123,
+      "playedOn": "2025-11-29T15:00:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "NEW",
+      "id": 124,
+      "playedOn": "2025-11-29T17:30:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "FUL",
+      "id": 125,
+      "playedOn": "2025-11-29T20:00:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "MUN",
+      "id": 126,
+      "playedOn": "2025-11-30T12:00:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "WOL",
+      "id": 127,
+      "playedOn": "2025-11-30T14:05:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "BHA",
+      "id": 128,
+      "playedOn": "2025-11-30T14:05:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "LIV",
+      "id": 129,
+      "playedOn": "2025-11-30T14:05:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "ARS",
+      "id": 130,
+      "playedOn": "2025-11-30T16:30:00Z",
+      "roundId": "md-13",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "EVE",
+      "id": 131,
+      "playedOn": "2025-12-02T19:30:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "MCI",
+      "id": 132,
+      "playedOn": "2025-12-02T19:30:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 5,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "TOT",
+      "id": 133,
+      "playedOn": "2025-12-02T20:15:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "AVL",
+      "id": 134,
+      "playedOn": "2025-12-03T19:30:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "BRE",
+      "id": 135,
+      "playedOn": "2025-12-03T19:30:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "CRY",
+      "id": 136,
+      "playedOn": "2025-12-03T19:30:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "NFO",
+      "id": 137,
+      "playedOn": "2025-12-03T19:30:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "SUN",
+      "id": 138,
+      "playedOn": "2025-12-03T20:15:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "CHE",
+      "id": 139,
+      "playedOn": "2025-12-03T20:15:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "WHU",
+      "id": 140,
+      "playedOn": "2025-12-04T20:00:00Z",
+      "roundId": "md-14",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "ARS",
+      "id": 141,
+      "playedOn": "2025-12-06T12:30:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "CHE",
+      "id": 142,
+      "playedOn": "2025-12-06T15:00:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "NFO",
+      "id": 143,
+      "playedOn": "2025-12-06T15:00:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "SUN",
+      "id": 144,
+      "playedOn": "2025-12-06T15:00:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "BUR",
+      "id": 145,
+      "playedOn": "2025-12-06T15:00:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "BRE",
+      "id": 146,
+      "playedOn": "2025-12-06T15:00:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "LIV",
+      "id": 147,
+      "playedOn": "2025-12-06T17:30:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "WHU",
+      "id": 148,
+      "playedOn": "2025-12-07T14:00:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "CRY",
+      "id": 149,
+      "playedOn": "2025-12-07T16:30:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "MUN",
+      "id": 150,
+      "playedOn": "2025-12-08T20:00:00Z",
+      "roundId": "md-15",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "EVE",
+      "id": 151,
+      "playedOn": "2025-12-13T15:00:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "BHA",
+      "id": 152,
+      "playedOn": "2025-12-13T15:00:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "FUL",
+      "id": 153,
+      "playedOn": "2025-12-13T17:30:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "WOL",
+      "id": 154,
+      "playedOn": "2025-12-13T20:00:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "NEW",
+      "id": 155,
+      "playedOn": "2025-12-14T14:00:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "MCI",
+      "id": 156,
+      "playedOn": "2025-12-14T14:00:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "TOT",
+      "id": 157,
+      "playedOn": "2025-12-14T14:00:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "AVL",
+      "id": 158,
+      "playedOn": "2025-12-14T14:00:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "LEE",
+      "id": 159,
+      "playedOn": "2025-12-14T16:30:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "BOU",
+      "id": 160,
+      "playedOn": "2025-12-15T20:00:00Z",
+      "roundId": "md-16",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "CHE",
+      "id": 161,
+      "playedOn": "2025-12-20T12:30:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "BUR",
+      "id": 162,
+      "playedOn": "2025-12-20T15:00:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "SUN",
+      "id": 163,
+      "playedOn": "2025-12-20T15:00:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "WHU",
+      "id": 164,
+      "playedOn": "2025-12-20T15:00:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "BRE",
+      "id": 165,
+      "playedOn": "2025-12-20T15:00:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "LIV",
+      "id": 166,
+      "playedOn": "2025-12-20T17:30:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "ARS",
+      "id": 167,
+      "playedOn": "2025-12-20T20:00:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "CRY",
+      "id": 168,
+      "playedOn": "2025-12-20T20:00:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "MUN",
+      "id": 169,
+      "playedOn": "2025-12-21T16:30:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "NFO",
+      "id": 170,
+      "playedOn": "2025-12-22T20:00:00Z",
+      "roundId": "md-17",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "NEW",
+      "id": 171,
+      "playedOn": "2025-12-26T20:00:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "MCI",
+      "id": 172,
+      "playedOn": "2025-12-27T12:30:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "BHA",
+      "id": 173,
+      "playedOn": "2025-12-27T15:00:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "BOU",
+      "id": 174,
+      "playedOn": "2025-12-27T15:00:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "EVE",
+      "id": 175,
+      "playedOn": "2025-12-27T15:00:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "WOL",
+      "id": 176,
+      "playedOn": "2025-12-27T15:00:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "FUL",
+      "id": 177,
+      "playedOn": "2025-12-27T15:00:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "AVL",
+      "id": 178,
+      "playedOn": "2025-12-27T17:30:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "LEE",
+      "id": 179,
+      "playedOn": "2025-12-28T14:00:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "TOT",
+      "id": 180,
+      "playedOn": "2025-12-28T16:30:00Z",
+      "roundId": "md-18",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "NEW",
+      "id": 181,
+      "playedOn": "2025-12-30T19:30:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "BOU",
+      "id": 182,
+      "playedOn": "2025-12-30T19:30:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "EVE",
+      "id": 183,
+      "playedOn": "2025-12-30T19:30:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "BHA",
+      "id": 184,
+      "playedOn": "2025-12-30T19:30:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "AVL",
+      "id": 185,
+      "playedOn": "2025-12-30T20:15:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "WOL",
+      "id": 186,
+      "playedOn": "2025-12-30T20:15:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "FUL",
+      "id": 187,
+      "playedOn": "2026-01-01T17:30:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "LEE",
+      "id": 188,
+      "playedOn": "2026-01-01T17:30:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "MCI",
+      "id": 189,
+      "playedOn": "2026-01-01T20:00:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "TOT",
+      "id": 190,
+      "playedOn": "2026-01-01T20:00:00Z",
+      "roundId": "md-19",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "NFO",
+      "id": 191,
+      "playedOn": "2026-01-03T12:30:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "BUR",
+      "id": 192,
+      "playedOn": "2026-01-03T15:00:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "WHU",
+      "id": 193,
+      "playedOn": "2026-01-03T15:00:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "ARS",
+      "id": 194,
+      "playedOn": "2026-01-03T17:30:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "MUN",
+      "id": 195,
+      "playedOn": "2026-01-04T12:30:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "BRE",
+      "id": 196,
+      "playedOn": "2026-01-04T15:00:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "CRY",
+      "id": 197,
+      "playedOn": "2026-01-04T15:00:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "SUN",
+      "id": 198,
+      "playedOn": "2026-01-04T15:00:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "LIV",
+      "id": 199,
+      "playedOn": "2026-01-04T15:15:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "CHE",
+      "id": 200,
+      "playedOn": "2026-01-04T17:30:00Z",
+      "roundId": "md-20",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "NFO",
+      "id": 201,
+      "playedOn": "2026-01-06T20:00:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "TOT",
+      "id": 202,
+      "playedOn": "2026-01-07T19:30:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "AVL",
+      "id": 203,
+      "playedOn": "2026-01-07T19:30:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "SUN",
+      "id": 204,
+      "playedOn": "2026-01-07T19:30:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "WOL",
+      "id": 205,
+      "playedOn": "2026-01-07T19:30:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "CHE",
+      "id": 206,
+      "playedOn": "2026-01-07T19:30:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "BHA",
+      "id": 207,
+      "playedOn": "2026-01-07T19:30:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "MUN",
+      "id": 208,
+      "playedOn": "2026-01-07T20:15:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "LEE",
+      "id": 209,
+      "playedOn": "2026-01-07T20:15:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "LIV",
+      "id": 210,
+      "playedOn": "2026-01-08T20:00:00Z",
+      "roundId": "md-21",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "MCI",
+      "id": 211,
+      "playedOn": "2026-01-17T12:30:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "CRY",
+      "id": 212,
+      "playedOn": "2026-01-17T15:00:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "BRE",
+      "id": 213,
+      "playedOn": "2026-01-17T15:00:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "BUR",
+      "id": 214,
+      "playedOn": "2026-01-17T15:00:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "FUL",
+      "id": 215,
+      "playedOn": "2026-01-17T15:00:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "WHU",
+      "id": 216,
+      "playedOn": "2026-01-17T15:00:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "ARS",
+      "id": 217,
+      "playedOn": "2026-01-17T17:30:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "NEW",
+      "id": 218,
+      "playedOn": "2026-01-18T14:00:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "EVE",
+      "id": 219,
+      "playedOn": "2026-01-18T16:30:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "BOU",
+      "id": 220,
+      "playedOn": "2026-01-19T20:00:00Z",
+      "roundId": "md-22",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "SUN",
+      "id": 221,
+      "playedOn": "2026-01-24T12:30:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "TOT",
+      "id": 222,
+      "playedOn": "2026-01-24T15:00:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "BHA",
+      "id": 223,
+      "playedOn": "2026-01-24T15:00:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "WOL",
+      "id": 224,
+      "playedOn": "2026-01-24T15:00:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "LIV",
+      "id": 225,
+      "playedOn": "2026-01-24T17:30:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "CHE",
+      "id": 226,
+      "playedOn": "2026-01-25T14:00:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "NFO",
+      "id": 227,
+      "playedOn": "2026-01-25T14:00:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "AVL",
+      "id": 228,
+      "playedOn": "2026-01-25T14:00:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "MUN",
+      "id": 229,
+      "playedOn": "2026-01-25T16:30:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "LEE",
+      "id": 230,
+      "playedOn": "2026-01-26T20:00:00Z",
+      "roundId": "md-23",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "EVE",
+      "id": 231,
+      "playedOn": "2026-01-31T15:00:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "ARS",
+      "id": 232,
+      "playedOn": "2026-01-31T15:00:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "BOU",
+      "id": 233,
+      "playedOn": "2026-01-31T15:00:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "WHU",
+      "id": 234,
+      "playedOn": "2026-01-31T17:30:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "NEW",
+      "id": 235,
+      "playedOn": "2026-01-31T20:00:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "BRE",
+      "id": 236,
+      "playedOn": "2026-02-01T14:00:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "FUL",
+      "id": 237,
+      "playedOn": "2026-02-01T14:00:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "CRY",
+      "id": 238,
+      "playedOn": "2026-02-01T14:00:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "MCI",
+      "id": 239,
+      "playedOn": "2026-02-01T16:30:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "BUR",
+      "id": 240,
+      "playedOn": "2026-02-02T20:00:00Z",
+      "roundId": "md-24",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "NFO",
+      "id": 241,
+      "playedOn": "2026-02-06T20:00:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "TOT",
+      "id": 242,
+      "playedOn": "2026-02-07T12:30:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "AVL",
+      "id": 243,
+      "playedOn": "2026-02-07T15:00:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "SUN",
+      "id": 244,
+      "playedOn": "2026-02-07T15:00:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "WHU",
+      "id": 245,
+      "playedOn": "2026-02-07T15:00:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "EVE",
+      "id": 246,
+      "playedOn": "2026-02-07T15:00:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "CHE",
+      "id": 247,
+      "playedOn": "2026-02-07T15:00:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "BRE",
+      "id": 248,
+      "playedOn": "2026-02-07T17:30:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "CRY",
+      "id": 249,
+      "playedOn": "2026-02-08T14:00:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "MCI",
+      "id": 250,
+      "playedOn": "2026-02-08T16:30:00Z",
+      "roundId": "md-25",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "LEE",
+      "id": 251,
+      "playedOn": "2026-02-10T19:30:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "BOU",
+      "id": 252,
+      "playedOn": "2026-02-10T19:30:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "NEW",
+      "id": 253,
+      "playedOn": "2026-02-10T19:30:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "MUN",
+      "id": 254,
+      "playedOn": "2026-02-10T20:15:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "BHA",
+      "id": 255,
+      "playedOn": "2026-02-11T19:30:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "FUL",
+      "id": 256,
+      "playedOn": "2026-02-11T19:30:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "WOL",
+      "id": 257,
+      "playedOn": "2026-02-11T19:30:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "BUR",
+      "id": 258,
+      "playedOn": "2026-02-11T19:40:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "LIV",
+      "id": 259,
+      "playedOn": "2026-02-11T20:15:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "ARS",
+      "id": 260,
+      "playedOn": "2026-02-12T20:00:00Z",
+      "roundId": "md-26",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "ARS",
+      "id": 261,
+      "playedOn": "2026-02-18T20:00:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "LEE",
+      "id": 262,
+      "playedOn": "2026-02-21T15:00:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "BHA",
+      "id": 263,
+      "playedOn": "2026-02-21T15:00:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "BUR",
+      "id": 264,
+      "playedOn": "2026-02-21T15:00:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "BOU",
+      "id": 265,
+      "playedOn": "2026-02-21T17:30:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "NEW",
+      "id": 266,
+      "playedOn": "2026-02-21T20:00:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "FUL",
+      "id": 267,
+      "playedOn": "2026-02-22T14:00:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "WOL",
+      "id": 268,
+      "playedOn": "2026-02-22T14:00:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "LIV",
+      "id": 269,
+      "playedOn": "2026-02-22T14:00:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "ARS",
+      "id": 270,
+      "playedOn": "2026-02-22T16:30:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "MUN",
+      "id": 271,
+      "playedOn": "2026-02-23T20:00:00Z",
+      "roundId": "md-27",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "AVL",
+      "id": 272,
+      "playedOn": "2026-02-27T20:00:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "SUN",
+      "id": 273,
+      "playedOn": "2026-02-28T12:30:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "BRE",
+      "id": 274,
+      "playedOn": "2026-02-28T15:00:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "WHU",
+      "id": 275,
+      "playedOn": "2026-02-28T15:00:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 5,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "EVE",
+      "id": 276,
+      "playedOn": "2026-02-28T15:00:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "MCI",
+      "id": 277,
+      "playedOn": "2026-02-28T17:30:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "NFO",
+      "id": 278,
+      "playedOn": "2026-03-01T14:00:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "TOT",
+      "id": 279,
+      "playedOn": "2026-03-01T14:00:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "CRY",
+      "id": 280,
+      "playedOn": "2026-03-01T14:00:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "CHE",
+      "id": 281,
+      "playedOn": "2026-03-01T16:30:00Z",
+      "roundId": "md-28",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "BRE",
+      "id": 282,
+      "playedOn": "2026-03-03T19:30:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "BUR",
+      "id": 283,
+      "playedOn": "2026-03-03T19:30:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "SUN",
+      "id": 284,
+      "playedOn": "2026-03-03T19:30:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "LIV",
+      "id": 285,
+      "playedOn": "2026-03-03T20:15:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "CHE",
+      "id": 286,
+      "playedOn": "2026-03-04T19:30:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "ARS",
+      "id": 287,
+      "playedOn": "2026-03-04T19:30:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "WHU",
+      "id": 288,
+      "playedOn": "2026-03-04T19:30:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "NFO",
+      "id": 289,
+      "playedOn": "2026-03-04T19:30:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "MUN",
+      "id": 290,
+      "playedOn": "2026-03-04T20:15:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "CRY",
+      "id": 291,
+      "playedOn": "2026-03-05T20:00:00Z",
+      "roundId": "md-29",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "BHA",
+      "id": 292,
+      "playedOn": "2026-03-14T15:00:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "BOU",
+      "id": 293,
+      "playedOn": "2026-03-14T15:00:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "EVE",
+      "id": 294,
+      "playedOn": "2026-03-14T17:30:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "NEW",
+      "id": 295,
+      "playedOn": "2026-03-14T17:30:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "MCI",
+      "id": 296,
+      "playedOn": "2026-03-14T20:00:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "LEE",
+      "id": 297,
+      "playedOn": "2026-03-15T14:00:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "AVL",
+      "id": 298,
+      "playedOn": "2026-03-15T14:00:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "FUL",
+      "id": 299,
+      "playedOn": "2026-03-15T14:00:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "TOT",
+      "id": 300,
+      "playedOn": "2026-03-15T16:30:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "WOL",
+      "id": 301,
+      "playedOn": "2026-03-16T20:00:00Z",
+      "roundId": "md-30",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "MUN",
+      "id": 302,
+      "playedOn": "2026-03-20T20:00:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "LIV",
+      "id": 303,
+      "playedOn": "2026-03-21T12:45:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "BUR",
+      "id": 304,
+      "playedOn": "2026-03-21T15:00:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "CHE",
+      "id": 305,
+      "playedOn": "2026-03-21T17:30:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "BRE",
+      "id": 306,
+      "playedOn": "2026-03-21T20:00:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "SUN",
+      "id": 307,
+      "playedOn": "2026-03-22T12:00:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "WHU",
+      "id": 308,
+      "playedOn": "2026-03-22T14:15:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "NFO",
+      "id": 309,
+      "playedOn": "2026-03-22T14:15:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "WOL",
+      "id": 310,
+      "playedOn": "2026-04-10T20:00:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "BOU",
+      "id": 311,
+      "playedOn": "2026-04-11T12:30:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "EVE",
+      "id": 312,
+      "playedOn": "2026-04-11T15:00:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "BHA",
+      "id": 313,
+      "playedOn": "2026-04-11T15:00:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "FUL",
+      "id": 314,
+      "playedOn": "2026-04-11T17:30:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "TOT",
+      "id": 315,
+      "playedOn": "2026-04-12T14:00:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "NEW",
+      "id": 316,
+      "playedOn": "2026-04-12T14:00:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "AVL",
+      "id": 317,
+      "playedOn": "2026-04-12T14:00:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "MCI",
+      "id": 318,
+      "playedOn": "2026-04-12T16:30:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "LEE",
+      "id": 319,
+      "playedOn": "2026-04-13T20:00:00Z",
+      "roundId": "md-32",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "FUL",
+      "id": 320,
+      "playedOn": "2026-04-18T12:30:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "BOU",
+      "id": 321,
+      "playedOn": "2026-04-18T15:00:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "WOL",
+      "id": 322,
+      "playedOn": "2026-04-18T15:00:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "BHA",
+      "id": 323,
+      "playedOn": "2026-04-18T17:30:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "MUN",
+      "id": 324,
+      "playedOn": "2026-04-18T20:00:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "BUR",
+      "id": 325,
+      "playedOn": "2026-04-19T14:00:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "SUN",
+      "id": 326,
+      "playedOn": "2026-04-19T14:00:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "LIV",
+      "id": 327,
+      "playedOn": "2026-04-19T14:00:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "ARS",
+      "id": 328,
+      "playedOn": "2026-04-19T16:30:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "WHU",
+      "id": 329,
+      "playedOn": "2026-04-20T20:00:00Z",
+      "roundId": "md-33",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "CHE",
+      "id": 330,
+      "playedOn": "2026-04-21T20:00:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "LEE",
+      "id": 331,
+      "playedOn": "2026-04-22T20:00:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "MCI",
+      "id": 332,
+      "playedOn": "2026-04-22T20:00:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "NFO",
+      "id": 333,
+      "playedOn": "2026-04-24T20:00:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 5,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "AVL",
+      "id": 334,
+      "playedOn": "2026-04-25T12:30:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "CRY",
+      "id": 335,
+      "playedOn": "2026-04-25T15:00:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "EVE",
+      "id": 336,
+      "playedOn": "2026-04-25T15:00:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "TOT",
+      "id": 337,
+      "playedOn": "2026-04-25T15:00:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "NEW",
+      "id": 338,
+      "playedOn": "2026-04-25T17:30:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "BRE",
+      "id": 339,
+      "playedOn": "2026-04-27T20:00:00Z",
+      "roundId": "md-34",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "BUR",
+      "id": 340,
+      "playedOn": "2026-05-01T20:00:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "WHU",
+      "id": 341,
+      "playedOn": "2026-05-02T15:00:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "BHA",
+      "id": 342,
+      "playedOn": "2026-05-02T15:00:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "SUN",
+      "id": 343,
+      "playedOn": "2026-05-02T15:00:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "FUL",
+      "id": 344,
+      "playedOn": "2026-05-02T17:30:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "CRY",
+      "id": 345,
+      "playedOn": "2026-05-03T14:00:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "LIV",
+      "id": 346,
+      "playedOn": "2026-05-03T15:30:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "TOT",
+      "id": 347,
+      "playedOn": "2026-05-03T19:00:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "NFO",
+      "id": 348,
+      "playedOn": "2026-05-04T15:00:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "MCI",
+      "id": 349,
+      "playedOn": "2026-05-04T20:00:00Z",
+      "roundId": "md-35",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "CHE",
+      "id": 350,
+      "playedOn": "2026-05-09T12:30:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "MUN",
+      "id": 351,
+      "playedOn": "2026-05-09T15:00:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "WOL",
+      "id": 352,
+      "playedOn": "2026-05-09T15:00:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "BOU",
+      "id": 353,
+      "playedOn": "2026-05-09T15:00:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "BRE",
+      "id": 354,
+      "playedOn": "2026-05-09T17:30:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "EVE",
+      "id": 355,
+      "playedOn": "2026-05-10T14:00:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "AVL",
+      "id": 356,
+      "playedOn": "2026-05-10T14:00:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "NEW",
+      "id": 357,
+      "playedOn": "2026-05-10T14:00:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "ARS",
+      "id": 358,
+      "playedOn": "2026-05-10T16:30:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "LEE",
+      "id": 359,
+      "playedOn": "2026-05-11T20:00:00Z",
+      "roundId": "md-36",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "CRY",
+      "id": 360,
+      "playedOn": "2026-05-13T20:00:00Z",
+      "roundId": "md-31",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "AVL",
+      "awayTeamId": "LIV",
+      "id": 361,
+      "playedOn": "2026-05-15T20:00:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 4,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MUN",
+      "awayTeamId": "NFO",
+      "id": 362,
+      "playedOn": "2026-05-17T12:30:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BRE",
+      "awayTeamId": "CRY",
+      "id": 363,
+      "playedOn": "2026-05-17T15:00:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "EVE",
+      "awayTeamId": "SUN",
+      "id": 364,
+      "playedOn": "2026-05-17T15:00:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LEE",
+      "awayTeamId": "BHA",
+      "id": 365,
+      "playedOn": "2026-05-17T15:00:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WOL",
+      "awayTeamId": "FUL",
+      "id": 366,
+      "playedOn": "2026-05-17T15:00:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NEW",
+      "awayTeamId": "WHU",
+      "id": 367,
+      "playedOn": "2026-05-17T17:30:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "ARS",
+      "awayTeamId": "BUR",
+      "id": 368,
+      "playedOn": "2026-05-18T20:00:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BOU",
+      "awayTeamId": "MCI",
+      "id": 369,
+      "playedOn": "2026-05-19T19:30:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CHE",
+      "awayTeamId": "TOT",
+      "id": 370,
+      "playedOn": "2026-05-19T20:15:00Z",
+      "roundId": "md-37",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "SUN",
+      "awayTeamId": "CHE",
+      "id": 371,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BHA",
+      "awayTeamId": "MUN",
+      "id": 372,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "CRY",
+      "awayTeamId": "ARS",
+      "id": 373,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "BUR",
+      "awayTeamId": "WOL",
+      "id": 374,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "FUL",
+      "awayTeamId": "NEW",
+      "id": 375,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "LIV",
+      "awayTeamId": "BRE",
+      "id": 376,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "MCI",
+      "awayTeamId": "AVL",
+      "id": 377,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "NFO",
+      "awayTeamId": "BOU",
+      "id": 378,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "TOT",
+      "awayTeamId": "EVE",
+      "id": 379,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "league",
+      "homeTeamId": "WHU",
+      "awayTeamId": "LEE",
+      "id": 380,
+      "playedOn": "2026-05-24T16:00:00Z",
+      "roundId": "md-38",
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    }
+  ]
+}

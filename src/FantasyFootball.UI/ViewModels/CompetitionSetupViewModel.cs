@@ -188,7 +188,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		SelectedEloSetName = DefaultEloSetNameFor(value);
 	}
 
-	// Definition's own EloSetName (e.g. "Bundesliga 2025-2026") if available; else year-matched ("2018"); else "Current". Names come from the live repo so user forks are pickable too.
+	// Definition's own EloSetName (e.g. "Clubs 2025-2026") if available; else year-matched ("2018"); else "Current". Names come from the live repo so user forks are pickable too.
 	string? DefaultEloSetNameFor(int year)
 	{
 		var defId = _catalog.FirstOrDefault(x => x.Type == SelectedType && x.Year == year).DefinitionId;
@@ -292,7 +292,7 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	CompetitionSpec BuildBulkSpec()
 	{
 		// AlwaysFresh → RandomLineupSpec; Fixed → CustomLineupSpec (drawn) or HistoricalSpec (original).
-		if (BulkMode == BulkRandomness.AlwaysFresh && _resolvedEloSet is not null)
+		if (BulkMode == BulkRandomness.AlwaysFresh && _resolvedEloSet is not null && !IsLeagueDefinition)
 		{
 			return new RandomLineupSpec
 			{

@@ -16,7 +16,6 @@ public class IconStrings
 			CompetitionType.EM => "logo_uefa",
 			CompetitionType.WM => "world",
 			CompetitionType.CHAMPIONS_LEAGUE => "logo_uefa_cl",
-			CompetitionType.DOMESTIC_LEAGUE => null,
 			_ => null,
 		};
 
