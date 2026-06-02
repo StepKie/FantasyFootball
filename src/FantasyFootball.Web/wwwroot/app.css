@@ -502,3 +502,38 @@ body {
   font-variant-numeric: tabular-nums;
   font-weight: 400;
 }
+
+/* What's new / CHANGELOG.md rendering. Global rather than scoped because the MudPaper wrapper's
+   root <div> doesn't pick up Blazor CSS isolation's scope attribute, so ::deep selectors miss
+   the Markdig-generated descendants. */
+.changelog-content h2 {
+  margin-top: 2.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.changelog-content h2:first-of-type { margin-top: 0; }
+.changelog-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+.changelog-content p { margin: 0.5rem 0; }
+.changelog-content ul {
+  padding-left: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+.changelog-content li { margin: 0.5rem 0; }
+.changelog-content a {
+  color: var(--mud-palette-primary);
+  text-decoration: none;
+}
+.changelog-content a:hover { text-decoration: underline; }
+.changelog-content code {
+  padding: 0 0.25rem;
+  background: rgba(127, 127, 127, 0.15);
+  border-radius: 3px;
+}
