@@ -1,4 +1,5 @@
 @inherits LayoutComponentBase
+@using System.Reflection
 
 <MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
@@ -17,6 +18,11 @@
       FantasyFootball
     </span>
     <MudSpacer />
+    <MudTooltip Text="What's new — release notes for this version and earlier">
+      <MudLink Href="whats-new" Color="Color.Inherit" Underline="Underline.None" Class="d-none d-sm-flex mx-3">
+        <MudText Typo="Typo.caption">v@_version · @_commit</MudText>
+      </MudLink>
+    </MudTooltip>
     <MudIconButton Icon="@Icons.Material.Filled.HelpOutline"
                    Color="Color.Inherit"
                    Href="about"
@@ -36,6 +42,12 @@
 </MudLayout>
 
 @code {
+  static readonly string _versionFull = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "unknown";
+  static readonly string[] _parts = _versionFull.Split("+");
+  readonly string _version = _parts[0];
+  // CI-published builds suffix the commit hash with '+abc1234…'; local debug builds may not.
+  readonly string _commit = _parts.Length > 1 ? _parts[1][..Math.Min(7, _parts[1].Length)] : "dev";
+
   bool _drawerOpen = true;
   bool _isDarkMode = true;
 

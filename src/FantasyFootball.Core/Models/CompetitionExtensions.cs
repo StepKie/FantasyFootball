@@ -9,12 +9,30 @@ namespace FantasyFootball.Models;
 public static class CompetitionExtensions
 {
 	/// <summary>
-	/// All participant team IDs across all groups (flat union). The order
-	/// follows group letter order: GroupAssignments[0]'s teams first, then
-	/// GroupAssignments[1]'s, etc.
+	/// All participant team IDs. Cup formats: flat union of <see cref="Competition.GroupAssignments"/>
+	/// in group-letter order. League formats: <see cref="Competition.Teams"/> as-is.
 	/// </summary>
 	public static IEnumerable<string> AllTeamIds(this Competition c) =>
-		c.GroupAssignments.SelectMany(g => g);
+		c.IsLeague() ? c.Teams : c.GroupAssignments.SelectMany(g => g);
+
+	/// <summary>
+	/// True if this competition's participant ShortNames are national-team codes (WM/EM);
+	/// false for club competitions (domestic leagues, Champions League). Used by team lookups
+	/// to scope the search — STP collides between São Tomé and Príncipe (national) and
+	/// FC St. Pauli (club).
+	/// </summary>
+	public static bool IsNationalTeamCompetition(this Competition c) =>
+		c.Type is CompetitionType.WM or CompetitionType.EM;
+
+	/// <summary>
+	/// True for league-format competitions (round-robin, season-long table, no knockout):
+	/// champion = top of standings, no groups, no qualifier chain. Drives the model-shape
+	/// branch — league formats use <see cref="Competition.Teams"/>, cup formats use
+	/// <see cref="Competition.GroupAssignments"/>.
+	/// </summary>
+	public static bool IsLeague(this Competition c) =>
+		c.Type is CompetitionType.BUNDESLIGA or CompetitionType.PREMIER_LEAGUE
+			or CompetitionType.SERIE_A or CompetitionType.LA_LIGA or CompetitionType.LIGUE_1;
 
 	/// <summary>All games in a given group letter (e.g. "A"). Empty for KO games.</summary>
 	public static IEnumerable<GroupGame> GroupGames(this Competition c, string letter) =>
@@ -68,30 +86,20 @@ public static class CompetitionExtensions
 	/// </summary>
 	public static string? WinnerTeamId(this Competition c)
 	{
+		// League: champion is top of the season-long table, not "winner of the final game".
+		if (c.IsLeague())
+		{
+			return c.LeagueStandings().FirstOrDefault()?.TeamId;
+		}
+
 		if (c.Rounds.Length == 0) { return null; }
 		// The "final" is the game in the round with the highest Order that has a Result.
 		var maxOrder = c.Rounds.Max(r => r.Order);
 		var finalRoundIds = c.Rounds.Where(r => r.Order == maxOrder).Select(r => r.Id).ToHashSet();
 		var finalGame = c.Games.LastOrDefault(g => finalRoundIds.Contains(g.RoundId) && g.Result is not null);
 		if (finalGame is null || finalGame.Result is not { } r) { return null; }
-		return r.HomeWon ? HomeTeamIdOf(finalGame) : AwayTeamIdOf(finalGame);
+		return r.HomeWon ? finalGame.HomeTeamId : finalGame.AwayTeamId;
 	}
-
-	/// <summary>Resolved home team id, or null if a KO qualifier hasn't resolved yet.</summary>
-	public static string? HomeTeamIdOf(Game g) => g switch
-	{
-		GroupGame gg => gg.HomeTeamId,
-		KoGame kg => kg.HomeTeamId,
-		_ => null,
-	};
-
-	/// <summary>Resolved away team id, or null if a KO qualifier hasn't resolved yet.</summary>
-	public static string? AwayTeamIdOf(Game g) => g switch
-	{
-		GroupGame gg => gg.AwayTeamId,
-		KoGame kg => kg.AwayTeamId,
-		_ => null,
-	};
 
 	/// <summary>
 	/// 1-based position of <paramref name="game"/> within its round
@@ -165,6 +173,45 @@ public static class CompetitionExtensions
 				row.GoalsAgainst,
 				row.Points,
 				Position: i + 1);
+		}
+		return result;
+	}
+
+	/// <summary>
+	/// Standings table for a league format (no group letter). Same tiebreaker cascade as
+	/// <see cref="Standings(Competition, string)"/> — points → GD → GF → team-id alphabetical.
+	/// Pure function; recomputed on demand.
+	/// </summary>
+	public static IReadOnlyList<GroupStanding> LeagueStandings(this Competition c)
+	{
+		var stats = c.Teams.ToDictionary(t => t, _ => new MutableRow());
+
+		foreach (var game in c.Games.OfType<LeagueGame>())
+		{
+			if (game.Result is not { } r) { continue; }
+			var home = stats[game.HomeTeamId];
+			var away = stats[game.AwayTeamId];
+			home.Played++; away.Played++;
+			home.GoalsFor += r.HomeScore; home.GoalsAgainst += r.AwayScore;
+			away.GoalsFor += r.AwayScore; away.GoalsAgainst += r.HomeScore;
+			if (r.HomeWon) { home.Wins++; away.Losses++; }
+			else if (r.AwayWon) { away.Wins++; home.Losses++; }
+			else { home.Draws++; away.Draws++; }
+		}
+
+		var ordered = stats
+			.Select(kv => (TeamId: kv.Key, Row: kv.Value))
+			.OrderByDescending(x => x.Row.Points)
+			.ThenByDescending(x => x.Row.GoalsFor - x.Row.GoalsAgainst)
+			.ThenByDescending(x => x.Row.GoalsFor)
+			.ThenBy(x => x.TeamId, StringComparer.Ordinal)
+			.ToList();
+
+		var result = new GroupStanding[ordered.Count];
+		for (int i = 0; i < ordered.Count; i++)
+		{
+			var (teamId, row) = ordered[i];
+			result[i] = new GroupStanding(teamId, row.Played, row.Wins, row.Draws, row.Losses, row.GoalsFor, row.GoalsAgainst, row.Points, Position: i + 1);
 		}
 		return result;
 	}

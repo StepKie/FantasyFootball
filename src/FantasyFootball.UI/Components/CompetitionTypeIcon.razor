@@ -34,18 +34,29 @@
   // Bundled SVGs ship in the UI Razor class library; consumed via the RCL `_content/{lib}/...` prefix. See tools/fetch-logos.sh + tools/fetch-flogos.sh for the refresh pipelines.
   string? OfficialPath => Type switch
   {
-    CompetitionType.WM => "_content/FantasyFootball.UI/img/competitions/wm.svg",
-    CompetitionType.EM => "_content/FantasyFootball.UI/img/competitions/em.svg",
-    CompetitionType.CHAMPIONS_LEAGUE => "_content/FantasyFootball.UI/img/competitions/ucl.svg",
+    CompetitionType.WM => Svg("wm"),
+    CompetitionType.EM => Svg("em"),
+    CompetitionType.CHAMPIONS_LEAGUE => Svg("ucl"),
+    CompetitionType.BUNDESLIGA => Svg("bundesliga"),
+    CompetitionType.PREMIER_LEAGUE => Svg("pl"),
+    CompetitionType.SERIE_A => Svg("seriea"),
+    CompetitionType.LA_LIGA => Svg("laliga"),
+    CompetitionType.LIGUE_1 => Svg("ligue1"),
     _ => null,
   };
 
-  // Human-readable alt/title — raw enum names ("WM", "EM") would be spelled out letter-by-letter by screen readers.
+  static string Svg(string name) => $"_content/FantasyFootball.UI/img/competitions/{name}.svg";
+
   string AltText => Type switch
   {
     CompetitionType.WM => "FIFA World Cup",
     CompetitionType.EM => "UEFA European Championship",
     CompetitionType.CHAMPIONS_LEAGUE => "UEFA Champions League",
+    CompetitionType.BUNDESLIGA => "Bundesliga",
+    CompetitionType.PREMIER_LEAGUE => "Premier League",
+    CompetitionType.SERIE_A => "Serie A",
+    CompetitionType.LA_LIGA => "LaLiga",
+    CompetitionType.LIGUE_1 => "Ligue 1",
     _ => Type.ToString(),
   };
 

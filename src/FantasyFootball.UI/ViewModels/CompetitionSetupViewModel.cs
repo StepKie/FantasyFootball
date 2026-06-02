@@ -29,7 +29,6 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	public enum BulkRandomness { Fixed, AlwaysFresh }
 
 	readonly ICompetitionDefinitionStore _definitions;
-	readonly ITeamRegistry _registry;
 	readonly IDataService _dataService;
 	readonly CompetitionFactory _factory;
 	readonly ICompetitionRepository _repo;
@@ -44,7 +43,6 @@ public partial class CompetitionSetupViewModel : ObservableObject
 
 	public CompetitionSetupViewModel(
 		ICompetitionDefinitionStore definitions,
-		ITeamRegistry registry,
 		IDataService dataService,
 		CompetitionFactory factory,
 		ICompetitionRepository repo,
@@ -52,7 +50,6 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		IRepository entityRepo)
 	{
 		_definitions = definitions;
-		_registry = registry;
 		_dataService = dataService;
 		_factory = factory;
 		_repo = repo;
@@ -79,8 +76,6 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		AvailableEloSetNames = LoadEloSetNames();
 		SelectedEloSetName = DefaultEloSetNameFor(SelectedYear);
 
-		// Refresh when the user creates / deletes / switches an EloSet on the Teams page mid-session, so the new name shows up here without a page reload.
-		MessageBus.Register<EloSetChangedMessage>(this, (_, _) => RefreshEloSetNames());
 		MessageBus.Register<DataResetMessage>(this, (_, _) => RefreshEloSetNames());
 	}
 
@@ -115,6 +110,14 @@ public partial class CompetitionSetupViewModel : ObservableObject
 
 	[ObservableProperty]
 	public partial string? SelectedEloSetName { get; set; }
+
+	partial void OnSelectedEloSetNameChanged(string? value) =>
+		_resolvedEloSet = value is null ? null : _entityRepo.GetAll<EloSet>().FirstOrDefault(s => s.Name == value);
+
+	EloSet? _resolvedEloSet;
+
+	/// <summary>Elo for <paramref name="team"/> from the EloSet currently picked in the dropdown (not the globally active one — the setup page previews under the to-be-applied snapshot).</summary>
+	public int EloOf(Team team) => _resolvedEloSet?.Snapshot.GetValueOrDefault(team.ShortName) ?? 0;
 
 	[ObservableProperty]
 	[NotifyPropertyChangedFor(nameof(Groups))]
@@ -154,6 +157,10 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		_drawnLineup = null;
 		CurrentLineup = LineupMode.Original;
 
+		// EloSet picker is kind-scoped — club elos for club comps, national for nat comps.
+		AvailableEloSetNames = LoadEloSetNames();
+		SelectedEloSetName = DefaultEloSetNameFor(SelectedYear);
+
 		// Propagate to the shared pref so the list page picks this up on navigate-back.
 		_dataService.SelectedCompetitionType = value;
 	}
@@ -177,22 +184,41 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	{
 		_drawnLineup = null;
 		CurrentLineup = LineupMode.Original;
+		AvailableEloSetNames = LoadEloSetNames();
 		SelectedEloSetName = DefaultEloSetNameFor(value);
 	}
 
-	// Year-matched ("2018") if a bundled snapshot exists, else "Current". Names come from the live repo so user forks are pickable too.
+	// Definition's own EloSetName (e.g. "Clubs 2025-2026") if available; else year-matched ("2018"); else "Current". Names come from the live repo so user forks are pickable too.
 	string? DefaultEloSetNameFor(int year)
 	{
+		var defId = _catalog.FirstOrDefault(x => x.Type == SelectedType && x.Year == year).DefinitionId;
+		if (defId is not null)
+		{
+			var declared = _definitions.Load(defId).EloSetName;
+			if (declared is not null && AvailableEloSetNames.Contains(declared)) { return declared; }
+		}
+
 		var yearName = year.ToString(CultureInfo.InvariantCulture);
 		if (AvailableEloSetNames.Contains(yearName)) { return yearName; }
+
 		return AvailableEloSetNames.Contains(JsonDataService.CurrentEloSetName) ? JsonDataService.CurrentEloSetName : AvailableEloSetNames.FirstOrDefault();
 	}
 
-	IReadOnlyList<string> LoadEloSetNames() => _entityRepo.GetAll<EloSet>()
-		.Select(s => s.Name)
-		.OrderBy(name => name == JsonDataService.CurrentEloSetName ? 0 : 1)
-		.ThenBy(name => name, StringComparer.Ordinal)
-		.ToList();
+	IReadOnlyList<string> LoadEloSetNames()
+	{
+		var compTeamType = TeamTypeFor(SelectedType);
+
+		return _entityRepo.GetAll<EloSet>()
+			.Where(s => s.TeamType == compTeamType)
+			.Select(s => s.Name)
+			.OrderBy(name => name == JsonDataService.CurrentEloSetName ? 0 : 1)
+			.ThenBy(name => name, StringComparer.Ordinal)
+			.ToList();
+	}
+
+	static TeamType TeamTypeFor(CompetitionType t) => t is CompetitionType.WM or CompetitionType.EM
+		? TeamType.NATIONAL_MEN
+		: TeamType.CLUB_MEN;
 
 	public void ResetToOriginal()
 	{
@@ -204,10 +230,10 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	{
 		var template = _definitions.Load(DefinitionId);
 		var groupCount = template.GroupAssignments.Length;
-		if (groupCount == 0) { return; }
+		if (groupCount == 0 || _resolvedEloSet is null) { return; }
 
 		var teamsPerGroup = template.GroupAssignments[0].Length;
-		_drawnLineup = new UniformDrawFromRegistry(_registry).Draw(groupCount, teamsPerGroup);
+		_drawnLineup = new UniformDrawFromRegistry(new EloSetTeamRegistry(_resolvedEloSet)).Draw(groupCount, teamsPerGroup);
 		CurrentLineup = LineupMode.Random;
 	}
 
@@ -266,12 +292,12 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	CompetitionSpec BuildBulkSpec()
 	{
 		// AlwaysFresh → RandomLineupSpec; Fixed → CustomLineupSpec (drawn) or HistoricalSpec (original).
-		if (BulkMode == BulkRandomness.AlwaysFresh)
+		if (BulkMode == BulkRandomness.AlwaysFresh && _resolvedEloSet is not null && !IsLeagueDefinition)
 		{
 			return new RandomLineupSpec
 			{
 				DefinitionId = DefinitionId,
-				DrawAlgorithm = new UniformDrawFromRegistry(_registry),
+				DrawAlgorithm = new UniformDrawFromRegistry(new EloSetTeamRegistry(_resolvedEloSet)),
 				EloSetName = SelectedEloSetName,
 			};
 		}
@@ -285,10 +311,25 @@ public partial class CompetitionSetupViewModel : ObservableObject
 	{
 		if (string.IsNullOrEmpty(DefinitionId)) { return []; }
 
-		var teams = _dataService.AllTeams.ToDictionary(t => t.ShortName, t => t);
+		var template = _definitions.Load(DefinitionId);
+		// Codes collide across kinds (STP = São Tomé and Príncipe national + FC St. Pauli club). Pick the right pool by competition type.
+		var pool = IsNationalComp(template.Type)
+			? _dataService.AllTeams.Where(t => t.IsNationalTeam)
+			: _dataService.AllTeams.Where(t => !t.IsNationalTeam);
+		var teams = pool.ToDictionary(t => t.ShortName, t => t);
+
+		if (template.IsLeague())
+		{
+			var rows = template.Teams
+				.Select(id => teams.TryGetValue(id, out var t) ? t : Placeholder(id))
+				.ToList();
+
+			return [new LineupGroup(template.Title, rows)];
+		}
+
 		var lineup = CurrentLineup == LineupMode.Random && _drawnLineup is not null
 			? _drawnLineup
-			: _definitions.Load(DefinitionId).GroupAssignments;
+			: template.GroupAssignments;
 
 		var result = new List<LineupGroup>(lineup.Length);
 		for (int i = 0; i < lineup.Length; i++)
@@ -303,8 +344,12 @@ public partial class CompetitionSetupViewModel : ObservableObject
 		return result;
 	}
 
+	public bool IsLeagueDefinition => !string.IsNullOrEmpty(DefinitionId) && _definitions.Load(DefinitionId).IsLeague();
+
 	// Placeholder Team for IDs not in the local registry (e.g. synthetic test IDs from an extended-pool draw).
 	static Team Placeholder(string shortName) => new() { Name = shortName, ShortName = shortName };
+
+	static bool IsNationalComp(CompetitionType t) => t is CompetitionType.WM or CompetitionType.EM;
 
 	public sealed record LineupGroup(string Name, IReadOnlyList<Team> Teams);
 }

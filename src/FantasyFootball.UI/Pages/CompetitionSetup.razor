@@ -5,7 +5,6 @@
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
 @inject CompetitionSetupViewModel ViewModel
-@inject IActiveEloSet ActiveEloSet
 @inject NavigationManager Nav
 @implements IDisposable
 
@@ -76,7 +75,7 @@
                      Color="@(ViewModel.CurrentLineup == CompetitionSetupViewModel.LineupMode.Random ? Color.Primary : Color.Default)"
                      StartIcon="@Icons.Material.Filled.Shuffle"
                      OnClick="ViewModel.RandomDraw"
-                     Disabled="ViewModel.IsRunning">
+                     Disabled="@(ViewModel.IsRunning || ViewModel.IsLeagueDefinition)">
             Random draw
           </MudButton>
         </MudStack>
@@ -175,7 +174,7 @@
                 <FlagIcon Team="team" Size="28" />
                 <MudText Typo="Typo.body2">@team.Name</MudText>
                 <MudSpacer />
-                <MudText Typo="Typo.caption" Color="Color.Secondary">@ActiveEloSet.EloOf(team)</MudText>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">@ViewModel.EloOf(team)</MudText>
               </div>
             }
           </div>
@@ -215,6 +214,11 @@
     CompetitionType.WM => "World Cup",
     CompetitionType.EM => "European Championship",
     CompetitionType.CHAMPIONS_LEAGUE => "Champions League",
+    CompetitionType.BUNDESLIGA => "Bundesliga",
+    CompetitionType.PREMIER_LEAGUE => "Premier League",
+    CompetitionType.SERIE_A => "Serie A",
+    CompetitionType.LA_LIGA => "LaLiga",
+    CompetitionType.LIGUE_1 => "Ligue 1",
     _ => t.ToString(),
   };
 }

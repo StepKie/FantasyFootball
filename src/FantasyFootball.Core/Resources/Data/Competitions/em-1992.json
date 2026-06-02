@@ -1,0 +1,298 @@
+{
+  "id": "em-1992",
+  "title": "European Championship 1992",
+  "type": "EM",
+  "year": 1992,
+  "formatId": "euro-8team-2group-sf",
+  "eloSetName": "1992",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 4
+    }
+  ],
+  "groups": {
+    "A": [
+      "SWE",
+      "FRA",
+      "DEN",
+      "ENG"
+    ],
+    "B": [
+      "NED",
+      "GER",
+      "SCO",
+      "CIS"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "SWE",
+      "awayTeamId": "FRA",
+      "playedOn": "1992-06-10T18:00:00Z",
+      "attendance": 29860,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "DEN",
+      "awayTeamId": "ENG",
+      "playedOn": "1992-06-11T18:00:00Z",
+      "attendance": 26385,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "FRA",
+      "awayTeamId": "ENG",
+      "playedOn": "1992-06-14T18:00:00Z",
+      "attendance": 26535,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "SWE",
+      "awayTeamId": "DEN",
+      "playedOn": "1992-06-14T18:00:00Z",
+      "attendance": 29902,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "SWE",
+      "awayTeamId": "ENG",
+      "playedOn": "1992-06-17T18:00:00Z",
+      "attendance": 30126,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "FRA",
+      "awayTeamId": "DEN",
+      "playedOn": "1992-06-17T18:00:00Z",
+      "attendance": 25763,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "NED",
+      "awayTeamId": "SCO",
+      "playedOn": "1992-06-12T18:00:00Z",
+      "attendance": 35720,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "CIS",
+      "awayTeamId": "GER",
+      "playedOn": "1992-06-12T18:00:00Z",
+      "attendance": 17410,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "SCO",
+      "awayTeamId": "GER",
+      "playedOn": "1992-06-15T18:00:00Z",
+      "attendance": 17638,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "NED",
+      "awayTeamId": "CIS",
+      "playedOn": "1992-06-15T18:00:00Z",
+      "attendance": 34440,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "NED",
+      "awayTeamId": "GER",
+      "playedOn": "1992-06-18T18:00:00Z",
+      "attendance": 37725,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "SCO",
+      "awayTeamId": "CIS",
+      "playedOn": "1992-06-18T18:00:00Z",
+      "attendance": 14660,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 13,
+      "roundId": "sf",
+      "homeQual": "A1",
+      "awayQual": "B2",
+      "homeTeamId": "SWE",
+      "awayTeamId": "GER",
+      "playedOn": "1992-06-21T18:00:00Z",
+      "attendance": 28827,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 14,
+      "roundId": "sf",
+      "homeQual": "B1",
+      "awayQual": "A2",
+      "homeTeamId": "NED",
+      "awayTeamId": "DEN",
+      "playedOn": "1992-06-22T18:00:00Z",
+      "attendance": 37450,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "PENALTIES",
+        "penaltyHome": 4,
+        "penaltyAway": 5
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 15,
+      "roundId": "final",
+      "homeQual": "W-14",
+      "awayQual": "W-13",
+      "homeTeamId": "DEN",
+      "awayTeamId": "GER",
+      "playedOn": "1992-06-26T18:00:00Z",
+      "attendance": 37800,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    }
+  ]
+}

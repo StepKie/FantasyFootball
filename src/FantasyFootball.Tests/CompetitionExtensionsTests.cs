@@ -163,24 +163,22 @@ public class CompetitionExtensionsTests
 	}
 
 	[Fact]
-	public void HomeTeamIdOf_ReadsFromBothGameTypes()
+	public void HomeTeamId_ReadsFromBaseAcrossGameKinds()
 	{
 		var c = BuildMiniWc(simulateFinal: true);
-		CompetitionExtensions.HomeTeamIdOf(c.Games[0]).Should().Be("MEX");
-		CompetitionExtensions.HomeTeamIdOf(c.Games[2]).Should().Be("MEX");
+		c.Games[0].HomeTeamId.Should().Be("MEX");
+		c.Games[2].HomeTeamId.Should().Be("MEX");
 	}
 
 	[Fact]
-	public void HomeTeamIdOf_ReturnsNullForUnresolvedKoGame()
+	public void HomeTeamId_NullForUnresolvedKoGame()
 	{
 		var unresolved = new KoGame
 		{
 			Id = 99, PlayedOn = DateTime.Now, RoundId = "final",
 			HomeQual = "A1", AwayQual = "B1",
-			HomeTeamId = null, AwayTeamId = null,
 		};
-		CompetitionExtensions.HomeTeamIdOf(unresolved).Should().BeNull();
-		CompetitionExtensions.AwayTeamIdOf(unresolved).Should().BeNull();
+		unresolved.IsFullyInitialized.Should().BeFalse();
 	}
 
 	[Fact]
@@ -209,7 +207,6 @@ public class CompetitionExtensionsTests
 		{
 			Id = 50, PlayedOn = new(2026, 6, 28, 20, 0, 0), RoundId = "r32",
 			HomeQual = "A1", AwayQual = "B2",
-			HomeTeamId = null, AwayTeamId = null,
 		};
 		unresolved.Format().Should().Be("[50] 28.06.2026 20:00 A1 v B2  [r32]");
 	}

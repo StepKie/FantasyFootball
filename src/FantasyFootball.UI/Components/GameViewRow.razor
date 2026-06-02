@@ -3,7 +3,6 @@
 @using FantasyFootball.Repositories
 @using FantasyFootball.Services
 @inject IDataService DataService
-@inject IActiveEloSet ActiveEloSet
 @inject IRepository EntityRepo
 @inject ICompetitionRepository Repo
 @inject IVenueRegistry VenueRegistry
@@ -165,10 +164,11 @@
 
   protected override async Task OnParametersSetAsync()
   {
-    var homeId = CompetitionExtensions.HomeTeamIdOf(Game);
-    var awayId = CompetitionExtensions.AwayTeamIdOf(Game);
-    _homeTeam = homeId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == homeId);
-    _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId);
+    var homeId = Game.HomeTeamId;
+    var awayId = Game.AwayTeamId;
+    var isNational = Competition?.IsNationalTeamCompetition() ?? true;
+    _homeTeam = homeId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == homeId && t.IsNationalTeam == isNational);
+    _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId && t.IsNationalTeam == isNational);
     _venue = Game.VenueId is { } vid ? VenueRegistry.Get(vid) : null;
 
     // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id.
@@ -213,9 +213,8 @@
   int DisplayEloOf(Team? team)
   {
     if (team is null) { return 0; }
-    var set = Competition is null ? null : HistoricalScoreModelResolver.ResolveEloSet(Competition.EloSetName, Competition.Year, EntityRepo);
-    var snapshot = set?.Snapshot ?? ActiveEloSet.Current?.Snapshot;
-    return snapshot?.GetValueOrDefault(team.ShortName) ?? 0;
+    var set = Competition is null ? null : HistoricalScoreModelResolver.ResolveEloSet(Competition.EloSetName, EntityRepo);
+    return set?.Snapshot.GetValueOrDefault(team.ShortName) ?? 0;
   }
 
   // Floor at "<1%": "0%" reads as impossible for a heavy underdog who could still win.

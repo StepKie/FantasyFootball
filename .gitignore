@@ -68,3 +68,7 @@ mono_crash*
 
 # Claude Code per-user settings
 .claude/settings.local.json
+
+# CHANGELOG.md is staged into the Blazor wwwroot at build time (see Web csproj StageRepoMarkdown target).
+# The canonical copy lives at the repo root; the staged copy must not be committed.
+src/FantasyFootball.Web/wwwroot/CHANGELOG.md

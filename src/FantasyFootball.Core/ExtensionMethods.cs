@@ -9,8 +9,12 @@ public static class ExtensionMethods
 		{
 			CompetitionType.EM => (Res.EC, Res.European_Championship),
 			CompetitionType.WM => (Res.WC, Res.WorldCup),
-			CompetitionType.CHAMPIONS_LEAGUE => throw new NotImplementedException(),
-			CompetitionType.DOMESTIC_LEAGUE => throw new NotImplementedException(),
+			CompetitionType.CHAMPIONS_LEAGUE => ("UCL", "UEFA Champions League"),
+			CompetitionType.BUNDESLIGA => ("BUN", "Bundesliga"),
+			CompetitionType.PREMIER_LEAGUE => ("PL", "Premier League"),
+			CompetitionType.SERIE_A => ("SA", "Serie A"),
+			CompetitionType.LA_LIGA => ("LL", "LaLiga"),
+			CompetitionType.LIGUE_1 => ("L1", "Ligue 1"),
 			_ => throw new ArgumentException("Unknown Competition Type"),
 		};
 	}

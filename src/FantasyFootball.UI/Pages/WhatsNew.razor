@@ -1,0 +1,65 @@
+@page "/whats-new"
+@inject HttpClient Http
+@implements IDisposable
+@using System.Text.RegularExpressions
+@using Markdig
+
+<PageTitle>What's new — Fantasy Football</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-2">What's new</MudText>
+<MudText Typo="Typo.body2" Class="mud-text-secondary mb-6">
+  Release history for Fantasy Football. The full source of this page is
+  <MudLink Href="https://github.com/StepKie/FantasyFootball/blob/main/CHANGELOG.md" Target="_blank" Color="Color.Primary">CHANGELOG.md</MudLink>
+  on GitHub.
+</MudText>
+
+@if (_error is not null)
+{
+  <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">
+    Couldn't load release notes: @_error
+  </MudAlert>
+}
+else if (_html is null)
+{
+  <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+}
+else
+{
+  <MudPaper Elevation="1" Class="pa-5 changelog-content">
+    @((MarkupString)_html)
+  </MudPaper>
+}
+
+@code {
+  static readonly Markdig.MarkdownPipeline _pipeline =
+    new Markdig.MarkdownPipelineBuilder().UseAutoLinks().DisableHtml().Build();
+
+  // Rewrites external anchors to open in a new tab so SPA navigation isn't hijacked.
+  static readonly Regex _externalLinkPattern = new(@"<a href=""(https?://[^""]+)""", RegexOptions.Compiled);
+
+  string? _html;
+  string? _error;
+
+  readonly CancellationTokenSource _cts = new();
+
+  protected override async Task OnInitializedAsync()
+  {
+    try
+    {
+      var markdown = await Http.GetStringAsync("CHANGELOG.md", _cts.Token);
+      var html = Markdig.Markdown.ToHtml(markdown, _pipeline);
+      _html = _externalLinkPattern.Replace(html, @"<a target=""_blank"" rel=""noopener noreferrer"" href=""$1""");
+    }
+    catch (OperationCanceledException) { /* user navigated away mid-fetch */ }
+    catch (Exception ex)
+    {
+      _error = ex.Message;
+    }
+  }
+
+  public void Dispose()
+  {
+    _cts.Cancel();
+    _cts.Dispose();
+  }
+}

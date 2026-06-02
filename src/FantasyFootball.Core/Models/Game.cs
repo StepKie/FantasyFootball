@@ -3,20 +3,29 @@ using System.Text.Json.Serialization;
 namespace FantasyFootball.Models;
 
 /// <summary>
-/// Sealed hierarchy on game KIND (Group vs KO). The two-state lifecycle
-/// (scheduled vs played) is orthogonal — captured by nullable
-/// <see cref="Result"/> on the base.
+/// Sealed hierarchy on game KIND (group, league, KO). The two-state lifecycle
+/// (scheduled vs played) is orthogonal — captured by nullable <see cref="Result"/>
+/// on the base.
 ///
-/// JSON polymorphism uses a "kind" discriminator: "group" or "ko".
+/// <see cref="HomeTeamId"/> / <see cref="AwayTeamId"/> live on the base so callers
+/// can read them uniformly. Group / League games carry their IDs at definition
+/// time (required, STJ enforces); KO games default to the empty sentinel until
+/// the qualifier chain resolves, then the simulator writes the resolved id.
+/// Callers should never compare these strings directly — use <see cref="IsHomeInitialized"/>,
+/// <see cref="IsAwayInitialized"/>, or <see cref="IsFullyInitialized"/> instead, so the
+/// sentinel representation can change without rippling.
 ///
-/// <c>ToString()</c> stays as the record default (verbose, repr-like —
-/// useful in debugger / test failure output). For compact console output,
-/// call <see cref="Format"/> on the subclass.
+/// JSON polymorphism uses a "kind" discriminator: "group", "league", or "ko".
+///
+/// <c>ToString()</c> stays as the record default (verbose, repr-like — useful in
+/// debugger / test failure output). For compact console output, call <see cref="Format"/>
+/// on the subclass.
 ///
 /// </summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "kind")]
 [JsonDerivedType(typeof(GroupGame), "group")]
 [JsonDerivedType(typeof(KoGame), "ko")]
+[JsonDerivedType(typeof(LeagueGame), "league")]
 public abstract record class Game
 {
 	/// <summary>
@@ -35,6 +44,13 @@ public abstract record class Game
 
 	/// <summary>Official spectator count for completed real-world games. Null for simulated or unplayed matches.</summary>
 	public int? Attendance { get; init; }
+
+	public abstract string HomeTeamId { get; set; }
+	public abstract string AwayTeamId { get; set; }
+
+	public bool IsHomeInitialized => !string.IsNullOrEmpty(HomeTeamId);
+	public bool IsAwayInitialized => !string.IsNullOrEmpty(AwayTeamId);
+	public bool IsFullyInitialized => IsHomeInitialized && IsAwayInitialized;
 
 	/// <summary>
 	/// null = scheduled (not yet played). Non-null = played.
@@ -56,8 +72,8 @@ public abstract record class Game
 public sealed record class GroupGame : Game
 {
 	public required string GroupLetter { get; init; }
-	public required string HomeTeamId { get; init; }
-	public required string AwayTeamId { get; init; }
+	public override required string HomeTeamId { get; set; }
+	public override required string AwayTeamId { get; set; }
 
 	public override string Format() =>
 		Result is { } r
@@ -66,11 +82,28 @@ public sealed record class GroupGame : Game
 }
 
 /// <summary>
+/// League round-robin game. Teams are known up front (from <see cref="Competition.Teams"/>);
+/// there's no group letter — leagues don't have a group concept (groups exist only in
+/// cup formats as a precursor to a knockout/intermediate phase).
+/// </summary>
+public sealed record class LeagueGame : Game
+{
+	public override required string HomeTeamId { get; set; }
+	public override required string AwayTeamId { get; set; }
+
+	public override string Format() =>
+		Result is { } r
+			? $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {HomeTeamId} {r.Format()} {AwayTeamId}  [{RoundId}]"
+			: $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {HomeTeamId} v {AwayTeamId}  [{RoundId}]";
+}
+
+/// <summary>
 /// Knockout-stage game. Teams come from a qualifier expression evaluated
 /// against earlier stage outcomes; the resolved team IDs are cached on
-/// <see cref="HomeTeamId"/> / <see cref="AwayTeamId"/> once the upstream
-/// qualifier resolves, so subsequent reads don't re-walk the qualifier
-/// chain.
+/// <see cref="Game.HomeTeamId"/> / <see cref="Game.AwayTeamId"/> once the upstream
+/// qualifier resolves, so subsequent reads don't re-walk the qualifier chain.
+/// Until then both default to the empty sentinel; <see cref="Game.IsHomeInitialized"/>
+/// / <see cref="Game.IsAwayInitialized"/> tell the two states apart.
 ///
 /// Qualifier DSL: <c>A1</c> = group A's 1st place, <c>W-49</c> = winner
 /// of game 49, <c>L-61</c> = loser of game 61, <c>A/B/F3</c> = best
@@ -81,22 +114,18 @@ public sealed record class KoGame : Game
 	public required string HomeQual { get; init; }
 	public required string AwayQual { get; init; }
 
-	/// <summary>
-	/// Cached resolution of <see cref="HomeQual"/>. Null until the
-	/// upstream qualifier becomes computable; written when resolved.
-	/// </summary>
-	public string? HomeTeamId { get; set; }
+	// Stay omitted from the on-disk JSON until resolved — definition files have no homeTeamId/awayTeamId on KO games, and FlatJson.Options drops nulls but not defaults.
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public override string HomeTeamId { get; set; } = "";
 
-	/// <summary>
-	/// Cached resolution of <see cref="AwayQual"/>.
-	/// </summary>
-	public string? AwayTeamId { get; set; }
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public override string AwayTeamId { get; set; } = "";
 
 	public override string Format()
 	{
 		// Resolved IDs take priority; fall back to the qualifier expression for unresolved KO slots.
-		var home = HomeTeamId ?? HomeQual;
-		var away = AwayTeamId ?? AwayQual;
+		var home = IsHomeInitialized ? HomeTeamId : HomeQual;
+		var away = IsAwayInitialized ? AwayTeamId : AwayQual;
 		return Result is { } r
 			? $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {home} {r.Format()} {away}  [{RoundId}]"
 			: $"[{Id}] {PlayedOn:dd.MM.yyyy HH:mm} {home} v {away}  [{RoundId}]";

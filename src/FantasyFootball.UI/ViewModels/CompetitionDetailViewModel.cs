@@ -18,8 +18,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	readonly CompetitionFactory _factory;
 	readonly IRepository _entityRepo;
 
-	// Resolved when Competition loads; passed to every Simulate* call so the year-matched or pinned EloSet is used.
-	IScoreModel? _scoreOverride;
+	// Resolved eagerly in LoadAsync (throws if the pinned EloSet can't be found); passed to every Simulate* call.
+	IScoreModel _scoreModel = null!;
 
 	public CompetitionDetailViewModel(
 		ICompetitionRepository repo,
@@ -79,6 +79,12 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		{
 			if (Competition is null) { return []; }
 
+			// League formats: one season-long table, no group split. Letter is empty — the Razor uses it as a section heading and renders no heading for "".
+			if (Competition.IsLeague())
+			{
+				return [(Letter: "", Standings: Competition.LeagueStandings())];
+			}
+
 			// Group-stage round → only that round's groups; KO round / no round → all groups (panel stays useful).
 			var roundLetters = SelectedRoundId is null
 				? []
@@ -121,7 +127,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		Competition = await _repo.GetAsync(competitionId);
 		if (Competition is null) { return; }
 
-		_scoreOverride = HistoricalScoreModelResolver.Resolve(Competition, _entityRepo);
+		_scoreModel = HistoricalScoreModelResolver.Resolve(Competition, _entityRepo)
+			?? throw new InvalidOperationException($"Cannot resolve EloSet '{Competition.EloSetName}' for competition '{Competition.DefinitionId}'.");
 
 		var currentGame = Competition.CurrentGame();
 		var currentRoundId = currentGame?.RoundId
@@ -161,7 +168,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		{
 			try
 			{
-				_simulator.SimulateGame(Competition, game, _scoreOverride);
+				_simulator.SimulateGame(Competition, game, _scoreModel);
 				await _repo.SaveAsync(Competition);
 			}
 			catch
@@ -247,7 +254,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 			{
 				lastPlayed.Result = null;
 				ClearUnplayedKoResolutions(Competition);
-				_simulator.SimulateGame(Competition, lastPlayed, _scoreOverride);
+				_simulator.SimulateGame(Competition, lastPlayed, _scoreModel);
 				CompetitionSimulator.ResolveAvailableKoTeams(Competition);
 				await _repo.SaveAsync(Competition);
 			}
@@ -269,8 +276,8 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		foreach (var ko in c.Games.OfType<KoGame>().Where(g => g.Result is null))
 		{
-			ko.HomeTeamId = null;
-			ko.AwayTeamId = null;
+			ko.HomeTeamId = "";
+			ko.AwayTeamId = "";
 		}
 	}
 
@@ -324,7 +331,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 					.Where(g => g.Result is null && g.PlayedOn <= cutoff)
 					.OrderBy(g => g.PlayedOn))
 				{
-					_simulator.SimulateGame(Competition, game, _scoreOverride);
+					_simulator.SimulateGame(Competition, game, _scoreModel);
 					played.Add(game);
 				}
 				await _repo.SaveAsync(Competition);
@@ -352,12 +359,15 @@ public partial class CompetitionDetailViewModel : ObservableObject
 	{
 		if (Competition is null) { return null; }
 
-		var spec = new CustomLineupSpec
-		{
-			DefinitionId = Competition.DefinitionId,
-			Groups = Competition.GroupAssignments.Select(g => (string[])g.Clone()).ToArray(),
-			EloSetName = Competition.EloSetName,
-		};
+		// Leagues have a fixed schedule — no lineup to substitute. Replay = re-run the historical fixture list, results cleared.
+		CompetitionSpec spec = Competition.IsLeague()
+			? new HistoricalSpec { DefinitionId = Competition.DefinitionId, Played = false, EloSetName = Competition.EloSetName }
+			: new CustomLineupSpec
+			{
+				DefinitionId = Competition.DefinitionId,
+				Groups = Competition.GroupAssignments.Select(g => (string[])g.Clone()).ToArray(),
+				EloSetName = Competition.EloSetName,
+			};
 		var replay = _factory.Create(spec);
 		return await _repo.SaveAsync(replay);
 	}
@@ -370,7 +380,7 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		{
 			// Yield so the IsBusy spinner flushes before the synchronous sim hogs the WASM thread.
 			await Task.Yield();
-			_simulator.Simulate(Competition, _scoreOverride);
+			_simulator.Simulate(Competition, _scoreModel);
 			await _repo.SaveAsync(Competition);
 		}
 		finally

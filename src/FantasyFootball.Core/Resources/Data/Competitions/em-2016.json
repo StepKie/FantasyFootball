@@ -1,0 +1,890 @@
+{
+  "id": "em-2016",
+  "title": "European Championship 2016",
+  "type": "EM",
+  "year": 2016,
+  "formatId": "euro-24team-6group",
+  "eloSetName": "2016",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "r16",
+      "name": "Round of 16",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "qf",
+      "name": "Quarterfinal",
+      "stageId": "ko",
+      "order": 4
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 5
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 6
+    }
+  ],
+  "groups": {
+    "A": [
+      "FRA",
+      "ROU",
+      "ALB",
+      "SUI"
+    ],
+    "B": [
+      "ENG",
+      "RUS",
+      "WAL",
+      "SVK"
+    ],
+    "C": [
+      "GER",
+      "UKR",
+      "POL",
+      "NIR"
+    ],
+    "D": [
+      "ESP",
+      "CZE",
+      "TUR",
+      "CRO"
+    ],
+    "E": [
+      "BEL",
+      "ITA",
+      "IRL",
+      "SWE"
+    ],
+    "F": [
+      "POR",
+      "ISL",
+      "AUT",
+      "HUN"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "FRA",
+      "awayTeamId": "ROU",
+      "playedOn": "2016-06-10T18:00:00Z",
+      "attendance": 75113,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "ALB",
+      "awayTeamId": "SUI",
+      "playedOn": "2016-06-11T18:00:00Z",
+      "attendance": 33805,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "ROU",
+      "awayTeamId": "SUI",
+      "playedOn": "2016-06-15T18:00:00Z",
+      "attendance": 43576,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "FRA",
+      "awayTeamId": "ALB",
+      "playedOn": "2016-06-15T18:00:00Z",
+      "attendance": 63670,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "ROU",
+      "awayTeamId": "ALB",
+      "playedOn": "2016-06-19T18:00:00Z",
+      "attendance": 49752,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "SUI",
+      "awayTeamId": "FRA",
+      "playedOn": "2016-06-19T18:00:00Z",
+      "attendance": 45616,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "WAL",
+      "awayTeamId": "SVK",
+      "playedOn": "2016-06-11T18:00:00Z",
+      "attendance": 37831,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "ENG",
+      "awayTeamId": "RUS",
+      "playedOn": "2016-06-11T18:00:00Z",
+      "attendance": 62343,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "RUS",
+      "awayTeamId": "SVK",
+      "playedOn": "2016-06-15T18:00:00Z",
+      "attendance": 38989,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "WAL",
+      "playedOn": "2016-06-16T18:00:00Z",
+      "attendance": 34033,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "RUS",
+      "awayTeamId": "WAL",
+      "playedOn": "2016-06-20T18:00:00Z",
+      "attendance": 28840,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "SVK",
+      "awayTeamId": "ENG",
+      "playedOn": "2016-06-20T18:00:00Z",
+      "attendance": 39051,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 13,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "POL",
+      "awayTeamId": "NIR",
+      "playedOn": "2016-06-12T18:00:00Z",
+      "attendance": 33742,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 14,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "GER",
+      "awayTeamId": "UKR",
+      "playedOn": "2016-06-12T18:00:00Z",
+      "attendance": 43035,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 15,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "UKR",
+      "awayTeamId": "NIR",
+      "playedOn": "2016-06-16T18:00:00Z",
+      "attendance": 51043,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 16,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "GER",
+      "awayTeamId": "POL",
+      "playedOn": "2016-06-16T18:00:00Z",
+      "attendance": 73648,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 17,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "UKR",
+      "awayTeamId": "POL",
+      "playedOn": "2016-06-21T18:00:00Z",
+      "attendance": 58874,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 18,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "NIR",
+      "awayTeamId": "GER",
+      "playedOn": "2016-06-21T18:00:00Z",
+      "attendance": 44125,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 19,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "TUR",
+      "awayTeamId": "CRO",
+      "playedOn": "2016-06-12T18:00:00Z",
+      "attendance": 43842,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 20,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "ESP",
+      "awayTeamId": "CZE",
+      "playedOn": "2016-06-13T18:00:00Z",
+      "attendance": 29400,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 21,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "CZE",
+      "awayTeamId": "CRO",
+      "playedOn": "2016-06-17T18:00:00Z",
+      "attendance": 38376,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 22,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "ESP",
+      "awayTeamId": "TUR",
+      "playedOn": "2016-06-17T18:00:00Z",
+      "attendance": 33409,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 23,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "CZE",
+      "awayTeamId": "TUR",
+      "playedOn": "2016-06-21T18:00:00Z",
+      "attendance": 32836,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 24,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "CRO",
+      "awayTeamId": "ESP",
+      "playedOn": "2016-06-21T18:00:00Z",
+      "attendance": 37245,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 25,
+      "groupLetter": "E",
+      "roundId": "group-r1",
+      "homeTeamId": "IRL",
+      "awayTeamId": "SWE",
+      "playedOn": "2016-06-13T18:00:00Z",
+      "attendance": 73419,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 26,
+      "groupLetter": "E",
+      "roundId": "group-r1",
+      "homeTeamId": "BEL",
+      "awayTeamId": "ITA",
+      "playedOn": "2016-06-13T18:00:00Z",
+      "attendance": 55408,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 27,
+      "groupLetter": "E",
+      "roundId": "group-r2",
+      "homeTeamId": "ITA",
+      "awayTeamId": "SWE",
+      "playedOn": "2016-06-17T18:00:00Z",
+      "attendance": 29600,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 28,
+      "groupLetter": "E",
+      "roundId": "group-r2",
+      "homeTeamId": "BEL",
+      "awayTeamId": "IRL",
+      "playedOn": "2016-06-18T18:00:00Z",
+      "attendance": 39493,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 29,
+      "groupLetter": "E",
+      "roundId": "group-r3",
+      "homeTeamId": "ITA",
+      "awayTeamId": "IRL",
+      "playedOn": "2016-06-22T18:00:00Z",
+      "attendance": 44268,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 30,
+      "groupLetter": "E",
+      "roundId": "group-r3",
+      "homeTeamId": "SWE",
+      "awayTeamId": "BEL",
+      "playedOn": "2016-06-22T18:00:00Z",
+      "attendance": 34011,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 31,
+      "groupLetter": "F",
+      "roundId": "group-r1",
+      "homeTeamId": "AUT",
+      "awayTeamId": "HUN",
+      "playedOn": "2016-06-14T18:00:00Z",
+      "attendance": 34424,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 32,
+      "groupLetter": "F",
+      "roundId": "group-r1",
+      "homeTeamId": "POR",
+      "awayTeamId": "ISL",
+      "playedOn": "2016-06-14T18:00:00Z",
+      "attendance": 38742,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 33,
+      "groupLetter": "F",
+      "roundId": "group-r2",
+      "homeTeamId": "ISL",
+      "awayTeamId": "HUN",
+      "playedOn": "2016-06-18T18:00:00Z",
+      "attendance": 60842,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 34,
+      "groupLetter": "F",
+      "roundId": "group-r2",
+      "homeTeamId": "POR",
+      "awayTeamId": "AUT",
+      "playedOn": "2016-06-18T18:00:00Z",
+      "attendance": 44291,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 35,
+      "groupLetter": "F",
+      "roundId": "group-r3",
+      "homeTeamId": "ISL",
+      "awayTeamId": "AUT",
+      "playedOn": "2016-06-22T18:00:00Z",
+      "attendance": 68714,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 36,
+      "groupLetter": "F",
+      "roundId": "group-r3",
+      "homeTeamId": "HUN",
+      "awayTeamId": "POR",
+      "playedOn": "2016-06-22T18:00:00Z",
+      "attendance": 55514,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 37,
+      "roundId": "r16",
+      "homeQual": "A2",
+      "awayQual": "C2",
+      "homeTeamId": "SUI",
+      "awayTeamId": "POL",
+      "playedOn": "2016-06-25T18:00:00Z",
+      "attendance": 38842,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 4,
+        "penaltyAway": 5
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 38,
+      "roundId": "r16",
+      "homeQual": "B1",
+      "awayQual": "A/B/C/D/E/F3",
+      "homeTeamId": "WAL",
+      "awayTeamId": "NIR",
+      "playedOn": "2016-06-25T18:00:00Z",
+      "attendance": 44342,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 39,
+      "roundId": "r16",
+      "homeQual": "D1",
+      "awayQual": "A/B/C/D/E/F3",
+      "homeTeamId": "CRO",
+      "awayTeamId": "POR",
+      "playedOn": "2016-06-25T18:00:00Z",
+      "attendance": 33523,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "EXTRA_TIME"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 40,
+      "roundId": "r16",
+      "homeQual": "A1",
+      "awayQual": "A/B/C/D/E/F3",
+      "homeTeamId": "FRA",
+      "awayTeamId": "IRL",
+      "playedOn": "2016-06-26T18:00:00Z",
+      "attendance": 56279,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 41,
+      "roundId": "r16",
+      "homeQual": "C1",
+      "awayQual": "A/B/C/D/E/F3",
+      "homeTeamId": "GER",
+      "awayTeamId": "SVK",
+      "playedOn": "2016-06-26T18:00:00Z",
+      "attendance": 44312,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 42,
+      "roundId": "r16",
+      "homeQual": "F1",
+      "awayQual": "E2",
+      "homeTeamId": "HUN",
+      "awayTeamId": "BEL",
+      "playedOn": "2016-06-26T18:00:00Z",
+      "attendance": 28921,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 43,
+      "roundId": "r16",
+      "homeQual": "E1",
+      "awayQual": "D2",
+      "homeTeamId": "ITA",
+      "awayTeamId": "ESP",
+      "playedOn": "2016-06-27T18:00:00Z",
+      "attendance": 76165,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 44,
+      "roundId": "r16",
+      "homeQual": "B2",
+      "awayQual": "F2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "ISL",
+      "playedOn": "2016-06-27T18:00:00Z",
+      "attendance": 33901,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 45,
+      "roundId": "qf",
+      "homeQual": "W-37",
+      "awayQual": "W-39",
+      "homeTeamId": "POL",
+      "awayTeamId": "POR",
+      "playedOn": "2016-06-30T18:00:00Z",
+      "attendance": 62940,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 5
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 46,
+      "roundId": "qf",
+      "homeQual": "W-38",
+      "awayQual": "W-42",
+      "homeTeamId": "WAL",
+      "awayTeamId": "BEL",
+      "playedOn": "2016-07-01T18:00:00Z",
+      "attendance": 45936,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 47,
+      "roundId": "qf",
+      "homeQual": "W-41",
+      "awayQual": "W-43",
+      "homeTeamId": "GER",
+      "awayTeamId": "ITA",
+      "playedOn": "2016-07-02T18:00:00Z",
+      "attendance": 38764,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 6,
+        "penaltyAway": 5
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 48,
+      "roundId": "qf",
+      "homeQual": "W-40",
+      "awayQual": "W-44",
+      "homeTeamId": "FRA",
+      "awayTeamId": "ISL",
+      "playedOn": "2016-07-03T18:00:00Z",
+      "attendance": 76833,
+      "result": {
+        "homeScore": 5,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 49,
+      "roundId": "sf",
+      "homeQual": "W-45",
+      "awayQual": "W-46",
+      "homeTeamId": "POR",
+      "awayTeamId": "WAL",
+      "playedOn": "2016-07-06T18:00:00Z",
+      "attendance": 59067,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 50,
+      "roundId": "sf",
+      "homeQual": "W-47",
+      "awayQual": "W-48",
+      "homeTeamId": "GER",
+      "awayTeamId": "FRA",
+      "playedOn": "2016-07-07T18:00:00Z",
+      "attendance": 64078,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 51,
+      "roundId": "final",
+      "homeQual": "W-49",
+      "awayQual": "W-50",
+      "homeTeamId": "POR",
+      "awayTeamId": "FRA",
+      "playedOn": "2016-07-10T18:00:00Z",
+      "attendance": 75868,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "EXTRA_TIME"
+      }
+    }
+  ]
+}

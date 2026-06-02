@@ -1,5 +1,6 @@
 @page "/"
 @page "/competitions"
+@using FantasyFootball
 @using FantasyFootball.Data
 @using FantasyFootball.Models
 @using FantasyFootball.Services
@@ -26,7 +27,7 @@
   <MudText Typo="Typo.subtitle2" Class="mr-2">Type</MudText>
   @foreach (var t in ViewModel.AvailableTypeFilters)
   {
-    var label = t is null ? "All" : t.ToString();
+    var label = t is null ? "All" : t.Value.Name().Long;
     var isSel = ViewModel.SelectedType == t;
     <MudChip T="string" Size="Size.Small"
              Variant="@(isSel ? Variant.Filled : Variant.Outlined)"
@@ -66,8 +67,9 @@
 else if (ViewModel.FilteredCompetitions.Count == 0)
 {
   <MudAlert Severity="Severity.Info">
-    No competitions @(ViewModel.SelectedType is { } t ? $"of type {t} " : "")yet.
-    <MudLink Href="competitions/setup">Start one.</MudLink>
+    No competitions @(ViewModel.SelectedType is { } t ? $"of type {t.Name().Long} " : "")yet.
+    <MudLink Href="competitions/setup">Start one</MudLink>, or load the bundled tournaments from
+    <MudLink Href="settings">Settings → Restore historical competitions</MudLink>.
   </MudAlert>
 }
 else
@@ -125,7 +127,7 @@ else
       <MudTd DataLabel="Winner">
         @if (isFinished && context.WinnerTeamId() is { } winnerId)
         {
-          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId);
+          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == context.IsNationalTeamCompetition());
           <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
             <FlagIcon Team="winner" Code="@winnerId" Size="20" />
             <span>@(winner?.Name ?? winnerId)</span>

@@ -46,6 +46,10 @@ body {
   object-fit: contain;
 }
 
+.flag-crest {
+  object-fit: contain;
+}
+
 .flag-round {
   border-radius: 50%;
 }
@@ -440,6 +444,14 @@ body {
 .standings-qual-bar-advance { background: var(--mud-palette-success); opacity: 0.55; }
 .standings-qual-bar-out { background: var(--mud-palette-error); opacity: 0.3; }
 
+/* League-format qualification slots — darker = stronger consequence (positive or negative). */
+.standings-qual-bar-champion           { background: #1b5e20; opacity: 0.9;  }
+.standings-qual-bar-champions-league   { background: #2e7d32; opacity: 0.75; }
+.standings-qual-bar-europa-league      { background: #4caf50; opacity: 0.6;  }
+.standings-qual-bar-conference-league  { background: #81c784; opacity: 0.5;  }
+.standings-qual-bar-relegation-playoff { background: #ef5350; opacity: 0.5;  }
+.standings-qual-bar-relegated          { background: #c62828; opacity: 0.85; }
+
 /* Right-side action column on a game row — Sim on the current game, Redo+Undo on the most recently simmed one. */
 .scoreboard-action {
   min-width: 5rem;
@@ -489,4 +501,39 @@ body {
   color: var(--mud-palette-text-secondary, #9CA3AF);
   font-variant-numeric: tabular-nums;
   font-weight: 400;
+}
+
+/* What's new / CHANGELOG.md rendering. Global rather than scoped because the MudPaper wrapper's
+   root <div> doesn't pick up Blazor CSS isolation's scope attribute, so ::deep selectors miss
+   the Markdig-generated descendants. */
+.changelog-content h2 {
+  margin-top: 2.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.changelog-content h2:first-of-type { margin-top: 0; }
+.changelog-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+.changelog-content p { margin: 0.5rem 0; }
+.changelog-content ul {
+  padding-left: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+.changelog-content li { margin: 0.5rem 0; }
+.changelog-content a {
+  color: var(--mud-palette-primary);
+  text-decoration: none;
+}
+.changelog-content a:hover { text-decoration: underline; }
+.changelog-content code {
+  padding: 0 0.25rem;
+  background: rgba(127, 127, 127, 0.15);
+  border-radius: 3px;
 }

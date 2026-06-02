@@ -1,0 +1,580 @@
+{
+  "id": "wm-1966",
+  "title": "World Cup 1966",
+  "type": "WM",
+  "year": 1966,
+  "formatId": "wc-16team-4group",
+  "eloSetName": "1966",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "qf",
+      "name": "Quarterfinal",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 4
+    },
+    {
+      "id": "third",
+      "name": "Third Place Match",
+      "stageId": "ko",
+      "order": 5
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 6
+    }
+  ],
+  "groups": {
+    "A": [
+      "ENG",
+      "URU",
+      "MEX",
+      "FRA"
+    ],
+    "B": [
+      "FRG",
+      "ARG",
+      "ESP",
+      "SUI"
+    ],
+    "C": [
+      "POR",
+      "HUN",
+      "BRA",
+      "BUL"
+    ],
+    "D": [
+      "URS",
+      "PRK",
+      "ITA",
+      "CHI"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "ENG",
+      "awayTeamId": "URU",
+      "playedOn": "1966-07-11T18:00:00Z",
+      "attendance": 87148,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "FRA",
+      "awayTeamId": "MEX",
+      "playedOn": "1966-07-13T18:00:00Z",
+      "attendance": 69237,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "URU",
+      "awayTeamId": "FRA",
+      "playedOn": "1966-07-15T18:00:00Z",
+      "attendance": 45662,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "MEX",
+      "playedOn": "1966-07-16T18:00:00Z",
+      "attendance": 92570,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "MEX",
+      "awayTeamId": "URU",
+      "playedOn": "1966-07-19T18:00:00Z",
+      "attendance": 61112,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "ENG",
+      "awayTeamId": "FRA",
+      "playedOn": "1966-07-20T18:00:00Z",
+      "attendance": 98270,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "FRG",
+      "awayTeamId": "SUI",
+      "playedOn": "1966-07-12T18:00:00Z",
+      "attendance": 36127,
+      "result": {
+        "homeScore": 5,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "ARG",
+      "awayTeamId": "ESP",
+      "playedOn": "1966-07-13T18:00:00Z",
+      "attendance": 42738,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "ESP",
+      "awayTeamId": "SUI",
+      "playedOn": "1966-07-15T18:00:00Z",
+      "attendance": 32028,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "ARG",
+      "awayTeamId": "FRG",
+      "playedOn": "1966-07-16T18:00:00Z",
+      "attendance": 46587,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "ARG",
+      "awayTeamId": "SUI",
+      "playedOn": "1966-07-19T18:00:00Z",
+      "attendance": 32127,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "FRG",
+      "awayTeamId": "ESP",
+      "playedOn": "1966-07-20T18:00:00Z",
+      "attendance": 42187,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 13,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "BRA",
+      "awayTeamId": "BUL",
+      "playedOn": "1966-07-12T18:00:00Z",
+      "attendance": 47308,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 14,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "POR",
+      "awayTeamId": "HUN",
+      "playedOn": "1966-07-13T18:00:00Z",
+      "attendance": 29886,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 15,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "HUN",
+      "awayTeamId": "BRA",
+      "playedOn": "1966-07-15T18:00:00Z",
+      "attendance": 51387,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 16,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "POR",
+      "awayTeamId": "BUL",
+      "playedOn": "1966-07-16T18:00:00Z",
+      "attendance": 25438,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 17,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "POR",
+      "awayTeamId": "BRA",
+      "playedOn": "1966-07-19T18:00:00Z",
+      "attendance": 58479,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 18,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "HUN",
+      "awayTeamId": "BUL",
+      "playedOn": "1966-07-20T18:00:00Z",
+      "attendance": 24129,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 19,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "URS",
+      "awayTeamId": "PRK",
+      "playedOn": "1966-07-12T18:00:00Z",
+      "attendance": 23006,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 20,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "ITA",
+      "awayTeamId": "CHI",
+      "playedOn": "1966-07-13T18:00:00Z",
+      "attendance": 27199,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 21,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "CHI",
+      "awayTeamId": "PRK",
+      "playedOn": "1966-07-15T18:00:00Z",
+      "attendance": 13792,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 22,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "URS",
+      "awayTeamId": "ITA",
+      "playedOn": "1966-07-16T18:00:00Z",
+      "attendance": 27793,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 23,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "PRK",
+      "awayTeamId": "ITA",
+      "playedOn": "1966-07-19T18:00:00Z",
+      "attendance": 17829,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 24,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "URS",
+      "awayTeamId": "CHI",
+      "playedOn": "1966-07-20T18:00:00Z",
+      "attendance": 16027,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 25,
+      "roundId": "qf",
+      "homeQual": "A1",
+      "awayQual": "B2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "ARG",
+      "playedOn": "1966-07-23T18:00:00Z",
+      "attendance": 90584,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 26,
+      "roundId": "qf",
+      "homeQual": "B1",
+      "awayQual": "A2",
+      "homeTeamId": "FRG",
+      "awayTeamId": "URU",
+      "playedOn": "1966-07-23T18:00:00Z",
+      "attendance": 40007,
+      "result": {
+        "homeScore": 4,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 27,
+      "roundId": "qf",
+      "homeQual": "D1",
+      "awayQual": "C2",
+      "homeTeamId": "URS",
+      "awayTeamId": "HUN",
+      "playedOn": "1966-07-23T18:00:00Z",
+      "attendance": 26844,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 28,
+      "roundId": "qf",
+      "homeQual": "C1",
+      "awayQual": "D2",
+      "homeTeamId": "POR",
+      "awayTeamId": "PRK",
+      "playedOn": "1966-07-23T18:00:00Z",
+      "attendance": 40248,
+      "result": {
+        "homeScore": 5,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 29,
+      "roundId": "sf",
+      "homeQual": "W-26",
+      "awayQual": "W-27",
+      "homeTeamId": "FRG",
+      "awayTeamId": "URS",
+      "playedOn": "1966-07-25T18:00:00Z",
+      "attendance": 38273,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 30,
+      "roundId": "sf",
+      "homeQual": "W-25",
+      "awayQual": "W-28",
+      "homeTeamId": "ENG",
+      "awayTeamId": "POR",
+      "playedOn": "1966-07-26T18:00:00Z",
+      "attendance": 94493,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 31,
+      "roundId": "third",
+      "homeQual": "L-30",
+      "awayQual": "L-29",
+      "homeTeamId": "POR",
+      "awayTeamId": "URS",
+      "playedOn": "1966-07-28T18:00:00Z",
+      "attendance": 87696,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 32,
+      "roundId": "final",
+      "homeQual": "W-30",
+      "awayQual": "W-29",
+      "homeTeamId": "ENG",
+      "awayTeamId": "FRG",
+      "playedOn": "1966-07-30T18:00:00Z",
+      "attendance": 96924,
+      "result": {
+        "homeScore": 4,
+        "awayScore": 2,
+        "ending": "EXTRA_TIME"
+      }
+    }
+  ]
+}

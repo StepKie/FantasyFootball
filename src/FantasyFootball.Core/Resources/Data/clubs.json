@@ -1,0 +1,692 @@
+[
+  {
+    "code": "B04",
+    "name": {
+      "en": "Bayer 04 Leverkusen",
+      "de": "Bayer 04 Leverkusen"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "BMG",
+    "name": {
+      "en": "Borussia Mönchengladbach",
+      "de": "Borussia Mönchengladbach"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "BVB",
+    "name": {
+      "en": "Borussia Dortmund",
+      "de": "Borussia Dortmund"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "FCA",
+    "name": {
+      "en": "FC Augsburg",
+      "de": "FC Augsburg"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "FCB",
+    "name": {
+      "en": "FC Bayern Munich",
+      "de": "FC Bayern München"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "FCH",
+    "name": {
+      "en": "1. FC Heidenheim",
+      "de": "1. FC Heidenheim"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "FCU",
+    "name": {
+      "en": "1. FC Union Berlin",
+      "de": "1. FC Union Berlin"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "HSV",
+    "name": {
+      "en": "Hamburger SV",
+      "de": "Hamburger SV"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "KOE",
+    "name": {
+      "en": "1. FC Köln",
+      "de": "1. FC Köln"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "M05",
+    "name": {
+      "en": "1. FSV Mainz 05",
+      "de": "1. FSV Mainz 05"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "RBL",
+    "name": {
+      "en": "RB Leipzig",
+      "de": "RB Leipzig"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "SCF",
+    "name": {
+      "en": "SC Freiburg",
+      "de": "SC Freiburg"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "SGE",
+    "name": {
+      "en": "Eintracht Frankfurt",
+      "de": "Eintracht Frankfurt"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "STP",
+    "name": {
+      "en": "FC St. Pauli",
+      "de": "FC St. Pauli"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "SVW",
+    "name": {
+      "en": "Werder Bremen",
+      "de": "Werder Bremen"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "TSG",
+    "name": {
+      "en": "TSG 1899 Hoffenheim",
+      "de": "TSG 1899 Hoffenheim"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "VFB",
+    "name": {
+      "en": "VfB Stuttgart",
+      "de": "VfB Stuttgart"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "WOB",
+    "name": {
+      "en": "VfL Wolfsburg",
+      "de": "VfL Wolfsburg"
+    },
+    "country": "GER"
+  },
+  {
+    "code": "BOU",
+    "name": {
+      "en": "AFC Bournemouth"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "ARS",
+    "name": {
+      "en": "Arsenal"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "AVL",
+    "name": {
+      "en": "Aston Villa"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "BRE",
+    "name": {
+      "en": "Brentford"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "BHA",
+    "name": {
+      "en": "Brighton & Hove Albion"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "BUR",
+    "name": {
+      "en": "Burnley"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "CHE",
+    "name": {
+      "en": "Chelsea"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "CRY",
+    "name": {
+      "en": "Crystal Palace"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "EVE",
+    "name": {
+      "en": "Everton"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "FUL",
+    "name": {
+      "en": "Fulham"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "LEE",
+    "name": {
+      "en": "Leeds United"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "LIV",
+    "name": {
+      "en": "Liverpool"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "MCI",
+    "name": {
+      "en": "Manchester City"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "MUN",
+    "name": {
+      "en": "Manchester United"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "NEW",
+    "name": {
+      "en": "Newcastle United"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "NFO",
+    "name": {
+      "en": "Nottingham Forest"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "SUN",
+    "name": {
+      "en": "Sunderland"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "TOT",
+    "name": {
+      "en": "Tottenham Hotspur"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "WHU",
+    "name": {
+      "en": "West Ham United"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "WOL",
+    "name": {
+      "en": "Wolverhampton Wanderers"
+    },
+    "country": "ENG"
+  },
+  {
+    "code": "MIL",
+    "name": {
+      "en": "AC Milan"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "PIS",
+    "name": {
+      "en": "Pisa"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "FIO",
+    "name": {
+      "en": "Fiorentina"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "ROM",
+    "name": {
+      "en": "AS Roma"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "ATA",
+    "name": {
+      "en": "Atalanta"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "BOL",
+    "name": {
+      "en": "Bologna"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "CAG",
+    "name": {
+      "en": "Cagliari"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "COM",
+    "name": {
+      "en": "Como"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "INT",
+    "name": {
+      "en": "Inter"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "GEN",
+    "name": {
+      "en": "Genoa"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "VER",
+    "name": {
+      "en": "Hellas Verona"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "JUV",
+    "name": {
+      "en": "Juventus"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "PAR",
+    "name": {
+      "en": "Parma"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "LAZ",
+    "name": {
+      "en": "Lazio"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "NAP",
+    "name": {
+      "en": "Napoli"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "TOR",
+    "name": {
+      "en": "Torino"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "CRE",
+    "name": {
+      "en": "Cremonese"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "LEC",
+    "name": {
+      "en": "Lecce"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "SAS",
+    "name": {
+      "en": "Sassuolo"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "UDI",
+    "name": {
+      "en": "Udinese"
+    },
+    "country": "ITA"
+  },
+  {
+    "code": "ATH",
+    "name": {
+      "en": "Athletic Bilbao"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "OSA",
+    "name": {
+      "en": "Osasuna"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "ATM",
+    "name": {
+      "en": "Atlético Madrid"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "ALA",
+    "name": {
+      "en": "Deportivo Alavés"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "ELC",
+    "name": {
+      "en": "Elche"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "BAR",
+    "name": {
+      "en": "Barcelona"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "GET",
+    "name": {
+      "en": "Getafe"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "GIR",
+    "name": {
+      "en": "Girona"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "LEV",
+    "name": {
+      "en": "Levante"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "CEL",
+    "name": {
+      "en": "Celta Vigo"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "ESY",
+    "name": {
+      "en": "Espanyol"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "MLL",
+    "name": {
+      "en": "Mallorca"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "RAY",
+    "name": {
+      "en": "Rayo Vallecano"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "BET",
+    "name": {
+      "en": "Real Betis"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "RMA",
+    "name": {
+      "en": "Real Madrid"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "OVI",
+    "name": {
+      "en": "Real Oviedo"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "RSO",
+    "name": {
+      "en": "Real Sociedad"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "SEV",
+    "name": {
+      "en": "Sevilla"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "VAL",
+    "name": {
+      "en": "Valencia"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "VIL",
+    "name": {
+      "en": "Villarreal"
+    },
+    "country": "ESP"
+  },
+  {
+    "code": "AJA",
+    "name": {
+      "en": "Auxerre"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "ASM",
+    "name": {
+      "en": "Monaco"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "ANG",
+    "name": {
+      "en": "Angers"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "LOR",
+    "name": {
+      "en": "Lorient"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "MET",
+    "name": {
+      "en": "Metz"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "NAN",
+    "name": {
+      "en": "Nantes"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "LEH",
+    "name": {
+      "en": "Le Havre"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "LIL",
+    "name": {
+      "en": "Lille"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "NIC",
+    "name": {
+      "en": "Nice"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "LYO",
+    "name": {
+      "en": "Lyon"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "MAR",
+    "name": {
+      "en": "Marseille"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "PFC",
+    "name": {
+      "en": "Paris FC"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "PSG",
+    "name": {
+      "en": "Paris Saint-Germain"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "STR",
+    "name": {
+      "en": "Strasbourg"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "LEN",
+    "name": {
+      "en": "Lens"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "BRS",
+    "name": {
+      "en": "Brest"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "REN",
+    "name": {
+      "en": "Rennes"
+    },
+    "country": "FRA"
+  },
+  {
+    "code": "TOU",
+    "name": {
+      "en": "Toulouse"
+    },
+    "country": "FRA"
+  }
+]

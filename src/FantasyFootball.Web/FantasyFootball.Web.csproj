@@ -33,4 +33,12 @@
     <ProjectReference Include="..\FantasyFootball.UI\FantasyFootball.UI.csproj" />
   </ItemGroup>
 
+  <!-- Stage CHANGELOG.md from the repo root into wwwroot so the /whats-new page can fetch it
+       at runtime via HttpClient. AfterTargets="Build" runs after the static-web-assets pipeline
+       has enumerated wwwroot, so the file isn't tracked in git and the page links to the
+       GitHub-hosted original as a fallback if rendering ever fails. -->
+  <Target Name="StageRepoMarkdown" AfterTargets="Build">
+    <Copy SourceFiles="..\..\CHANGELOG.md" DestinationFolder="wwwroot" />
+  </Target>
+
 </Project>

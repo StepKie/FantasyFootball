@@ -1,0 +1,566 @@
+{
+  "id": "em-1996",
+  "title": "European Championship 1996",
+  "type": "EM",
+  "year": 1996,
+  "formatId": "euro-16team-4group",
+  "eloSetName": "1996",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "qf",
+      "name": "Quarterfinal",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 4
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 5
+    }
+  ],
+  "groups": {
+    "A": [
+      "ENG",
+      "SUI",
+      "NED",
+      "SCO"
+    ],
+    "B": [
+      "ESP",
+      "BUL",
+      "ROU",
+      "FRA"
+    ],
+    "C": [
+      "GER",
+      "CZE",
+      "ITA",
+      "RUS"
+    ],
+    "D": [
+      "DEN",
+      "POR",
+      "TUR",
+      "CRO"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "ENG",
+      "awayTeamId": "SUI",
+      "playedOn": "1996-06-08T18:00:00Z",
+      "attendance": 76567,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "NED",
+      "awayTeamId": "SCO",
+      "playedOn": "1996-06-10T18:00:00Z",
+      "attendance": 34363,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "SUI",
+      "awayTeamId": "NED",
+      "playedOn": "1996-06-13T18:00:00Z",
+      "attendance": 36800,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "SCO",
+      "awayTeamId": "ENG",
+      "playedOn": "1996-06-15T18:00:00Z",
+      "attendance": 76864,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "SCO",
+      "awayTeamId": "SUI",
+      "playedOn": "1996-06-18T18:00:00Z",
+      "attendance": 34926,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "NED",
+      "awayTeamId": "ENG",
+      "playedOn": "1996-06-18T18:00:00Z",
+      "attendance": 76798,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 4,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "ESP",
+      "awayTeamId": "BUL",
+      "playedOn": "1996-06-09T18:00:00Z",
+      "attendance": 24006,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "ROU",
+      "awayTeamId": "FRA",
+      "playedOn": "1996-06-10T18:00:00Z",
+      "attendance": 26323,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "BUL",
+      "awayTeamId": "ROU",
+      "playedOn": "1996-06-13T18:00:00Z",
+      "attendance": 19107,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "FRA",
+      "awayTeamId": "ESP",
+      "playedOn": "1996-06-15T18:00:00Z",
+      "attendance": 35626,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "FRA",
+      "awayTeamId": "BUL",
+      "playedOn": "1996-06-18T18:00:00Z",
+      "attendance": 26976,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "ROU",
+      "awayTeamId": "ESP",
+      "playedOn": "1996-06-18T18:00:00Z",
+      "attendance": 32719,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 13,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "GER",
+      "awayTeamId": "CZE",
+      "playedOn": "1996-06-09T18:00:00Z",
+      "attendance": 37300,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 14,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "ITA",
+      "awayTeamId": "RUS",
+      "playedOn": "1996-06-11T18:00:00Z",
+      "attendance": 35120,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 15,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "CZE",
+      "awayTeamId": "ITA",
+      "playedOn": "1996-06-14T18:00:00Z",
+      "attendance": 37320,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 16,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "RUS",
+      "awayTeamId": "GER",
+      "playedOn": "1996-06-16T18:00:00Z",
+      "attendance": 50760,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 17,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "RUS",
+      "awayTeamId": "CZE",
+      "playedOn": "1996-06-19T18:00:00Z",
+      "attendance": 21128,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 18,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "ITA",
+      "awayTeamId": "GER",
+      "playedOn": "1996-06-19T18:00:00Z",
+      "attendance": 53740,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 19,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "DEN",
+      "awayTeamId": "POR",
+      "playedOn": "1996-06-09T18:00:00Z",
+      "attendance": 34993,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 20,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "TUR",
+      "awayTeamId": "CRO",
+      "playedOn": "1996-06-11T18:00:00Z",
+      "attendance": 22460,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 21,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "POR",
+      "awayTeamId": "TUR",
+      "playedOn": "1996-06-14T18:00:00Z",
+      "attendance": 22670,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 22,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "CRO",
+      "awayTeamId": "DEN",
+      "playedOn": "1996-06-16T18:00:00Z",
+      "attendance": 33671,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 23,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "CRO",
+      "awayTeamId": "POR",
+      "playedOn": "1996-06-19T18:00:00Z",
+      "attendance": 20484,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 24,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "TUR",
+      "awayTeamId": "DEN",
+      "playedOn": "1996-06-19T18:00:00Z",
+      "attendance": 28951,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 25,
+      "roundId": "qf",
+      "homeQual": "A1",
+      "awayQual": "B2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "ESP",
+      "playedOn": "1996-06-22T18:00:00Z",
+      "attendance": 75440,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "PENALTIES",
+        "penaltyHome": 4,
+        "penaltyAway": 2
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 26,
+      "roundId": "qf",
+      "homeQual": "B1",
+      "awayQual": "A2",
+      "homeTeamId": "FRA",
+      "awayTeamId": "NED",
+      "playedOn": "1996-06-22T18:00:00Z",
+      "attendance": 37465,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "PENALTIES",
+        "penaltyHome": 5,
+        "penaltyAway": 4
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 27,
+      "roundId": "qf",
+      "homeQual": "C1",
+      "awayQual": "D2",
+      "homeTeamId": "GER",
+      "awayTeamId": "CRO",
+      "playedOn": "1996-06-23T18:00:00Z",
+      "attendance": 43412,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 28,
+      "roundId": "qf",
+      "homeQual": "C2",
+      "awayQual": "D1",
+      "homeTeamId": "CZE",
+      "awayTeamId": "POR",
+      "playedOn": "1996-06-23T18:00:00Z",
+      "attendance": 26832,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 29,
+      "roundId": "sf",
+      "homeQual": "W-26",
+      "awayQual": "W-28",
+      "homeTeamId": "FRA",
+      "awayTeamId": "CZE",
+      "playedOn": "1996-06-26T18:00:00Z",
+      "attendance": 43877,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "PENALTIES",
+        "penaltyHome": 5,
+        "penaltyAway": 6
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 30,
+      "roundId": "sf",
+      "homeQual": "W-25",
+      "awayQual": "W-27",
+      "homeTeamId": "ENG",
+      "awayTeamId": "GER",
+      "playedOn": "1996-06-26T18:00:00Z",
+      "attendance": 75862,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 5,
+        "penaltyAway": 6
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 31,
+      "roundId": "final",
+      "homeQual": "W-30",
+      "awayQual": "W-29",
+      "homeTeamId": "GER",
+      "awayTeamId": "CZE",
+      "playedOn": "1996-06-30T18:00:00Z",
+      "attendance": 73611,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "EXTRA_TIME"
+      }
+    }
+  ]
+}

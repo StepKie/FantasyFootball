@@ -1,0 +1,912 @@
+{
+  "id": "wm-1986",
+  "title": "World Cup 1986",
+  "type": "WM",
+  "year": 1986,
+  "formatId": "wc-24team-6group",
+  "eloSetName": "1986",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "r16",
+      "name": "Round of 16",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "qf",
+      "name": "Quarterfinal",
+      "stageId": "ko",
+      "order": 4
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 5
+    },
+    {
+      "id": "third",
+      "name": "Third Place Match",
+      "stageId": "ko",
+      "order": 6
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 7
+    }
+  ],
+  "groups": {
+    "A": [
+      "ARG",
+      "ITA",
+      "BUL",
+      "KOR"
+    ],
+    "B": [
+      "MEX",
+      "PAR",
+      "BEL",
+      "IRQ"
+    ],
+    "C": [
+      "URS",
+      "FRA",
+      "HUN",
+      "CAN"
+    ],
+    "D": [
+      "BRA",
+      "ESP",
+      "NIR",
+      "ALG"
+    ],
+    "E": [
+      "DEN",
+      "FRG",
+      "URU",
+      "SCO"
+    ],
+    "F": [
+      "MAR",
+      "ENG",
+      "POL",
+      "POR"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "BUL",
+      "awayTeamId": "ITA",
+      "playedOn": "1986-05-31T18:00:00Z",
+      "attendance": 96000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "ARG",
+      "awayTeamId": "KOR",
+      "playedOn": "1986-06-02T18:00:00Z",
+      "attendance": 60000,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "ITA",
+      "awayTeamId": "ARG",
+      "playedOn": "1986-06-05T18:00:00Z",
+      "attendance": 32000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "KOR",
+      "awayTeamId": "BUL",
+      "playedOn": "1986-06-05T18:00:00Z",
+      "attendance": 45000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "KOR",
+      "awayTeamId": "ITA",
+      "playedOn": "1986-06-10T18:00:00Z",
+      "attendance": 20000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "ARG",
+      "awayTeamId": "BUL",
+      "playedOn": "1986-06-10T18:00:00Z",
+      "attendance": 65000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "BEL",
+      "awayTeamId": "MEX",
+      "playedOn": "1986-06-03T18:00:00Z",
+      "attendance": 110000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "PAR",
+      "awayTeamId": "IRQ",
+      "playedOn": "1986-06-04T18:00:00Z",
+      "attendance": 24000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "MEX",
+      "awayTeamId": "PAR",
+      "playedOn": "1986-06-07T18:00:00Z",
+      "attendance": 114600,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "IRQ",
+      "awayTeamId": "BEL",
+      "playedOn": "1986-06-08T18:00:00Z",
+      "attendance": 20000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "PAR",
+      "awayTeamId": "BEL",
+      "playedOn": "1986-06-11T18:00:00Z",
+      "attendance": 16000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "IRQ",
+      "awayTeamId": "MEX",
+      "playedOn": "1986-06-11T18:00:00Z",
+      "attendance": 103763,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 13,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "CAN",
+      "awayTeamId": "FRA",
+      "playedOn": "1986-06-01T18:00:00Z",
+      "attendance": 65500,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 14,
+      "groupLetter": "C",
+      "roundId": "group-r1",
+      "homeTeamId": "URS",
+      "awayTeamId": "HUN",
+      "playedOn": "1986-06-02T18:00:00Z",
+      "attendance": 16500,
+      "result": {
+        "homeScore": 6,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 15,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "FRA",
+      "awayTeamId": "URS",
+      "playedOn": "1986-06-05T18:00:00Z",
+      "attendance": 36540,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 16,
+      "groupLetter": "C",
+      "roundId": "group-r2",
+      "homeTeamId": "HUN",
+      "awayTeamId": "CAN",
+      "playedOn": "1986-06-06T18:00:00Z",
+      "attendance": 13800,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 17,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "HUN",
+      "awayTeamId": "FRA",
+      "playedOn": "1986-06-09T18:00:00Z",
+      "attendance": 31420,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 18,
+      "groupLetter": "C",
+      "roundId": "group-r3",
+      "homeTeamId": "URS",
+      "awayTeamId": "CAN",
+      "playedOn": "1986-06-09T18:00:00Z",
+      "attendance": 14200,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 19,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "ESP",
+      "awayTeamId": "BRA",
+      "playedOn": "1986-06-01T18:00:00Z",
+      "attendance": 35748,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 20,
+      "groupLetter": "D",
+      "roundId": "group-r1",
+      "homeTeamId": "ALG",
+      "awayTeamId": "NIR",
+      "playedOn": "1986-06-03T18:00:00Z",
+      "attendance": 22000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 21,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "BRA",
+      "awayTeamId": "ALG",
+      "playedOn": "1986-06-06T18:00:00Z",
+      "attendance": 48000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 22,
+      "groupLetter": "D",
+      "roundId": "group-r2",
+      "homeTeamId": "NIR",
+      "awayTeamId": "ESP",
+      "playedOn": "1986-06-07T18:00:00Z",
+      "attendance": 28000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 23,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "NIR",
+      "awayTeamId": "BRA",
+      "playedOn": "1986-06-12T18:00:00Z",
+      "attendance": 51000,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 24,
+      "groupLetter": "D",
+      "roundId": "group-r3",
+      "homeTeamId": "ALG",
+      "awayTeamId": "ESP",
+      "playedOn": "1986-06-12T18:00:00Z",
+      "attendance": 23980,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 25,
+      "groupLetter": "E",
+      "roundId": "group-r1",
+      "homeTeamId": "URU",
+      "awayTeamId": "FRG",
+      "playedOn": "1986-06-04T18:00:00Z",
+      "attendance": 30500,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 26,
+      "groupLetter": "E",
+      "roundId": "group-r1",
+      "homeTeamId": "SCO",
+      "awayTeamId": "DEN",
+      "playedOn": "1986-06-04T18:00:00Z",
+      "attendance": 18000,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 27,
+      "groupLetter": "E",
+      "roundId": "group-r2",
+      "homeTeamId": "FRG",
+      "awayTeamId": "SCO",
+      "playedOn": "1986-06-08T18:00:00Z",
+      "attendance": 30000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 28,
+      "groupLetter": "E",
+      "roundId": "group-r2",
+      "homeTeamId": "DEN",
+      "awayTeamId": "URU",
+      "playedOn": "1986-06-08T18:00:00Z",
+      "attendance": 26500,
+      "result": {
+        "homeScore": 6,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 29,
+      "groupLetter": "E",
+      "roundId": "group-r3",
+      "homeTeamId": "DEN",
+      "awayTeamId": "FRG",
+      "playedOn": "1986-06-13T18:00:00Z",
+      "attendance": 36000,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 30,
+      "groupLetter": "E",
+      "roundId": "group-r3",
+      "homeTeamId": "SCO",
+      "awayTeamId": "URU",
+      "playedOn": "1986-06-13T18:00:00Z",
+      "attendance": 20000,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 31,
+      "groupLetter": "F",
+      "roundId": "group-r1",
+      "homeTeamId": "MAR",
+      "awayTeamId": "POL",
+      "playedOn": "1986-06-02T18:00:00Z",
+      "attendance": 19900,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 32,
+      "groupLetter": "F",
+      "roundId": "group-r1",
+      "homeTeamId": "POR",
+      "awayTeamId": "ENG",
+      "playedOn": "1986-06-03T18:00:00Z",
+      "attendance": 23000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 33,
+      "groupLetter": "F",
+      "roundId": "group-r2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "MAR",
+      "playedOn": "1986-06-06T18:00:00Z",
+      "attendance": 20200,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 34,
+      "groupLetter": "F",
+      "roundId": "group-r2",
+      "homeTeamId": "POL",
+      "awayTeamId": "POR",
+      "playedOn": "1986-06-07T18:00:00Z",
+      "attendance": 19915,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 35,
+      "groupLetter": "F",
+      "roundId": "group-r3",
+      "homeTeamId": "ENG",
+      "awayTeamId": "POL",
+      "playedOn": "1986-06-11T18:00:00Z",
+      "attendance": 22700,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 36,
+      "groupLetter": "F",
+      "roundId": "group-r3",
+      "homeTeamId": "POR",
+      "awayTeamId": "MAR",
+      "playedOn": "1986-06-11T18:00:00Z",
+      "attendance": 28000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 37,
+      "roundId": "r16",
+      "homeQual": "B1",
+      "awayQual": "A/B/C/D/E/F3",
+      "homeTeamId": "MEX",
+      "awayTeamId": "BUL",
+      "playedOn": "1986-06-15T18:00:00Z",
+      "attendance": 114580,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 38,
+      "roundId": "r16",
+      "homeQual": "C1",
+      "awayQual": "A/B/C/D/E/F3",
+      "homeTeamId": "URS",
+      "awayTeamId": "BEL",
+      "playedOn": "1986-06-15T18:00:00Z",
+      "attendance": 32277,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 4,
+        "ending": "EXTRA_TIME"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 39,
+      "roundId": "r16",
+      "homeQual": "D1",
+      "awayQual": "A/B/C/D/E/F3",
+      "homeTeamId": "BRA",
+      "awayTeamId": "POL",
+      "playedOn": "1986-06-16T18:00:00Z",
+      "attendance": 45000,
+      "result": {
+        "homeScore": 4,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 40,
+      "roundId": "r16",
+      "homeQual": "A1",
+      "awayQual": "A/B/C/D/E/F3",
+      "homeTeamId": "ARG",
+      "awayTeamId": "URU",
+      "playedOn": "1986-06-16T18:00:00Z",
+      "attendance": 26000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 41,
+      "roundId": "r16",
+      "homeQual": "A2",
+      "awayQual": "C2",
+      "homeTeamId": "ITA",
+      "awayTeamId": "FRA",
+      "playedOn": "1986-06-17T18:00:00Z",
+      "attendance": 70000,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 42,
+      "roundId": "r16",
+      "homeQual": "F1",
+      "awayQual": "E2",
+      "homeTeamId": "MAR",
+      "awayTeamId": "FRG",
+      "playedOn": "1986-06-17T18:00:00Z",
+      "attendance": 19800,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 43,
+      "roundId": "r16",
+      "homeQual": "F2",
+      "awayQual": "B2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "PAR",
+      "playedOn": "1986-06-18T18:00:00Z",
+      "attendance": 98728,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 44,
+      "roundId": "r16",
+      "homeQual": "E1",
+      "awayQual": "D2",
+      "homeTeamId": "DEN",
+      "awayTeamId": "ESP",
+      "playedOn": "1986-06-18T18:00:00Z",
+      "attendance": 38500,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 5,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 45,
+      "roundId": "qf",
+      "homeQual": "W-39",
+      "awayQual": "W-41",
+      "homeTeamId": "BRA",
+      "awayTeamId": "FRA",
+      "playedOn": "1986-06-21T18:00:00Z",
+      "attendance": 65000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 3,
+        "penaltyAway": 4
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 46,
+      "roundId": "qf",
+      "homeQual": "W-42",
+      "awayQual": "W-37",
+      "homeTeamId": "FRG",
+      "awayTeamId": "MEX",
+      "playedOn": "1986-06-21T18:00:00Z",
+      "attendance": 41700,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 0,
+        "ending": "PENALTIES",
+        "penaltyHome": 4,
+        "penaltyAway": 1
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 47,
+      "roundId": "qf",
+      "homeQual": "W-40",
+      "awayQual": "W-43",
+      "homeTeamId": "ARG",
+      "awayTeamId": "ENG",
+      "playedOn": "1986-06-22T18:00:00Z",
+      "attendance": 114580,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 48,
+      "roundId": "qf",
+      "homeQual": "W-44",
+      "awayQual": "W-38",
+      "homeTeamId": "ESP",
+      "awayTeamId": "BEL",
+      "playedOn": "1986-06-22T18:00:00Z",
+      "attendance": 45000,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "PENALTIES",
+        "penaltyHome": 4,
+        "penaltyAway": 5
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 49,
+      "roundId": "sf",
+      "homeQual": "W-45",
+      "awayQual": "W-46",
+      "homeTeamId": "FRA",
+      "awayTeamId": "FRG",
+      "playedOn": "1986-06-25T18:00:00Z",
+      "attendance": 45000,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 50,
+      "roundId": "sf",
+      "homeQual": "W-47",
+      "awayQual": "W-48",
+      "homeTeamId": "ARG",
+      "awayTeamId": "BEL",
+      "playedOn": "1986-06-25T18:00:00Z",
+      "attendance": 114580,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 51,
+      "roundId": "third",
+      "homeQual": "L-49",
+      "awayQual": "L-50",
+      "homeTeamId": "FRA",
+      "awayTeamId": "BEL",
+      "playedOn": "1986-06-28T18:00:00Z",
+      "attendance": 21000,
+      "result": {
+        "homeScore": 4,
+        "awayScore": 2,
+        "ending": "EXTRA_TIME"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 52,
+      "roundId": "final",
+      "homeQual": "W-50",
+      "awayQual": "W-49",
+      "homeTeamId": "ARG",
+      "awayTeamId": "FRG",
+      "playedOn": "1986-06-29T18:00:00Z",
+      "attendance": 114600,
+      "result": {
+        "homeScore": 3,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    }
+  ]
+}

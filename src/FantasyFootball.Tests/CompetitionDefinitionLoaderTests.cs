@@ -122,8 +122,7 @@ public class CompetitionDefinitionLoaderTests
 		var ko = (KoGame)c.Games[2];
 		ko.HomeQual.Should().Be("A1");
 		ko.AwayQual.Should().Be("B1");
-		ko.HomeTeamId.Should().BeNull("KO qualifiers haven't resolved yet");
-		ko.AwayTeamId.Should().BeNull();
+		ko.IsFullyInitialized.Should().BeFalse("KO qualifiers haven't resolved yet");
 		ko.Result.Should().BeNull();
 	}
 

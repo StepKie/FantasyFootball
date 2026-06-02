@@ -2,11 +2,10 @@
 @using FantasyFootball.Services
 @using FantasyFootball.UI.Helpers
 @inject ISettingsService Settings
-@inject IActiveEloSet ActiveEloSet
 
-@if (Resolved is { } code)
+@if (ImageSrc is { } src)
 {
-  <img src="@FlagHelper.UrlFor(code, Team?.Country?.Code3)"
+  <img src="@src"
        alt="@ResolvedAlt"
        class="@CssClass"
        style="@InlineStyle"
@@ -34,17 +33,23 @@
 
   string? Resolved => Team?.Country?.Code2 is { Length: > 0 } c ? c : (string.IsNullOrEmpty(Code) ? null : Code);
 
-  // Caller-set Alt wins (including "" for decorative). Otherwise prefer country name → team name → code as last resort.
-  string ResolvedAlt => Alt ?? Team?.Country?.Name ?? Team?.Name ?? Resolved ?? "";
+  // Club teams use a bundled crest (clubs/{shortname}.png); national teams keep the country-flag path.
+  string? ImageSrc => Team is { IsNationalTeam: false, ShortName: { Length: > 0 } sn }
+    ? $"_content/FantasyFootball.UI/img/clubs/{sn.ToLowerInvariant()}.png"
+    : Resolved is { } code ? FlagHelper.UrlFor(code, Team?.Country?.Code3) : null;
 
-  int? ResolvedElo => Elo ?? (Team is null ? null : ActiveEloSet.EloOf(Team));
+  // Caller-set Alt wins (including "" for decorative). Otherwise the team name — same string for both club ("FC Bayern Munich") and national ("Germany", via the Country.NationalTeam projection). Falls back to the raw code when no Team is bound.
+  string ResolvedAlt => Alt ?? Team?.Name ?? Resolved ?? "";
 
-  string CssClass => Settings.FlagStyle switch
-  {
-    FlagStyle.Round => "flag-icon flag-round",
-    FlagStyle.RoundTier => $"flag-icon flag-round flag-tier-{Tier(ResolvedElo)}",
-    _ => "flag-icon flag-square",
-  };
+  // Club crests are square PNGs with whitespace around the mark — circular clip + cover would crop corners. Render contain, no clip, regardless of FlagStyle.
+  string CssClass => Team is { IsNationalTeam: false }
+    ? "flag-icon flag-crest"
+    : Settings.FlagStyle switch
+    {
+      FlagStyle.Round => "flag-icon flag-round",
+      FlagStyle.RoundTier => $"flag-icon flag-round flag-tier-{Tier(Elo)}",
+      _ => "flag-icon flag-square",
+    };
 
   // Plain pixel dimensions only — max-width:100% collapses inside MudTable cells (the table-cell width is fluid, creating a circular constraint that resolves the img to 0 width).
   string InlineStyle => $"width: {Size}px; height: {Size}px;";

@@ -1,0 +1,296 @@
+{
+  "id": "em-1988",
+  "title": "European Championship 1988",
+  "type": "EM",
+  "year": 1988,
+  "formatId": "euro-8team-2group-sf",
+  "eloSetName": "1988",
+  "stages": [
+    {
+      "id": "group",
+      "name": "Group Stage",
+      "order": 0
+    },
+    {
+      "id": "ko",
+      "name": "K.O. Stage",
+      "order": 1
+    }
+  ],
+  "rounds": [
+    {
+      "id": "group-r1",
+      "name": "Round 1",
+      "stageId": "group",
+      "order": 0
+    },
+    {
+      "id": "group-r2",
+      "name": "Round 2",
+      "stageId": "group",
+      "order": 1
+    },
+    {
+      "id": "group-r3",
+      "name": "Round 3",
+      "stageId": "group",
+      "order": 2
+    },
+    {
+      "id": "sf",
+      "name": "Semifinal",
+      "stageId": "ko",
+      "order": 3
+    },
+    {
+      "id": "final",
+      "name": "Final",
+      "stageId": "ko",
+      "order": 4
+    }
+  ],
+  "groups": {
+    "A": [
+      "FRG",
+      "ITA",
+      "ESP",
+      "DEN"
+    ],
+    "B": [
+      "URS",
+      "NED",
+      "ENG",
+      "IRL"
+    ]
+  },
+  "games": [
+    {
+      "kind": "group",
+      "id": 1,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "FRG",
+      "awayTeamId": "ITA",
+      "playedOn": "1988-06-10T20:00:00Z",
+      "attendance": 62552,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 2,
+      "groupLetter": "A",
+      "roundId": "group-r1",
+      "homeTeamId": "DEN",
+      "awayTeamId": "ESP",
+      "playedOn": "1988-06-11T20:00:00Z",
+      "attendance": 55707,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 3,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "FRG",
+      "awayTeamId": "DEN",
+      "playedOn": "1988-06-14T20:00:00Z",
+      "attendance": 64812,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 4,
+      "groupLetter": "A",
+      "roundId": "group-r2",
+      "homeTeamId": "ITA",
+      "awayTeamId": "ESP",
+      "playedOn": "1988-06-14T17:15:00Z",
+      "attendance": 47506,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 5,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "FRG",
+      "awayTeamId": "ESP",
+      "playedOn": "1988-06-17T20:00:00Z",
+      "attendance": 63802,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 6,
+      "groupLetter": "A",
+      "roundId": "group-r3",
+      "homeTeamId": "ITA",
+      "awayTeamId": "DEN",
+      "playedOn": "1988-06-17T17:15:00Z",
+      "attendance": 53951,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 7,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "ENG",
+      "awayTeamId": "IRL",
+      "playedOn": "1988-06-12T17:15:00Z",
+      "attendance": 51373,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 8,
+      "groupLetter": "B",
+      "roundId": "group-r1",
+      "homeTeamId": "NED",
+      "awayTeamId": "URS",
+      "playedOn": "1988-06-12T20:00:00Z",
+      "attendance": 54336,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 9,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "ENG",
+      "awayTeamId": "NED",
+      "playedOn": "1988-06-15T20:00:00Z",
+      "attendance": 63940,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 10,
+      "groupLetter": "B",
+      "roundId": "group-r2",
+      "homeTeamId": "IRL",
+      "awayTeamId": "URS",
+      "playedOn": "1988-06-15T17:15:00Z",
+      "attendance": 38308,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 11,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "ENG",
+      "awayTeamId": "URS",
+      "playedOn": "1988-06-18T20:00:00Z",
+      "attendance": 48335,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 3,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "group",
+      "id": 12,
+      "groupLetter": "B",
+      "roundId": "group-r3",
+      "homeTeamId": "IRL",
+      "awayTeamId": "NED",
+      "playedOn": "1988-06-18T17:15:00Z",
+      "attendance": 64731,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 1,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 13,
+      "roundId": "sf",
+      "homeQual": "A1",
+      "awayQual": "B2",
+      "homeTeamId": "FRG",
+      "awayTeamId": "NED",
+      "playedOn": "1988-06-21T20:00:00Z",
+      "attendance": 56115,
+      "result": {
+        "homeScore": 1,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 14,
+      "roundId": "sf",
+      "homeQual": "B1",
+      "awayQual": "A2",
+      "homeTeamId": "URS",
+      "awayTeamId": "ITA",
+      "playedOn": "1988-06-22T20:00:00Z",
+      "attendance": 61606,
+      "result": {
+        "homeScore": 2,
+        "awayScore": 0,
+        "ending": "NORMAL"
+      }
+    },
+    {
+      "kind": "ko",
+      "id": 15,
+      "roundId": "final",
+      "homeQual": "W-14",
+      "awayQual": "W-13",
+      "homeTeamId": "URS",
+      "awayTeamId": "NED",
+      "playedOn": "1988-06-25T17:30:00Z",
+      "attendance": 62770,
+      "result": {
+        "homeScore": 0,
+        "awayScore": 2,
+        "ending": "NORMAL"
+      }
+    }
+  ]
+}

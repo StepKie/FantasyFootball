@@ -43,9 +43,9 @@ public class HistoricEuroLoadTest
 		// Re-sim via Played=false: exercises the full QF→SF→Final qualifier chain.
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "em-1996", Played = false });
 		c.IsFinished().Should().BeFalse();
-		c.Games.OfType<KoGame>().Should().OnlyContain(g => g.HomeTeamId == null && g.AwayTeamId == null);
+		c.Games.OfType<KoGame>().Should().OnlyContain(g => !g.IsFullyInitialized);
 
-		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+		new CompetitionSimulator().Simulate(c, new StubScoreModel());
 
 		c.IsFinished().Should().BeTrue();
 		c.WinnerTeamId().Should().NotBeNull();
@@ -56,7 +56,7 @@ public class HistoricEuroLoadTest
 	{
 		// 24-team: re-sim must fill best-3rd R16 slots with four distinct teams.
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "em-2020", Played = false });
-		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+		new CompetitionSimulator().Simulate(c, new StubScoreModel());
 
 		c.IsFinished().Should().BeTrue();
 		c.WinnerTeamId().Should().NotBeNull();

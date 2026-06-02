@@ -5,15 +5,15 @@ namespace FantasyFootball.Services;
 
 /// <summary>
 /// Reads competition definitions from JSON files embedded in
-/// <c>FantasyFootball.Core</c>'s <c>Definitions/</c> folder.
-/// Manifest names match <c>FantasyFootball.Definitions.{id}.json</c>;
+/// <c>FantasyFootball.Core</c>'s <c>Resources/Data/Competitions/</c> folder.
+/// Manifest names match <c>FantasyFootball.Resources.Data.Competitions.{id}.json</c>;
 /// the prefix comes from the project's <c>RootNamespace</c>, which is
 /// pinned to <c>FantasyFootball</c> in the csproj (not
 /// <c>FantasyFootball.Core</c>).
 /// </summary>
 public sealed class EmbeddedCompetitionDefinitionStore : ICompetitionDefinitionStore
 {
-	const string ResourcePrefix = "FantasyFootball.Definitions.";
+	const string ResourcePrefix = "FantasyFootball.Resources.Data.Competitions.";
 	const string ResourceSuffix = ".json";
 
 	static readonly Assembly DefinitionAssembly = typeof(EmbeddedCompetitionDefinitionStore).Assembly;

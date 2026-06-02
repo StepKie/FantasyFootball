@@ -44,7 +44,7 @@ public class HistoricWorldCupLoadTest
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "wm-1970", Played = false });
 		c.IsFinished().Should().BeFalse();
 
-		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+		new CompetitionSimulator().Simulate(c, new StubScoreModel());
 
 		c.IsFinished().Should().BeTrue();
 		c.WinnerTeamId().Should().NotBeNull();
@@ -54,7 +54,7 @@ public class HistoricWorldCupLoadTest
 	public void WorldCup2018_ReSim_RunsThroughR16Bracket()
 	{
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "wm-2018", Played = false });
-		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+		new CompetitionSimulator().Simulate(c, new StubScoreModel());
 
 		c.IsFinished().Should().BeTrue();
 		c.WinnerTeamId().Should().NotBeNull();
@@ -65,7 +65,7 @@ public class HistoricWorldCupLoadTest
 	{
 		// 24-team: four best-3rd R16 slots share the A/B/C/D/E/F3 pool.
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "wm-1990", Played = false });
-		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+		new CompetitionSimulator().Simulate(c, new StubScoreModel());
 
 		c.IsFinished().Should().BeTrue();
 		c.WinnerTeamId().Should().NotBeNull();
@@ -76,7 +76,7 @@ public class HistoricWorldCupLoadTest
 	{
 		// 2002's R16 cross-bracket is non-standard (1E-2B, 1A-2F, ...).
 		var c = _factory.Create(new HistoricalSpec { DefinitionId = "wm-2002", Played = false });
-		new CompetitionSimulator(new StubScoreModel()).Simulate(c);
+		new CompetitionSimulator().Simulate(c, new StubScoreModel());
 
 		c.IsFinished().Should().BeTrue();
 		c.WinnerTeamId().Should().NotBeNull();

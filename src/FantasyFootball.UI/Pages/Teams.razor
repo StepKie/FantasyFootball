@@ -2,47 +2,22 @@
 @using FantasyFootball.UI.Components
 @using FantasyFootball.UI.ViewModels
 @inject TeamsViewModel ViewModel
-@inject IDialogService DialogService
 @inject NavigationManager Nav
 @implements IDisposable
 
 <PageTitle>Teams — Fantasy Football</PageTitle>
 
 <MudStack Spacing="3">
-  <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-    <MudSelect T="string"
-               Label="Elo set"
-               Value="ViewModel.SelectedEloSetName"
-               ValueChanged="@(v => ViewModel.SelectedEloSetName = v)"
-               Class="elo-set-picker">
-      @foreach (var name in ViewModel.AvailableEloSetNames)
-      {
-        <MudSelectItem Value="@name">@name</MudSelectItem>
-      }
-    </MudSelect>
-    <MudIconButton Icon="@Icons.Material.Filled.SaveAs"
-                   Size="Size.Small"
-                   OnClick="OpenSaveAs"
-                   title="Save the current snapshot under a new name" />
-    @if (_confirmingDelete)
+  <MudSelect T="string"
+             Label="Elo set"
+             Value="ViewModel.SelectedEloSetName"
+             ValueChanged="@(v => ViewModel.SelectedEloSetName = v)"
+             Class="elo-set-picker">
+    @foreach (var name in ViewModel.AvailableEloSetNames)
     {
-      <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small"
-                     OnClick="@(() => _confirmingDelete = false)"
-                     title="Cancel" />
-      <MudIconButton Icon="@Icons.Material.Filled.DeleteForever" Size="Size.Small"
-                     Color="Color.Error" Variant="Variant.Filled"
-                     OnClick="ConfirmDelete"
-                     title="@($"Confirm delete \"{ViewModel.SelectedEloSetName}\"")" />
+      <MudSelectItem Value="@name">@name</MudSelectItem>
     }
-    else
-    {
-      <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small"
-                     Color="Color.Default"
-                     Disabled="@(!ViewModel.CanDeleteSelectedSet)"
-                     OnClick="@(() => _confirmingDelete = true)"
-                     title="@(ViewModel.CanDeleteSelectedSet ? "Delete this Elo set" : "Bundled Elo sets can't be deleted")" />
-    }
-  </MudStack>
+  </MudSelect>
 
   <MudSelect T="string"
              Label="Confederation"
@@ -78,40 +53,13 @@
 </MudStack>
 
 @code {
-  bool _confirmingDelete;
-
   protected override void OnInitialized() => ViewModel.PropertyChanged += OnViewModelChanged;
 
-  void OnViewModelChanged(object? sender, EventArgs e)
-  {
-    // Selected set changed (e.g. via the dropdown or after a save) — drop any pending delete-confirm state so the new selection's button reflects its own deletability.
-    _confirmingDelete = false;
-    InvokeAsync(StateHasChanged);
-  }
+  void OnViewModelChanged(object? sender, EventArgs e) => InvokeAsync(StateHasChanged);
 
   void OnRowClick(TableRowClickEventArgs<TeamListItem> args)
   {
     Nav.NavigateTo($"teams/{args.Item!.Team.Id}");
-  }
-
-  async Task OpenSaveAs()
-  {
-    var parameters = new DialogParameters<SaveEloSetDialog>
-    {
-      { x => x.ExistingNames, ViewModel.AvailableEloSetNames },
-    };
-    var dialog = await DialogService.ShowAsync<SaveEloSetDialog>("Save Elo set as", parameters);
-    var result = await dialog.Result;
-    if (result is { Canceled: false, Data: string name })
-    {
-      ViewModel.SaveAs(name);
-    }
-  }
-
-  void ConfirmDelete()
-  {
-    ViewModel.DeleteSelected();
-    _confirmingDelete = false;
   }
 
   public void Dispose() => ViewModel.PropertyChanged -= OnViewModelChanged;
