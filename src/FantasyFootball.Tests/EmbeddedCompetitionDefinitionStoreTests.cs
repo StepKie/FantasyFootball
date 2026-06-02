@@ -23,7 +23,12 @@ public class EmbeddedCompetitionDefinitionStoreTests
 	[InlineData("wm-2026", CompetitionType.WM, 2026, 12, 48, 104, "world-cup-48")]
 	[InlineData("em-2024", CompetitionType.EM, 2024, 6, 24, 51, "european-championship-24")]
 	// League formats have 0 groups and store participants in Competition.Teams instead.
-	[InlineData("bundesliga-2025-2026", CompetitionType.DOMESTIC_LEAGUE, 2026, 0, 18, 306, "bundesliga-18")]
+	[InlineData("bundesliga-2025-2026", CompetitionType.BUNDESLIGA, 2026, 0, 18, 306, "bundesliga-18")]
+	[InlineData("pl-2025-2026", CompetitionType.PREMIER_LEAGUE, 2026, 0, 20, 380, "pl-20")]
+	[InlineData("seriea-2025-2026", CompetitionType.SERIE_A, 2026, 0, 20, 380, "seriea-20")]
+	[InlineData("laliga-2025-2026", CompetitionType.LA_LIGA, 2026, 0, 20, 380, "laliga-20")]
+	// Ligue 1: one final-matchday fixture (Nantes v Toulouse) was cancelled and never replayed, so the season has 305 played games, not the full 306-game round-robin.
+	[InlineData("ligue1-2025-2026", CompetitionType.LIGUE_1, 2026, 0, 18, 305, "ligue1-18")]
 	public void Load_HistoricalCompetition_HasExpectedShape(
 		string id, CompetitionType type, int year, int groups, int teams, int games, string formatId)
 	{

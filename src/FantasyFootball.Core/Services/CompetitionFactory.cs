@@ -23,13 +23,13 @@ public sealed class CompetitionFactory
 	public Competition Create(CompetitionSpec spec)
 	{
 		var competition = _definitions.Load(spec.DefinitionId);
-		// Spec wins when present; otherwise keep the definition's own declared EloSet (e.g. "Bundesliga 2025-2026" baked into the JSON).
+		// Spec wins when present; otherwise keep the definition's own declared EloSet (e.g. "Clubs 2025-2026" baked into the JSON).
 		if (spec.EloSetName is not null) { competition.EloSetName = spec.EloSetName; }
 
 		if (competition.GroupAssignments.Length == 0 && spec is not HistoricalSpec)
 		{
 			throw new ArgumentException(
-				$"Competition '{spec.DefinitionId}' is knockout-only (no group stage); lineup-substituting specs are not supported. Use HistoricalSpec.",
+				$"Competition '{spec.DefinitionId}' has no group assignments; lineup-substituting specs are not supported. Use HistoricalSpec.",
 				nameof(spec));
 		}
 

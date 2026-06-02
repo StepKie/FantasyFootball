@@ -5,5 +5,9 @@ public enum CompetitionType
 	EM,
 	WM,
 	CHAMPIONS_LEAGUE,
-	DOMESTIC_LEAGUE,
+	BUNDESLIGA,
+	PREMIER_LEAGUE,
+	SERIE_A,
+	LA_LIGA,
+	LIGUE_1,
 }

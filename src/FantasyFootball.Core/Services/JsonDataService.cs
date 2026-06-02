@@ -13,7 +13,7 @@ public class JsonDataService : IDataService
 
 	public const string CurrentEloSetName = "Current";
 
-	/// <summary>Names of the bundled EloSets shipped with the app (Current + every elo-{year}.json resource). Used by the UI to mark them as undeletable.</summary>
+	/// <summary>Names of the bundled EloSets shipped with the app (Current + every EloSets/*.json resource). Used by the UI to mark them as undeletable.</summary>
 	public static readonly IReadOnlySet<string> BundledEloSetNames = LoadBundledEloSetNames();
 
 	static readonly JsonSerializerOptions JsonOpts = new(JsonSerializerDefaults.Web)
@@ -141,19 +141,21 @@ public class JsonDataService : IDataService
 			.ToList();
 	}
 
-	// Enumerates the embedded elo-{year}.json resource names to extract their year part; cheap (no JSON parse, no I/O beyond Assembly.GetManifestResourceNames).
+	// Reads each set's actual "name" (not the filename stem: {slug}-{season} sets like "Clubs 2025-2026" don't match their resource name). JsonDocument avoids a full EloSet round-trip — and the dependency on JsonOpts, which isn't initialized yet when this static field runs.
 	static IReadOnlySet<string> LoadBundledEloSetNames()
 	{
-		var names = new HashSet<string> { CurrentEloSetName };
-		const string prefix = HistoricalEloSetPrefix + "elo-";
-		const string suffix = ".json";
-		foreach (var resource in Assembly.GetExecutingAssembly().GetManifestResourceNames())
-		{
-			if (resource.StartsWith(prefix, StringComparison.Ordinal) && resource.EndsWith(suffix, StringComparison.Ordinal))
+		var asm = Assembly.GetExecutingAssembly();
+		var names = asm.GetManifestResourceNames()
+			.Where(n => n.StartsWith(HistoricalEloSetPrefix, StringComparison.Ordinal) && n.EndsWith(".json", StringComparison.Ordinal))
+			.Select(n =>
 			{
-				names.Add(resource[prefix.Length..^suffix.Length]);
-			}
-		}
+				using var stream = asm.GetManifestResourceStream(n)!;
+				using var doc = JsonDocument.Parse(stream);
+				return doc.RootElement.GetProperty("name").GetString() ?? "";
+			})
+			.Where(name => name.Length > 0)
+			.ToHashSet();
+		names.Add(CurrentEloSetName);
 		return names;
 	}
 
