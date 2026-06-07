@@ -176,7 +176,7 @@
     _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId && t.IsNationalTeam == isNational);
     _venue = Game.VenueId is { } vid ? VenueRegistry.Get(vid) : null;
 
-    // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id. Soften adds soft hyphens so long names wrap cleanly in narrow cells.
+    // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id.
     _homeLabel = DisplayHyphenation.Soften(_homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?");
     _awayLabel = DisplayHyphenation.Soften(_awayTeam?.Name ?? LabelForUnresolved(Game, isHome: false) ?? awayId ?? "?");
     _homeCompact = _homeTeam?.CompactName is { } hc ? DisplayHyphenation.Soften(hc) : null;

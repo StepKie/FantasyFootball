@@ -10,7 +10,7 @@ namespace FantasyFootball.UI.Helpers;
 /// </summary>
 public static class DisplayHyphenation
 {
-	const string Shy = "­";
+	const string Shy = "\u00AD";
 
 	// Every word ≥ 9 chars appearing in countries.json (en) or clubs.json names.
 	static readonly Dictionary<string, string> Words = new(StringComparer.Ordinal)
