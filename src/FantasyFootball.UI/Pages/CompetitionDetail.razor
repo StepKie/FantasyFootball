@@ -31,26 +31,29 @@ else
     @* Title + main sim controls *@
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Wrap="Wrap.Wrap">
       <CompetitionTypeIcon Type="@ViewModel.Competition.Type" Size="36" />
-      <MudText Typo="Typo.h5" HtmlTag="h1">
+      <MudText Typo="Typo.h5" HtmlTag="h1" Class="comp-heading">
         @ViewModel.Competition.Title <span style="opacity:0.6;">#@ViewModel.Competition.Id</span>
       </MudText>
-      @if (!ViewModel.IsFinished)
-      {
-        <MudIconButton Icon="@Icons.Material.Filled.DoubleArrow"
-                       Size="Size.Small"
-                       OnClick="ViewModel.SimulateAll"
-                       Disabled="ViewModel.IsBusy"
-                       title="Simulate tournament (T)" />
-        <MudIconButton Icon="@Icons.Material.Filled.MyLocation"
-                       Size="Size.Small"
-                       OnClick="JumpToCurrent"
-                       Disabled="ViewModel.IsBusy || ViewModel.Competition.CurrentGame() is null"
-                       title="Jump to the current round" />
-      }
-      @if (ViewModel.IsBusy)
-      {
-        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-      }
+      @* Action icons share one non-wrapping cluster so a narrow header can't orphan them one per line. *@
+      <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="0">
+        @if (!ViewModel.IsFinished)
+        {
+          <MudIconButton Icon="@Icons.Material.Filled.DoubleArrow"
+                         Size="Size.Small"
+                         OnClick="ViewModel.SimulateAll"
+                         Disabled="ViewModel.IsBusy"
+                         title="Simulate tournament (T)" />
+          <MudIconButton Icon="@Icons.Material.Filled.MyLocation"
+                         Size="Size.Small"
+                         OnClick="JumpToCurrent"
+                         Disabled="ViewModel.IsBusy || ViewModel.Competition.CurrentGame() is null"
+                         title="Jump to the current round" />
+        }
+        @if (ViewModel.IsBusy)
+        {
+          <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+        }
+      </MudStack>
       @if (ViewModel.IsFinished && ViewModel.WinnerTeamId is { } winnerId)
       {
         var winnerTeam = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == ViewModel.Competition.IsNationalTeamCompetition());
@@ -94,6 +97,7 @@ else
             var isSelected = s.Id == ViewModel.SelectedStageId;
             var isCurrent  = s.Id == ViewModel.CurrentStageId;
             var isDone     = ViewModel.IsStageDone(s);
+            @* Chip + its play-arrow share one cell so a line break can't orphan the arrow. *@
             <div class="timeline-cell">
               <MudChip T="string"
                        Variant="@(isSelected ? Variant.Filled : Variant.Outlined)"
@@ -104,18 +108,16 @@ else
                        OnClick="@(() => ViewModel.SelectedStageId = stageForChip.Id)">
                 @s.Name@(isDone ? " ✓" : "")
               </MudChip>
-            </div>
-            @if (!isDone)
-            {
-              <div class="timeline-cell">
+              @if (!isDone)
+              {
                 <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
                                Size="Size.Small"
                                Color="Color.Primary"
                                OnClick="@(async () => await ViewModel.SimulateStage(stageForChip.Id))"
                                Disabled="ViewModel.IsBusy"
                                title="@($"Simulate up through {s.Name}")" />
-              </div>
-            }
+              }
+            </div>
           }
         </div>
       </div>
@@ -138,18 +140,16 @@ else
                        OnClick="@(() => ViewModel.SelectedRoundId = roundForChip.Id)">
                 @r.Name@(isDone ? " ✓" : "")
               </MudChip>
-            </div>
-            @if (!isDone)
-            {
-              <div class="timeline-cell">
+              @if (!isDone)
+              {
                 <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
                                Size="Size.Small"
                                Color="Color.Primary"
                                OnClick="@(async () => await ViewModel.SimulateRound(roundForChip.Id))"
                                Disabled="ViewModel.IsBusy"
                                title="@($"Simulate up through {r.Name}")" />
-              </div>
-            }
+              }
+            </div>
           }
         </div>
       </div>
