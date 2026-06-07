@@ -254,6 +254,33 @@ body {
   flex-shrink: 0;
 }
 
+/* Clubs carry a compact display name ("Gladbach"); compact containers swap it in for the full name. */
+.team-name-compact {
+  display: none;
+}
+
+/* Overall-standings table responds to its own width like the scoreboard cards do. */
+.overall-standings {
+  container-type: inline-size;
+}
+
+/* Numeric columns hug their content right-aligned; the Team column absorbs the slack. */
+.overall-standings .standings-num {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The (hover-revealed) sort icon reserves width inside each header; flip it left of the text so the header text stays flush with the right-aligned numbers below. */
+.overall-standings th.standings-num .mud-table-sort-label {
+  flex-direction: row-reverse;
+}
+
+.overall-standings .mud-table-cell {
+  padding: 6px 10px;
+}
+
 .scoreboard-score {
   font-family: 'Barlow Condensed', 'Inter', sans-serif;
   font-weight: 700;
@@ -518,6 +545,9 @@ body {
   .scoreboard-action { flex-basis: 100%; justify-content: flex-end; min-width: 0; }
   .scoreboard-action .mud-icon-button { padding: 2px; }
   .scoreboard-action-empty { display: none; }
+  .team-name-full { display: none; }
+  .team-name-compact { display: inline; }
+  .overall-standings .mud-table-cell { padding: 4px 6px; font-size: 0.8rem; }
 }
 
 /* Phone-only: unbound the cards' inner scroll — nested scroll traps the drag

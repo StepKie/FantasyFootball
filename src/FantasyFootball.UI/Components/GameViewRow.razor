@@ -17,7 +17,8 @@
     <span class="scoreboard-group-tag-time">@Game.PlayedOn.ToString("HH:mm")</span>
   </div>
   <div class="scoreboard-team scoreboard-team-home @TeamClass(HomeIsWinner)">
-    <span class="scoreboard-team-name">@_homeLabel</span>
+    <span class="scoreboard-team-name @(_homeCompact is null ? "" : "team-name-full")">@_homeLabel</span>
+    @if (_homeCompact is not null) { <span class="scoreboard-team-name team-name-compact">@_homeCompact</span> }
     @if (_homeTeam is not null) { <FlagIcon Team="_homeTeam" Size="24" /> }
   </div>
   <div class="scoreboard-score @(HasResult ? "" : "scoreboard-pending")">
@@ -40,7 +41,8 @@
   </div>
   <div class="scoreboard-team scoreboard-team-away @TeamClass(AwayIsWinner)">
     @if (_awayTeam is not null) { <FlagIcon Team="_awayTeam" Size="24" /> }
-    <span class="scoreboard-team-name">@_awayLabel</span>
+    <span class="scoreboard-team-name @(_awayCompact is null ? "" : "team-name-full")">@_awayLabel</span>
+    @if (_awayCompact is not null) { <span class="scoreboard-team-name team-name-compact">@_awayCompact</span> }
   </div>
   <div class="scoreboard-action @(ShowSim || ShowUndo ? "" : "scoreboard-action-empty")" @onclick:stopPropagation="true">
     @if (ShowSim)
@@ -156,6 +158,8 @@
   Venue? _venue;
   string _homeLabel = "";
   string _awayLabel = "";
+  string? _homeCompact;
+  string? _awayCompact;
   string _groupLetter = "";
   bool _prevDetailsOpen;
   string? _lastFetchedHomeId;
@@ -175,6 +179,8 @@
     // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id. Soften adds soft hyphens so long names wrap cleanly in narrow cells.
     _homeLabel = DisplayHyphenation.Soften(_homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?");
     _awayLabel = DisplayHyphenation.Soften(_awayTeam?.Name ?? LabelForUnresolved(Game, isHome: false) ?? awayId ?? "?");
+    _homeCompact = _homeTeam?.CompactName is { } hc ? DisplayHyphenation.Soften(hc) : null;
+    _awayCompact = _awayTeam?.CompactName is { } ac ? DisplayHyphenation.Soften(ac) : null;
 
     _groupLetter = Game switch
     {
