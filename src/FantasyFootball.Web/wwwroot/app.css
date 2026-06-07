@@ -232,14 +232,25 @@ body {
   text-align: left;
 }
 
-/* Team name: never truncate with ellipsis. Long names (e.g. "Bosnia and
-   Herzegovina") wrap to two lines inside the cell — row grows taller for
-   that game, but the team stays fully readable. Most names fit on one line. */
+/* Team name: never truncate with ellipsis; long names wrap at word boundaries
+   ("Bosnia and Herzegovina" → two lines), a too-wide single word hyphenates at
+   a dictionary point ("Nether-lands", en dictionary via html[lang]), and
+   `break-word` is the last resort for words the dictionary can't split. All
+   need min-width: 0 — a flex item otherwise floors at the word's min-content
+   width and clips instead of wrapping. `anywhere` stays banned: it collapses
+   to one char per line. */
 .scoreboard-team-name {
   white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  min-width: 0;
   line-height: 1.2;
+}
+
+/* Flags keep their size when the name span shrinks. */
+.scoreboard-team img {
+  flex-shrink: 0;
 }
 
 .scoreboard-score {
@@ -484,6 +495,34 @@ body {
 .scoreboard-group-tag-time {
   font-size: 0.7rem;
   font-variant-numeric: tabular-nums;
+}
+
+/* Scoreboard density responds to the CARD's width, not the viewport: phones get
+   a narrow card directly, tablets get one via the two-column md grid. Compact
+   mode drops the desktop alignment reservations so two names, two flags and the
+   score fit — the always-reserved action column (5rem for buttons only 1-2 rows
+   have) is the main win. */
+.bounded-scroll-card {
+  container-type: inline-size;
+}
+
+@container (max-width: 520px) {
+  .scoreboard-row { gap: 0.4rem; padding: 0.4rem 0.5rem; flex-wrap: wrap; }
+  .scoreboard-team { gap: 0.35rem; overflow: hidden; }
+  .scoreboard-team-name { font-size: 0.875rem; }
+  .scoreboard-score { min-width: 3.25rem; font-size: 1.15rem; }
+  .scoreboard-group-tag { min-width: 2rem; }
+  /* Sim/undo buttons wrap to a line of their own, so the score and flag
+     columns stay aligned with the button-less rows. */
+  .scoreboard-action { flex-basis: 100%; justify-content: flex-end; min-width: 0; }
+  .scoreboard-action .mud-icon-button { padding: 2px; }
+  .scoreboard-action-empty { display: none; }
+}
+
+/* Phone-only: unbound the cards' inner scroll — nested scroll traps the drag
+   gesture inside the games card, making the standings card below hard to reach. */
+@media (max-width: 599px) {
+  .bounded-scroll-card { max-height: none; overflow-y: visible; }
 }
 
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */

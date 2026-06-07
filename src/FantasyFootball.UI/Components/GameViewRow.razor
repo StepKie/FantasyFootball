@@ -2,6 +2,7 @@
 @using FantasyFootball.Models
 @using FantasyFootball.Repositories
 @using FantasyFootball.Services
+@using FantasyFootball.UI.Helpers
 @inject IDataService DataService
 @inject IRepository EntityRepo
 @inject ICompetitionRepository Repo
@@ -41,7 +42,7 @@
     @if (_awayTeam is not null) { <FlagIcon Team="_awayTeam" Size="24" /> }
     <span class="scoreboard-team-name">@_awayLabel</span>
   </div>
-  <div class="scoreboard-action" @onclick:stopPropagation="true">
+  <div class="scoreboard-action @(ShowSim || ShowUndo ? "" : "scoreboard-action-empty")" @onclick:stopPropagation="true">
     @if (ShowSim)
     {
       <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
@@ -171,9 +172,9 @@
     _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId && t.IsNationalTeam == isNational);
     _venue = Game.VenueId is { } vid ? VenueRegistry.Get(vid) : null;
 
-    // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id.
-    _homeLabel = _homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?";
-    _awayLabel = _awayTeam?.Name ?? LabelForUnresolved(Game, isHome: false) ?? awayId ?? "?";
+    // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id. Soften adds soft hyphens so long names wrap cleanly in narrow cells.
+    _homeLabel = DisplayHyphenation.Soften(_homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?");
+    _awayLabel = DisplayHyphenation.Soften(_awayTeam?.Name ?? LabelForUnresolved(Game, isHome: false) ?? awayId ?? "?");
 
     _groupLetter = Game switch
     {
