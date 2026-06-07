@@ -2,16 +2,17 @@ namespace FantasyFootball.Tests;
 
 /// <summary>
 /// Qualifier-resolution sanity: group placement reads from standings,
-/// game-winner/loser walks the chronological chain, third-place pool
-/// ranks across the eligible groups. Drives off the embedded
-/// definitions plus scripted results — no full sim needed.
+/// game-winner/loser walks the chronological chain, third-place pools
+/// refuse per-slot resolution (they resolve only as a batch in
+/// CompetitionSimulator). Drives off the embedded definitions plus
+/// scripted results — no full sim needed.
 /// </summary>
 /// <remarks>
 /// TryResolve semantics pinned by the tests below: GameWinner / GameLoser
-/// fail-closed (return null when the referenced game is unplayed);
-/// GroupPlacement and ThirdPlacePool fail-open (return the
+/// and ThirdPlacePool fail-closed (return null when the referenced game is
+/// unplayed / always, respectively); GroupPlacement fails open (returns the
 /// alphabetical-default team because <c>Standings()</c> doesn't gate on
-/// completion). The fail-open paths are a known limitation — they let
+/// completion). The fail-open path is a known limitation — it lets
 /// ResolveAvailableKoTeams prematurely fill KO slots with the
 /// alphabetical first team during the group stage. A future fix should
 /// gate <c>Standings()</c> on group-stage completion; the tests below
@@ -69,51 +70,12 @@ public class QualifierResolverTests
 	}
 
 	[Fact]
-	public void Resolve_ThirdPlacePool_AllUnplayed_PicksAlphabeticallyEarlierTeam()
+	public void Resolve_ThirdPlacePool_Throws_PoolsAreBatchOnly()
 	{
-		// With nothing scripted, every group's 3rd-place row has 0 pts /
-		// GD 0 / GF 0 — the only discriminator left is team-id alphabetical
-		// (our deterministic stand-in for the FIFA tail).
 		var c = _definitions.Load("wm-2026");
-		var aThird = c.Standings("A")[2].TeamId;
-		var bThird = c.Standings("B")[2].TeamId;
-		var alphaFirst = string.CompareOrdinal(aThird, bThird) < 0 ? aThird : bThird;
-
-		QualifierResolver.Resolve(c, "A/B3").Should().Be(alphaFirst);
-	}
-
-	[Fact]
-	public void Resolve_ThirdPlacePool_PicksHigherPointsTeam()
-	{
-		// Script Group A so its alphabetically-LAST team (originally 4th)
-		// wins one game and rises to 3rd with 3 points. Group B stays
-		// unplayed. Pool should resolve to A's third (3 pts) over B's
-		// third (0 pts).
-		var c = _definitions.Load("wm-2026");
-		var teamsInA = c.GroupAssignments[0];
-		var alphaLastInA = teamsInA.OrderBy(t => t, StringComparer.Ordinal).Last();
-		var alphaFirstInA = teamsInA.OrderBy(t => t, StringComparer.Ordinal).First();
-
-		// Find the A game between those two and give the win to alphaLast.
-		var game = c.GroupGames("A").First(g =>
-			(g.HomeTeamId == alphaLastInA && g.AwayTeamId == alphaFirstInA) ||
-			(g.HomeTeamId == alphaFirstInA && g.AwayTeamId == alphaLastInA));
-		game.Result = game.HomeTeamId == alphaLastInA
-			? new Result(1, 0, GameEnd.NORMAL)
-			: new Result(0, 1, GameEnd.NORMAL);
-
-		// alphaLastInA now has 3 pts (1W). Others in A still have 0 pts
-		// (alphaFirstInA has -1 GD from that loss). So 3rd-place in A is
-		// whichever 0-pt team has alphabetically-earliest id.
-		var aStandings = c.Standings("A");
-		var aThird = aStandings[2].TeamId;
-		aStandings[2].Points.Should().Be(0, "verify scripted standings put a 0-pt team in 3rd");
-		var bThird = c.Standings("B")[2].TeamId;
-
-		// Pool comparison: A's third has 0 pts, B's third has 0 pts —
-		// alphabetical tiebreaker on the two 3rd-place candidates.
-		var expected = string.CompareOrdinal(aThird, bThird) < 0 ? aThird : bThird;
-		QualifierResolver.Resolve(c, "A/B3").Should().Be(expected);
+		Action act = () => QualifierResolver.Resolve(c, "A/B3");
+		act.Should().Throw<InvalidOperationException>()
+			.WithMessage("*third-place pool*");
 	}
 
 	[Fact]
@@ -164,11 +126,10 @@ public class QualifierResolverTests
 	}
 
 	[Fact]
-	public void TryResolve_ThirdPlacePool_BeforeAnyGroupFinishes_FailsOpen()
+	public void TryResolve_ThirdPlacePool_ReturnsNull()
 	{
-		// Same fail-open shape as GroupPlacement — returns the alphabetical best 3rd-placer (all 0-pt).
 		var c = _definitions.Load("wm-2022");
-		QualifierResolver.TryResolve(c, "A/B3").Should().NotBeNull();
+		QualifierResolver.TryResolve(c, "A/B3").Should().BeNull();
 	}
 
 	[Fact]
