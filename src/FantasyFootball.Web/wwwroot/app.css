@@ -138,6 +138,7 @@ body {
    outlined variant) doesn't have to win a specificity fight with MudBlazor. */
 .timeline-cell {
   display: inline-flex;
+  align-items: center;
   background-color: var(--mud-palette-background);
   border-radius: 999px;
   position: relative;
@@ -520,9 +521,14 @@ body {
 }
 
 /* Phone-only: unbound the cards' inner scroll — nested scroll traps the drag
-   gesture inside the games card, making the standings card below hard to reach. */
+   gesture inside the games card, making the standings card below hard to reach.
+   Timeline: flatten the round indent and drop the dashed backdrop, which strikes
+   through the chips once they wrap to multiple lines. */
 @media (max-width: 599px) {
   .bounded-scroll-card { max-height: none; overflow-y: visible; }
+  .timeline-row-round { padding-left: 0.75rem; }
+  .timeline-label { min-width: 2.75rem; }
+  .timeline-chips::before { display: none; }
 }
 
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */

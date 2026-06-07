@@ -94,6 +94,7 @@ else
             var isSelected = s.Id == ViewModel.SelectedStageId;
             var isCurrent  = s.Id == ViewModel.CurrentStageId;
             var isDone     = ViewModel.IsStageDone(s);
+            @* Chip + its play-arrow share one cell so a line break can't orphan the arrow. *@
             <div class="timeline-cell">
               <MudChip T="string"
                        Variant="@(isSelected ? Variant.Filled : Variant.Outlined)"
@@ -104,18 +105,16 @@ else
                        OnClick="@(() => ViewModel.SelectedStageId = stageForChip.Id)">
                 @s.Name@(isDone ? " ✓" : "")
               </MudChip>
-            </div>
-            @if (!isDone)
-            {
-              <div class="timeline-cell">
+              @if (!isDone)
+              {
                 <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
                                Size="Size.Small"
                                Color="Color.Primary"
                                OnClick="@(async () => await ViewModel.SimulateStage(stageForChip.Id))"
                                Disabled="ViewModel.IsBusy"
                                title="@($"Simulate up through {s.Name}")" />
-              </div>
-            }
+              }
+            </div>
           }
         </div>
       </div>
@@ -138,18 +137,16 @@ else
                        OnClick="@(() => ViewModel.SelectedRoundId = roundForChip.Id)">
                 @r.Name@(isDone ? " ✓" : "")
               </MudChip>
-            </div>
-            @if (!isDone)
-            {
-              <div class="timeline-cell">
+              @if (!isDone)
+              {
                 <MudIconButton Icon="@Icons.Material.Filled.PlayArrow"
                                Size="Size.Small"
                                Color="Color.Primary"
                                OnClick="@(async () => await ViewModel.SimulateRound(roundForChip.Id))"
                                Disabled="ViewModel.IsBusy"
                                title="@($"Simulate up through {r.Name}")" />
-              </div>
-            }
+              }
+            </div>
           }
         </div>
       </div>
