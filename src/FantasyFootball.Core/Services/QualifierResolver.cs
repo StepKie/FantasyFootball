@@ -35,7 +35,9 @@ public static class QualifierResolver
 			GroupPlacement gp => ResolveGroupPlacement(c, gp),
 			GameWinner gw => ResolveGameOutcome(c, gw.GameId, winner: true),
 			GameLoser gl => ResolveGameOutcome(c, gl.GameId, winner: false),
-			ThirdPlacePool pool => ResolveThirdPlacePool(c, pool),
+			// Per-slot pool resolution can duplicate a team across overlapping pools; only the batch resolver in CompetitionSimulator is valid.
+			ThirdPlacePool => throw new InvalidOperationException(
+				$"Qualifier '{qualifierDsl}' is a third-place pool; per-slot resolution is unsupported."),
 			_ => throw new InvalidOperationException($"Unknown qualifier type {q.GetType().Name} for '{qualifierDsl}'."),
 		};
 	}
@@ -74,29 +76,5 @@ public static class QualifierResolver
 				$"Game {gameId} ended in a tie ({r.HomeScore}-{r.AwayScore}); winner/loser qualifiers only apply to games with a decisive result.");
 		}
 		return (winner == r.HomeWon) ? home : away;
-	}
-
-	static string ResolveThirdPlacePool(Competition c, ThirdPlacePool pool)
-	{
-		// Take the 3rd-place finisher from each eligible group, then
-		// rank them across the pool using the same tiebreakers we use
-		// within a group (points → GD → GF → team ID alphabetical).
-		var ranked = pool.EligibleGroups
-			.Select(g => c.Standings(g))
-			.Select(static s =>
-			{
-				if (s.Count < 3)
-				{
-					throw new InvalidOperationException(
-						$"Third-place pool needs a 3rd-place row from each eligible group, but a group has only {s.Count} teams.");
-				}
-				return s[2];
-			})
-			.OrderByDescending(s => s.Points)
-			.ThenByDescending(s => s.GoalDifference)
-			.ThenByDescending(s => s.GoalsFor)
-			.ThenBy(s => s.TeamId, StringComparer.Ordinal)
-			.ToList();
-		return ranked[0].TeamId;
 	}
 }
