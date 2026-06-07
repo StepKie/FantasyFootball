@@ -570,6 +570,7 @@ body {
   .timeline-row-round { padding-left: 0.75rem; }
   .timeline-label { min-width: 2.75rem; }
   .timeline-chips::before { display: none; }
+  .comp-heading { font-size: 1.15rem; }
 }
 
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */
