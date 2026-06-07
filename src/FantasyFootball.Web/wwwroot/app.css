@@ -259,8 +259,9 @@ body {
   display: none;
 }
 
-/* Overall-standings table responds to its own width like the scoreboard cards do. */
-.overall-standings {
+/* Overall-standings table and competitions list respond to their own width like the scoreboard cards do. */
+.overall-standings,
+.competitions-list {
   container-type: inline-size;
 }
 
@@ -277,7 +278,8 @@ body {
   flex-direction: row-reverse;
 }
 
-.overall-standings .mud-table-cell {
+/* Specificity must match MudBlazor's own `.mud-table-dense * .mud-table-row .mud-table-cell` — app.css loads later, so equal specificity wins. */
+.overall-standings .mud-table-row .mud-table-cell {
   padding: 6px 10px;
 }
 
@@ -547,7 +549,16 @@ body {
   .scoreboard-action-empty { display: none; }
   .team-name-full { display: none; }
   .team-name-compact { display: inline; }
-  .overall-standings .mud-table-cell { padding: 4px 6px; font-size: 0.8rem; }
+  .overall-standings .mud-table-row .mud-table-cell,
+  .competitions-list .mud-table-row .mud-table-cell { padding: 4px 6px; font-size: 0.8rem; }
+  /* Hidden-but-space-reserving sort icons cost 24px per header; without them the tables fit and stop crushing the Team column. */
+  .overall-standings .mud-table-sort-label .mud-svg-icon,
+  .competitions-list .mud-table-sort-label .mud-svg-icon { display: none; }
+  /* One line per competition: drop the Started column, ellipsize long titles, tighten chips and buttons. */
+  .competitions-list .comp-started { display: none; }
+  .competitions-list .comp-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 9rem; }
+  .competitions-list .mud-chip { margin: 0; }
+  .competitions-list .mud-icon-button { padding: 2px; }
 }
 
 /* Phone-only: unbound the cards' inner scroll — nested scroll traps the drag

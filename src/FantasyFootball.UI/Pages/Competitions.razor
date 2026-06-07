@@ -75,16 +75,17 @@ else if (ViewModel.FilteredCompetitions.Count == 0)
 }
 else
 {
-  @* Sortable competitions table *@
-  <MudTable Items="ViewModel.FilteredCompetitions" Dense="true" Hover="true"
+  @* Sortable competitions table. Breakpoint.None: keep one row per competition on phones — the stacked label/value fallback can't be scanned as a list. *@
+  <div class="competitions-list">
+  <MudTable Items="ViewModel.FilteredCompetitions" Dense="true" Hover="true" Breakpoint="Breakpoint.None"
             OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<Competition>>(this, args => Nav.NavigateTo($"competitions/{args.Item!.Id}")))"
             T="Competition">
     <HeaderContent>
       <MudTh style="width:1%;"><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.Id)" T="Competition">#</MudTableSortLabel></MudTh>
       <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.Title)" T="Competition">Title</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.SimulationStart ?? DateTime.MinValue)" T="Competition" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => StateOrder(c))" T="Competition">State</MudTableSortLabel></MudTh>
+      <MudTh Class="comp-started"><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.SimulationStart ?? DateTime.MinValue)" T="Competition" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
       <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.WinnerTeamId() ?? string.Empty)" T="Competition">Winner</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => StateOrder(c))" T="Competition">State</MudTableSortLabel></MudTh>
       <MudTh style="width:1%;"></MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -98,10 +99,10 @@ else
       <MudTd DataLabel="Title">
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
           <CompetitionTypeIcon Type="@context.Type" Size="20" />
-          <span>@context.Title</span>
+          <span class="comp-title">@context.Title</span>
         </MudStack>
       </MudTd>
-      <MudTd DataLabel="Started">
+      <MudTd DataLabel="Started" Class="comp-started">
         @if (context.SimulationStart is { } start)
         {
           <span title="@start.ToString("yyyy-MM-dd HH:mm 'UTC'")">@start.ToLocalTime().ToString(start.ToLocalTime().Year < DateTime.Now.Year ? "MMM d, yyyy" : "MMM d, HH:mm")</span>
@@ -109,6 +110,17 @@ else
         else
         {
           <span style="opacity:0.5;">—</span>
+        }
+      </MudTd>
+      <MudTd DataLabel="Winner">
+        @if (isFinished && context.WinnerTeamId() is { } winnerId)
+        {
+          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == context.IsNationalTeamCompetition());
+          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <FlagIcon Team="winner" Code="@winnerId" Size="20" />
+            <span class="@(winner?.CompactName is null ? "" : "team-name-full")">@DisplayHyphenation.Soften(winner?.Name ?? winnerId)</span>
+            @if (winner?.CompactName is { } winnerCompact) { <span class="team-name-compact">@DisplayHyphenation.Soften(winnerCompact)</span> }
+          </MudStack>
         }
       </MudTd>
       <MudTd DataLabel="State">
@@ -123,16 +135,6 @@ else
         else
         {
           <span style="opacity:0.5;">scheduled</span>
-        }
-      </MudTd>
-      <MudTd DataLabel="Winner">
-        @if (isFinished && context.WinnerTeamId() is { } winnerId)
-        {
-          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == context.IsNationalTeamCompetition());
-          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-            <FlagIcon Team="winner" Code="@winnerId" Size="20" />
-            <span>@(winner?.Name ?? winnerId)</span>
-          </MudStack>
         }
       </MudTd>
       <MudTd Style="text-align:right;">
@@ -165,6 +167,7 @@ else
       </MudTd>
     </RowTemplate>
   </MudTable>
+  </div>
 
   @* Overall standings — aggregate across every finished competition in the current filter; capture once so the OverallRecords getter only walks comps × games once per render. *@
   @if (ViewModel.OverallRecords is var overallRecords && overallRecords.Count > 0)
