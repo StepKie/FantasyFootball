@@ -1,8 +1,8 @@
 // Tiny scroll helper for the variant-B whole-stage games panel.
-// Round chips invoke this to jump to a round's <section id="round-N"> anchor.
+// 'start' aligns the element top with the viewport top (round headers); 'center' puts it mid-viewport so context shows above + below (just-finished / current game).
 window.ffScroll = {
-    toElement: (id) => {
+    toElement: (id, block) => {
         const el = document.getElementById(id);
-        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        if (el) { el.scrollIntoView({ behavior: 'smooth', block: block || 'start' }); }
     }
 };

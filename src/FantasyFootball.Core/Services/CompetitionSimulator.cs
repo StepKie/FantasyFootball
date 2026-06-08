@@ -83,31 +83,28 @@ public sealed class CompetitionSimulator
 	}
 
 	/// <summary>
-	/// Best-effort pass over every KO game. Non-pool qualifiers
-	/// (<see cref="GroupPlacement"/>, <see cref="GameWinner"/>,
-	/// <see cref="GameLoser"/>) resolve per-slot via <see cref="QualifierResolver"/>.
+	/// Best-effort pass over every KO game. For each <b>unplayed</b> KO game, non-pool
+	/// qualifiers (<see cref="GroupPlacement"/>, <see cref="GameWinner"/>,
+	/// <see cref="GameLoser"/>) re-resolve per-slot via <see cref="QualifierResolver"/>
+	/// — the slot tracks the current standings/upstream-game outcome until that source
+	/// is final, so R32 shows a live preview during group stage instead of locking to
+	/// whoever was leading after game 1. Played KO games stay frozen.
 	/// 3rd-place pools resolve as a batch via <see cref="ResolveThirdPlacePools"/>
 	/// — a single team per slot, no duplicates across overlapping pools.
 	/// Silent on slots whose prerequisites aren't ready.
 	/// </summary>
 	public static void ResolveAvailableKoTeams(Competition c)
 	{
-		// Hot-path skip: all KO slots already assigned → nothing to do.
-		var anyUnresolved = false;
 		foreach (var ko in c.Games.OfType<KoGame>())
 		{
-			if (!ko.IsFullyInitialized) { anyUnresolved = true; break; }
-		}
-		if (!anyUnresolved) { return; }
-
-		foreach (var ko in c.Games.OfType<KoGame>())
-		{
-			if (!ko.IsHomeInitialized && IsNonPool(ko.HomeQual))
+			// Played games are frozen — changing their teams now would orphan the recorded Result.
+			if (ko.Result is not null) { continue; }
+			if (IsNonPool(ko.HomeQual))
 			{
 				var resolved = QualifierResolver.TryResolve(c, ko.HomeQual);
 				if (resolved is not null) { ko.HomeTeamId = resolved; }
 			}
-			if (!ko.IsAwayInitialized && IsNonPool(ko.AwayQual))
+			if (IsNonPool(ko.AwayQual))
 			{
 				var resolved = QualifierResolver.TryResolve(c, ko.AwayQual);
 				if (resolved is not null) { ko.AwayTeamId = resolved; }

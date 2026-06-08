@@ -123,6 +123,24 @@ public class CompetitionSimulatorTests
 	}
 
 	[Fact]
+	public void Wm2026_IncrementalPlay_DoesNotLockKoSlotsWithMidGroupStandings()
+	{
+		// UI flow: every game triggers RefreshAfterSim → ResolveAvailableKoTeams, which must not lock GroupPlacement slots to partial standings (collides with the pool resolver later).
+		var c = _definitions.Load("wm-2026");
+		foreach (var game in c.Games.OrderBy(g => g.PlayedOn).ToList())
+		{
+			_simulator.SimulateGame(c, game, _scoreModel);
+			CompetitionSimulator.ResolveAvailableKoTeams(c);
+		}
+
+		var r32Teams = c.RoundGames("r32")
+			.OfType<KoGame>()
+			.SelectMany(g => new[] { g.HomeTeamId, g.AwayTeamId })
+			.ToList();
+		r32Teams.Should().OnlyHaveUniqueItems("R32 must have each team in at most one slot, even under per-game resolve");
+	}
+
+	[Fact]
 	public void ResolveAvailableKoTeams_RankingThatStrandsFirstFit_FillsAllPoolSlotsWithTopEight()
 	{
 		// Ranking B, F, E, I, J, … strands slot B/E/F/I/J3 under first-fit: every eligible team gets diverted into an earlier slot.
