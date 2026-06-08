@@ -36,7 +36,7 @@ builder.Services.AddScoped<IDataService, JsonDataService>();
 
 builder.Services.AddSingleton<ICompetitionDefinitionStore, EmbeddedCompetitionDefinitionStore>();
 builder.Services.AddSingleton<IVenueRegistry, EmbeddedVenueRegistry>();
-builder.Services.AddScoped<ICompetitionRepository, LocalStorageCompetitionRepository>();
+builder.Services.AddScoped<ICompetitionRepository, IndexedDbCompetitionRepository>();
 builder.Services.AddScoped<CompetitionFactory>();
 builder.Services.AddScoped<CompetitionSimulator>();
 builder.Services.AddScoped<BulkSimRunner>();
@@ -49,6 +49,13 @@ builder.Services.AddScoped<CompetitionSetupViewModel>();
 builder.Services.AddScoped<CompetitionsViewModel>();
 
 var app = builder.Build();
+
+// One-time purge of pre-IndexedDB competitions orphaned in LocalStorage; they'd otherwise keep occupying the ~5 MB Web Storage cap the entity registry still uses.
+var legacyStore = app.Services.GetRequiredService<ISyncLocalStorageService>();
+foreach (var staleKey in legacyStore.Keys().Where(k => k.StartsWith("ff-flat:")).ToList())
+{
+    legacyStore.RemoveItem(staleKey);
+}
 
 // Pre-warm IDataService so the embedded-JSON parse / LocalStorage polymorphic
 // deserialize (~200 teams + countries + confederations) runs during the WASM

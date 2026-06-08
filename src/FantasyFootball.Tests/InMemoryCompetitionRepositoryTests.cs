@@ -132,6 +132,26 @@ public class InMemoryCompetitionRepositoryTests
 	}
 
 	[Fact]
+	public async Task GetAllSummaries_FaithfullyProjectsEveryPersistedCompetition()
+	{
+		var wm = _definitions.Load("wm-2022");
+		await _repo.SaveAsync(wm);
+		await _repo.SaveAsync(_definitions.Load("em-2024"));
+
+		var summaries = await _repo.GetAllSummariesAsync();
+
+		summaries.Should().HaveCount(2);
+		var wmSummary = summaries.Single(s => s.Id == wm.Id);
+		wmSummary.Type.Should().Be(wm.Type);
+		wmSummary.Title.Should().Be(wm.Title);
+		wmSummary.IsNationalTeam.Should().BeTrue();
+		wmSummary.TotalGames.Should().Be(wm.Games.Length);
+		wmSummary.PlayedGames.Should().Be(wm.Games.Count(g => g.Result is not null));
+		wmSummary.IsFinished.Should().Be(wm.IsFinished());
+		wmSummary.WinnerId.Should().Be(wm.WinnerTeamId());
+	}
+
+	[Fact]
 	public async Task Delete_RemovesById()
 	{
 		var c = _definitions.Load("wm-2022");

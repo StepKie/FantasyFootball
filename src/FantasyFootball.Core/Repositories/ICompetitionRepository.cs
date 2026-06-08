@@ -11,11 +11,9 @@ namespace FantasyFootball.Repositories;
 /// <list type="bullet">
 ///   <item><c>InMemoryCompetitionRepository</c> — tests + the working
 ///         set inside <c>BulkSimRunner</c> before user-visible persistence.</item>
-///   <item><c>LocalStorageCompetitionRepository</c> — browser persistence
-///         for the Blazor WASM host.</item>
-///   <item><c>IndexedDbCompetitionRepository</c> (follow-up) —
-///         higher-capacity browser storage for bulk sims that exceed
-///         LocalStorage's 5–10 MB quota.</item>
+///   <item><c>IndexedDbCompetitionRepository</c> — browser persistence
+///         for the Blazor WASM host. Each competition is one record in an
+///         IndexedDB object store, escaping LocalStorage's ~5 MB cap.</item>
 /// </list>
 /// </summary>
 public interface ICompetitionRepository
@@ -30,8 +28,20 @@ public interface ICompetitionRepository
 	/// <summary>Loads a competition by repository ID, or null if no such ID.</summary>
 	Task<Competition?> GetAsync(int id);
 
-	/// <summary>Lists all persisted competitions. Order is implementation-defined.</summary>
+	/// <summary>
+	/// Lists all persisted competitions, fully materialized. Heavy — deserializes
+	/// every game of every competition. Use <see cref="GetAllSummariesAsync"/> for
+	/// the list view; reserve this for the overall-standings aggregate, which needs
+	/// per-game results. Order is implementation-defined.
+	/// </summary>
 	Task<IReadOnlyList<Competition>> GetAllAsync();
+
+	/// <summary>
+	/// Lists a lightweight <see cref="CompetitionSummary"/> for every persisted
+	/// competition — enough to render the list without deserializing the games.
+	/// Order is implementation-defined.
+	/// </summary>
+	Task<IReadOnlyList<CompetitionSummary>> GetAllSummariesAsync();
 
 	/// <summary>Removes a competition by ID. No-op if the ID is unknown.</summary>
 	Task DeleteAsync(int id);

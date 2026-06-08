@@ -60,6 +60,18 @@ public sealed class InMemoryCompetitionRepository : ICompetitionRepository
 		return Task.FromResult<IReadOnlyList<Competition>>(list);
 	}
 
+	public Task<IReadOnlyList<CompetitionSummary>> GetAllSummariesAsync()
+	{
+		var list = new List<CompetitionSummary>(_storage.Count);
+		foreach (var (id, json) in _storage)
+		{
+			var c = CompetitionDefinitionLoader.Load(json);
+			c.Id = id;
+			list.Add(CompetitionSummary.Of(c));
+		}
+		return Task.FromResult<IReadOnlyList<CompetitionSummary>>(list);
+	}
+
 	public Task DeleteAsync(int id)
 	{
 		_storage.Remove(id);
