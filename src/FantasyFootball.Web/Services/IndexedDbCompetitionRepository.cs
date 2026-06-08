@@ -64,9 +64,10 @@ public sealed class IndexedDbCompetitionRepository : ICompetitionRepository
 
 	public async Task<IReadOnlyList<Competition>> GetAllAsync()
 	{
-		// Two interop calls, not N+1: keys() and values() both iterate the store in ascending key order, so index i pairs the id with its payload.
-		var ids = await _js.InvokeAsync<int[]>("ffIdb.keys");
-		var payloads = await _js.InvokeAsync<string[]>("ffIdb.values");
+		// One transaction so keys and values are a consistent snapshot — a delete mid-read can't misalign id[i] with payload[i].
+		var entries = await _js.InvokeAsync<JsonElement>("ffIdb.entries");
+		var ids = entries.GetProperty("keys").Deserialize<int[]>()!;
+		var payloads = entries.GetProperty("values").Deserialize<string[]>()!;
 		var result = new List<Competition>(ids.Length);
 		for (int i = 0; i < ids.Length; i++)
 		{

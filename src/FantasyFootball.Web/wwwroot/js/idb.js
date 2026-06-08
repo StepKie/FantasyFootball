@@ -1,8 +1,4 @@
-// IndexedDB-backed store for simulated competitions. Two object stores keyed by
-// repo id: 'competitions' holds the full JSON, 'summaries' holds a tiny list
-// projection so the competitions list never ships or parses every full season.
-// Competitions outgrew localStorage's ~5 MB per-origin cap; IndexedDB draws from
-// the browser's disk-based quota instead.
+// IndexedDB-backed competition store: two object stores ('competitions' full JSON, 'summaries' list projection) keyed by repo id, escaping localStorage's ~5 MB cap.
 window.ffIdb = (() => {
     const DB_NAME = 'fantasy-football';
     const FULL = 'competitions';
@@ -43,7 +39,14 @@ window.ffIdb = (() => {
     return {
         get: (key) => read(FULL, s => s.get(key)),
         keys: () => read(FULL, s => s.getAllKeys()),
-        values: () => read(FULL, s => s.getAll()),
+        // Keys and values from one transaction — a consistent snapshot, so a delete mid-read can't misalign them.
+        entries: () => open().then(db => new Promise((resolve, reject) => {
+            const store = db.transaction(FULL, 'readonly').objectStore(FULL);
+            const keysReq = store.getAllKeys();
+            const valuesReq = store.getAll();
+            store.transaction.oncomplete = () => resolve({ keys: keysReq.result, values: valuesReq.result });
+            store.transaction.onerror = () => reject(store.transaction.error);
+        })),
         summaries: () => read(SUMMARY, s => s.getAll()),
         summaryKeys: () => read(SUMMARY, s => s.getAllKeys()),
         // Full payload and its summary commit together so the list store never drifts from the full store.

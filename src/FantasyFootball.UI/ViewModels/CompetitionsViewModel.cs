@@ -209,8 +209,9 @@ public partial class CompetitionsViewModel : ObservableObject
 		IsLoadingOverall = true;
 		try
 		{
-			// Delay covers the panel's ~300ms expand animation so the (compositor-animated) spinner is painted before the synchronous aggregation blocks the single WASM thread.
-			await Task.Delay(350);
+			// Covers the panel's ~300ms expand animation so the (compositor-animated) spinner paints before the synchronous aggregation blocks the single WASM thread.
+			const int SpinnerPaintDelayMs = 350;
+			await Task.Delay(SpinnerPaintDelayMs);
 			var all = await _repo.GetAllAsync();
 			var scoped = SelectedType is { } t ? all.Where(c => c.Type == t) : all;
 			OverallRecords = ComputeOverallRecords(scoped);
