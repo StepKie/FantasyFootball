@@ -1,3 +1,13 @@
+## [0.7.0](https://github.com/StepKie/FantasyFootball/releases/tag/0.7.0) — 2026-06-08
+
+### New Features
+
+- **Phone-friendly layout** ([PR #71](https://github.com/StepKie/FantasyFootball/pull/71)) — game cards, standings, the competitions list and detail headers all reflow for narrow screens. Game rows stay on one line; long club names like "Borussia Mönchengladbach" use a compact form ("Gladbach") on small cards and break at curated points when the full name still has to fit. Standings tables stay real tables on phones instead of collapsing to stacked label/value rows, and the competitions list shows one row per competition.
+
+### Bugfixes
+
+- **Third-place qualifiers no longer duplicate across knockout slots** ([PR #69](https://github.com/StepKie/FantasyFootball/pull/69)) — in WC48-style formats with overlapping third-place pools, the previous resolver could assign the same team to two Round-of-32 slots and silently corrupt the bracket. Slots now fill via a true matching: every slot gets a team whenever a valid assignment exists, and the qualifiers are exactly the best-ranked teams. An unfillable slot fails loudly instead of silently.
+
 ## [0.6.0](https://github.com/StepKie/FantasyFootball/releases/tag/0.6.0) — 2026-06-02
 
 ### New Features
