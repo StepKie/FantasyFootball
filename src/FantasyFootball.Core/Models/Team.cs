@@ -7,6 +7,9 @@ public class Team : NamedUniqueId
 	public TeamType Type { get; init; }
 	[JsonIgnore] public bool IsNationalTeam => Type is TeamType.NATIONAL_MEN or TeamType.NATIONAL_WOMEN;
 	public virtual string ShortName { get; init; }
+
+	/// <summary>Compact display name for narrow layouts ("Gladbach", "Man City"). Null for national teams, whose names compact via hyphenation instead.</summary>
+	public string? CompactName { get; init; }
 	[JsonIgnore] public virtual string Logo => IconStrings.GetTeamLogo(this);
 
 	public int CountryId { get; set; }

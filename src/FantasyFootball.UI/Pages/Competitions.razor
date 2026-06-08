@@ -5,6 +5,7 @@
 @using FantasyFootball.Models
 @using FantasyFootball.Services
 @using FantasyFootball.UI.Components
+@using FantasyFootball.UI.Helpers
 @using FantasyFootball.UI.ViewModels
 @inject CompetitionsViewModel ViewModel
 @inject IDataService DataService
@@ -74,16 +75,17 @@ else if (ViewModel.FilteredCompetitions.Count == 0)
 }
 else
 {
-  @* Sortable competitions table *@
-  <MudTable Items="ViewModel.FilteredCompetitions" Dense="true" Hover="true"
+  @* Sortable competitions table. Breakpoint.None: keep one row per competition on phones — the stacked label/value fallback can't be scanned as a list. *@
+  <div class="competitions-list">
+  <MudTable Items="ViewModel.FilteredCompetitions" Dense="true" Hover="true" Breakpoint="Breakpoint.None"
             OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<Competition>>(this, args => Nav.NavigateTo($"competitions/{args.Item!.Id}")))"
             T="Competition">
     <HeaderContent>
       <MudTh style="width:1%;"><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.Id)" T="Competition">#</MudTableSortLabel></MudTh>
       <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.Title)" T="Competition">Title</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.SimulationStart ?? DateTime.MinValue)" T="Competition" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => StateOrder(c))" T="Competition">State</MudTableSortLabel></MudTh>
+      <MudTh Class="comp-started"><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.SimulationStart ?? DateTime.MinValue)" T="Competition" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
       <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.WinnerTeamId() ?? string.Empty)" T="Competition">Winner</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => StateOrder(c))" T="Competition">State</MudTableSortLabel></MudTh>
       <MudTh style="width:1%;"></MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -97,10 +99,10 @@ else
       <MudTd DataLabel="Title">
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
           <CompetitionTypeIcon Type="@context.Type" Size="20" />
-          <span>@context.Title</span>
+          <span class="comp-title">@context.Title</span>
         </MudStack>
       </MudTd>
-      <MudTd DataLabel="Started">
+      <MudTd DataLabel="Started" Class="comp-started">
         @if (context.SimulationStart is { } start)
         {
           <span title="@start.ToString("yyyy-MM-dd HH:mm 'UTC'")">@start.ToLocalTime().ToString(start.ToLocalTime().Year < DateTime.Now.Year ? "MMM d, yyyy" : "MMM d, HH:mm")</span>
@@ -108,6 +110,17 @@ else
         else
         {
           <span style="opacity:0.5;">—</span>
+        }
+      </MudTd>
+      <MudTd DataLabel="Winner">
+        @if (isFinished && context.WinnerTeamId() is { } winnerId)
+        {
+          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == context.IsNationalTeamCompetition());
+          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <FlagIcon Team="winner" Code="@winnerId" Size="20" />
+            <span class="@(winner?.CompactName is null ? "" : "team-name-full")">@DisplayHyphenation.Soften(winner?.Name ?? winnerId)</span>
+            @if (winner?.CompactName is { } winnerCompact) { <span class="team-name-compact">@DisplayHyphenation.Soften(winnerCompact)</span> }
+          </MudStack>
         }
       </MudTd>
       <MudTd DataLabel="State">
@@ -122,16 +135,6 @@ else
         else
         {
           <span style="opacity:0.5;">scheduled</span>
-        }
-      </MudTd>
-      <MudTd DataLabel="Winner">
-        @if (isFinished && context.WinnerTeamId() is { } winnerId)
-        {
-          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == context.IsNationalTeamCompetition());
-          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-            <FlagIcon Team="winner" Code="@winnerId" Size="20" />
-            <span>@(winner?.Name ?? winnerId)</span>
-          </MudStack>
         }
       </MudTd>
       <MudTd Style="text-align:right;">
@@ -164,43 +167,48 @@ else
       </MudTd>
     </RowTemplate>
   </MudTable>
+  </div>
 
   @* Overall standings — aggregate across every finished competition in the current filter; capture once so the OverallRecords getter only walks comps × games once per render. *@
   @if (ViewModel.OverallRecords is var overallRecords && overallRecords.Count > 0)
   {
     <MudExpansionPanels Class="mt-4">
       <MudExpansionPanel Text="@($"Overall standings ({overallRecords.Count} teams)")">
-        <MudTable Items="overallRecords" Dense="true" Hover="true" T="TeamRecord">
+        @* Breakpoint.None: keep the real table on phones — the stacked label/value fallback can't be scanned as standings. *@
+        <div class="overall-standings">
+        <MudTable Items="overallRecords" Dense="true" Hover="true" Breakpoint="Breakpoint.None" T="TeamRecord">
           <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Team.Name)" T="TeamRecord">Team</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.CompetitionWins)" T="TeamRecord">Titles</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.MatchesPlayed)" T="TeamRecord">P</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Wins)" T="TeamRecord">W</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Draws)" T="TeamRecord">D</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Losses)" T="TeamRecord">L</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalsFor)" T="TeamRecord">GF</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalsAgainst)" T="TeamRecord">GA</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalDifference)" T="TeamRecord">GD</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Points)" T="TeamRecord" InitialDirection="SortDirection.Descending">Pts</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.CompetitionWins)" T="TeamRecord">Titles</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.MatchesPlayed)" T="TeamRecord">P</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Wins)" T="TeamRecord">W</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Draws)" T="TeamRecord">D</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Losses)" T="TeamRecord">L</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalsFor)" T="TeamRecord">GF</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalsAgainst)" T="TeamRecord">GA</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalDifference)" T="TeamRecord">GD</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Points)" T="TeamRecord" InitialDirection="SortDirection.Descending">Pts</MudTableSortLabel></MudTh>
           </HeaderContent>
           <RowTemplate>
             <MudTd DataLabel="Team">
               <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
                 <FlagIcon Team="context.Team" Size="20" />
-                <span>@context.Team.Name</span>
+                <span class="@(context.Team.CompactName is null ? "" : "team-name-full")">@DisplayHyphenation.Soften(context.Team.Name)</span>
+                @if (context.Team.CompactName is { } compact) { <span class="team-name-compact">@DisplayHyphenation.Soften(compact)</span> }
               </MudStack>
             </MudTd>
-            <MudTd DataLabel="Titles">@context.CompetitionWins</MudTd>
-            <MudTd DataLabel="P">@context.MatchesPlayed</MudTd>
-            <MudTd DataLabel="W">@context.Wins</MudTd>
-            <MudTd DataLabel="D">@context.Draws</MudTd>
-            <MudTd DataLabel="L">@context.Losses</MudTd>
-            <MudTd DataLabel="GF">@context.GoalsFor</MudTd>
-            <MudTd DataLabel="GA">@context.GoalsAgainst</MudTd>
-            <MudTd DataLabel="GD">@context.GoalDifference</MudTd>
-            <MudTd DataLabel="Pts"><strong>@context.Points</strong></MudTd>
+            <MudTd DataLabel="Titles" Class="standings-num">@context.CompetitionWins</MudTd>
+            <MudTd DataLabel="P" Class="standings-num">@context.MatchesPlayed</MudTd>
+            <MudTd DataLabel="W" Class="standings-num">@context.Wins</MudTd>
+            <MudTd DataLabel="D" Class="standings-num">@context.Draws</MudTd>
+            <MudTd DataLabel="L" Class="standings-num">@context.Losses</MudTd>
+            <MudTd DataLabel="GF" Class="standings-num">@context.GoalsFor</MudTd>
+            <MudTd DataLabel="GA" Class="standings-num">@context.GoalsAgainst</MudTd>
+            <MudTd DataLabel="GD" Class="standings-num">@context.GoalDifference</MudTd>
+            <MudTd DataLabel="Pts" Class="standings-num"><strong>@context.Points</strong></MudTd>
           </RowTemplate>
         </MudTable>
+        </div>
       </MudExpansionPanel>
     </MudExpansionPanels>
   }

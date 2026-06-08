@@ -33,7 +33,7 @@ $UA           = 'FantasyFootball-LeagueFetch/0.1 (https://github.com/StepKie/Fan
 $ClubEloName  = 'Clubs 2025-2026'
 $ClubEloDate  = '2025-08-15'   # one ClubElo snapshot near the 2025-26 season start, covering every league
 
-# Roster columns, pipe-delimited:  CODE | openfootball name | clubelo name | crest filename (no .png) | display name (en)
+# Roster columns, pipe-delimited:  CODE | openfootball name | clubelo name | crest filename (no .png) | display name (en) | short display name (optional; defaults to the clubelo name)
 # Codes are unique among clubs; collisions with national-team codes are fine (records aggregate per (isNational, code)).
 # Avoid Windows reserved device names as codes (CON, PRN, AUX, NUL, COM1-9, LPT1-9) — the lowercase {code}.png crest is unwritable. (AJ Auxerre is AJA, not AUX.)
 $Leagues = @(
@@ -57,9 +57,9 @@ FCA|FC Augsburg|Augsburg|FC Augsburg|FC Augsburg
 SVW|SV Werder Bremen|Werder|SV Werder Bremen|Werder Bremen
 TSG|TSG 1899 Hoffenheim|Hoffenheim|TSG 1899 Hoffenheim|TSG 1899 Hoffenheim
 FCH|1. FC Heidenheim 1846|Heidenheim|1.FC Heidenheim 1846|1. FC Heidenheim
-STP|FC St. Pauli 1910|St Pauli|FC St. Pauli|FC St. Pauli
-HSV|Hamburger SV|Hamburg|Hamburger SV|Hamburger SV
-KOE|1. FC Köln|Koeln|1.FC Köln|1. FC Köln
+STP|FC St. Pauli 1910|St Pauli|FC St. Pauli|FC St. Pauli|St. Pauli
+HSV|Hamburger SV|Hamburg|Hamburger SV|Hamburger SV|HSV
+KOE|1. FC Köln|Koeln|1.FC Köln|1. FC Köln|Köln
 '@
     },
     @{
@@ -123,8 +123,8 @@ UDI|Udinese Calcio|Udinese|Udinese Calcio|Udinese
         Roster = @'
 ATH|Athletic Club|Bilbao|Athletic Bilbao|Athletic Bilbao
 OSA|CA Osasuna|Osasuna|CA Osasuna|Osasuna
-ATM|Club Atlético de Madrid|Atletico|Atlético de Madrid|Atlético Madrid
-ALA|Deportivo Alavés|Alaves|Deportivo Alavés|Deportivo Alavés
+ATM|Club Atlético de Madrid|Atletico|Atlético de Madrid|Atlético Madrid|Atlético
+ALA|Deportivo Alavés|Alaves|Deportivo Alavés|Deportivo Alavés|Alavés
 ELC|Elche CF|Elche|Elche CF|Elche
 BAR|FC Barcelona|Barcelona|FC Barcelona|Barcelona
 GET|Getafe CF|Getafe|Getafe CF|Getafe
@@ -199,7 +199,7 @@ function ConvertTo-Roster {
         $line = $line.Trim()
         if ([string]::IsNullOrWhiteSpace($line)) { continue }
         $p = $line -split '\|'
-        $map[$p[0]] = @{ Code = $p[0]; OpenFootball = $p[1]; Elo = $p[2]; Crest = $p[3]; En = $p[4] }
+        $map[$p[0]] = @{ Code = $p[0]; OpenFootball = $p[1]; Elo = $p[2]; Crest = $p[3]; En = $p[4]; Short = ($p.Length -ge 6 -and $p[5]) ? $p[5] : $p[2] }
     }
     return $map
 }
@@ -300,7 +300,7 @@ foreach ($lg in $Leagues) {
     }
     Write-Host "  -> crests: $okCrests/$($roster.Count)" -ForegroundColor Green
 
-    foreach ($r in $roster.Values) { $newClubs[$r.Code] = @{ En = $r.En; Country = $lg.Country } }
+    foreach ($r in $roster.Values) { $newClubs[$r.Code] = @{ En = $r.En; Country = $lg.Country; Short = $r.Short } }
 }
 
 # --- Combined club EloSet: one ClubElo snapshot covering every league's clubs ---
@@ -340,7 +340,8 @@ if ($toAdd) {
     "name": {
       "en": "$en"
     },
-    "country": "$($_.Value.Country)"
+    "country": "$($_.Value.Country)",
+    "short": "$($_.Value.Short)"
   }
 "@
     }

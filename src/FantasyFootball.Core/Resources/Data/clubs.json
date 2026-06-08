@@ -5,7 +5,8 @@
       "en": "Bayer 04 Leverkusen",
       "de": "Bayer 04 Leverkusen"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Leverkusen"
   },
   {
     "code": "BMG",
@@ -13,7 +14,8 @@
       "en": "Borussia Mönchengladbach",
       "de": "Borussia Mönchengladbach"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Gladbach"
   },
   {
     "code": "BVB",
@@ -21,7 +23,8 @@
       "en": "Borussia Dortmund",
       "de": "Borussia Dortmund"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Dortmund"
   },
   {
     "code": "FCA",
@@ -29,7 +32,8 @@
       "en": "FC Augsburg",
       "de": "FC Augsburg"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Augsburg"
   },
   {
     "code": "FCB",
@@ -37,7 +41,8 @@
       "en": "FC Bayern Munich",
       "de": "FC Bayern München"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Bayern"
   },
   {
     "code": "FCH",
@@ -45,7 +50,8 @@
       "en": "1. FC Heidenheim",
       "de": "1. FC Heidenheim"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Heidenheim"
   },
   {
     "code": "FCU",
@@ -53,7 +59,8 @@
       "en": "1. FC Union Berlin",
       "de": "1. FC Union Berlin"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Union Berlin"
   },
   {
     "code": "HSV",
@@ -61,7 +68,8 @@
       "en": "Hamburger SV",
       "de": "Hamburger SV"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "HSV"
   },
   {
     "code": "KOE",
@@ -69,7 +77,8 @@
       "en": "1. FC Köln",
       "de": "1. FC Köln"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Köln"
   },
   {
     "code": "M05",
@@ -77,7 +86,8 @@
       "en": "1. FSV Mainz 05",
       "de": "1. FSV Mainz 05"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Mainz"
   },
   {
     "code": "RBL",
@@ -85,7 +95,8 @@
       "en": "RB Leipzig",
       "de": "RB Leipzig"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "RB Leipzig"
   },
   {
     "code": "SCF",
@@ -93,7 +104,8 @@
       "en": "SC Freiburg",
       "de": "SC Freiburg"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Freiburg"
   },
   {
     "code": "SGE",
@@ -101,7 +113,8 @@
       "en": "Eintracht Frankfurt",
       "de": "Eintracht Frankfurt"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Frankfurt"
   },
   {
     "code": "STP",
@@ -109,7 +122,8 @@
       "en": "FC St. Pauli",
       "de": "FC St. Pauli"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "St. Pauli"
   },
   {
     "code": "SVW",
@@ -117,7 +131,8 @@
       "en": "Werder Bremen",
       "de": "Werder Bremen"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Werder"
   },
   {
     "code": "TSG",
@@ -125,7 +140,8 @@
       "en": "TSG 1899 Hoffenheim",
       "de": "TSG 1899 Hoffenheim"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Hoffenheim"
   },
   {
     "code": "VFB",
@@ -133,7 +149,8 @@
       "en": "VfB Stuttgart",
       "de": "VfB Stuttgart"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Stuttgart"
   },
   {
     "code": "WOB",
@@ -141,552 +158,631 @@
       "en": "VfL Wolfsburg",
       "de": "VfL Wolfsburg"
     },
-    "country": "GER"
+    "country": "GER",
+    "short": "Wolfsburg"
   },
   {
     "code": "BOU",
     "name": {
       "en": "AFC Bournemouth"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Bournemouth"
   },
   {
     "code": "ARS",
     "name": {
       "en": "Arsenal"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Arsenal"
   },
   {
     "code": "AVL",
     "name": {
       "en": "Aston Villa"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Aston Villa"
   },
   {
     "code": "BRE",
     "name": {
       "en": "Brentford"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Brentford"
   },
   {
     "code": "BHA",
     "name": {
       "en": "Brighton & Hove Albion"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Brighton"
   },
   {
     "code": "BUR",
     "name": {
       "en": "Burnley"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Burnley"
   },
   {
     "code": "CHE",
     "name": {
       "en": "Chelsea"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Chelsea"
   },
   {
     "code": "CRY",
     "name": {
       "en": "Crystal Palace"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Crystal Palace"
   },
   {
     "code": "EVE",
     "name": {
       "en": "Everton"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Everton"
   },
   {
     "code": "FUL",
     "name": {
       "en": "Fulham"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Fulham"
   },
   {
     "code": "LEE",
     "name": {
       "en": "Leeds United"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Leeds"
   },
   {
     "code": "LIV",
     "name": {
       "en": "Liverpool"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Liverpool"
   },
   {
     "code": "MCI",
     "name": {
       "en": "Manchester City"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Man City"
   },
   {
     "code": "MUN",
     "name": {
       "en": "Manchester United"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Man United"
   },
   {
     "code": "NEW",
     "name": {
       "en": "Newcastle United"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Newcastle"
   },
   {
     "code": "NFO",
     "name": {
       "en": "Nottingham Forest"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Forest"
   },
   {
     "code": "SUN",
     "name": {
       "en": "Sunderland"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Sunderland"
   },
   {
     "code": "TOT",
     "name": {
       "en": "Tottenham Hotspur"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Tottenham"
   },
   {
     "code": "WHU",
     "name": {
       "en": "West Ham United"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "West Ham"
   },
   {
     "code": "WOL",
     "name": {
       "en": "Wolverhampton Wanderers"
     },
-    "country": "ENG"
+    "country": "ENG",
+    "short": "Wolves"
   },
   {
     "code": "MIL",
     "name": {
       "en": "AC Milan"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Milan"
   },
   {
     "code": "PIS",
     "name": {
       "en": "Pisa"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Pisa"
   },
   {
     "code": "FIO",
     "name": {
       "en": "Fiorentina"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Fiorentina"
   },
   {
     "code": "ROM",
     "name": {
       "en": "AS Roma"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Roma"
   },
   {
     "code": "ATA",
     "name": {
       "en": "Atalanta"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Atalanta"
   },
   {
     "code": "BOL",
     "name": {
       "en": "Bologna"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Bologna"
   },
   {
     "code": "CAG",
     "name": {
       "en": "Cagliari"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Cagliari"
   },
   {
     "code": "COM",
     "name": {
       "en": "Como"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Como"
   },
   {
     "code": "INT",
     "name": {
       "en": "Inter"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Inter"
   },
   {
     "code": "GEN",
     "name": {
       "en": "Genoa"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Genoa"
   },
   {
     "code": "VER",
     "name": {
       "en": "Hellas Verona"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Verona"
   },
   {
     "code": "JUV",
     "name": {
       "en": "Juventus"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Juventus"
   },
   {
     "code": "PAR",
     "name": {
       "en": "Parma"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Parma"
   },
   {
     "code": "LAZ",
     "name": {
       "en": "Lazio"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Lazio"
   },
   {
     "code": "NAP",
     "name": {
       "en": "Napoli"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Napoli"
   },
   {
     "code": "TOR",
     "name": {
       "en": "Torino"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Torino"
   },
   {
     "code": "CRE",
     "name": {
       "en": "Cremonese"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Cremonese"
   },
   {
     "code": "LEC",
     "name": {
       "en": "Lecce"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Lecce"
   },
   {
     "code": "SAS",
     "name": {
       "en": "Sassuolo"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Sassuolo"
   },
   {
     "code": "UDI",
     "name": {
       "en": "Udinese"
     },
-    "country": "ITA"
+    "country": "ITA",
+    "short": "Udinese"
   },
   {
     "code": "ATH",
     "name": {
       "en": "Athletic Bilbao"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Bilbao"
   },
   {
     "code": "OSA",
     "name": {
       "en": "Osasuna"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Osasuna"
   },
   {
     "code": "ATM",
     "name": {
       "en": "Atlético Madrid"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Atlético"
   },
   {
     "code": "ALA",
     "name": {
       "en": "Deportivo Alavés"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Alavés"
   },
   {
     "code": "ELC",
     "name": {
       "en": "Elche"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Elche"
   },
   {
     "code": "BAR",
     "name": {
       "en": "Barcelona"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Barcelona"
   },
   {
     "code": "GET",
     "name": {
       "en": "Getafe"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Getafe"
   },
   {
     "code": "GIR",
     "name": {
       "en": "Girona"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Girona"
   },
   {
     "code": "LEV",
     "name": {
       "en": "Levante"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Levante"
   },
   {
     "code": "CEL",
     "name": {
       "en": "Celta Vigo"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Celta"
   },
   {
     "code": "ESY",
     "name": {
       "en": "Espanyol"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Espanyol"
   },
   {
     "code": "MLL",
     "name": {
       "en": "Mallorca"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Mallorca"
   },
   {
     "code": "RAY",
     "name": {
       "en": "Rayo Vallecano"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Rayo Vallecano"
   },
   {
     "code": "BET",
     "name": {
       "en": "Real Betis"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Betis"
   },
   {
     "code": "RMA",
     "name": {
       "en": "Real Madrid"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Real Madrid"
   },
   {
     "code": "OVI",
     "name": {
       "en": "Real Oviedo"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Oviedo"
   },
   {
     "code": "RSO",
     "name": {
       "en": "Real Sociedad"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Sociedad"
   },
   {
     "code": "SEV",
     "name": {
       "en": "Sevilla"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Sevilla"
   },
   {
     "code": "VAL",
     "name": {
       "en": "Valencia"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Valencia"
   },
   {
     "code": "VIL",
     "name": {
       "en": "Villarreal"
     },
-    "country": "ESP"
+    "country": "ESP",
+    "short": "Villarreal"
   },
   {
     "code": "AJA",
     "name": {
       "en": "Auxerre"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Auxerre"
   },
   {
     "code": "ASM",
     "name": {
       "en": "Monaco"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Monaco"
   },
   {
     "code": "ANG",
     "name": {
       "en": "Angers"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Angers"
   },
   {
     "code": "LOR",
     "name": {
       "en": "Lorient"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Lorient"
   },
   {
     "code": "MET",
     "name": {
       "en": "Metz"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Metz"
   },
   {
     "code": "NAN",
     "name": {
       "en": "Nantes"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Nantes"
   },
   {
     "code": "LEH",
     "name": {
       "en": "Le Havre"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Le Havre"
   },
   {
     "code": "LIL",
     "name": {
       "en": "Lille"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Lille"
   },
   {
     "code": "NIC",
     "name": {
       "en": "Nice"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Nice"
   },
   {
     "code": "LYO",
     "name": {
       "en": "Lyon"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Lyon"
   },
   {
     "code": "MAR",
     "name": {
       "en": "Marseille"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Marseille"
   },
   {
     "code": "PFC",
     "name": {
       "en": "Paris FC"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Paris FC"
   },
   {
     "code": "PSG",
     "name": {
       "en": "Paris Saint-Germain"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Paris SG"
   },
   {
     "code": "STR",
     "name": {
       "en": "Strasbourg"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Strasbourg"
   },
   {
     "code": "LEN",
     "name": {
       "en": "Lens"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Lens"
   },
   {
     "code": "BRS",
     "name": {
       "en": "Brest"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Brest"
   },
   {
     "code": "REN",
     "name": {
       "en": "Rennes"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Rennes"
   },
   {
     "code": "TOU",
     "name": {
       "en": "Toulouse"
     },
-    "country": "FRA"
+    "country": "FRA",
+    "short": "Toulouse"
   }
 ]

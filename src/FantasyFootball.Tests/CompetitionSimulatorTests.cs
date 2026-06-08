@@ -121,4 +121,49 @@ public class CompetitionSimulatorTests
 			}
 		}
 	}
+
+	[Fact]
+	public void ResolveAvailableKoTeams_RankingThatStrandsFirstFit_FillsAllPoolSlotsWithTopEight()
+	{
+		// Ranking B, F, E, I, J, … strands slot B/E/F/I/J3 under first-fit: every eligible team gets diverted into an earlier slot.
+		var c = _definitions.Load("wm-2026");
+		string[] rankedLetters = ["B", "F", "E", "I", "J", "A", "C", "D", "G", "H", "K", "L"];
+		for (var i = 0; i < rankedLetters.Length; i++)
+		{
+			ScriptGroup(c, rankedLetters[i], thirdPlaceGoals: 14 - i);
+		}
+
+		CompetitionSimulator.ResolveAvailableKoTeams(c);
+
+		var poolTeams = new List<string>();
+		foreach (var ko in c.Games.OfType<KoGame>())
+		{
+			if (QualifierParser.TryParse(ko.HomeQual, out var qh) && qh is ThirdPlacePool) { poolTeams.Add(ko.HomeTeamId); }
+			if (QualifierParser.TryParse(ko.AwayQual, out var qa) && qa is ThirdPlacePool) { poolTeams.Add(ko.AwayTeamId); }
+		}
+		var topEight = rankedLetters.Take(8).Select(l => c.Standings(l)[2].TeamId);
+
+		poolTeams.Should().BeEquivalentTo(topEight, "the 8 best-ranked 3rd-placers qualify, each in exactly one R32 slot");
+	}
+
+	/// <summary>
+	/// Scripts a group deterministically: the alphabetical 1st beats everyone,
+	/// 2nd beats 3rd and 4th, 3rd beats 4th by <paramref name="thirdPlaceGoals"/> —
+	/// which controls the 3rd-placer's GD/GF and thereby its global pool rank.
+	/// </summary>
+	static void ScriptGroup(Competition c, string letter, int thirdPlaceGoals)
+	{
+		var ordered = c.GroupGames(letter)
+			.SelectMany(g => new[] { g.HomeTeamId, g.AwayTeamId })
+			.Distinct()
+			.OrderBy(t => t, StringComparer.Ordinal)
+			.ToList();
+		foreach (var game in c.GroupGames(letter))
+		{
+			var home = ordered.IndexOf(game.HomeTeamId);
+			var away = ordered.IndexOf(game.AwayTeamId);
+			var goals = Math.Min(home, away) == 2 ? thirdPlaceGoals : 1;
+			game.Result = home < away ? new Result(goals, 0, GameEnd.NORMAL) : new Result(0, goals, GameEnd.NORMAL);
+		}
+	}
 }

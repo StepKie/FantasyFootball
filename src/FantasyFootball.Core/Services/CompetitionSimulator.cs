@@ -121,13 +121,16 @@ public sealed class CompetitionSimulator
 
 	/// <summary>
 	/// Batch-assign 3rd-place pool slots. Globally ranks 3rd-placers across all groups
-	/// referenced by any pool slot, takes the top N (where N = number of pool slots),
-	/// and greedily assigns each to a slot whose <see cref="ThirdPlacePool.EligibleGroups"/>
-	/// includes the team's group letter.
+	/// referenced by any pool slot, then matches teams to slots in rank order via
+	/// augmenting paths (Kuhn's algorithm): a team whose eligible slots are all taken
+	/// may relocate an earlier qualifier to one of its alternative slots. Guarantees
+	/// every slot fills whenever a valid assignment exists, and that the qualifiers
+	/// are exactly the best-ranked assignable teams — first-fit can strand a slot
+	/// whose eligible teams were all diverted into earlier slots.
 	///
-	/// Only fills NULL slots — preserves existing assignments. Subsequent calls hit
-	/// an empty <c>poolSlots</c> and return immediately, keeping the post-sim refresh
-	/// path cheap on every game tick.
+	/// No-op until every referenced group completes, then fills all pool slots in one
+	/// pass; subsequent calls collect no uninitialized pool slots and return
+	/// immediately, keeping the post-sim refresh path cheap on every game tick.
 	/// </summary>
 	static void ResolveThirdPlacePools(Competition c)
 	{
@@ -168,17 +171,44 @@ public sealed class CompetitionSimulator
 			.ThenBy(x => x.Standing.TeamId, StringComparer.Ordinal)
 			.ToList();
 
-		// Greedy best-team-first; if a team's letter isn't in any remaining slot's eligibles we skip it and try the next, until `remaining` is empty.
-		var remaining = new List<(KoGame Game, bool IsHome, ThirdPlacePool Pool)>(poolSlots);
-		foreach (var (letter, standing) in thirdPlacers)
+		// slotTeam[s] = index into thirdPlacers occupying slot s, -1 = free.
+		var slotTeam = new int[poolSlots.Count];
+		Array.Fill(slotTeam, -1);
+
+		// Kuhn's augmenting path: claim a free eligible slot, or recursively relocate its occupant to one of their alternatives.
+		bool TryPlace(int teamIdx, bool[] visited)
 		{
-			if (remaining.Count == 0) { break; }
-			var idx = remaining.FindIndex(s => s.Pool.EligibleGroups.Contains(letter));
-			if (idx < 0) { continue; }
-			var slot = remaining[idx];
-			if (slot.IsHome) { slot.Game.HomeTeamId = standing.TeamId; }
-			else { slot.Game.AwayTeamId = standing.TeamId; }
-			remaining.RemoveAt(idx);
+			for (var s = 0; s < poolSlots.Count; s++)
+			{
+				if (visited[s] || !poolSlots[s].Pool.EligibleGroups.Contains(thirdPlacers[teamIdx].Letter)) { continue; }
+				visited[s] = true;
+				if (slotTeam[s] < 0 || TryPlace(slotTeam[s], visited))
+				{
+					slotTeam[s] = teamIdx;
+					return true;
+				}
+			}
+			return false;
+		}
+
+		var filled = 0;
+		for (var t = 0; t < thirdPlacers.Count && filled < poolSlots.Count; t++)
+		{
+			if (TryPlace(t, new bool[poolSlots.Count])) { filled++; }
+		}
+
+		if (filled < poolSlots.Count)
+		{
+			throw new InvalidOperationException(
+				$"Third-place pools in '{c.DefinitionId}' leave {poolSlots.Count - filled} of {poolSlots.Count} slots unfillable.");
+		}
+
+		for (var s = 0; s < poolSlots.Count; s++)
+		{
+			var (game, isHome, _) = poolSlots[s];
+			var teamId = thirdPlacers[slotTeam[s]].Standing.TeamId;
+			if (isHome) { game.HomeTeamId = teamId; }
+			else { game.AwayTeamId = teamId; }
 		}
 	}
 }

@@ -70,6 +70,7 @@ public class JsonDataService : IDataService
 			Type = TeamType.CLUB_MEN,
 			ShortName = s.Code,
 			Name = s.Name.GetValueOrDefault(_languageId) ?? s.Name.GetValueOrDefault("en") ?? s.Code,
+			CompactName = s.Short,
 			Country = countryByCode3[s.Country],
 		});
 		return nationalTeams.Concat(clubTeams).ToList();
@@ -172,5 +173,6 @@ public class JsonDataService : IDataService
 		public string Code { get; set; } = "";
 		public Dictionary<string, string> Name { get; set; } = [];
 		public string Country { get; set; } = "";
+		public string? Short { get; set; }
 	}
 }
