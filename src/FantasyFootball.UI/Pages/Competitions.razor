@@ -209,7 +209,7 @@ else
           <RowTemplate>
             <MudTd DataLabel="Team">
               <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                <FlagIcon Team="context.Team" Size="20" />
+                <FlagIcon Team="context.Team" Code="@context.Team.ShortName" Size="20" />
                 <span class="@(context.Team.CompactName is null ? "" : "team-name-full")">@DisplayHyphenation.Soften(context.Team.Name)</span>
                 @if (context.Team.CompactName is { } compact) { <span class="team-name-compact">@DisplayHyphenation.Soften(compact)</span> }
               </MudStack>

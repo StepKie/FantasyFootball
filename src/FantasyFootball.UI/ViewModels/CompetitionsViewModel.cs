@@ -141,7 +141,8 @@ public partial class CompetitionsViewModel : ObservableObject
 			.Select(kv =>
 			{
 				var lookup = kv.Key.IsNational ? nationsByCode : clubsByCode;
-				var team = lookup.TryGetValue(kv.Key.Code, out var t) ? t : new Team { Name = kv.Key.Code, ShortName = kv.Key.Code };
+				// Type drives FlagIcon's club-crest-vs-flag routing; a code missing from the registry (e.g. CIS) must keep its national type or it 404s on a club crest.
+				var team = lookup.TryGetValue(kv.Key.Code, out var t) ? t : new Team { Name = kv.Key.Code, ShortName = kv.Key.Code, Type = kv.Key.IsNational ? TeamType.NATIONAL_MEN : TeamType.CLUB_MEN };
 
 				return new TeamRecord(team,
 					kv.Value.Wins, kv.Value.Draws, kv.Value.Losses,
