@@ -4,10 +4,10 @@ using FantasyFootball.Repositories;
 namespace FantasyFootball.Services;
 
 /// <summary>
-/// Cross-competition head-to-head tally for the Competition store.
-/// Walks every stored Competition's finished games once. Matches teams
-/// by their ShortName id — works regardless of whether games are KO (with
-/// resolved <c>HomeTeamId</c> / <c>AwayTeamId</c>) or group (with init-only ids).
+/// Cross-competition head-to-head tally for the Competition store. Walks every
+/// stored competition's finished games once, matching teams by their ShortName id —
+/// works for both KO (resolved <c>HomeTeamId</c> / <c>AwayTeamId</c>) and group
+/// (init-only id) games. The repo caches the bulk load, so repeat lookups are cheap.
 /// </summary>
 public static class HeadToHeadLookup
 {
