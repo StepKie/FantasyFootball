@@ -347,9 +347,11 @@ else
       if (ViewModel.RecentlyFinishedGameId is { } rfid && rfid != _lastScrolledJustFinishedId)
       {
         _lastScrolledJustFinishedId = rfid;
-        // Bump so the post-pulse render doesn't re-scroll to current and yank the result out of view.
-        _lastScrolledCurrentGameId = ViewModel.Competition?.CurrentGame()?.Id;
-        await JS.InvokeVoidAsync("ffScroll.toElement", "just-finished-game");
+        // Bump to where SelectedRoundId is *going* to be after RefreshAfterSim — CurrentGame.RoundId — not where it is right now; the post-pulse render lands after that update.
+        var nextCurrent = ViewModel.Competition?.CurrentGame();
+        _lastScrolledCurrentGameId = nextCurrent?.Id;
+        _lastScrolledRoundId = nextCurrent?.RoundId ?? ViewModel.SelectedRoundId;
+        await JS.InvokeVoidAsync("ffScroll.toElement", "just-finished-game", "center");
         return;
       }
 
@@ -357,7 +359,7 @@ else
       if (currentGame is { Id: var cgid } && cgid != _lastScrolledCurrentGameId)
       {
         _lastScrolledCurrentGameId = cgid;
-        await JS.InvokeVoidAsync("ffScroll.toElement", "current-game");
+        await JS.InvokeVoidAsync("ffScroll.toElement", "current-game", "center");
         return;
       }
 

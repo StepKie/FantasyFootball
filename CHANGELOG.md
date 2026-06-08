@@ -1,3 +1,12 @@
+## [0.7.1](https://github.com/StepKie/FantasyFootball/releases/tag/0.7.1) — 2026-06-08
+
+### Bugfixes
+
+- **Round-of-32 duplicates closed** ([PR #73](https://github.com/StepKie/FantasyFootball/pull/73)) — group-position knockout slots (Group A runner-up, Group B runner-up, …) could lock to mid-group standings the moment the first group game scored, and never refreshed as more games played. When the third-place pool later resolved against final standings, the same team could end up in both a group-position slot and a pool slot. Slots now track live standings and only freeze when their game is actually played; as a bonus, the Round-of-32 bracket now shows live predicted matchups that update as group standings shift.
+- **Round of 32 fills in when you reopen a competition mid-tournament** ([PR #73](https://github.com/StepKie/FantasyFootball/pull/73)) — closing the page on the last group game and reopening used to show qualifier placeholders ("Group A runner-up", "Best 3rd of A/B/C/D/F") instead of resolved team names. The bracket now resolves on load.
+- **Played-game result no longer hides behind the title bar on phone** ([PR #73](https://github.com/StepKie/FantasyFootball/pull/73)) — playing a game now centers the just-finished row in view with context above and below, instead of sliding it under the sticky app bar.
+- **End-of-round no longer yanks the bracket forward before you can read the result** ([PR #73](https://github.com/StepKie/FantasyFootball/pull/73)) — playing the last game of a round used to scroll the page to the next round about a second later, taking the just-finished result off-screen. The view now stays on the result.
+
 ## [0.7.0](https://github.com/StepKie/FantasyFootball/releases/tag/0.7.0) — 2026-06-08
 
 ### New Features
