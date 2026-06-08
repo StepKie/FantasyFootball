@@ -130,6 +130,9 @@ public partial class CompetitionDetailViewModel : ObservableObject
 		_scoreModel = HistoricalScoreModelResolver.Resolve(Competition, _entityRepo)
 			?? throw new InvalidOperationException($"Cannot resolve EloSet '{Competition.EloSetName}' for competition '{Competition.DefinitionId}'.");
 
+		// SimulateGame saves before RefreshAfterSim — a comp saved on the last group game lands here with unresolved R32 slots.
+		CompetitionSimulator.ResolveAvailableKoTeams(Competition);
+
 		var currentGame = Competition.CurrentGame();
 		var currentRoundId = currentGame?.RoundId
 			?? Competition.Rounds.OrderByDescending(r => r.Order).FirstOrDefault()?.Id;
