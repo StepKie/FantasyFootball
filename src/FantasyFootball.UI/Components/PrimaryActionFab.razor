@@ -1,0 +1,21 @@
+@* Primary thumb-zone action — fixed bottom-center so it's reachable one-handed on phones. De-emphasized on desktop, where Space / inline controls drive play. *@
+<div class="primary-action-fab @(MobileOnly ? "primary-action-fab-mobile-only" : "")">
+  <MudFab Color="Color.Primary"
+          Size="Size.Large"
+          StartIcon="@Icon"
+          Href="@Href"
+          OnClick="OnClick"
+          Disabled="Disabled"
+          title="@Title" />
+</div>
+
+@code {
+  [Parameter] public string Icon { get; set; } = Icons.Material.Filled.PlayArrow;
+  [Parameter] public string? Href { get; set; }
+  [Parameter] public EventCallback OnClick { get; set; }
+  [Parameter] public string? Title { get; set; }
+  [Parameter] public bool Disabled { get; set; }
+
+  /// <summary>Show only on phones — for actions that already have a keyboard / inline equivalent on desktop (e.g. Space to play).</summary>
+  [Parameter] public bool MobileOnly { get; set; }
+}
