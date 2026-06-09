@@ -162,6 +162,9 @@
   string? _awayCompact;
   string _groupLetter = "";
   bool _prevDetailsOpen;
+  int _resolvedGameId = -1;
+  string? _resolvedHomeId;
+  string? _resolvedAwayId;
   string? _lastFetchedHomeId;
   string? _lastFetchedAwayId;
   MatchProbability.Prediction _prob;
@@ -172,9 +175,16 @@
     var homeId = Game.HomeTeamId;
     var awayId = Game.AwayTeamId;
     var isNational = Competition?.IsNationalTeamCompetition() ?? true;
-    _homeTeam = homeId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == homeId && t.IsNationalTeam == isNational);
-    _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId && t.IsNationalTeam == isNational);
-    _venue = Game.VenueId is { } vid ? VenueRegistry.Get(vid) : null;
+    // Team lookups scan AllTeams (O(teams)); they only change with the game's teams, so skip them when unchanged — else a popover toggle re-scans every row in a 300+-game league.
+    if (homeId != _resolvedHomeId || awayId != _resolvedAwayId || Game.Id != _resolvedGameId)
+    {
+      _resolvedHomeId = homeId;
+      _resolvedAwayId = awayId;
+      _resolvedGameId = Game.Id;
+      _homeTeam = homeId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == homeId && t.IsNationalTeam == isNational);
+      _awayTeam = awayId is null ? null : DataService.AllTeams.FirstOrDefault(t => t.ShortName == awayId && t.IsNationalTeam == isNational);
+      _venue = Game.VenueId is { } vid ? VenueRegistry.Get(vid) : null;
+    }
 
     // Resolved team → Name; unresolved KO slot → "Winner of R16 #1"; otherwise raw id.
     _homeLabel = DisplayHyphenation.Soften(_homeTeam?.Name ?? LabelForUnresolved(Game, isHome: true) ?? homeId ?? "?");

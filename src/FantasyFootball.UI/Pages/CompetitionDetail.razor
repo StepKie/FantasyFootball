@@ -73,16 +73,18 @@ else
 
     @if (ViewModel.IsFinished)
     {
-      @* Big circular Replay button — mirrors the Play FAB on /competitions and /competitions/setup
-         so the click-through visually flows. Lands on the new (scheduled) competition's detail page. *@
-      <MudStack AlignItems="AlignItems.Center" Class="my-2">
-        <MudFab Color="Color.Primary"
-                Size="Size.Large"
-                StartIcon="@Icons.Material.Filled.Refresh"
-                OnClick="HandleReplay"
-                Disabled="ViewModel.IsBusy"
-                title="Replay (clone this competition with the same teams)" />
-      </MudStack>
+      <PrimaryActionFab Icon="@Icons.Material.Filled.Refresh"
+                        OnClick="HandleReplay"
+                        Disabled="ViewModel.IsBusy"
+                        Title="Replay (clone this competition with the same teams)" />
+    }
+    else
+    {
+      @* Play-next: a phone-only thumb affordance — desktop uses Space / the inline play buttons. *@
+      <PrimaryActionFab OnClick="ViewModel.SimulateGame"
+                        Disabled="ViewModel.IsBusy"
+                        Title="Play the next game"
+                        MobileOnly="true" />
     }
 
     @* Hierarchical timeline pickers: Stage chips on top, Round chips below.
@@ -343,6 +345,9 @@ else
         await JS.InvokeVoidAsync("ffKeyboard.registerDocumentHandler", _selfRef);
         await JS.InvokeVoidAsync("ffPopover.registerOutsideClickHandler", _selfRef);
       }
+
+      // Skip auto-scroll mid-sim: the games have advanced but the just-finished pulse isn't set yet, so scrolling now lands on the next game and then again on the result — the double-jump.
+      if (ViewModel.IsBusy) { return; }
 
       if (ViewModel.RecentlyFinishedGameId is { } rfid && rfid != _lastScrolledJustFinishedId)
       {

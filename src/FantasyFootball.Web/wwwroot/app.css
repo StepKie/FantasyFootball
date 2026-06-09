@@ -571,6 +571,32 @@ body {
   .timeline-label { min-width: 2.75rem; }
   .timeline-chips::before { display: none; }
   .comp-heading { font-size: 1.15rem; }
+  /* Clearance so the fixed primary-action FAB doesn't cover the last row. */
+  .mud-main-content { padding-bottom: 5rem; }
+}
+
+/* Primary action: centered in-flow on desktop (sits with the content, not floating over it);
+   a fixed bottom-center FAB only on phones, where one-handed thumb reach is the point. */
+.primary-action-fab {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0 1rem;
+}
+@media (max-width: 599px) {
+  .primary-action-fab {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 1.25rem;
+    margin: 0;
+    z-index: 1100;
+    pointer-events: none; /* the full-width wrapper mustn't block content; the FAB re-enables itself */
+  }
+  .primary-action-fab > * { pointer-events: auto; }
+}
+@media (min-width: 600px) {
+  /* The play FAB is a phone affordance — desktop has Space + inline play buttons. */
+  .primary-action-fab-mobile-only { display: none; }
 }
 
 /* Day-grouping divider for the games panel when a round spans multiple PlayedOn dates. */

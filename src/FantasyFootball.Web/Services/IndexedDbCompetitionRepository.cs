@@ -27,6 +27,9 @@ public sealed class IndexedDbCompetitionRepository : ICompetitionRepository
 	// Monotonic id counter; seeded once from existing keys, then bumped synchronously before each async write so a concurrent save (bulk sim + user click) can't collide on an id.
 	int _nextId;
 
+	// Cache of the bulk read (overall standings + cross-competition H2H); cleared on any write so the next read reflects it.
+	IReadOnlyList<Competition>? _cachedAll;
+
 	public IndexedDbCompetitionRepository(IJSRuntime js)
 	{
 		_js = js;
@@ -49,6 +52,7 @@ public sealed class IndexedDbCompetitionRepository : ICompetitionRepository
 			FlatJson.Serialize(competition, compact: true),
 			SerializeSummary(CompetitionSummary.Of(competition)));
 
+		_cachedAll = null;
 		return competition.Id;
 	}
 
@@ -64,6 +68,7 @@ public sealed class IndexedDbCompetitionRepository : ICompetitionRepository
 
 	public async Task<IReadOnlyList<Competition>> GetAllAsync()
 	{
+		if (_cachedAll is not null) { return _cachedAll; }
 		// One transaction so keys and values are a consistent snapshot — a delete mid-read can't misalign id[i] with payload[i].
 		var entries = await _js.InvokeAsync<JsonElement>("ffIdb.entries");
 		var ids = entries.GetProperty("keys").Deserialize<int[]>()!;
@@ -77,6 +82,7 @@ public sealed class IndexedDbCompetitionRepository : ICompetitionRepository
 			result.Add(c);
 		}
 
+		_cachedAll = result;
 		return result;
 	}
 
@@ -90,8 +96,11 @@ public sealed class IndexedDbCompetitionRepository : ICompetitionRepository
 		return summaries;
 	}
 
-	public async Task DeleteAsync(int id) =>
+	public async Task DeleteAsync(int id)
+	{
 		await _js.InvokeVoidAsync("ffIdb.remove", id);
+		_cachedAll = null;
+	}
 
 	public async Task<int> CountAsync() =>
 		(await _js.InvokeAsync<int[]>("ffIdb.summaryKeys")).Length;
@@ -100,6 +109,7 @@ public sealed class IndexedDbCompetitionRepository : ICompetitionRepository
 	{
 		await _js.InvokeVoidAsync("ffIdb.clear");
 		_nextId = 0;
+		_cachedAll = null;
 	}
 
 	// Competitions persisted before the summary store existed have a full payload but no summary. Derive the missing ones once from the full store; every later save keeps both in sync, so this no-ops thereafter.
