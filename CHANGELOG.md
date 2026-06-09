@@ -1,3 +1,15 @@
+## [0.8.0](https://github.com/StepKie/FantasyFootball/releases/tag/0.8.0) — 2026-06-09
+
+### New Features
+
+- **Run as many simulations as you want** ([PR #75](https://github.com/StepKie/FantasyFootball/pull/75)) — bulk-simulating lots of competitions used to crash once the browser's small storage quota filled up (roughly a few dozen leagues). Saved competitions now use the browser's larger database instead, so you can run and keep far more — and the competitions list still loads fast with hundreds saved.
+- **Bottom play button on phones** ([PR #76](https://github.com/StepKie/FantasyFootball/pull/76)) — a thumb-reachable button at the bottom of the screen drives the main action on each page: start a new competition, play the next game, or replay a finished one. Desktop keeps the inline buttons and the Space shortcut.
+
+### Bugfixes
+
+- **Faster game-details popover and standings with many saved competitions** ([PR #76](https://github.com/StepKie/FantasyFootball/pull/76)) — the head-to-head stat and the overall-standings panel no longer re-scan every saved competition on each open, and the popover opens and closes without lag.
+- **CIS (Euro 1992) flag shows in overall standings** ([PR #75](https://github.com/StepKie/FantasyFootball/pull/75)) — it no longer falls back to a missing club crest.
+
 ## [0.7.1](https://github.com/StepKie/FantasyFootball/releases/tag/0.7.1) — 2026-06-08
 
 ### Bugfixes

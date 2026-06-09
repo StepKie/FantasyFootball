@@ -10,7 +10,7 @@
 
       Bump this on each release; do not put <Version> in individual .csproj files.
     -->
-    <Version>0.7.1</Version>
+    <Version>0.8.0</Version>
   </PropertyGroup>
 
 </Project>
