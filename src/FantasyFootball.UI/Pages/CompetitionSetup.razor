@@ -19,13 +19,15 @@
 
 <MudStack Spacing="3">
 
-  @* Top row: 3 equal-height columns.
-     Left  = pickers above, lineup-mode buttons at bottom (so the column matches the right column's height).
-     Center = round Play FAB, vertically + horizontally centered (mirrors the FAB on /competitions).
-     Right = bulk panel. *@
+  <PrimaryActionFab OnClick="HandleCreateSingle"
+                    Disabled="@(ViewModel.IsRunning || ViewModel.Groups.Count == 0)"
+                    Title="Start the competition for interactive play" />
+
+  @* Two equal-height columns: left = pickers + lineup-mode buttons, right = bulk panel.
+     The single-competition Play action is the shared bottom-center FAB above. *@
   <MudGrid Spacing="3" AlignItems="AlignItems.Stretch">
 
-    <MudItem xs="12" md="4">
+    <MudItem xs="12" md="6">
       <MudStack Spacing="2" Style="height:100%;">
         <MudSelect T="CompetitionType"
                    Label="Competition"
@@ -82,18 +84,7 @@
       </MudStack>
     </MudItem>
 
-    <MudItem xs="12" md="4">
-      <div style="display:flex; align-items:center; justify-content:center; height:100%; min-height:12rem;">
-        <MudFab Color="Color.Primary"
-                Size="Size.Large"
-                StartIcon="@Icons.Material.Filled.PlayArrow"
-                OnClick="HandleCreateSingle"
-                Disabled="@(ViewModel.IsRunning || ViewModel.Groups.Count == 0)"
-                title="Start the competition for interactive play" />
-      </div>
-    </MudItem>
-
-    <MudItem xs="12" md="4">
+    <MudItem xs="12" md="6">
       <MudPaper Class="pa-3" Outlined="true" Style="background-color: transparent; height:100%;">
         <MudStack Spacing="1" Style="height:100%;">
           <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">

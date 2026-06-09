@@ -45,6 +45,10 @@ public partial class CompetitionsViewModel : ObservableObject
 	{
 		// Persist non-null choices so other consumers inherit the pick; null = "All" filter, leave the prior pref alone.
 		if (value is { } t) { _dataService.SelectedCompetitionType = t; }
+
+		// Standings are filter-scoped — the loaded set no longer matches.
+		_overallStale = true;
+		OverallRecords = [];
 	}
 
 	/// <summary>
@@ -68,75 +72,88 @@ public partial class CompetitionsViewModel : ObservableObject
 	];
 
 	[ObservableProperty]
-	[NotifyPropertyChangedFor(nameof(FilteredCompetitions))]
+	[NotifyPropertyChangedFor(nameof(FilteredSummaries))]
+	[NotifyPropertyChangedFor(nameof(HasFinished))]
 	public partial CompetitionType? SelectedType { get; set; }
 
 	[ObservableProperty]
-	[NotifyPropertyChangedFor(nameof(FilteredCompetitions))]
-	public partial IReadOnlyList<Competition> AllCompetitions { get; set; } = [];
+	[NotifyPropertyChangedFor(nameof(FilteredSummaries))]
+	[NotifyPropertyChangedFor(nameof(HasFinished))]
+	public partial IReadOnlyList<CompetitionSummary> AllSummaries { get; set; } = [];
 
 	[ObservableProperty]
 	public partial bool IsBusy { get; set; }
 
-	public IReadOnlyList<Competition> FilteredCompetitions => SelectedType is { } t
-		? AllCompetitions.Where(c => c.Type == t).ToList()
-		: AllCompetitions;
+	/// <summary>Overall-standings rows, populated lazily by <see cref="EnsureOverallRecordsAsync"/> when the panel expands.</summary>
+	[ObservableProperty]
+	public partial IReadOnlyList<TeamRecord> OverallRecords { get; set; } = [];
+
+	[ObservableProperty]
+	public partial bool IsLoadingOverall { get; set; }
+
+	public IReadOnlyList<CompetitionSummary> FilteredSummaries => SelectedType is { } t
+		? AllSummaries.Where(s => s.Type == t).ToList()
+		: AllSummaries;
+
+	/// <summary>Any visible competition finished — cheap gate (off summaries) for showing the overall-standings panel.</summary>
+	public bool HasFinished => FilteredSummaries.Any(s => s.IsFinished);
+
+	// Standings need per-game results (absent from the summary), so they load on demand; stale when the filter changes or data reloads.
+	bool _overallStale = true;
 
 	/// <summary>
-	/// Team-level aggregate across every finished competition currently
-	/// visible (after the type filter). Played games are summed into a
-	/// single row per team. Sorted by points desc → GD desc → GF desc.
+	/// Team-level aggregate across every finished competition in <paramref name="comps"/>.
+	/// Played games are summed into a single row per team. Sorted by points desc →
+	/// GD desc → GF desc.
 	/// </summary>
-	public IReadOnlyList<TeamRecord> OverallRecords
+	IReadOnlyList<TeamRecord> ComputeOverallRecords(IEnumerable<Competition> comps)
 	{
-		get
+		// Codes collide across kinds (STP = São Tomé and Príncipe national + FC St. Pauli club). Aggregate per (isNational, code).
+		var clubsByCode = _dataService.AllTeams.Where(t => !t.IsNationalTeam).ToDictionary(t => t.ShortName, t => t);
+		var nationsByCode = _dataService.AllTeams.Where(t => t.IsNationalTeam).ToDictionary(t => t.ShortName, t => t);
+		var perTeam = new Dictionary<(bool IsNational, string Code), TeamRecord.Mutable>();
+
+		foreach (var comp in comps.Where(c => c.IsFinished()))
 		{
-			// Codes collide across kinds (STP = São Tomé and Príncipe national + FC St. Pauli club). Aggregate per (isNational, code).
-			var clubsByCode = _dataService.AllTeams.Where(t => !t.IsNationalTeam).ToDictionary(t => t.ShortName, t => t);
-			var nationsByCode = _dataService.AllTeams.Where(t => t.IsNationalTeam).ToDictionary(t => t.ShortName, t => t);
-			var perTeam = new Dictionary<(bool IsNational, string Code), TeamRecord.Mutable>();
-
-			foreach (var comp in FilteredCompetitions.Where(c => c.IsFinished()))
+			var isNational = IsNationalComp(comp.Type);
+			var champion = comp.WinnerTeamId();
+			foreach (var game in comp.Games)
 			{
-				var isNational = IsNationalComp(comp.Type);
-				var champion = comp.WinnerTeamId();
-				foreach (var game in comp.Games)
-				{
-					if (game.Result is not { } r) { continue; }
+				if (game.Result is not { } r) { continue; }
 
-					if (!game.IsFullyInitialized) { continue; }
-					var home = game.HomeTeamId;
-					var away = game.AwayTeamId;
+				if (!game.IsFullyInitialized) { continue; }
+				var home = game.HomeTeamId;
+				var away = game.AwayTeamId;
 
-					Accumulate(perTeam, (isNational, home), r, isHomeTeam: true);
-					Accumulate(perTeam, (isNational, away), r, isHomeTeam: false);
-				}
-
-				if (champion is not null)
-				{
-					var key = (isNational, champion);
-					var entry = perTeam.GetValueOrDefault(key);
-					perTeam[key] = entry with { CompetitionWins = entry.CompetitionWins + 1 };
-				}
+				Accumulate(perTeam, (isNational, home), r, isHomeTeam: true);
+				Accumulate(perTeam, (isNational, away), r, isHomeTeam: false);
 			}
 
-			return perTeam
-				.Select(kv =>
-				{
-					var lookup = kv.Key.IsNational ? nationsByCode : clubsByCode;
-					var team = lookup.TryGetValue(kv.Key.Code, out var t) ? t : new Team { Name = kv.Key.Code, ShortName = kv.Key.Code };
-
-					return new TeamRecord(team,
-						kv.Value.Wins, kv.Value.Draws, kv.Value.Losses,
-						kv.Value.GoalsFor, kv.Value.GoalsAgainst,
-						kv.Value.CompetitionWins);
-				})
-				.OrderByDescending(r => r.Points)
-				.ThenByDescending(r => r.GoalDifference)
-				.ThenByDescending(r => r.GoalsFor)
-				.ThenBy(r => r.Team.ShortName, StringComparer.Ordinal)
-				.ToList();
+			if (champion is not null)
+			{
+				var key = (isNational, champion);
+				var entry = perTeam.GetValueOrDefault(key);
+				perTeam[key] = entry with { CompetitionWins = entry.CompetitionWins + 1 };
+			}
 		}
+
+		return perTeam
+			.Select(kv =>
+			{
+				var lookup = kv.Key.IsNational ? nationsByCode : clubsByCode;
+				// Type drives FlagIcon's club-crest-vs-flag routing; a code missing from the registry (e.g. CIS) must keep its national type or it 404s on a club crest.
+				var team = lookup.TryGetValue(kv.Key.Code, out var t) ? t : new Team { Name = kv.Key.Code, ShortName = kv.Key.Code, Type = kv.Key.IsNational ? TeamType.NATIONAL_MEN : TeamType.CLUB_MEN };
+
+				return new TeamRecord(team,
+					kv.Value.Wins, kv.Value.Draws, kv.Value.Losses,
+					kv.Value.GoalsFor, kv.Value.GoalsAgainst,
+					kv.Value.CompetitionWins);
+			})
+			.OrderByDescending(r => r.Points)
+			.ThenByDescending(r => r.GoalDifference)
+			.ThenByDescending(r => r.GoalsFor)
+			.ThenBy(r => r.Team.ShortName, StringComparer.Ordinal)
+			.ToList();
 	}
 
 	static bool IsNationalComp(CompetitionType t) => t is CompetitionType.WM or CompetitionType.EM;
@@ -169,12 +186,40 @@ public partial class CompetitionsViewModel : ObservableObject
 		IsBusy = true;
 		try
 		{
-			var all = await _repo.GetAllAsync();
-			AllCompetitions = all.OrderByDescending(c => c.Id).ToList();
+			AllSummaries = (await _repo.GetAllSummariesAsync())
+				.OrderByDescending(s => s.Id)
+				.ToList();
+			_overallStale = true;
+			OverallRecords = [];
 		}
 		finally
 		{
 			IsBusy = false;
+		}
+	}
+
+	/// <summary>
+	/// Loads full competitions and builds the overall-standings aggregate for the
+	/// current filter. Driven by the standings panel expanding; a no-op until the
+	/// filter changes or the list reloads, so re-expanding is instant.
+	/// </summary>
+	public async Task EnsureOverallRecordsAsync()
+	{
+		if (!_overallStale || IsLoadingOverall) { return; }
+		IsLoadingOverall = true;
+		try
+		{
+			// Covers the panel's ~300ms expand animation so the (compositor-animated) spinner paints before the synchronous aggregation blocks the single WASM thread.
+			const int SpinnerPaintDelayMs = 350;
+			await Task.Delay(SpinnerPaintDelayMs);
+			var all = await _repo.GetAllAsync();
+			var scoped = SelectedType is { } t ? all.Where(c => c.Type == t) : all;
+			OverallRecords = ComputeOverallRecords(scoped);
+			_overallStale = false;
+		}
+		finally
+		{
+			IsLoadingOverall = false;
 		}
 	}
 
@@ -258,6 +303,15 @@ public sealed record TeamRecord(
 	public int Points => 3 * Wins + Draws;
 	public int GoalDifference => GoalsFor - GoalsAgainst;
 	public int MatchesPlayed => Wins + Draws + Losses;
+
+	// Per-game rates for the "Per game" view. MatchesPlayed is ≥ 1 for any aggregated row, but guard anyway so an empty row can't surface NaN/∞ in the table.
+	public double WinRatio => MatchesPlayed == 0 ? 0 : (double)Wins / MatchesPlayed;
+	public double DrawRatio => MatchesPlayed == 0 ? 0 : (double)Draws / MatchesPlayed;
+	public double LossRatio => MatchesPlayed == 0 ? 0 : (double)Losses / MatchesPlayed;
+	public double GoalsForPerGame => MatchesPlayed == 0 ? 0 : (double)GoalsFor / MatchesPlayed;
+	public double GoalsAgainstPerGame => MatchesPlayed == 0 ? 0 : (double)GoalsAgainst / MatchesPlayed;
+	public double GoalDifferencePerGame => MatchesPlayed == 0 ? 0 : (double)GoalDifference / MatchesPlayed;
+	public double PointsPerGame => MatchesPlayed == 0 ? 0 : (double)Points / MatchesPlayed;
 
 	internal record struct Mutable(int Wins, int Draws, int Losses, int GoalsFor, int GoalsAgainst, int CompetitionWins);
 }

@@ -16,13 +16,7 @@
 
 <MudText Typo="Typo.h5" HtmlTag="h1" Class="mb-3">Competitions</MudText>
 
-<MudStack AlignItems="AlignItems.Center" Class="mb-4">
-  <MudFab Color="Color.Primary"
-          Size="Size.Large"
-          StartIcon="@Icons.Material.Filled.PlayArrow"
-          Href="competitions/setup"
-          title="Set up a new competition" />
-</MudStack>
+<PrimaryActionFab Href="competitions/setup" Title="Set up a new competition" />
 
 <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1" Wrap="Wrap.Wrap" Class="mb-3">
   <MudText Typo="Typo.subtitle2" Class="mr-2">Type</MudText>
@@ -33,12 +27,12 @@
     <MudChip T="string" Size="Size.Small"
              Variant="@(isSel ? Variant.Filled : Variant.Outlined)"
              Color="@(isSel ? Color.Primary : Color.Default)"
-             OnClick="@(() => ViewModel.SelectedType = t)">
+             OnClick="@(() => SetType(t))">
       @label
     </MudChip>
   }
   <MudSpacer />
-  @if (ViewModel.FilteredCompetitions.Count > 0)
+  @if (ViewModel.FilteredSummaries.Count > 0)
   {
     @if (_confirmingDeleteAll)
     {
@@ -65,7 +59,7 @@
 {
   <MudProgressCircular Size="Size.Small" Indeterminate="true" />
 }
-else if (ViewModel.FilteredCompetitions.Count == 0)
+else if (ViewModel.FilteredSummaries.Count == 0)
 {
   <MudAlert Severity="Severity.Info">
     No competitions @(ViewModel.SelectedType is { } t ? $"of type {t.Name().Long} " : "")yet.
@@ -77,23 +71,23 @@ else
 {
   @* Sortable competitions table. Breakpoint.None: keep one row per competition on phones — the stacked label/value fallback can't be scanned as a list. *@
   <div class="competitions-list">
-  <MudTable Items="ViewModel.FilteredCompetitions" Dense="true" Hover="true" Breakpoint="Breakpoint.None"
-            OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<Competition>>(this, args => Nav.NavigateTo($"competitions/{args.Item!.Id}")))"
-            T="Competition">
+  <MudTable Items="ViewModel.FilteredSummaries" Dense="true" Hover="true" Breakpoint="Breakpoint.None"
+            OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<CompetitionSummary>>(this, args => Nav.NavigateTo($"competitions/{args.Item!.Id}")))"
+            T="CompetitionSummary">
     <HeaderContent>
-      <MudTh style="width:1%;"><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.Id)" T="Competition">#</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.Title)" T="Competition">Title</MudTableSortLabel></MudTh>
-      <MudTh Class="comp-started"><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.SimulationStart ?? DateTime.MinValue)" T="Competition" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => c.WinnerTeamId() ?? string.Empty)" T="Competition">Winner</MudTableSortLabel></MudTh>
-      <MudTh><MudTableSortLabel SortBy="new Func<Competition, object>(c => StateOrder(c))" T="Competition">State</MudTableSortLabel></MudTh>
+      <MudTh style="width:1%;"><MudTableSortLabel SortBy="new Func<CompetitionSummary, object>(s => s.Id)" T="CompetitionSummary">#</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<CompetitionSummary, object>(s => s.Title)" T="CompetitionSummary">Title</MudTableSortLabel></MudTh>
+      <MudTh Class="comp-started"><MudTableSortLabel SortBy="new Func<CompetitionSummary, object>(s => s.SimulationStart ?? DateTime.MinValue)" T="CompetitionSummary" InitialDirection="SortDirection.Descending">Started</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<CompetitionSummary, object>(s => s.WinnerId ?? string.Empty)" T="CompetitionSummary">Winner</MudTableSortLabel></MudTh>
+      <MudTh><MudTableSortLabel SortBy="new Func<CompetitionSummary, object>(s => StateOrder(s))" T="CompetitionSummary">State</MudTableSortLabel></MudTh>
       <MudTh style="width:1%;"></MudTh>
     </HeaderContent>
     <RowTemplate>
       @{
         var id = context.Id;
-        var isFinished = context.IsFinished();
-        var totalGames = context.Games.Length;
-        var playedGames = context.Games.Count(g => g.Result is not null);
+        var isFinished = context.IsFinished;
+        var totalGames = context.TotalGames;
+        var playedGames = context.PlayedGames;
       }
       <MudTd DataLabel="#">@context.Id</MudTd>
       <MudTd DataLabel="Title">
@@ -113,9 +107,9 @@ else
         }
       </MudTd>
       <MudTd DataLabel="Winner">
-        @if (isFinished && context.WinnerTeamId() is { } winnerId)
+        @if (isFinished && context.WinnerId is { } winnerId)
         {
-          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == context.IsNationalTeamCompetition());
+          var winner = DataService.AllTeams.FirstOrDefault(t => t.ShortName == winnerId && t.IsNationalTeam == context.IsNationalTeam);
           <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
             <FlagIcon Team="winner" Code="@winnerId" Size="20" />
             <span class="@(winner?.CompactName is null ? "" : "team-name-full")">@DisplayHyphenation.Soften(winner?.Name ?? winnerId)</span>
@@ -169,46 +163,64 @@ else
   </MudTable>
   </div>
 
-  @* Overall standings — aggregate across every finished competition in the current filter; capture once so the OverallRecords getter only walks comps × games once per render. *@
-  @if (ViewModel.OverallRecords is var overallRecords && overallRecords.Count > 0)
+  @* Overall standings need per-game results (absent from the list summaries), so the full competitions are loaded only when this panel is expanded. *@
+  @if (ViewModel.HasFinished)
   {
     <MudExpansionPanels Class="mt-4">
-      <MudExpansionPanel Text="@($"Overall standings ({overallRecords.Count} teams)")">
+      <MudExpansionPanel Text="@(ViewModel.OverallRecords.Count > 0 ? $"Overall standings ({ViewModel.OverallRecords.Count} teams)" : "Overall standings")"
+                         Expanded="_overallExpanded" ExpandedChanged="OnOverallExpandedChanged">
+        @if (ViewModel.IsLoadingOverall)
+        {
+          <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="my-2" />
+        }
+        else if (ViewModel.OverallRecords.Count > 0)
+        {
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1" Class="mb-2">
+          <MudChip T="string" Size="Size.Small"
+                   Variant="@(_overallPerGame ? Variant.Outlined : Variant.Filled)"
+                   Color="@(_overallPerGame ? Color.Default : Color.Primary)"
+                   OnClick="@(() => _overallPerGame = false)">Total</MudChip>
+          <MudChip T="string" Size="Size.Small"
+                   Variant="@(_overallPerGame ? Variant.Filled : Variant.Outlined)"
+                   Color="@(_overallPerGame ? Color.Primary : Color.Default)"
+                   OnClick="@(() => _overallPerGame = true)">Per game</MudChip>
+        </MudStack>
         @* Breakpoint.None: keep the real table on phones — the stacked label/value fallback can't be scanned as standings. *@
         <div class="overall-standings">
-        <MudTable Items="overallRecords" Dense="true" Hover="true" Breakpoint="Breakpoint.None" T="TeamRecord">
+        <MudTable Items="ViewModel.OverallRecords" Dense="true" Hover="true" Breakpoint="Breakpoint.None" T="TeamRecord">
           <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Team.Name)" T="TeamRecord">Team</MudTableSortLabel></MudTh>
             <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.CompetitionWins)" T="TeamRecord">Titles</MudTableSortLabel></MudTh>
             <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.MatchesPlayed)" T="TeamRecord">P</MudTableSortLabel></MudTh>
-            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Wins)" T="TeamRecord">W</MudTableSortLabel></MudTh>
-            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Draws)" T="TeamRecord">D</MudTableSortLabel></MudTh>
-            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Losses)" T="TeamRecord">L</MudTableSortLabel></MudTh>
-            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalsFor)" T="TeamRecord">GF</MudTableSortLabel></MudTh>
-            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalsAgainst)" T="TeamRecord">GA</MudTableSortLabel></MudTh>
-            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.GoalDifference)" T="TeamRecord">GD</MudTableSortLabel></MudTh>
-            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => r.Points)" T="TeamRecord" InitialDirection="SortDirection.Descending">Pts</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => _overallPerGame ? r.WinRatio : r.Wins)" T="TeamRecord">@(_overallPerGame ? "W%" : "W")</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => _overallPerGame ? r.DrawRatio : r.Draws)" T="TeamRecord">@(_overallPerGame ? "D%" : "D")</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => _overallPerGame ? r.LossRatio : r.Losses)" T="TeamRecord">@(_overallPerGame ? "L%" : "L")</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => _overallPerGame ? r.GoalsForPerGame : r.GoalsFor)" T="TeamRecord">@(_overallPerGame ? "GF/g" : "GF")</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => _overallPerGame ? r.GoalsAgainstPerGame : r.GoalsAgainst)" T="TeamRecord">@(_overallPerGame ? "GA/g" : "GA")</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => _overallPerGame ? r.GoalDifferencePerGame : r.GoalDifference)" T="TeamRecord">@(_overallPerGame ? "GD/g" : "GD")</MudTableSortLabel></MudTh>
+            <MudTh Class="standings-num"><MudTableSortLabel SortBy="new Func<TeamRecord, object>(r => _overallPerGame ? r.PointsPerGame : r.Points)" T="TeamRecord" InitialDirection="SortDirection.Descending">@(_overallPerGame ? "PPG" : "Pts")</MudTableSortLabel></MudTh>
           </HeaderContent>
           <RowTemplate>
             <MudTd DataLabel="Team">
               <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                <FlagIcon Team="context.Team" Size="20" />
+                <FlagIcon Team="context.Team" Code="@context.Team.ShortName" Size="20" />
                 <span class="@(context.Team.CompactName is null ? "" : "team-name-full")">@DisplayHyphenation.Soften(context.Team.Name)</span>
                 @if (context.Team.CompactName is { } compact) { <span class="team-name-compact">@DisplayHyphenation.Soften(compact)</span> }
               </MudStack>
             </MudTd>
             <MudTd DataLabel="Titles" Class="standings-num">@context.CompetitionWins</MudTd>
             <MudTd DataLabel="P" Class="standings-num">@context.MatchesPlayed</MudTd>
-            <MudTd DataLabel="W" Class="standings-num">@context.Wins</MudTd>
-            <MudTd DataLabel="D" Class="standings-num">@context.Draws</MudTd>
-            <MudTd DataLabel="L" Class="standings-num">@context.Losses</MudTd>
-            <MudTd DataLabel="GF" Class="standings-num">@context.GoalsFor</MudTd>
-            <MudTd DataLabel="GA" Class="standings-num">@context.GoalsAgainst</MudTd>
-            <MudTd DataLabel="GD" Class="standings-num">@context.GoalDifference</MudTd>
-            <MudTd DataLabel="Pts" Class="standings-num"><strong>@context.Points</strong></MudTd>
+            <MudTd DataLabel="W" Class="standings-num">@(_overallPerGame ? context.WinRatio.ToString("P0") : context.Wins.ToString())</MudTd>
+            <MudTd DataLabel="D" Class="standings-num">@(_overallPerGame ? context.DrawRatio.ToString("P0") : context.Draws.ToString())</MudTd>
+            <MudTd DataLabel="L" Class="standings-num">@(_overallPerGame ? context.LossRatio.ToString("P0") : context.Losses.ToString())</MudTd>
+            <MudTd DataLabel="GF" Class="standings-num">@(_overallPerGame ? context.GoalsForPerGame.ToString("0.00") : context.GoalsFor.ToString())</MudTd>
+            <MudTd DataLabel="GA" Class="standings-num">@(_overallPerGame ? context.GoalsAgainstPerGame.ToString("0.00") : context.GoalsAgainst.ToString())</MudTd>
+            <MudTd DataLabel="GD" Class="standings-num">@(_overallPerGame ? context.GoalDifferencePerGame.ToString("0.00") : context.GoalDifference.ToString())</MudTd>
+            <MudTd DataLabel="Pts" Class="standings-num"><strong>@(_overallPerGame ? context.PointsPerGame.ToString("0.00") : context.Points.ToString())</strong></MudTd>
           </RowTemplate>
         </MudTable>
         </div>
+        }
       </MudExpansionPanel>
     </MudExpansionPanels>
   }
@@ -216,12 +228,27 @@ else
 
 @code {
   bool _confirmingDeleteAll;
+  bool _overallExpanded;
+  bool _overallPerGame;
 
   protected override async Task OnInitializedAsync()
   {
     ViewModel.PropertyChanged += OnVmChanged;
     ViewModel.SyncFromDataService();
     await ViewModel.InitializeAsync();
+  }
+
+  async Task SetType(CompetitionType? t)
+  {
+    ViewModel.SelectedType = t;
+    // Filter change re-scopes the standings; reload them if the panel is open.
+    if (_overallExpanded) { await ViewModel.EnsureOverallRecordsAsync(); }
+  }
+
+  async Task OnOverallExpandedChanged(bool expanded)
+  {
+    _overallExpanded = expanded;
+    if (expanded) { await ViewModel.EnsureOverallRecordsAsync(); }
   }
 
   void OnVmChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -244,10 +271,10 @@ else
   }
 
   // Sort order for the State column: 0 = finished, 1 = in-progress, 2 = scheduled.
-  static int StateOrder(Competition c)
+  static int StateOrder(CompetitionSummary s)
   {
-    if (c.IsFinished()) { return 0; }
-    if (c.Games.Any(g => g.Result is not null)) { return 1; }
+    if (s.IsFinished) { return 0; }
+    if (s.PlayedGames > 0) { return 1; }
     return 2;
   }
 

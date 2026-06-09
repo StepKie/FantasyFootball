@@ -11,7 +11,7 @@ namespace FantasyFootball.Web.Services;
 /// under its own browser LocalStorage key. Aggregate roots: Team, Confederation,
 /// EloSet — TeamDetailViewModel writes Elo edits into the active EloSet via this
 /// repo. The flat competition model has its own repository
-/// (<see cref="LocalStorageCompetitionRepository"/>).
+/// (<see cref="IndexedDbCompetitionRepository"/>).
 /// </summary>
 public sealed class LocalStorageRepository : IRepository
 {
